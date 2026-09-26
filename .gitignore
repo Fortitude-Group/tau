@@ -21,6 +21,13 @@ data/
 .cache/
 frontier-cache/
 
+# Committed test data: Python-generated fixtures and the tiny provider-spike model
+!tests/**/data/
+!tests/Tau.Inference.Tests/Onnx/*.onnx
+
+# ONNX Runtime native flavours and CUDA wheels (fetched by scripts/fetch-natives.ps1 and fetch-cuda.ps1)
+native/
+
 # Local reports are committed selectively; scratch is not
 scratch/
 *.tmp
