@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tau.fortitude-omnis.group/contracts/systemone/2026-09-27/request.schema.json",
+  "title": "POST /v1/systemone request (snapshot 2026-09-27)",
+  "type": "object",
+  "required": ["model", "state", "questions"],
+  "properties": {
+    "model": { "type": "string", "minLength": 1 },
+    "state": {},
+    "questions": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "$ref": "#/$defs/question" }
+    }
+  },
+  "patternProperties": { "^x-tau-": {} },
+  "additionalProperties": false,
+  "$defs": {
+    "structured": { "type": ["string", "object", "array"] },
+    "question": {
+      "type": "object",
+      "required": ["type", "instructions"],
+      "properties": { "type": { "enum": ["noul", "choice", "score"] } },
+      "oneOf": [
+        { "$ref": "#/$defs/noul" },
+        { "$ref": "#/$defs/choice" },
+        { "$ref": "#/$defs/score" }
+      ]
+    },
+    "noul": {
+      "type": "object",
+      "properties": {
+        "type": { "const": "noul" },
+        "instructions": { "$ref": "#/$defs/structured" },
+        "criteria": {
+          "type": "object",
+          "propertyNames": { "enum": ["true", "false", "True", "False", "TRUE", "FALSE"] },
+          "additionalProperties": { "type": ["string", "object", "array", "null"] }
+        }
+      },
+      "required": ["type", "instructions"],
+      "additionalProperties": false
+    },
+    "choice": {
+      "type": "object",
+      "properties": {
+        "type": { "const": "choice" },
+        "instructions": { "$ref": "#/$defs/structured" },
+        "criteria": {
+          "type": "object",
+          "minProperties": 1,
+          "maxProperties": 255,
+          "additionalProperties": { "type": ["string", "object", "array", "null"] }
+        }
+      },
+      "required": ["type", "instructions", "criteria"],
+      "additionalProperties": false
+    },
+    "score": {
+      "type": "object",
+      "properties": {
+        "type": { "const": "score" },
+        "instructions": { "$ref": "#/$defs/structured" },
+        "criteria": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 10,
+          "items": { "$ref": "#/$defs/structured" }
+        }
+      },
+      "required": ["type", "instructions", "criteria"],
+      "additionalProperties": false
+    }
+  }
+}

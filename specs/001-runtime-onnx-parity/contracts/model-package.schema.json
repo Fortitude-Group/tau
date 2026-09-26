@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "tau-model.json (model package manifest) v1",
+  "type": "object",
+  "required": ["format", "version", "id", "family", "source", "onnx", "tokenizer", "limits", "postProcessing", "reference"],
+  "properties": {
+    "format": { "const": "tau.model" },
+    "version": { "const": 1 },
+    "id": { "type": "string" },
+    "family": { "enum": ["laya", "von"] },
+    "source": {
+      "type": "object",
+      "required": ["repo", "revision", "files"],
+      "properties": {
+        "repo": { "type": "string" },
+        "revision": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "subfolder": { "type": ["string", "null"] },
+        "files": { "type": "object", "additionalProperties": { "type": "string", "pattern": "^[0-9a-f]{64}$" } }
+      }
+    },
+    "onnx": {
+      "type": "object",
+      "required": ["file", "sha256", "opset", "exporter", "precision"],
+      "properties": {
+        "file": { "type": "string" },
+        "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "opset": { "type": "integer" },
+        "exporter": { "enum": ["torchscript", "dynamo"] },
+        "precision": { "enum": ["fp32", "fp16"] }
+      }
+    },
+    "tokenizer": {
+      "type": "object",
+      "required": ["file", "sha256"],
+      "properties": { "file": { "type": "string" }, "sha256": { "type": "string" } }
+    },
+    "limits": { "type": "object" },
+    "postProcessing": { "type": "object" },
+    "reference": {
+      "type": "object",
+      "required": ["package", "transformers", "torch"],
+      "properties": {
+        "package": { "type": "string" },
+        "transformers": { "type": "string" },
+        "torch": { "type": "string" }
+      }
+    }
+  }
+}

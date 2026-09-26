@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tau.fortitude-omnis.group/contracts/systemone/2026-09-27/response.schema.json",
+  "title": "POST /v1/systemone response (snapshot 2026-09-27). Strict: no fields outside the contract.",
+  "type": "object",
+  "required": ["model", "answers", "usage"],
+  "properties": {
+    "model": { "type": "string", "minLength": 1 },
+    "answers": { "type": "object", "additionalProperties": { "$ref": "#/$defs/answer" } },
+    "usage": {
+      "type": "object",
+      "required": ["input_tokens", "output_tokens"],
+      "properties": {
+        "input_tokens": { "type": "integer", "minimum": 0 },
+        "output_tokens": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "prob": { "type": "number", "minimum": 0, "maximum": 1 },
+    "probMap": { "type": "object", "minProperties": 1, "additionalProperties": { "$ref": "#/$defs/prob" } },
+    "answer": {
+      "type": "object",
+      "required": ["type"],
+      "oneOf": [
+        { "$ref": "#/$defs/noul" },
+        { "$ref": "#/$defs/choice" },
+        { "$ref": "#/$defs/score" }
+      ]
+    },
+    "noul": {
+      "type": "object",
+      "properties": { "type": { "const": "noul" }, "noul": { "$ref": "#/$defs/prob" } },
+      "required": ["type", "noul"],
+      "additionalProperties": false
+    },
+    "choice": {
+      "type": "object",
+      "properties": {
+        "type": { "const": "choice" },
+        "choice": { "type": "string" },
+        "probabilities": { "$ref": "#/$defs/probMap" },
+        "confidence": { "$ref": "#/$defs/prob" }
+      },
+      "required": ["type", "choice", "probabilities", "confidence"],
+      "additionalProperties": false
+    },
+    "score": {
+      "type": "object",
+      "properties": {
+        "type": { "const": "score" },
+        "score": { "type": "number", "minimum": 0 },
+        "legend": { "type": "object", "additionalProperties": { "type": "string" } },
+        "probabilities": { "$ref": "#/$defs/probMap" },
+        "confidence": { "$ref": "#/$defs/prob" }
+      },
+      "required": ["type", "score", "legend", "probabilities", "confidence"],
+      "additionalProperties": false
+    }
+  }
+}
