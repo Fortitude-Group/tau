@@ -1,0 +1,35 @@
+# .NET
+bin/
+obj/
+*.user
+[Bb]uild/
+publish/
+artifacts/
+
+# Python sidecar
+.venv/
+__pycache__/
+*.pyc
+sidecar/**/env/
+
+# Models, datasets, caches (fetched by scripts, pinned by hash — never committed)
+models/
+data/
+*.onnx
+*.safetensors
+*.bin
+.cache/
+frontier-cache/
+
+# Local reports are committed selectively; scratch is not
+scratch/
+*.tmp
+
+# Secrets — never commit
+.env
+*.env
+secrets.json
+
+# OS
+.DS_Store
+Thumbs.db
