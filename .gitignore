@@ -33,3 +33,6 @@ secrets.json
 # OS
 .DS_Store
 Thumbs.db
+
+# Agent worktrees (local only)
+.claude/worktrees/
