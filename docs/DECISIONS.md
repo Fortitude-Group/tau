@@ -6,6 +6,70 @@ this file records the ones I made so the trail is auditable.
 
 ---
 
+## 2026-09-27 · ONNX export spike: approach A failed, approach B passed for all four models
+
+- **Approach A** (TorchScript `torch.onnx.export`, opset 17) exported `laya-en` in 19 s, but the graph
+  **doesn't generalise**. The head's `nn.MultiheadAttention` bakes the traced sequence length (423) into
+  a reshape, so a 21-token input fails with `Reshape … {21,1,1024} → {423,16,64}`. Keeping it would have
+  been silently wrong for every request of a different length. Dropped.
+- **Approach B** (the `torch.export`/dynamo exporter, opset 18, symbolic B/S/K dims) passes. All four
+  models exported (`laya-en`, `laya-multilingual`, `laya-typed-decisions`, `von-1.2.0`) in 27–45 s each,
+  with weights in `model.onnx.data`. Level-1 parity (onnxruntime-python on CPU against the vendor PyTorch
+  forward on identical tensors, 293 rows over 163 model-case pairs): **max |Δlogit| 5.5e-5, max |Δprob|
+  4.0e-6, 0 argmax mismatches**. The tolerance is 2e-3 / 1e-3, so the headroom is about 36x.
+  Evidence: `reports/r1/parity-model.json`, produced by `uv run python -m tau_sidecar.parity`.
+- No fallback needed, so no Python inference process sits behind the Runtime.
+- Tracing hazards found in the reference code and handled: HF masks skip padding and the local window
+  on small examples (trace with padding and S > 300); the fused encoder-layer fast path has no ONNX
+  export (export with grad enabled); `topk(2)` needs K ≥ 2 (the host pads K to 2 with a masked slot).
+
+## 2026-09-27 · argmax tie-break: first index within 1e-4 of the max
+
+Von scores each option independently, so two options with identical text get exactly the same logit
+in the reference. torch picks the first index, and ONNX float noise (about 1e-6) picked the second.
+**Decision:** Tau picks the lowest index among logits within 1e-4 of the max. That's the reference's
+own first-index rule, made robust to float noise. The parity gate uses the same rule.
+**Consequence:** if two options genuinely differ by less than 1e-4 in logit (about 2.5e-5 in
+probability), Tau may pick the other one. That's a tie in any practical sense.
+
+## 2026-09-27 · Von input rules come from von-sdk's own types
+
+`von.types` only accepts string (or null) descriptions for choice and noul criteria. It turns object
+or array instructions into text with `json.dumps(v, sort_keys=isinstance(v, dict))` (default ASCII
+escaping). Score levels are strings or `{what, examples}` dicts.
+**Decision:** for `von-1.2.0`, Tau reproduces that exact instruction serialisation. It rejects, with
+422 naming the field, any contract-valid shapes the reference itself rejects (structured choice or noul
+descriptions, array score levels). Noul criteria keys are lower-cased before Von sees them (the Tau
+contract rule), so `"True"` works on Von. The reference would silently ignore it. Recorded deviation.
+
+## 2026-09-27 · Laya's option budget depends on the checkpoint
+
+The English checkpoint (`max_len` 512, `head_max_len` 192) fits about 125 short options. The
+multilingual and typed-decisions checkpoints (`max_len` 1024) fit all 255. Over-budget requests are
+rejected with 422, as the reference raises. My first parity case assumed 512 for all three. The
+reference was right and the case was fixed.
+
+## 2026-09-27 · Datasets (FR-027 licence check)
+
+Verified from the HF API and dataset cards by a research agent. Key facts rechecked where they matter.
+- **Banking77** (`PolyAI/banking77` @ `90d4e2ee…`): **CC-BY-4.0**. 13,083 rows (10,003/3,080), 77
+  gold intents. Publishable with attribution.
+- **Tobi-Bueck/customer-support-tickets** (@ `ddf1c81a…`): the best urgency set. 61,765 real tickets, a
+  5-level `priority` field, English and German. **CC-BY-NC-4.0, non-commercial.** It's fine for
+  measuring and for Rob's articles, but redistributing samples inside an Apache-2.0 repo, or using it
+  on a company page, is a grey area. **Put to Rob at the R1 gate** with a recommendation.
+- Dropped: `gorkemsevinc/customer_support_tickets` (no licence), `electricsheepafrica/…` (contradictory
+  rights statement), `bitext/…` (no urgency field).
+- Permissive fallbacks if Rob says no to NC: `nerofinal012/TicketingToolDataset` (MIT, real, gated,
+  small, row count unverified), `Horizon-Labs/multilingual-zeroshot-synthetic` (ODC-BY, synthetic).
+
+## 2026-09-27 · RuFlo / Claude Flow unavailable, so fan-out uses the Agent tool
+
+The ruflo MCP server failed to connect this session, and `npx @claude-flow/cli@latest` crashes on
+start (`npm error Class extends value undefined is not a constructor or null`). **Decision:** fall back
+to Claude Code's Agent tool, with worktree isolation for parallel lanes, as the global CLAUDE.md
+allows when the CLI is unavailable.
+
 ## 2026-09-27 · Laya's reference is the maintained `laya==0.3.20` runtime, not the checkpoint-repo script
 
 The checkpoint repo's `rl_agent_api.py` is out of date. The PyPI runtime clamps temperatures
