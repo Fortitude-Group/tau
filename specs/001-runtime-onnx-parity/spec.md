@@ -115,6 +115,7 @@ A maintainer drops calibrator files (produced later by the Workbench) into the R
 
 ### Edge Cases
 
+- A Von request whose packed sequence exceeds the configured cap (default 4,096 tokens; the reference allows 8,192 but its per-row attention masks grow with the square of the length): rejected with a validation error naming the question. It's a documented deviation from the reference.
 - A choice with so many or such long options that they can't all fit the model's option budget: the request is rejected with a validation error naming the question. A truncated answer space is never silently returned (this matches the reference behaviour).
 - A state longer than the model's context: it's truncated the way the reference implementation truncates, and the fact is recorded in telemetry.
 - Empty state (`""` or `null`): accepted and answered.
