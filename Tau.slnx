@@ -1,0 +1,20 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Tau.Calibration/Tau.Calibration.csproj" />
+    <Project Path="src/Tau.Client/Tau.Client.csproj" />
+    <Project Path="src/Tau.Contract/Tau.Contract.csproj" />
+    <Project Path="src/Tau.Inference/Tau.Inference.csproj" />
+    <Project Path="src/Tau.Runtime/Tau.Runtime.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Tau.Calibration.Tests/Tau.Calibration.Tests.csproj" />
+    <Project Path="tests/Tau.Client.Tests/Tau.Client.Tests.csproj" />
+    <Project Path="tests/Tau.Contract.Tests/Tau.Contract.Tests.csproj" />
+    <Project Path="tests/Tau.Inference.Tests/Tau.Inference.Tests.csproj" />
+    <Project Path="tests/Tau.Runtime.Tests/Tau.Runtime.Tests.csproj" />
+  </Folder>
+  <Folder Name="/tools/">
+    <Project Path="tools/Tau.Bench/Tau.Bench.csproj" />
+    <Project Path="tools/Tau.Conformance/Tau.Conformance.csproj" />
+  </Folder>
+</Solution>
