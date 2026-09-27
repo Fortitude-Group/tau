@@ -1,0 +1,176 @@
+{
+  "model": "von-1.2.0",
+  "split": "calibration",
+  "phase": "raw",
+  "endpoint": "http://localhost:18093/",
+  "endpoint_identity": {
+    "is_tau": true,
+    "description": "Tau Runtime at http://localhost:18093/ (3 model(s) installed)",
+    "models": [
+      {
+        "id": "laya-en",
+        "family": "laya",
+        "revision": "55cf4c4ebb4ebe31b2550e8bdf3bd21b99753851",
+        "onnx_sha256": "866a05b244e47e96820660d18ee050c518c2de0f60c39e2e9a89dfeb056e1eec",
+        "loaded": true
+      },
+      {
+        "id": "von-1.2.0",
+        "family": "von",
+        "revision": "5df8185a4f2327ad0a7cd117cc4f701ac557b9ae",
+        "onnx_sha256": "0777bb988636663b770775ae0b4eb961d6fbee176c9bea1d1da823723b1eb3f3",
+        "loaded": true
+      },
+      {
+        "id": "laya-en-ft-banking77",
+        "family": "laya",
+        "revision": "469442c64b974d12d1c397c6fab2baeeb1cdd8cc",
+        "onnx_sha256": "198e563957ce43348f944a10739bdf17929bc3d2175f22a72239b4601d421556",
+        "loaded": true
+      }
+    ],
+    "aliases": [
+      "auto",
+      "tau-auto",
+      "jev-latest",
+      "jev-*"
+    ]
+  },
+  "model_hash": "0777bb988636663b770775ae0b4eb961d6fbee176c9bea1d1da823723b1eb3f3",
+  "model_hashes_seen": [
+    "0777bb988636663b770775ae0b4eb961d6fbee176c9bea1d1da823723b1eb3f3"
+  ],
+  "calibrators_seen": [
+    "none"
+  ],
+  "items": 1000,
+  "measured": 1000,
+  "failures": 0,
+  "failures_by_status": {},
+  "truncated": 0,
+  "metrics": {
+    "n": 1000,
+    "accuracy": 0.749,
+    "ece": 0.20461950000000084,
+    "brier": 0.44131242713000024,
+    "log_loss": 3.5843613158156136,
+    "reliability": [
+      {
+        "lower": 0,
+        "upper": 0.06666666666666667,
+        "count": 0
+      },
+      {
+        "lower": 0.06666666666666667,
+        "upper": 0.13333333333333333,
+        "count": 0
+      },
+      {
+        "lower": 0.13333333333333333,
+        "upper": 0.2,
+        "count": 0
+      },
+      {
+        "lower": 0.2,
+        "upper": 0.26666666666666666,
+        "count": 0
+      },
+      {
+        "lower": 0.26666666666666666,
+        "upper": 0.3333333333333333,
+        "count": 0
+      },
+      {
+        "lower": 0.3333333333333333,
+        "upper": 0.4,
+        "count": 0
+      },
+      {
+        "lower": 0.4,
+        "upper": 0.4666666666666667,
+        "count": 3,
+        "mean_confidence": 0.4522333333333333,
+        "accuracy": 0
+      },
+      {
+        "lower": 0.4666666666666667,
+        "upper": 0.5333333333333333,
+        "count": 8,
+        "mean_confidence": 0.5052875,
+        "accuracy": 0.375
+      },
+      {
+        "lower": 0.5333333333333333,
+        "upper": 0.6,
+        "count": 20,
+        "mean_confidence": 0.560305,
+        "accuracy": 0.3
+      },
+      {
+        "lower": 0.6,
+        "upper": 0.6666666666666666,
+        "count": 13,
+        "mean_confidence": 0.6306461538461539,
+        "accuracy": 0.38461538461538464
+      },
+      {
+        "lower": 0.6666666666666666,
+        "upper": 0.7333333333333333,
+        "count": 22,
+        "mean_confidence": 0.7035636363636365,
+        "accuracy": 0.4090909090909091
+      },
+      {
+        "lower": 0.7333333333333333,
+        "upper": 0.8,
+        "count": 27,
+        "mean_confidence": 0.7687703703703703,
+        "accuracy": 0.4444444444444444
+      },
+      {
+        "lower": 0.8,
+        "upper": 0.8666666666666667,
+        "count": 37,
+        "mean_confidence": 0.838683783783784,
+        "accuracy": 0.5135135135135135
+      },
+      {
+        "lower": 0.8666666666666667,
+        "upper": 0.9333333333333333,
+        "count": 49,
+        "mean_confidence": 0.9046918367346939,
+        "accuracy": 0.5918367346938775
+      },
+      {
+        "lower": 0.9333333333333333,
+        "upper": 1,
+        "count": 821,
+        "mean_confidence": 0.9953953714981739,
+        "accuracy": 0.8112058465286236
+      }
+    ]
+  },
+  "reference": "gold",
+  "confidence_note": "Confidence for ECE and thresholds is max(p), the probability of the chosen answer, not the contract\u0027s confidence field, which for choice and score questions is not a calibrated probability.",
+  "exclusion_note": "No item failed; the metrics cover every item.",
+  "latency_ms": {
+    "p50": 91.50550000000001,
+    "p95": 105.8562,
+    "mean": 92.55757299999999
+  },
+  "model_ms": {
+    "p50": 89.81,
+    "p95": 103.90254999999999,
+    "mean": 90.82339500000006
+  },
+  "duration_seconds": 23.1683277,
+  "concurrency": 4,
+  "gpu": {
+    "mean_watts": 331.93608695652176,
+    "samples": 46,
+    "interval_ms": 500,
+    "gpu": "NVIDIA GeForce RTX 3080 Ti",
+    "note": "Mean of nvidia-smi power.draw for the first GPU, sampled while the phase ran. It is whole-GPU power: idle draw and any other work on the GPU are included, so it overstates what the model alone used."
+  },
+  "started_utc": "2026-09-27T13:08:23Z"
+}

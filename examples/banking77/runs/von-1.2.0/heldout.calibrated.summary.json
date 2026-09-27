@@ -1,0 +1,184 @@
+{
+  "model": "von-1.2.0",
+  "split": "heldout",
+  "phase": "calibrated",
+  "endpoint": "http://localhost:18093/",
+  "endpoint_identity": {
+    "is_tau": true,
+    "description": "Tau Runtime at http://localhost:18093/ (3 model(s) installed)",
+    "models": [
+      {
+        "id": "laya-en",
+        "family": "laya",
+        "revision": "55cf4c4ebb4ebe31b2550e8bdf3bd21b99753851",
+        "onnx_sha256": "866a05b244e47e96820660d18ee050c518c2de0f60c39e2e9a89dfeb056e1eec",
+        "loaded": true
+      },
+      {
+        "id": "von-1.2.0",
+        "family": "von",
+        "revision": "5df8185a4f2327ad0a7cd117cc4f701ac557b9ae",
+        "onnx_sha256": "0777bb988636663b770775ae0b4eb961d6fbee176c9bea1d1da823723b1eb3f3",
+        "loaded": true
+      },
+      {
+        "id": "laya-en-ft-banking77",
+        "family": "laya",
+        "revision": "469442c64b974d12d1c397c6fab2baeeb1cdd8cc",
+        "onnx_sha256": "198e563957ce43348f944a10739bdf17929bc3d2175f22a72239b4601d421556",
+        "loaded": true
+      }
+    ],
+    "aliases": [
+      "auto",
+      "tau-auto",
+      "jev-latest",
+      "jev-*"
+    ]
+  },
+  "model_hash": "0777bb988636663b770775ae0b4eb961d6fbee176c9bea1d1da823723b1eb3f3",
+  "model_hashes_seen": [
+    "0777bb988636663b770775ae0b4eb961d6fbee176c9bea1d1da823723b1eb3f3"
+  ],
+  "calibrators_seen": [
+    "von-1.2.0:choice:11\u002B"
+  ],
+  "items": 1000,
+  "measured": 1000,
+  "failures": 0,
+  "failures_by_status": {},
+  "truncated": 0,
+  "metrics": {
+    "n": 1000,
+    "accuracy": 0.77,
+    "ece": 0.039196099999998825,
+    "brier": 0.3537011943700003,
+    "log_loss": 1.0777672461242644,
+    "reliability": [
+      {
+        "lower": 0,
+        "upper": 0.06666666666666667,
+        "count": 1,
+        "mean_confidence": 0.0506,
+        "accuracy": 0
+      },
+      {
+        "lower": 0.06666666666666667,
+        "upper": 0.13333333333333333,
+        "count": 0
+      },
+      {
+        "lower": 0.13333333333333333,
+        "upper": 0.2,
+        "count": 0
+      },
+      {
+        "lower": 0.2,
+        "upper": 0.26666666666666666,
+        "count": 6,
+        "mean_confidence": 0.24803333333333336,
+        "accuracy": 0.16666666666666666
+      },
+      {
+        "lower": 0.26666666666666666,
+        "upper": 0.3333333333333333,
+        "count": 10,
+        "mean_confidence": 0.30954999999999994,
+        "accuracy": 0.5
+      },
+      {
+        "lower": 0.3333333333333333,
+        "upper": 0.4,
+        "count": 25,
+        "mean_confidence": 0.364372,
+        "accuracy": 0.4
+      },
+      {
+        "lower": 0.4,
+        "upper": 0.4666666666666667,
+        "count": 50,
+        "mean_confidence": 0.4386320000000001,
+        "accuracy": 0.34
+      },
+      {
+        "lower": 0.4666666666666667,
+        "upper": 0.5333333333333333,
+        "count": 45,
+        "mean_confidence": 0.5035044444444445,
+        "accuracy": 0.5555555555555556
+      },
+      {
+        "lower": 0.5333333333333333,
+        "upper": 0.6,
+        "count": 54,
+        "mean_confidence": 0.5664055555555553,
+        "accuracy": 0.5925925925925926
+      },
+      {
+        "lower": 0.6,
+        "upper": 0.6666666666666666,
+        "count": 93,
+        "mean_confidence": 0.6287043010752682,
+        "accuracy": 0.6989247311827957
+      },
+      {
+        "lower": 0.6666666666666666,
+        "upper": 0.7333333333333333,
+        "count": 21,
+        "mean_confidence": 0.6951714285714288,
+        "accuracy": 0.6666666666666666
+      },
+      {
+        "lower": 0.7333333333333333,
+        "upper": 0.8,
+        "count": 139,
+        "mean_confidence": 0.7622496402877689,
+        "accuracy": 0.7194244604316546
+      },
+      {
+        "lower": 0.8,
+        "upper": 0.8666666666666667,
+        "count": 37,
+        "mean_confidence": 0.8539351351351349,
+        "accuracy": 0.7297297297297297
+      },
+      {
+        "lower": 0.8666666666666667,
+        "upper": 0.9333333333333333,
+        "count": 492,
+        "mean_confidence": 0.8926313008130105,
+        "accuracy": 0.9085365853658537
+      },
+      {
+        "lower": 0.9333333333333333,
+        "upper": 1,
+        "count": 27,
+        "mean_confidence": 0.9380999999999996,
+        "accuracy": 1
+      }
+    ]
+  },
+  "reference": "gold",
+  "confidence_note": "Confidence for ECE and thresholds is max(p), the probability of the chosen answer, not the contract\u0027s confidence field, which for choice and score questions is not a calibrated probability.",
+  "exclusion_note": "No item failed; the metrics cover every item.",
+  "latency_ms": {
+    "p50": 91.841,
+    "p95": 103.91224999999999,
+    "mean": 92.60685999999991
+  },
+  "model_ms": {
+    "p50": 90.2755,
+    "p95": 101.8583,
+    "mean": 90.82669600000007
+  },
+  "duration_seconds": 23.1830646,
+  "concurrency": 4,
+  "gpu": {
+    "mean_watts": 338.245,
+    "samples": 46,
+    "interval_ms": 500,
+    "gpu": "NVIDIA GeForce RTX 3080 Ti",
+    "note": "Mean of nvidia-smi power.draw for the first GPU, sampled while the phase ran. It is whole-GPU power: idle draw and any other work on the GPU are included, so it overstates what the model alone used."
+  },
+  "started_utc": "2026-09-27T13:12:47Z"
+}
