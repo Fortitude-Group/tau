@@ -262,6 +262,24 @@ public static class ReportBuilder
         return string.Join(" ", parts);
     }
 
+    /// <summary>
+    /// Explains a missed ECE goal when the selection rule (lower calibration-split log loss) chose a method
+    /// whose calibration-split ECE was clearly worse than the other method's. The rule is fixed before any
+    /// held-out number is seen, so it is reported rather than changed.
+    /// </summary>
+    internal static IEnumerable<string> SelectionNotes(ModelReport m)
+    {
+        foreach (var c in m.Calibration?.Calibrators.Where(c => c.Scope == "question type") ?? [])
+        {
+            var chosen = c.Chosen == "isotonic" ? c.Isotonic : c.Temperature;
+            var other = c.Chosen == "isotonic" ? c.Temperature : c.Isotonic;
+            if (chosen is not null && other is not null && other.CalibrationEce < chosen.CalibrationEce / 2)
+            {
+                yield return $"Why {m.Model} fell short: the calibrator is chosen by lower calibration-split log loss, fixed before any held-out result. That picked {c.Chosen} (log loss {Fmt.Num(chosen.CalibrationLogLoss)}, ECE {Fmt.Num(chosen.CalibrationEce)}) over {other.Method} (log loss {Fmt.Num(other.CalibrationLogLoss)}, ECE {Fmt.Num(other.CalibrationEce)}). Log loss and max(p) ECE disagree here, and the rule was not changed after seeing the held-out result.";
+            }
+        }
+    }
+
     private static IReadOnlyList<string> Misses(
         DecisionSpec spec, IReadOnlyList<ModelReport> models, IReadOnlyList<ThresholdResult> thresholds,
         IReadOnlyList<CascadeResult> cascades, IReadOnlyList<BaselineResult> baselines, LabelSummary? frontier)
@@ -271,6 +289,7 @@ public static class ReportBuilder
         foreach (var m in models.Where(m => m.EceReduction is not null && m.EceReduction < TargetEceReduction))
         {
             misses.Add($"Calibration cut {m.Model}'s held-out ECE by only {Fmt.Pct(m.EceReduction)} (from {Fmt.Num(m.RawHeldOut!.Metrics!.Ece)} to {Fmt.Num(m.BestCalibrated!.Ece)}), short of the 50% goal.");
+            misses.AddRange(SelectionNotes(m));
         }
 
         var calibrated = models.Where(m => m.EceReduction is not null).ToArray();
