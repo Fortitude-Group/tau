@@ -7,9 +7,10 @@ JSON yourself.
 
 ## Install
 
-Packed locally only (not published to any feed in R1):
+Packed locally only (not published to any feed yet). Tau.Client depends on Tau.Contract, so pack both:
 
 ```bash
+dotnet pack src/Tau.Contract -c Release -o artifacts/packages
 dotnet pack src/Tau.Client -c Release -o artifacts/packages
 dotnet add <YourProject> package Tau.Client --source artifacts/packages
 ```

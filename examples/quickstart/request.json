@@ -1,0 +1,19 @@
+{
+  "model": "jev-latest",
+  "state": "My card payment failed three times this morning and I need it sorted today.",
+  "questions": {
+    "category": {
+      "type": "choice",
+      "instructions": "Which support category fits this message?",
+      "criteria": {
+        "billing": "Billing or payments issue",
+        "technical": "App or website technical issue",
+        "account": "Account access or security issue"
+      }
+    },
+    "urgent": {
+      "type": "noul",
+      "instructions": "Does the customer need an answer today?"
+    }
+  }
+}
