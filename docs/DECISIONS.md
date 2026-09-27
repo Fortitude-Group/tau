@@ -6,6 +6,44 @@ this file records the ones I made so the trail is auditable.
 
 ---
 
+## 2026-09-27 · Fine-tunes and the classic-encoder baseline (T014–T017)
+
+- **Laya fine-tunes** (RTX 3080 Ti, seed 42, 2 epochs, fine-tune split only):
+  - `laya-en-ft-banking77` trained on 8,603 items in 1,518 s.
+  - `laya-en-ft-tickets` trained on 7,600 items in 719 s.
+  - Both exported to ONNX and passed parity: max |Δlogit| 2.1e-5 (Banking77) and 1.1e-3 (tickets),
+    against the 2e-3 tolerance. `examples/<name>/finetune-parity.json` holds the reports and
+    `finetune-training.json` the settings.
+  - The tickets model has a 512-token budget, so it rejects one long laya-en case that laya-en
+    itself accepts. That is expected for a derived model.
+- **The MiniLM baseline's recipe changed after its first run, before any held-out number was
+  used.** At 5 epochs and lr 5e-5 its loss was still falling and it scored 80.8% on Banking77. A
+  classic encoder stopped early would be a strawman, and the brainstorm's claim is about properly
+  fine-tuned ones. Now it trains at lr 1e-4 for up to 20 epochs, with early stopping (patience 3)
+  on calibration-split accuracy, and the best epoch is kept.
+  - Banking77: best epoch 8, held-out accuracy 91.5%. The cited third-party figure is 93.2%.
+  - Tickets: best epoch 10, held-out accuracy 55.6%.
+  - The held-out split never influences training. The 80.8% first run is recorded here as a miss
+    in method, not hidden.
+
+## 2026-09-27 · Frontier labels come from compact answer sheets
+
+The Workbench exports one fixed prompt per item, and the cost model counts those characters:
+7.1M for Banking77 and 1.4M for the tickets, which is what an API caller would pay for.
+Answering them in this session uses `tau_sidecar.frontier_sheets`:
+
+- Each batch becomes a sheet showing the prompt's fixed part once (verbatim from the batch),
+  then every item's text.
+- One subagent answers each sheet, and the main and alternative-wording sheets go to different
+  subagents.
+- `ingest` validates every answer and appends it with provenance. `produced_by` states that the
+  answers came from batched sheets with no API.
+
+This is not the same as 1,000 independent calls. A model answering 200 items in one context can
+drift, so the reports say how the labels were made. Pending batches and sheets hold item text,
+so they are gitignored.
+**Reason:** the full per-item prompts would cost about 2M session tokens for the same answers.
+
 ## 2026-09-27 · Workbench choices made during lane B, reviewed at merge
 
 - **Isotonic is fitted one-vs-rest on every option's probability, not on max(p).** The shared

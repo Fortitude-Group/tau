@@ -1,0 +1,103 @@
+{
+  "model": "sentence-transformers/all-MiniLM-L6-v2",
+  "revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+  "licence": "Apache-2.0",
+  "params": 22715141,
+  "example": "support-tickets",
+  "train_rows": 8000,
+  "max_epochs": 20,
+  "best_epoch": 10,
+  "best_calibration_accuracy": 0.56,
+  "patience": 3,
+  "batch": 32,
+  "lr": 0.0001,
+  "max_len": 128,
+  "seed": 42,
+  "device": "cuda",
+  "gpu": "NVIDIA GeForce RTX 3080 Ti",
+  "epochs_log": [
+    {
+      "epoch": 1,
+      "avg_loss": 1.2409486694335938,
+      "calibration_accuracy": 0.433,
+      "elapsed_s": 9
+    },
+    {
+      "epoch": 2,
+      "avg_loss": 1.0402862243652344,
+      "calibration_accuracy": 0.468,
+      "elapsed_s": 18
+    },
+    {
+      "epoch": 3,
+      "avg_loss": 0.9838985137939453,
+      "calibration_accuracy": 0.48,
+      "elapsed_s": 26
+    },
+    {
+      "epoch": 4,
+      "avg_loss": 0.8829663162231445,
+      "calibration_accuracy": 0.484,
+      "elapsed_s": 35
+    },
+    {
+      "epoch": 5,
+      "avg_loss": 0.7649472198486328,
+      "calibration_accuracy": 0.49,
+      "elapsed_s": 44
+    },
+    {
+      "epoch": 6,
+      "avg_loss": 0.6290541191101074,
+      "calibration_accuracy": 0.525,
+      "elapsed_s": 53
+    },
+    {
+      "epoch": 7,
+      "avg_loss": 0.5233306846618653,
+      "calibration_accuracy": 0.543,
+      "elapsed_s": 61
+    },
+    {
+      "epoch": 8,
+      "avg_loss": 0.414725248336792,
+      "calibration_accuracy": 0.525,
+      "elapsed_s": 70
+    },
+    {
+      "epoch": 9,
+      "avg_loss": 0.3154662313461304,
+      "calibration_accuracy": 0.535,
+      "elapsed_s": 79
+    },
+    {
+      "epoch": 10,
+      "avg_loss": 0.2792138695716858,
+      "calibration_accuracy": 0.56,
+      "elapsed_s": 87
+    },
+    {
+      "epoch": 11,
+      "avg_loss": 0.21129061126708984,
+      "calibration_accuracy": 0.54,
+      "elapsed_s": 96
+    },
+    {
+      "epoch": 12,
+      "avg_loss": 0.17128042435646057,
+      "calibration_accuracy": 0.549,
+      "elapsed_s": 105
+    },
+    {
+      "epoch": 13,
+      "avg_loss": 0.14604108214378356,
+      "calibration_accuracy": 0.554,
+      "elapsed_s": 113
+    }
+  ],
+  "wall_time_s": 114,
+  "heldout_accuracy_quick_check": 0.556,
+  "torch": "2.11.0+cu128",
+  "python": "3.12.9",
+  "limit": 0
+}

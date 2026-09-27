@@ -1,0 +1,50 @@
+{
+  "dataset_revision": "9d081458ff52",
+  "frontier_model": "claude-opus-5-5",
+  "held_out_items": 1000,
+  "eligible_items": 1000,
+  "alt_subset_items": 200,
+  "pending": {
+    "v1": 1000,
+    "v1-alt": 200
+  },
+  "cached": {
+    "v1": 0,
+    "v1-alt": 0
+  },
+  "pending_batches": [
+    "frontier/pending/v1/batch-001.jsonl",
+    "frontier/pending/v1/batch-002.jsonl",
+    "frontier/pending/v1/batch-003.jsonl",
+    "frontier/pending/v1/batch-004.jsonl",
+    "frontier/pending/v1/batch-005.jsonl",
+    "frontier/pending/v1-alt/batch-001.jsonl"
+  ],
+  "rejected": [],
+  "duplicate_cache_lines": 0,
+  "overridden": 0,
+  "label_noise": {
+    "n": 0,
+    "count": 0
+  },
+  "prompt_agreement": {
+    "n": 0,
+    "count": 0
+  },
+  "chars": {
+    "v1": {
+      "answers": 0,
+      "input_chars": 0,
+      "output_chars": 0
+    },
+    "v1-alt": {
+      "answers": 0,
+      "input_chars": 0,
+      "output_chars": 0
+    }
+  },
+  "provenance_models": [],
+  "provenance_produced_by": [],
+  "provenance_dates": [],
+  "total_pending": 1200
+}

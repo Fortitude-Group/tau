@@ -3,9 +3,12 @@
 The brainstorm cites "a fine-tuned 22M encoder scores 93.2% on Banking77" as third-party data. This
 measures the same kind of model on our splits and hardware, so the claim is tested rather than repeated
 (constitution XIII). Standard recipe: AutoModelForSequenceClassification, AdamW 5e-5, linear warm-up and
-decay, 5 epochs, batch 32, max length 128, seed 42, fp16 on the GPU. It is trained on the example's
-fine-tune split only and writes softmax probabilities for the calibration and held-out splits; the
-Workbench computes every metric from those with the same code it uses for Tau's models.
+decay, batch 32, max length 128, seed 42, fp16 on the GPU, learning rate 1e-4, up to 20 epochs with early
+stopping (patience 3) on calibration-split accuracy; the best epoch's weights are kept. The held-out split is
+never looked at during training. A first run at 5 epochs and 5e-5 stopped with the loss still falling (80.8%
+on Banking77), which would have been a strawman. It is trained on the example's fine-tune split only and
+writes softmax probabilities for the calibration and held-out splits; the Workbench computes every metric
+from those with the same code it uses for Tau's models.
 
 Usage: uv run python -m tau_sidecar.baseline_minilm --example banking77
 Writes examples/<example>/baselines/minilm-l6-<short>.jsonl and a .training.json beside it.
@@ -28,7 +31,7 @@ from .reference import REPO
 MODEL = "sentence-transformers/all-MiniLM-L6-v2"
 REVISION = "1110a243fdf4706b3f48f1d95db1a4f5529b4d41"  # Apache-2.0
 SHORT = {"banking77": "banking77", "support-tickets": "tickets"}
-EPOCHS, BATCH, LR, MAX_LEN, SEED = 5, 32, 5e-5, 128, 42
+EPOCHS, BATCH, LR, MAX_LEN, SEED, PATIENCE = 20, 32, 1e-4, 128, 42, 3
 
 
 def main(argv=None) -> int:
@@ -72,7 +75,17 @@ def main(argv=None) -> int:
     steps = a.epochs * ((len(train) + BATCH - 1) // BATCH)
     sched = get_linear_schedule_with_warmup(opt, int(0.1 * steps), steps)
     scaler = torch.amp.GradScaler("cuda", enabled=a.device == "cuda")
+    def accuracy(rows):
+        model.eval()
+        hits = 0
+        with torch.no_grad():
+            for chunk, enc in batches(rows, shuffle=False):
+                pred = model(**enc).logits.argmax(-1).tolist()
+                hits += sum(int(keys[p] == str(r["label"])) for p, r in zip(pred, chunk))
+        return hits / max(1, len(rows))
+
     t0, log = time.time(), []
+    best_acc, best_epoch, best_state, stale = -1.0, 0, None, 0
     for epoch in range(a.epochs):
         model.train()
         total = 0.0
@@ -88,8 +101,19 @@ def main(argv=None) -> int:
             opt.zero_grad(set_to_none=True)
             sched.step()
             total += loss.item() * len(chunk)
-        log.append({"epoch": epoch + 1, "avg_loss": total / max(1, len(train)), "elapsed_s": round(time.time() - t0)})
-        print(f"epoch {epoch + 1}/{a.epochs} loss {log[-1]['avg_loss']:.4f} {log[-1]['elapsed_s']}s", flush=True)
+        cal_acc = accuracy(splits["calibration"])
+        log.append({"epoch": epoch + 1, "avg_loss": total / max(1, len(train)), "calibration_accuracy": cal_acc,
+                    "elapsed_s": round(time.time() - t0)})
+        print(f"epoch {epoch + 1}/{a.epochs} loss {log[-1]['avg_loss']:.4f} calibration acc {cal_acc:.4f} {log[-1]['elapsed_s']}s", flush=True)
+        if cal_acc > best_acc:
+            best_acc, best_epoch, stale = cal_acc, epoch + 1, 0
+            best_state = {k: v.detach().cpu().clone() for k, v in model.state_dict().items()}
+        else:
+            stale += 1
+            if stale >= PATIENCE:
+                break
+
+    model.load_state_dict(best_state)
 
     model.eval()
     name = f"minilm-l6-{SHORT[a.example]}"
@@ -107,7 +131,8 @@ def main(argv=None) -> int:
                         n += 1
                         correct += int(keys[int(p.argmax())] == str(r["label"]))
     training = {"model": MODEL, "revision": REVISION, "licence": "Apache-2.0", "params": sum(p.numel() for p in model.parameters()),
-                "example": a.example, "train_rows": len(train), "epochs": a.epochs, "batch": BATCH, "lr": LR,
+                "example": a.example, "train_rows": len(train), "max_epochs": a.epochs, "best_epoch": best_epoch,
+                "best_calibration_accuracy": best_acc, "patience": PATIENCE, "batch": BATCH, "lr": LR,
                 "max_len": MAX_LEN, "seed": SEED, "device": a.device,
                 "gpu": torch.cuda.get_device_name(0) if a.device == "cuda" else None, "epochs_log": log,
                 "wall_time_s": round(time.time() - t0), "heldout_accuracy_quick_check": correct / max(1, n),

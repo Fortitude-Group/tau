@@ -55,14 +55,14 @@ Serial by necessity: the end-to-end runs (T060+), because they need all lanes an
 
 ## Phase 5: Lane D (fine-tune + baseline, GPU)
 
-- [ ] T014 `tau_sidecar/finetune_laya.py`: adapt `train_ddp.py` from `NandhaKishorM/laya` @ `4066d5d5…` to one GPU (attribution header; same objective: proper-reward policy gradient + soft CE, AdamW encoder/head learning rates, cosine, fp16 autocast, gradient checkpointing). Train on the finetune split, seed 42. Write the checkpoint in Laya layout to `models/src/<ft-id>/` with `training.json` (data manifest hash, settings, epochs, wall time, GPU).
-- [ ] T015 Extend `export_laya`/`manifest`/`parity` for local fine-tuned ids (source `local-finetune`, no lock entry, cases applied as for laya-en). Export and run parity for `laya-en-ft-banking77` and `laya-en-ft-tickets`. Reports go to `examples/<name>/finetune-parity.json`.
-- [ ] T016 `tau_sidecar/baseline_minilm.py`: fine-tune `sentence-transformers/all-MiniLM-L6-v2` (pinned revision, Apache-2.0) with a classification head on the finetune split. Write held-out and calibration probability JSONL to `examples/<name>/baselines/minilm-l6-<name>.jsonl` with `training.json`.
-- [ ] T017 [P] pytest for the fine-tune data collation and the baseline output format (tiny smoke run on CPU with a few items).
+- [X] T014 `tau_sidecar/finetune_laya.py`: adapt `train_ddp.py` from `NandhaKishorM/laya` @ `4066d5d5…` to one GPU (attribution header; same objective: proper-reward policy gradient + soft CE, AdamW encoder/head learning rates, cosine, fp16 autocast, gradient checkpointing). Train on the finetune split, seed 42. Write the checkpoint in Laya layout to `models/src/<ft-id>/` with `training.json` (data manifest hash, settings, epochs, wall time, GPU).
+- [X] T015 Extend `export_laya`/`manifest`/`parity` for local fine-tuned ids (source `local-finetune`, no lock entry, cases applied as for laya-en). Export and run parity for `laya-en-ft-banking77` and `laya-en-ft-tickets`. Reports go to `examples/<name>/finetune-parity.json`.
+- [X] T016 `tau_sidecar/baseline_minilm.py`: fine-tune `sentence-transformers/all-MiniLM-L6-v2` (pinned revision, Apache-2.0) with a classification head on the finetune split. Write held-out and calibration probability JSONL to `examples/<name>/baselines/minilm-l6-<name>.jsonl` with `training.json`.
+- [X] T017 [P] pytest for the fine-tune data collation and the baseline output format (tiny smoke run on CPU with a few items).
 
 ## Phase 6: Lane E (frontier labelling: session tokens)
 
-- [ ] T050 Export batches for both examples (`tau label`). Report the pending item and character counts. **Give Rob a usage estimate before T051.**
+- [X] T050 Export batches for both examples (`tau label`). Report the pending item and character counts. **Give Rob a usage estimate before T051.**
 - [ ] T051 Answer the `v1` batches via Agent-tool subagents (the session's model), about 200 items per batch, writing `frontier/cache.jsonl`. Validate by re-running `tau label` (0 pending).
 - [ ] T052 Answer the `v1-alt` 200-item subsets likewise.
 - [ ] T053 Commit the caches. Record counts, dates and the session model in DECISIONS.
