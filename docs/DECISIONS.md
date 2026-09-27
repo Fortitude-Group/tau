@@ -15,6 +15,7 @@ in this log before 2026-09-27 refers to the pre-rewrite history. `docs/commit-ma
 hash to its new one.
 **Reason:** personal notes don't belong in a public repository, and a hash-level record keeps every
 report traceable.
+
 ## 2026-09-27 · R3 launch decisions
 
 - **Rob's clarify answers:**
