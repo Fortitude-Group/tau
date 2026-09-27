@@ -47,7 +47,7 @@ public sealed class VonPostProcessor
     /// <param name="stateTokens">State token count (for the temperature map).</param>
     public ChoiceAnswer Choice(IReadOnlyList<string> keys, ReadOnlySpan<float> logits, int stateTokens)
     {
-        var p = Probabilities(logits, stateTokens, keys.Count);
+        var p = ReferenceProbabilities(logits, stateTokens, keys.Count);
         return FromChoiceProbabilities(keys, p, Numerics.ArgMaxTie(logits));
     }
 
@@ -67,7 +67,7 @@ public sealed class VonPostProcessor
     /// <param name="logits">One logit per level.</param>
     /// <param name="stateTokens">State token count.</param>
     public ScoreAnswer Score(IReadOnlyList<string> legend, ReadOnlySpan<float> logits, int stateTokens) =>
-        FromScoreProbabilities(legend, Probabilities(logits, stateTokens, legend.Count));
+        FromScoreProbabilities(legend, ReferenceProbabilities(logits, stateTokens, legend.Count));
 
     /// <summary>Builds the score answer from probabilities (reference or calibrated).</summary>
     /// <param name="legend">Level descriptions.</param>
@@ -98,12 +98,23 @@ public sealed class VonPostProcessor
     /// <param name="logits">[true, false] logits for the real state.</param>
     /// <param name="nullLogits">[true, false] logits for the empty state, or empty when criteria were explicit.</param>
     /// <param name="stateTokens">State token count.</param>
-    public NoulAnswer Noul(ReadOnlySpan<float> logits, ReadOnlySpan<float> nullLogits, int stateTokens)
-    {
-        var z = CorrectNoul(logits, nullLogits);
-        var p = Probabilities(z, stateTokens, 2);
-        return new NoulAnswer { Noul = Numerics.PyRound(Math.Clamp((double)p[0], 0.0, 1.0), 4) };
-    }
+    public NoulAnswer Noul(ReadOnlySpan<float> logits, ReadOnlySpan<float> nullLogits, int stateTokens) =>
+        FromNoulProbabilities(NoulReferenceProbabilities(logits, nullLogits, stateTokens));
+
+    /// <summary>
+    /// The reference noul probabilities, ordered [true, false]: the prior correction, then the effective-temperature
+    /// softmax, unrounded. This is what a Tau calibrator is applied to.
+    /// </summary>
+    /// <param name="logits">[true, false] logits for the real state.</param>
+    /// <param name="nullLogits">[true, false] logits for the empty state, or empty when criteria were explicit.</param>
+    /// <param name="stateTokens">State token count.</param>
+    public float[] NoulReferenceProbabilities(ReadOnlySpan<float> logits, ReadOnlySpan<float> nullLogits, int stateTokens) =>
+        ReferenceProbabilities(CorrectNoul(logits, nullLogits), stateTokens, 2);
+
+    /// <summary>Builds the noul answer from [true, false] probabilities (reference or calibrated): P(true), 4 dp.</summary>
+    /// <param name="p">[true, false] probabilities.</param>
+    public static NoulAnswer FromNoulProbabilities(ReadOnlySpan<float> p) =>
+        new() { Noul = Numerics.PyRound(Math.Clamp((double)p[0], 0.0, 1.0), 4) };
 
     /// <summary>
     /// The reference's zero-shot noul prior correction: with no explicit criteria, subtract
@@ -135,7 +146,15 @@ public sealed class VonPostProcessor
         return Numerics.PyRound(Math.Clamp(c, 0.0, 1.0), 3);
     }
 
-    private float[] Probabilities(ReadOnlySpan<float> logits, int stateTokens, int nOptions)
+    /// <summary>
+    /// The reference probabilities for choice and score (and, after <see cref="CorrectNoul"/>, noul): the float32
+    /// softmax of the logits divided by the effective temperature, unrounded. This is what a raw answer reports
+    /// (before rounding) and what a Tau calibrator is applied to.
+    /// </summary>
+    /// <param name="logits">Unscaled logits, one per option.</param>
+    /// <param name="stateTokens">State token count (for the temperature map).</param>
+    /// <param name="nOptions">Number of options.</param>
+    public float[] ReferenceProbabilities(ReadOnlySpan<float> logits, int stateTokens, int nOptions)
     {
         var t = Math.Max(EffectiveTemperature(logits, stateTokens, nOptions), 1e-4);
         return Numerics.SoftmaxF32(Numerics.Scale(logits, t));

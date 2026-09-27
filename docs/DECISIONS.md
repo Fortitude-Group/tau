@@ -6,6 +6,41 @@ this file records the ones I made so the trail is auditable.
 
 ---
 
+## 2026-09-27 · Calibrators act on the log of the reference probabilities (R2 research R-01, T040–T041)
+
+R1's Runtime applied a `tau.calibrator` v1 file to the model's raw logits, before the
+reference temperature. From R2 a v1 file acts on the model's reference probabilities: the
+unrounded distribution an uncalibrated (`x-tau-raw: true`) answer reports. For Laya that is
+`softmax(logits / T_bucket)`. For Von it is `softmax(logits / T_eff)`, taken after the
+zero-shot prior correction for noul. Each probability is clamped at 1e-6 and logged.
+
+- Temperature gives `softmax(log p / T)`, so T now scales the reference's own temperature
+  rather than replacing it.
+- Isotonic maps each clamped, renormalised `p_i` and renormalises again.
+- Noul vectors keep each family's order: Laya `[1−p, p]`, Von `[p_true, p_false]`. Both
+  methods are symmetric across options, so the order doesn't change P(true). A test pins it.
+- The answer is rebuilt from the calibrated vector with the model's own confidence formula.
+  The choice is the argmax under the existing tie rule.
+- `Calibrator.Apply(rawLogits)` is gone. `Calibrator.ApplyToProbabilities` is the one entry
+  point for the Runtime and the Workbench, and `LogReferenceProbabilities` gives the fitting
+  input. The file schema is unchanged, but any v1 file fitted on logits under R1 must be
+  refitted. None was committed.
+
+The Workbench fits on the endpoint's 4-dp output while the Runtime applies to unrounded
+values. They agree within 1e-4 on the pinned test, but near saturation with T > 1 the rounding
+can be magnified. SC-007's equality test (T031) therefore feeds both paths the same vector.
+**Reason:** the Workbench only sees what the endpoint returns, which is probabilities, not
+logits. Calibrating what both sides can see keeps "calibrated" meaning one thing (XV).
+
+## 2026-09-27 · Support-tickets target error is 20%, Banking77's is 5%
+
+Urgency has five ordinal levels and the labels are synthetic and noisy. At 5% target error
+the threshold stage would almost certainly report "unreachable" for every model, which says
+nothing useful. 20% gives a τ that can be compared across models. If even 20% is
+unreachable, the report says so. That's a finding, not a failure.
+**Reason:** a threshold nobody can meet produces an empty cascade table. The number is in
+`examples/support-tickets/decision.yaml` and can be changed with one edit.
+
 ## 2026-09-27 · CORRECTION: the ticket dataset is synthetic; Rob chose to keep it, labelled as such
 
 Checked against the dataset card before building on it: `Tobi-Bueck/customer-support-tickets` is

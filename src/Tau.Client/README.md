@@ -42,6 +42,13 @@ Console.WriteLine(decision.Confidence);
 respectively. `SystemOneAsync` sends a raw `Tau.Contract.DecisionRequest` for anything the
 typed helpers don't cover.
 
+`SystemOneAsync` also takes per-request headers. Send `x-tau-raw: true` to get the model's
+uncalibrated reference probabilities from a Tau Runtime (other servers ignore the header):
+
+```csharp
+var raw = await client.SystemOneAsync(request, new Dictionary<string, string> { ["x-tau-raw"] = "true" });
+```
+
 ## Enum wire names
 
 An enum member's wire name (the criteria key sent to the server, and the key the response's

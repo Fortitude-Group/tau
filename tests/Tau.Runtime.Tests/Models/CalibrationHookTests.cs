@@ -46,8 +46,52 @@ public sealed class CalibrationHookTests : IDisposable
 
         var cal = JsonNode.Parse(calBody)!["answers"]!["refund"]!["noul"]!.GetValue<double>();
         var raw = JsonNode.Parse(rawBody)!["answers"]!["refund"]!["noul"]!.GetValue<double>();
-        // Raw is the reference's clamped temperature (≈1.98). Tau's T=3 must pull P(true) towards 0.5.
+        // Raw is the reference's answer (its own clamped temperature, ≈1.98). Tau's T=3 on log p_ref must pull
+        // P(true) further towards 0.5.
         Assert.True(Math.Abs(cal - 0.5) < Math.Abs(raw - 0.5), $"calibrated {cal} should be closer to 0.5 than raw {raw}");
+    }
+
+    [Fact]
+    public async Task Calibrated_noul_equals_the_calibrator_applied_to_the_raw_response()
+    {
+        // Format v1 (research R-01): the Runtime applies a calibrator to the reference probabilities a raw answer
+        // reports, so anyone holding the raw response (the Workbench) computes the same calibrated answer. Laya's
+        // noul vector is [1 − p, p]; the only gap is the raw answer's 4-dp rounding.
+        var file = CalibratorFile.CreateTemperature("laya-en", LayaEnHash(), QuestionType.Noul, OptionBucket.Two, 3.0, Fitted);
+        file.Write(Path.Combine(_dir, "laya-en-noul.calibrator.json"));
+        await using var factory = new RealEngineFactory { Settings = new() { ["Tau:CalibratorsDirectory"] = _dir, ["Tau:Models:0"] = "laya-en" } };
+        var client = factory.CreateClient();
+        var q = new JsonObject { ["refund"] = new JsonObject { ["type"] = "noul", ["instructions"] = "Is the customer asking for money back?" } };
+        var body = Http.Request("laya-en", Ticket, q);
+
+        var (_, calBody, _) = await Http.PostAsync(client, body);
+        var (_, rawBody, _) = await Http.PostAsync(client, body, r => r.Headers.Add("x-tau-raw", "true"));
+        var cal = JsonNode.Parse(calBody)!["answers"]!["refund"]!["noul"]!.GetValue<double>();
+        var raw = JsonNode.Parse(rawBody)!["answers"]!["refund"]!["noul"]!.GetValue<double>();
+
+        var expected = new Calibrator(file).ApplyToProbabilities([1 - raw, raw])[1];
+        Assert.Equal(expected, cal, 1e-4);
+    }
+
+    [Fact]
+    public async Task Calibrated_choice_equals_the_calibrator_applied_to_the_raw_response()
+    {
+        // The same equality for a whole choice distribution, option by option.
+        var file = CalibratorFile.CreateTemperature("laya-en", LayaEnHash(), QuestionType.Choice, null, 2.0, Fitted);
+        file.Write(Path.Combine(_dir, "laya-en-choice.calibrator.json"));
+        await using var factory = new RealEngineFactory { Settings = new() { ["Tau:CalibratorsDirectory"] = _dir, ["Tau:Models:0"] = "laya-en" } };
+        var client = factory.CreateClient();
+        var body = Http.Request("laya-en", Ticket, Http.Three);
+
+        var (_, calBody, _) = await Http.PostAsync(client, body);
+        var (_, rawBody, _) = await Http.PostAsync(client, body, r => r.Headers.Add("x-tau-raw", "true"));
+        double[] Probs(string json) => JsonNode.Parse(json)!["answers"]!["queue"]!["probabilities"]!.AsObject()
+            .Select(kv => kv.Value!.GetValue<double>()).ToArray();
+
+        var expected = new Calibrator(file).ApplyToProbabilities(Probs(rawBody));
+        var actual = Probs(calBody);
+        Assert.Equal(expected.Length, actual.Length);
+        for (var i = 0; i < expected.Length; i++) Assert.Equal(expected[i], actual[i], 1e-4);
     }
 
     [Fact]

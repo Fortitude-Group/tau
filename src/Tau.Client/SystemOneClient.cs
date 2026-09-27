@@ -80,9 +80,29 @@ public sealed class SystemOneClient : ISystemOneClient, IDisposable
     }
 
     /// <inheritdoc />
-    public async Task<DecisionResponse> SystemOneAsync(DecisionRequest request, CancellationToken ct = default)
+    public Task<DecisionResponse> SystemOneAsync(DecisionRequest request, CancellationToken ct = default) =>
+        SystemOneAsync(request, null, ct);
+
+    /// <inheritdoc />
+    public async Task<DecisionResponse> SystemOneAsync(
+        DecisionRequest request, IReadOnlyDictionary<string, string>? headers, CancellationToken ct = default)
     {
         ArgumentNullException.ThrowIfNull(request);
+        if (headers is not null)
+        {
+            foreach (var (name, value) in headers)
+            {
+                if (string.IsNullOrWhiteSpace(name))
+                {
+                    throw new ArgumentException("A header name must not be empty.", nameof(headers));
+                }
+
+                if (value is null)
+                {
+                    throw new ArgumentException($"Header '{name}' has a null value.", nameof(headers));
+                }
+            }
+        }
 
         var json = JsonSerializer.Serialize(request, ContractJson.Options);
         var maxAttempts = Math.Max(1, _retryPolicy.MaxAttempts);
@@ -93,6 +113,7 @@ public sealed class SystemOneClient : ISystemOneClient, IDisposable
             {
                 Content = new StringContent(json, Encoding.UTF8, "application/json"),
             };
+            AddHeaders(httpRequest, headers);
 
             using var response = await _http.SendAsync(httpRequest, ct).ConfigureAwait(false);
             var body = await response.Content.ReadAsStringAsync(ct).ConfigureAwait(false);
@@ -118,6 +139,28 @@ public sealed class SystemOneClient : ISystemOneClient, IDisposable
             }
 
             throw new SystemOneHttpException(response.StatusCode, body);
+        }
+    }
+
+    private static void AddHeaders(HttpRequestMessage httpRequest, IReadOnlyDictionary<string, string>? headers)
+    {
+        if (headers is null)
+        {
+            return;
+        }
+
+        foreach (var (name, value) in headers)
+        {
+            try
+            {
+                httpRequest.Headers.Add(name, value);
+            }
+            catch (Exception ex) when (ex is FormatException or InvalidOperationException)
+            {
+                // HttpHeaders reports a malformed name as FormatException and a content header
+                // (Content-Type and the like) as InvalidOperationException; both are caller errors.
+                throw new ArgumentException($"Header '{name}' can't be sent: {ex.Message}", nameof(headers), ex);
+            }
         }
     }
 
