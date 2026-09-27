@@ -13,5 +13,18 @@ licences are their own:
 - ONNX Runtime (Microsoft): MIT License
 - Tokenizers.DotNet (sappho192), wrapping Hugging Face tokenizers: MIT / Apache License 2.0
 
+- OpenTelemetry .NET (OpenTelemetry Authors): Apache License 2.0
+- YamlDotNet (Antoine Aubry and contributors): MIT License
+
+Tau measures its models on two datasets, downloaded by scripts and not
+redistributed here:
+
+- Banking77 (Casanueva et al., 2020, PolyAI): CC BY 4.0
+- Tobi-Bueck/customer-support-tickets: CC BY-NC 4.0 (non-commercial). Only
+  measurements and calibrators are published, never ticket rows.
+
 Model weights aren't redistributed in this repository. Scripts download them
 from their original locations at pinned revisions.
+
+THIRD-PARTY-NOTICES.md lists every package, model and dataset with its
+version, licence and source.

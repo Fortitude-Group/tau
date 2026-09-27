@@ -13,7 +13,7 @@ You need:
 - [PowerShell 7](https://learn.microsoft.com/powershell/scripting/install/installing-powershell) (`pwsh`), which runs the scripts
 - [uv](https://docs.astral.sh/uv/), which runs the one-off ONNX export and fetches its own Python 3.12
 - `curl` and `git`
-- about 10 GB of free disk. Most of it is the export's PyTorch environment.
+- about 12 GB of free disk. Most of it is the export's PyTorch environment and uv's download cache.
 
 Run every command from the repository root, in `pwsh`.
 
@@ -30,7 +30,7 @@ cd tau
 ./scripts/fetch-models.ps1 -Only laya-en
 ```
 
-**3. Export it to ONNX.** The export runs once, on CPU, and writes the model package to `models/laya-en/`. The first run downloads PyTorch and the other Python dependencies (a few GB), so it takes a while.
+**3. Export it to ONNX.** The export runs once, on CPU, and writes the model package to `models/laya-en/`. The first run downloads PyTorch and the other Python dependencies (about 3 GB). After that, the export itself takes a minute or two.
 
 ```powershell
 ./scripts/export.ps1 -Only laya-en

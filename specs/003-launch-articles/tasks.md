@@ -21,12 +21,12 @@
 
 ## Lane B: public readiness
 
-- [ ] T020 [P] [US3] Write `README.md`: what Tau is, a quickstart to a first decision (fetch models, build or run the Runtime, one curl/`Tau.Client` call), the Workbench in one example, links to the reports, licence.
-- [ ] T021 [US3] Follow the README literally on a fresh clone and time it, excluding the model download. Fix every step that failed or confused, and record the timing in `docs/PROGRESS.md`.
-- [ ] T022 [P] [US4] `dotnet pack` `Tau.Client` and `Tau.Workbench`, then install the tool locally from the nupkg and run `tau --help`. Nothing is pushed.
-- [ ] T023 [P] [US4] `docker build` the Runtime image, run it with the models mounted, answer one request, and stop only that container.
-- [ ] T024 [P] [US4] Licence audit: write `THIRD-PARTY-NOTICES.md` (NuGet, Python and model dependencies and datasets, with licences and links) and update `NOTICE` if needed.
-- [ ] T025 [P] [US4] Secret scan over the tree and the full history. Record the result.
+- [x] T020 [P] [US3] Write `README.md`: what Tau is, a quickstart to a first decision (fetch models, build or run the Runtime, one curl/`Tau.Client` call), the Workbench in one example, links to the reports, licence.
+- [x] T021 [US3] Follow the README literally on a fresh clone and time it, excluding the model download. Fix every step that failed or confused, and record the timing in `docs/PROGRESS.md`.
+- [x] T022 [P] [US4] `dotnet pack` `Tau.Client` and `Tau.Workbench`, then install the tool locally from the nupkg and run `tau --help`. Nothing is pushed.
+- [x] T023 [P] [US4] `docker build` the Runtime image, run it with the models mounted, answer one request, and stop only that container.
+- [x] T024 [P] [US4] Licence audit: write `THIRD-PARTY-NOTICES.md` (NuGet, Python and model dependencies and datasets, with licences and links) and update `NOTICE` if needed.
+- [x] T025 [P] [US4] Secret scan over the tree and the full history. Record the result.
 
 ## Lane C: checker and figures
 
