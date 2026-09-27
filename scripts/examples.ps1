@@ -47,6 +47,8 @@ param(
     [string]$Example,
     [int]$Port,
     [switch]$SkipCalibrated,
+    # Re-measure and re-fit even when the stored runs look current (for example after a Runtime change).
+    [switch]$Force,
     [switch]$CheckOnly,
     [int]$RuntimeStartupTimeoutSeconds = 300
 )
@@ -229,7 +231,7 @@ $exitCode = 1
 try {
     # --- 4. raw run ---
     Start-TauRuntime -Label 'raw'
-    $code = Invoke-Tau (@('run', $specRel) + $endpointArgs)
+    $code = Invoke-Tau (@('run', $specRel) + $endpointArgs + $(if ($Force) { @('--force') } else { @() }))
     if ($code -eq 2) {
         Write-Host "tau run is blocked (reason above). If frontier answers are pending, answer the batches under examples/$Example/frontier/pending/ and run this again." -ForegroundColor Yellow
         $exitCode = 2
