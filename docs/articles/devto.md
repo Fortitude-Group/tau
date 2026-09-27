@@ -140,6 +140,6 @@ The repo holds both worked examples with their reports, calibrators, cached fron
 ./scripts/examples.ps1 -Example banking77
 ```
 
-It checks the data and model packages first and prints the exact command for anything missing. Then read [the Banking77 report](https://github.com/Fortitude-Group/tau/blob/master/examples/banking77/report.html) and [the tickets report](https://github.com/Fortitude-Group/tau/blob/master/examples/support-tickets/report.html). They were harder on me than I've been here.
+It checks the data and model packages first and prints the exact command for anything missing. Then read [the Banking77 report](https://fortitude-omnis.group/rd/files/tau/banking77.html) and [the tickets report](https://fortitude-omnis.group/rd/files/tau/support-tickets.html). They were harder on me than I've been here.
 
 The repo is at https://github.com/Fortitude-Group/tau.

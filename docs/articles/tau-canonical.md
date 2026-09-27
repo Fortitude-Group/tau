@@ -79,4 +79,4 @@ The repo holds both worked examples with their reports, calibrators, cached fron
 ./scripts/examples.ps1 -Example banking77
 ```
 
-Read [the Banking77 report](../../examples/banking77/report.html) and [the tickets report](../../examples/support-tickets/report.html) first. They carry the misses in more detail than I've managed here, and they were harder on me than I was.
+Read [the Banking77 report](https://fortitude-omnis.group/rd/files/tau/banking77.html) and [the tickets report](https://fortitude-omnis.group/rd/files/tau/support-tickets.html) first. They carry the misses in more detail than I've managed here, and they were harder on me than I was.
