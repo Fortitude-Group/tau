@@ -40,6 +40,21 @@ Updated after every completed task. On session restart, resume from here without
 - **T021–T022 · Tau.Calibration** (worktree agent, merged). 95 tests pass.
 - **T059 (research part) · Dataset licences.** Banking77 is CC-BY-4.0 (publishable). The best urgency set
   (`Tobi-Bueck/customer-support-tickets`) is CC-BY-NC-4.0. **Put to Rob at the R1 gate.**
+- **T051, T052 (stub-handler part) · Tau.Client** (worktree agent). Typed .NET client for any
+  `/v1/systemone` server: `SystemOneClient` (`HttpClient` ctor and a `(Uri, apiKey?)` convenience
+  ctor, bearer header only when a key is given), raw `SystemOneAsync`, and typed helpers
+  `DecideAsync<TEnum>`/`ScoreAsync`/`NoulAsync` (+ `NoulDetailedAsync`) as `ISystemOneClient`
+  extension methods. Enum wire names resolve `JsonStringEnumMemberNameAttribute` →
+  `EnumMemberAttribute` → member name. Errors: `SystemOneValidationException` (422, parses Tau's
+  shape, keeps the raw body under a `"$"` problem for a non-Tau shape), `SystemOneHttpException`
+  (401/429/529-after-retries/5xx), `SystemOneProtocolException` (unparseable or missing-answer
+  200). `RetryPolicy` gives 429/529 exponential backoff (default 3 attempts, 0.5 s base), never for
+  other 4xx. 41 tests pass against a stub `HttpMessageHandler` (request shape, all three typed
+  helpers, every error path, retry/backoff, cancellation). `dotnet pack src/Tau.Client -c Release -o
+  artifacts/packages` produces `Tau.Client.0.1.0.nupkg`. **Deferred** (blocked, not in scope for this
+  change): T052's `Category=Models` round trip against the in-process Runtime — `Tau.Runtime` is
+  still the empty web template, so there is nothing to round-trip against yet. *Evidence:*
+  `dotnet test tests/Tau.Client.Tests` (41/41), `dotnet build Tau.slnx` (0 warnings, 0 errors).
 
 ## In flight
 
