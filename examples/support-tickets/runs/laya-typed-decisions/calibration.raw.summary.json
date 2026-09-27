@@ -1,0 +1,180 @@
+{
+  "model": "laya-typed-decisions",
+  "split": "calibration",
+  "phase": "raw",
+  "endpoint": "http://localhost:18093/",
+  "endpoint_identity": {
+    "is_tau": true,
+    "description": "Tau Runtime at http://localhost:18093/ (4 model(s) installed)",
+    "models": [
+      {
+        "id": "laya-en",
+        "family": "laya",
+        "revision": "55cf4c4ebb4ebe31b2550e8bdf3bd21b99753851",
+        "onnx_sha256": "866a05b244e47e96820660d18ee050c518c2de0f60c39e2e9a89dfeb056e1eec",
+        "loaded": true
+      },
+      {
+        "id": "laya-typed-decisions",
+        "family": "laya",
+        "revision": "55cf4c4ebb4ebe31b2550e8bdf3bd21b99753851",
+        "onnx_sha256": "2b7a961ac37157d1cfa8105e3283106baf1ba2a5cc30fb3a673253f06aa1e1c5",
+        "loaded": true
+      },
+      {
+        "id": "von-1.2.0",
+        "family": "von",
+        "revision": "5df8185a4f2327ad0a7cd117cc4f701ac557b9ae",
+        "onnx_sha256": "0777bb988636663b770775ae0b4eb961d6fbee176c9bea1d1da823723b1eb3f3",
+        "loaded": true
+      },
+      {
+        "id": "laya-en-ft-tickets",
+        "family": "laya",
+        "revision": "03677900b97d57980f7c525a84031b9a43cb989e",
+        "onnx_sha256": "9079fee9291e35dc4d3ed8c817a8f1592d97e4413ccbae0539b7a0ee6d9c950a",
+        "loaded": true
+      }
+    ],
+    "aliases": [
+      "auto",
+      "tau-auto",
+      "jev-latest",
+      "jev-*"
+    ]
+  },
+  "model_hash": "2b7a961ac37157d1cfa8105e3283106baf1ba2a5cc30fb3a673253f06aa1e1c5",
+  "model_hashes_seen": [
+    "2b7a961ac37157d1cfa8105e3283106baf1ba2a5cc30fb3a673253f06aa1e1c5"
+  ],
+  "calibrators_seen": [
+    "none"
+  ],
+  "items": 1000,
+  "measured": 1000,
+  "failures": 0,
+  "failures_by_status": {},
+  "truncated": 0,
+  "metrics": {
+    "n": 1000,
+    "accuracy": 0.205,
+    "ece": 0.24350509999999992,
+    "brier": 0.8820645681900008,
+    "log_loss": 1.9217328611400486,
+    "mae": 1.275,
+    "reliability": [
+      {
+        "lower": 0,
+        "upper": 0.06666666666666667,
+        "count": 0
+      },
+      {
+        "lower": 0.06666666666666667,
+        "upper": 0.13333333333333333,
+        "count": 0
+      },
+      {
+        "lower": 0.13333333333333333,
+        "upper": 0.2,
+        "count": 0
+      },
+      {
+        "lower": 0.2,
+        "upper": 0.26666666666666666,
+        "count": 0
+      },
+      {
+        "lower": 0.26666666666666666,
+        "upper": 0.3333333333333333,
+        "count": 6,
+        "mean_confidence": 0.32876666666666665,
+        "accuracy": 0
+      },
+      {
+        "lower": 0.3333333333333333,
+        "upper": 0.4,
+        "count": 229,
+        "mean_confidence": 0.3768371179039301,
+        "accuracy": 0.2096069868995633
+      },
+      {
+        "lower": 0.4,
+        "upper": 0.4666666666666667,
+        "count": 415,
+        "mean_confidence": 0.43001349397590344,
+        "accuracy": 0.14457831325301204
+      },
+      {
+        "lower": 0.4666666666666667,
+        "upper": 0.5333333333333333,
+        "count": 252,
+        "mean_confidence": 0.49708293650793645,
+        "accuracy": 0.25
+      },
+      {
+        "lower": 0.5333333333333333,
+        "upper": 0.6,
+        "count": 74,
+        "mean_confidence": 0.5619540540540542,
+        "accuracy": 0.3783783783783784
+      },
+      {
+        "lower": 0.6,
+        "upper": 0.6666666666666666,
+        "count": 23,
+        "mean_confidence": 0.619013043478261,
+        "accuracy": 0.2608695652173913
+      },
+      {
+        "lower": 0.6666666666666666,
+        "upper": 0.7333333333333333,
+        "count": 1,
+        "mean_confidence": 0.6944,
+        "accuracy": 0
+      },
+      {
+        "lower": 0.7333333333333333,
+        "upper": 0.8,
+        "count": 0
+      },
+      {
+        "lower": 0.8,
+        "upper": 0.8666666666666667,
+        "count": 0
+      },
+      {
+        "lower": 0.8666666666666667,
+        "upper": 0.9333333333333333,
+        "count": 0
+      },
+      {
+        "lower": 0.9333333333333333,
+        "upper": 1,
+        "count": 0
+      }
+    ]
+  },
+  "reference": "frontier",
+  "confidence_note": "Confidence for ECE and thresholds is max(p), the probability of the chosen answer, not the contract\u0027s confidence field, which for choice and score questions is not a calibrated probability.",
+  "exclusion_note": "No item failed; the metrics cover every item.",
+  "latency_ms": {
+    "p50": 51.8635,
+    "p95": 64.98654999999998,
+    "mean": 52.82578100000009
+  },
+  "model_ms": {
+    "p50": 50.8565,
+    "p95": 63.38219999999999,
+    "mean": 51.78832800000002
+  },
+  "duration_seconds": 13.2231599,
+  "concurrency": 4,
+  "gpu": {
+    "mean_watts": 343.0073076923078,
+    "samples": 26,
+    "interval_ms": 500,
+    "gpu": "NVIDIA GeForce RTX 3080 Ti",
+    "note": "Mean of nvidia-smi power.draw for the first GPU, sampled while the phase ran. It is whole-GPU power: idle draw and any other work on the GPU are included, so it overstates what the model alone used."
+  },
+  "started_utc": "2026-09-27T13:17:15Z"
+}

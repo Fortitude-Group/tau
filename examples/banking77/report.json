@@ -8291,11 +8291,11 @@
     "Label noise: the frontier model disagrees with gold on 5.8% (58 of 1,000)."
   ],
   "metadata": {
-    "generated_utc": "2026-09-27T13:15:15Z",
+    "generated_utc": "2026-09-27T13:22:02Z",
     "command": "tau report examples/banking77/decision.yaml",
     "tool_version": "0.1.0",
     "git": {
-      "commit": "924f9102ca41dabf6d883415837ef685cea779e3",
+      "commit": "a8b533f3c2e79c3fb9b008e41fed3701dc40c375",
       "dirty": false
     },
     "hardware": {
