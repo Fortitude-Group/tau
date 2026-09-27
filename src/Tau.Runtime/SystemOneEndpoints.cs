@@ -22,6 +22,15 @@ public static class SystemOneEndpoints
             engine.Ready ? Results.Ok(new { status = "ready" }) : Results.Json(new { status = "loading" }, statusCode: 503));
     }
 
+    /// <summary>
+    /// Request header asking for unrounded answers (value <see cref="FullPrecision"/>); echoed on the response when
+    /// honoured. Without it the answers are rounded exactly as the reference runtime rounds them.
+    /// </summary>
+    public const string PrecisionHeader = "x-tau-precision";
+
+    /// <summary>The <see cref="PrecisionHeader"/> value for unrounded answers.</summary>
+    public const string FullPrecision = "full";
+
     private static readonly JsonSerializerOptions DiscoveryJson = new(JsonSerializerDefaults.Web)
     {
         PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
@@ -49,10 +58,12 @@ public static class SystemOneEndpoints
 
         var raw = ctx.Request.Headers.TryGetValue("x-tau-raw", out var rawHeader)
                   && bool.TryParse(rawHeader.ToString(), out var r) && r;
+        var full = ctx.Request.Headers.TryGetValue(PrecisionHeader, out var precisionHeader)
+                   && string.Equals(precisionHeader.ToString().Trim(), FullPrecision, StringComparison.OrdinalIgnoreCase);
         DecisionResult result;
         try
         {
-            result = await engine.DecideAsync(request, new DecisionOptions(raw), ctx.RequestAborted);
+            result = await engine.DecideAsync(request, new DecisionOptions(raw, full), ctx.RequestAborted);
         }
         catch (DecisionRejectedException e)
         {
@@ -67,6 +78,7 @@ public static class SystemOneEndpoints
         h["x-tau-truncated"] = d.Truncated ? "true" : "false";
         h["x-tau-route-reason"] = AsciiHeader(d.RouteReason);
         h["x-tau-model-ms"] = d.ModelMilliseconds.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture);
+        if (full) h[PrecisionHeader] = FullPrecision;
         activity?.SetTag("tau.model", d.ModelId);
         activity?.SetTag("tau.batch_rows", d.BatchRows);
 

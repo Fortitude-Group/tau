@@ -27,6 +27,12 @@ internal sealed class StubSystemOne : HttpMessageHandler
 
     public int MaxDelayMs { get; init; }
 
+    /// <summary>Echo x-tau-precision: full when asked, as a Tau Runtime does (Jev and Kev don't).</summary>
+    public bool HonoursPrecision { get; init; }
+
+    /// <summary>Whether each request asked for x-tau-precision: full.</summary>
+    public ConcurrentBag<bool> PrecisionRequested { get; } = [];
+
     public ConcurrentBag<(string Text, bool Raw)> Calls { get; } = [];
 
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
@@ -53,6 +59,8 @@ internal sealed class StubSystemOne : HttpMessageHandler
         string text = (string)body["state"]!;
         bool raw = request.Headers.TryGetValues("x-tau-raw", out var values) && values.Contains("true");
         Calls.Add((text, raw));
+        bool full = request.Headers.TryGetValues("x-tau-precision", out var precision) && precision.Contains("full");
+        PrecisionRequested.Add(full);
         if (MaxDelayMs > 0)
         {
             await Task.Delay(Math.Abs(text.GetHashCode(StringComparison.Ordinal)) % MaxDelayMs, cancellationToken).ConfigureAwait(false);
@@ -108,6 +116,10 @@ internal sealed class StubSystemOne : HttpMessageHandler
             response.Headers.Add("x-tau-truncated", Truncate ? "true" : "false");
             response.Headers.Add("x-tau-model-hash", Hash);
             response.Headers.Add("x-tau-calibrators", raw ? "none" : Calibrators);
+            if (full && HonoursPrecision)
+            {
+                response.Headers.Add("x-tau-precision", "full");
+            }
         }
 
         return response;

@@ -54,9 +54,17 @@ contract:
 - `x-tau-calibrators`: the calibrators applied, or `none`.
 - `x-tau-truncated`: `true` if the state was cut to fit the model.
 - `x-tau-model-ms`: time spent in the model's forward pass.
+- `x-tau-precision`: `full` when the request asked for unrounded answers (see below); absent otherwise.
 
 Send `x-tau-raw: true` to skip Tau's calibrators and get the model's own post-processing. The Workbench
 uses this to measure the uncalibrated model.
+
+Send `x-tau-precision: full` to get every value in the answers unrounded: the probabilities, and the noul,
+score and confidence values, exactly as the engine computed them before the reference's rounding (4 dp for
+probabilities). The Runtime answers with `x-tau-precision: full` when it honoured the request. Without the
+header the response is rounded exactly as the reference runtimes round it, byte for byte. The Workbench sends
+it on every request, raw and calibrated, so calibrators are fitted on the same values the Runtime applies them
+to. Endpoints that don't know the header (Jev, Kev) ignore it and still round.
 
 ## Other endpoints
 

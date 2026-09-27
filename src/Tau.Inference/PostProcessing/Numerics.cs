@@ -62,6 +62,33 @@ public static class Numerics
     /// <param name="digits">Decimal places.</param>
     public static double PyRound(double x, int digits) => Routing.PyRound.Round(x, digits);
 
+    /// <summary>
+    /// A value as an answer reports it: <see cref="PyRound"/> to <paramref name="digits"/> places, the reference's
+    /// output, or unchanged when the request asked for full precision (<c>x-tau-precision: full</c>).
+    /// </summary>
+    /// <param name="x">Value.</param>
+    /// <param name="digits">Decimal places the reference rounds to.</param>
+    /// <param name="fullPrecision">True to return <paramref name="x"/> unrounded.</param>
+    public static double Report(double x, int digits, bool fullPrecision) => fullPrecision ? x : PyRound(x, digits);
+
+    /// <summary>Widens float32 probabilities to double exactly.</summary>
+    /// <param name="p">Probabilities.</param>
+    public static double[] Widen(ReadOnlySpan<float> p)
+    {
+        var d = new double[p.Length];
+        for (var i = 0; i < d.Length; i++) d[i] = p[i];
+        return d;
+    }
+
+    /// <summary>Narrows double probabilities to float32 (round to nearest).</summary>
+    /// <param name="p">Probabilities.</param>
+    public static float[] Narrow(ReadOnlySpan<double> p)
+    {
+        var f = new float[p.Length];
+        for (var i = 0; i < f.Length; i++) f[i] = (float)p[i];
+        return f;
+    }
+
     /// <summary>Normalised Shannon entropy of <paramref name="p"/> in float32, divided by ln(n) in double.</summary>
     /// <param name="p">Probabilities.</param>
     public static float EntropyF32(ReadOnlySpan<float> p)

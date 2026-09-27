@@ -50,6 +50,9 @@ uncalibrated reference probabilities from a Tau Runtime (other servers ignore th
 var raw = await client.SystemOneAsync(request, new Dictionary<string, string> { ["x-tau-raw"] = "true" });
 ```
 
+Send `x-tau-precision: full` to get every value in the answers unrounded instead of rounded to 4 dp.
+A Tau Runtime echoes the header on the response when it honoured it. `TauHeaders` holds both names.
+
 ## Enum wire names
 
 An enum member's wire name (the criteria key sent to the server, and the key the response's

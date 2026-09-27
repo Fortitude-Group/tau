@@ -45,34 +45,38 @@ public sealed class VonPostProcessor
     /// <param name="keys">Option keys in request order.</param>
     /// <param name="logits">One logit per option.</param>
     /// <param name="stateTokens">State token count (for the temperature map).</param>
-    public ChoiceAnswer Choice(IReadOnlyList<string> keys, ReadOnlySpan<float> logits, int stateTokens)
+    /// <param name="fullPrecision">True to report every value unrounded (<c>x-tau-precision: full</c>).</param>
+    public ChoiceAnswer Choice(IReadOnlyList<string> keys, ReadOnlySpan<float> logits, int stateTokens, bool fullPrecision = false)
     {
         var p = ReferenceProbabilities(logits, stateTokens, keys.Count);
-        return FromChoiceProbabilities(keys, p, Numerics.ArgMaxTie(logits));
+        return FromChoiceProbabilities(keys, Numerics.Widen(p), Numerics.ArgMaxTie(logits), fullPrecision);
     }
 
     /// <summary>Builds the choice answer from probabilities (reference or calibrated).</summary>
     /// <param name="keys">Option keys.</param>
     /// <param name="p">Probabilities.</param>
     /// <param name="argMax">Chosen index (the reference takes it from the unscaled logits).</param>
-    public static ChoiceAnswer FromChoiceProbabilities(IReadOnlyList<string> keys, ReadOnlySpan<float> p, int argMax)
+    /// <param name="fullPrecision">True to report every value unrounded.</param>
+    public static ChoiceAnswer FromChoiceProbabilities(IReadOnlyList<string> keys, ReadOnlySpan<double> p, int argMax, bool fullPrecision = false)
     {
         var probs = new OrderedDictionary<string, double>(keys.Count);
-        for (var i = 0; i < keys.Count; i++) probs[keys[i]] = Numerics.PyRound(p[i], 4);
-        return new ChoiceAnswer { Choice = keys[argMax], Probabilities = probs, Confidence = MarginConfidence(p) };
+        for (var i = 0; i < keys.Count; i++) probs[keys[i]] = Numerics.Report(p[i], 4, fullPrecision);
+        return new ChoiceAnswer { Choice = keys[argMax], Probabilities = probs, Confidence = MarginConfidence(p, fullPrecision) };
     }
 
     /// <summary>Score answer.</summary>
     /// <param name="legend">Level descriptions as Von renders them (index 0 first).</param>
     /// <param name="logits">One logit per level.</param>
     /// <param name="stateTokens">State token count.</param>
-    public ScoreAnswer Score(IReadOnlyList<string> legend, ReadOnlySpan<float> logits, int stateTokens) =>
-        FromScoreProbabilities(legend, ReferenceProbabilities(logits, stateTokens, legend.Count));
+    /// <param name="fullPrecision">True to report every value unrounded.</param>
+    public ScoreAnswer Score(IReadOnlyList<string> legend, ReadOnlySpan<float> logits, int stateTokens, bool fullPrecision = false) =>
+        FromScoreProbabilities(legend, Numerics.Widen(ReferenceProbabilities(logits, stateTokens, legend.Count)), fullPrecision);
 
     /// <summary>Builds the score answer from probabilities (reference or calibrated).</summary>
     /// <param name="legend">Level descriptions.</param>
     /// <param name="p">Probabilities.</param>
-    public static ScoreAnswer FromScoreProbabilities(IReadOnlyList<string> legend, ReadOnlySpan<float> p)
+    /// <param name="fullPrecision">True to report every value unrounded.</param>
+    public static ScoreAnswer FromScoreProbabilities(IReadOnlyList<string> legend, ReadOnlySpan<double> p, bool fullPrecision = false)
     {
         var probs = new OrderedDictionary<string, double>(p.Length);
         var leg = new OrderedDictionary<string, string>(p.Length);
@@ -80,13 +84,13 @@ public sealed class VonPostProcessor
         for (var i = 0; i < p.Length; i++)
         {
             var key = i.ToString(System.Globalization.CultureInfo.InvariantCulture);
-            probs[key] = Numerics.PyRound(p[i], 4);
+            probs[key] = Numerics.Report(p[i], 4, fullPrecision);
             leg[key] = legend[i];
-            weighted += i * (double)p[i];
+            weighted += i * p[i];
         }
         return new ScoreAnswer
         {
-            Score = Numerics.PyRound(weighted, 2), Legend = leg, Probabilities = probs, Confidence = MarginConfidence(p),
+            Score = Numerics.Report(weighted, 2, fullPrecision), Legend = leg, Probabilities = probs, Confidence = MarginConfidence(p, fullPrecision),
         };
     }
 
@@ -98,8 +102,9 @@ public sealed class VonPostProcessor
     /// <param name="logits">[true, false] logits for the real state.</param>
     /// <param name="nullLogits">[true, false] logits for the empty state, or empty when criteria were explicit.</param>
     /// <param name="stateTokens">State token count.</param>
-    public NoulAnswer Noul(ReadOnlySpan<float> logits, ReadOnlySpan<float> nullLogits, int stateTokens) =>
-        FromNoulProbabilities(NoulReferenceProbabilities(logits, nullLogits, stateTokens));
+    /// <param name="fullPrecision">True to report P(true) unrounded.</param>
+    public NoulAnswer Noul(ReadOnlySpan<float> logits, ReadOnlySpan<float> nullLogits, int stateTokens, bool fullPrecision = false) =>
+        FromNoulProbabilities(Numerics.Widen(NoulReferenceProbabilities(logits, nullLogits, stateTokens)), fullPrecision);
 
     /// <summary>
     /// The reference noul probabilities, ordered [true, false]: the prior correction, then the effective-temperature
@@ -113,8 +118,9 @@ public sealed class VonPostProcessor
 
     /// <summary>Builds the noul answer from [true, false] probabilities (reference or calibrated): P(true), 4 dp.</summary>
     /// <param name="p">[true, false] probabilities.</param>
-    public static NoulAnswer FromNoulProbabilities(ReadOnlySpan<float> p) =>
-        new() { Noul = Numerics.PyRound(Math.Clamp((double)p[0], 0.0, 1.0), 4) };
+    /// <param name="fullPrecision">True to report P(true) unrounded.</param>
+    public static NoulAnswer FromNoulProbabilities(ReadOnlySpan<double> p, bool fullPrecision = false) =>
+        new() { Noul = Numerics.Report(Math.Clamp(p[0], 0.0, 1.0), 4, fullPrecision) };
 
     /// <summary>
     /// The reference's zero-shot noul prior correction: with no explicit criteria, subtract
@@ -136,14 +142,15 @@ public sealed class VonPostProcessor
 
     /// <summary>TypeSafe's margin confidence, rounded to 3 dp: (n·p_max − 1)/(n − 1), clamped; 1 when n ≤ 1.</summary>
     /// <param name="p">Probabilities.</param>
-    public static double MarginConfidence(ReadOnlySpan<float> p)
+    /// <param name="fullPrecision">True to return it unrounded.</param>
+    public static double MarginConfidence(ReadOnlySpan<double> p, bool fullPrecision = false)
     {
         var n = p.Length;
         if (n <= 1) return 1.0;
-        double pMax = p[0];
+        var pMax = p[0];
         for (var i = 1; i < n; i++) if (p[i] > pMax) pMax = p[i];
         var c = (n * pMax - 1) / (n - 1);
-        return Numerics.PyRound(Math.Clamp(c, 0.0, 1.0), 3);
+        return Numerics.Report(Math.Clamp(c, 0.0, 1.0), 3, fullPrecision);
     }
 
     /// <summary>

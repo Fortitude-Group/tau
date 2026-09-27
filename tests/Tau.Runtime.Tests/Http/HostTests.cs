@@ -69,6 +69,22 @@ public sealed class HostTests(FakeEngineFactory factory) : IClassFixture<FakeEng
         Assert.False(factory.Engine.Calls[^1].Options.Raw);
     }
 
+    [Fact]
+    public async Task Full_precision_reaches_the_engine_and_is_echoed()
+    {
+        var full = await PostAsync(Valid, r => r.Headers.Add("x-tau-precision", "full"));
+        Assert.True(factory.Engine.Calls[^1].Options.FullPrecision);
+        Assert.Equal("full", full.Headers.GetValues("x-tau-precision").Single());
+
+        var plain = await PostAsync(Valid);
+        Assert.False(factory.Engine.Calls[^1].Options.FullPrecision);
+        Assert.False(plain.Headers.Contains("x-tau-precision"));
+
+        var unknown = await PostAsync(Valid, r => r.Headers.Add("x-tau-precision", "double"));
+        Assert.False(factory.Engine.Calls[^1].Options.FullPrecision);
+        Assert.False(unknown.Headers.Contains("x-tau-precision"));
+    }
+
     [Theory]
     [InlineData("{not json", "$")]
     [InlineData("""{"state":"x","questions":{"q":{"type":"noul","instructions":"y"}}}""", "model")]
