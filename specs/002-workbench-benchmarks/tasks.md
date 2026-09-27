@@ -34,9 +34,9 @@ Serial by necessity: the end-to-end runs (T060+), because they need all lanes an
 
 ## Phase 3: Lane C (R1 adjustments)
 
-- [ ] T040 [P] Engine: apply calibrators to **log reference probabilities** (research R-01). Laya: the reference probability vector. Von: reference probabilities. Noul: `[1−p, p]` (Laya) or `[p_true, p_false]` (Von), mapped back. Clamp at 1e-6. Update `CalibrationHookTests` expectations if the mechanism changes a number.
-- [ ] T041 [P] `Tau.Calibration`: a `Calibrator.ApplyToProbabilities(double[] p)` helper (log, clamp, then the existing apply), used by both the Engine and the Workbench. Unit tests.
-- [ ] T042 [P] `Tau.Client`: per-request headers (`SystemOneAsync(request, headers, ct)`) for `x-tau-raw`. Tests.
+- [X] T040 [P] Engine: apply calibrators to **log reference probabilities** (research R-01). Laya: the reference probability vector. Von: reference probabilities. Noul: `[1−p, p]` (Laya) or `[p_true, p_false]` (Von), mapped back. Clamp at 1e-6. Update `CalibrationHookTests` expectations if the mechanism changes a number.
+- [X] T041 [P] `Tau.Calibration`: a `Calibrator.ApplyToProbabilities(double[] p)` helper (log, clamp, then the existing apply), used by both the Engine and the Workbench. Unit tests.
+- [X] T042 [P] `Tau.Client`: per-request headers (`SystemOneAsync(request, headers, ct)`) for `x-tau-raw`. Tests.
 
 ## Phase 4: Lane B (Workbench core)
 

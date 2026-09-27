@@ -2,9 +2,16 @@
 
 Updated after every completed task. On session restart, resume from here without asking.
 
-**Current release:** R1 (Runtime core + ONNX parity), branch `001-runtime-onnx-parity`, merged to `master`.
-**Gate status:** **R1 GATE REACHED. Waiting for Rob's "go" before R2.**
-**Task list:** `specs/001-runtime-onnx-parity/tasks.md` (63/63; T038 carries a recorded deviation).
+**Current release:** R2 (Workbench + benchmarks), branch `002-workbench-benchmarks`. R1 is merged to `master`.
+**Gate status:** R1 passed (Rob's "go", 2026-09-27). R2 in progress.
+**Task list:** `specs/002-workbench-benchmarks/tasks.md`.
+
+## R2 log
+
+- Spec, clarify (3 answers), plan, research R-01..R-09, tasks T001–T066 in lanes A–E.
+- Lane D code: `finetune_laya.py`, the manifest/parity changes for local fine-tunes, and `baseline_minilm.py` are committed. They haven't been run yet because they need lane A's splits.
+- Lane C (T040–T042) is merged. Calibrators now act on the log reference probabilities (DECISIONS). The client has per-request headers. Tests: Calibration 107, Client 54, Runtime 43, Contract 113, Inference 1,507 (+3 skipped), model parity 12/12, all green in the agent's worktree. After the merge, the full non-model suite passes on the branch.
+- Still running: lane A (data), lane B (Workbench core + CLI).
 
 ---
 
