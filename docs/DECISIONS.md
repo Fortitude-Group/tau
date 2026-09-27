@@ -6,6 +6,25 @@ this file records the ones I made so the trail is auditable.
 
 ---
 
+## 2026-09-27 · Report summary quotes the best cascade, and the baseline is cascaded too
+
+- **The bug:** the summary quoted the first model's cascade (Von, 4.5% local), which buried the
+  fine-tuned Laya's 73.6%. I repeated that wrong headline to Rob before checking the cascade table.
+- **The fix:** the summary now quotes the cascade that keeps the most local (ties on blended
+  rate, then spec order). It names the least-local model for spread, or says "N models tie"
+  when the shares are equal at the displayed precision.
+- **The MiniLM baseline now goes through the same threshold and cascade code,** with τ picked on
+  its calibration lines only.
+  - Its rows say it wasn't served through Tau, so local latency and energy weren't measured.
+  - A baseline that keeps more local at blended accuracy at least as high is a miss. On Banking77
+    it is: 94.7% local against 73.6%.
+- **Cost change:** with no GPU power sample, the cascade £ now covers the frontier calls only
+  and says so, instead of refusing the figure. Both examples' Tau models had power samples, so
+  their figures are unchanged.
+**Reason:** Rob asked whether the work was worth finishing. The answer depended on a number the
+summary hid. A report whose summary can mislead its own author is a defect, not a style
+choice.
+
 ## 2026-09-27 · R1 latency re-run on the quiet machine (T063)
 
 - **First attempt failed.** `bench.ps1` loads every package in `models/`, so it picked up the two

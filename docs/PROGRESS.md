@@ -56,7 +56,18 @@ Reference machine: RTX 3080 Ti 12 GB, i9-11900K, CUDA FP32. Every number below i
 | Tickets (vs frontier) | laya-en-ft-tickets | 27.7% | 0.255 → 0.074 |
 | Tickets (vs frontier) | MiniLM-L6 baseline | 27.4% | calibrated 0.015 |
 
-Cascade: at a 5% target error on Banking77, only Von keeps any decisions local (4.5%). The blended result is 94.2% accurate, the same as Claude alone, at an estimated £3,723 against £3,898 per million decisions. On the tickets, at a 20% target disagreement, the local share is about 0.1%. Neither dataset gives a local model a meaningful share at these targets. That is the honest headline.
+Cascade (τ picked on the calibration split, judged on held-out, £ = list-price estimates):
+
+| Dataset | Model | Kept local | Blended | Frontier only | £ per million (cascade vs frontier) |
+| --- | --- | --- | --- | --- | --- |
+| Banking77, 5% target error | laya-en-ft-banking77 | **73.6%** | 93.2% | 94.2% | **£1,031** vs £3,898 |
+| Banking77 | von-1.2.0 | 4.5% | 94.2% | 94.2% | £3,723 vs £3,898 |
+| Banking77 | laya-en | no τ reaches 5% | | | |
+| Banking77 | MiniLM-L6 baseline (not served via Tau, no energy) | **94.7%** | 94.2% | 94.2% | £207 vs £3,898 |
+| Tickets, 20% target disagreement | every Tau model | 0.1% | 100% agreement (by construction) | | £996 vs £997 |
+| Tickets | MiniLM-L6 baseline | 0.4% | 99.7% | | £993 vs £997 |
+
+The headline: a fine-tuned Laya keeps about three-quarters of Banking77 decisions local at one point below the frontier's accuracy, which cuts the estimated bill by about 74%. A fine-tuned 22.7M MiniLM does better still. On urgency, a judgement call, nothing local stands in for the frontier. An earlier version of this paragraph said "only Von keeps any decisions local". It was copied from a report summary that quoted the first model's cascade rather than the best one. The summary is fixed (DECISIONS).
 
 ---
 
