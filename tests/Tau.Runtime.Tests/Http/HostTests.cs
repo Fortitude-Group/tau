@@ -10,7 +10,7 @@ namespace Tau.Runtime.Tests.Http;
 /// <summary>The HTTP surface, with a fake engine: contract shape, 422s, headers, discovery, health and /metrics.</summary>
 public sealed class HostTests(FakeEngineFactory factory) : IClassFixture<FakeEngineFactory>
 {
-    private static readonly JsonSchema ResponseSchema = JsonSchema.FromText(ContractSchemas.ResponseSchemaText);
+    private static JsonSchema ResponseSchema => TestSchemas.Response;
 
     private const string Valid = """
         {"model":"jev-latest","state":"I was charged twice.","questions":{

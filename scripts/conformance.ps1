@@ -20,7 +20,7 @@
 #>
 [CmdletBinding()]
 param(
-    [int]$TauPort = 8080,
+    [int]$TauPort = 8088,
     [int]$PeerPort = 8009,
     [string]$OutDir = 'reports/r1',
     [string]$RequestsDir = 'tests/conformance/requests',

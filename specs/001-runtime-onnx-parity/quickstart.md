@@ -47,7 +47,7 @@ $body = @{ model = "jev-latest"; state = "I was charged twice for my order and I
     queue   = @{ type = "choice"; instructions = "Which team owns this?"; criteria = @{ billing = "refunds, charges"; tech = "outages, bugs" } }
     urgency = @{ type = "score"; instructions = "How urgent?"; criteria = @("low", "medium", "high", "critical") }
     churn   = @{ type = "noul"; instructions = "Is the customer threatening to leave?" } } } | ConvertTo-Json -Depth 6
-Invoke-RestMethod -Method Post -Uri http://localhost:8080/v1/systemone -Body $body -ContentType application/json
+Invoke-RestMethod -Method Post -Uri http://localhost:8088/v1/systemone -Body $body -ContentType application/json
 ```
 
 Expected: `model = "laya-en"`, the three typed answers in contract shape, and HTTP 422 if you change

@@ -4,7 +4,7 @@
 #   docker build -f src/Tau.Runtime/Dockerfile --build-arg FLAVOUR=cuda -t tau-runtime:r1-cuda .  # CUDA
 #
 # Models aren't baked in (they're multi-GB and pinned by hash). Mount them:
-#   docker run --rm -p 8080:8080 -v ${PWD}/models:/models tau-runtime:r1-local
+#   docker run --rm -p 8088:8080 -v ${PWD}/models:/models tau-runtime:r1-local
 # For CUDA add `--gpus all` and build with FLAVOUR=cuda (the base image then carries CUDA 12 + cuDNN 9).
 
 ARG FLAVOUR=cpu
