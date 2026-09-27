@@ -6,6 +6,29 @@ this file records the ones I made so the trail is auditable.
 
 ---
 
+## 2026-09-27 · Performance findings before the R1 benchmark (measured, not assumed)
+
+- **CUDA is compute-bound in FP32.** Graph optimisation (basic against all), deterministic compute on or
+  off, and memory-pattern planning each change latency by under 2% on the 3080 Ti. Latency scales linearly
+  with questions (laya-en: about 18 / 50 / 108 ms for 1 / 4 / 10), i.e. about 11 ms per question. Laya's
+  published 7.2 ms/question on a T4 is reduced precision (bf16/fp16), so the real speed lever is an FP16
+  export. That changes precision, which is outside R1's FP32 parity definition. **Known gap, carried
+  forward.**
+- **First-seen input shapes cost more on CUDA.** The first request is about 150 ms (cold). New lengths
+  afterwards run about 1.7x the median at p95 (Von alone, q=10: p50 126 ms, p95 215 ms).
+- **With all four FP32 models resident (about 9.5 GB of the 12 GB card), first-seen shapes can stall for
+  seconds.** Von, varied inputs, q=10: p95 3,730 ms with all four loaded, against 215 ms with Von alone.
+  The mechanism is VRAM pressure (checked by that one-model comparison). **Decision:** the benchmark reports
+  the shipped default (all four resident) and says so. The varied-input pass exists to expose this, and the
+  gate report states the one-model comparison. Candidate fixes for later (not R1): shape bucketing with
+  warm-up, FP16 weights (half the VRAM), or serving fewer models per card.
+- **CPU:** one intra-op thread per physical core (8) is 18% faster than the old fixed 4. 16 was slower. That's
+  now the default. CPU FP32 is slow in absolute terms (laya-en q=1 about 0.7 s).
+- **Deviation from T038:** the plan promised an LRU cap on resident models (`MaxLoaded`). It was never
+  implemented, and the option did nothing. **Decision:** removed the dead option, not half-built. You limit
+  VRAM by listing models in `Tau:Models`. Eviction under load (disposing a session with requests in
+  flight) isn't worth its complexity for a self-hosted R&D runtime (Principle V).
+
 ## 2026-09-27 · An explicit `null` for an optional noul `criteria` means absent
 
 Found by the client round-trip test against the real Runtime. `Tau.Client` serialised a missing noul
