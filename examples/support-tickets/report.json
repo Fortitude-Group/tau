@@ -12,7 +12,7 @@
     "4"
   ],
   "target_error": 0.2,
-  "summary": "This report measures how far 4 model(s) can be trusted on \u0022How urgent is this customer support ticket?\u0022, using synthetic tickets data (1,000 held-out items). Reference: claude-opus-5-5\u0027s answers, not the dataset\u0027s labels. The question here is whether a local model can stand in for the frontier call, and whether its confidence says when, so every rate below is agreement with the frontier model. Out of the box, laya-en agrees with claude-opus-5-5 on 23.2% of held-out items with a calibration error (ECE) of 0.273; after calibration its ECE is 0.148, 46.0% lower, short of the 50% goal. At a 20.0% target disagreement, laya-en keeps 0.1% of decisions local; the cascade\u0027s served answers agree with claude-opus-5-5 on 100.0% (the frontier alone agrees with itself by construction), at an estimated \u00A3996 per million decisions against \u00A3997 (list prices, 2026-09-27). The dataset\u0027s own labels are reported as a finding, not used: claude-opus-5-5 agrees with them on only 23.8% of 1,000 items, and a secondary table shows every model against them.",
+  "summary": "This report measures how far 4 model(s) can be trusted on \u0022How urgent is this customer support ticket?\u0022, using synthetic tickets data (1,000 held-out items). Reference: claude-opus-5-5\u0027s answers, not the dataset\u0027s labels. The question here is whether a local model can stand in for the frontier call, and whether its confidence says when, so every rate below is agreement with the frontier model. Out of the box, laya-en agrees with claude-opus-5-5 on 23.2% of held-out items with a calibration error (ECE) of 0.273; after calibration its ECE is 0.148, 46.0% lower, short of the 50% goal. At a 20.0% target disagreement, laya-en keeps 0.1% of decisions local, the most of any model (laya-typed-decisions, the least, keeps 0.1%); the cascade\u0027s served answers agree with claude-opus-5-5 on 100.0% (the frontier alone agrees with itself by construction), at an estimated \u00A3996 per million decisions against \u00A3997 (list prices, 2026-09-27). The dataset\u0027s own labels are reported as a finding, not used: claude-opus-5-5 agrees with them on only 23.8% of 1,000 items, and a secondary table shows every model against them.",
   "reference": "frontier",
   "dataset_labels": {
     "caption": "The dataset\u0027s labels are synthetic and close to arbitrary; the frontier model agrees with them on 23.8%. That is no better than the 41.0% a model would get by always giving the most common label. This table is a secondary view: every other figure in the report is agreement with the frontier model, because this example asks whether a local model can stand in for the frontier call.",
@@ -9214,18 +9214,18 @@
         "rate": 1
       },
       "overrides_used": 0,
-      "local_latency_p50_ms": 52.2845,
-      "latency_source": "raw",
+      "local_latency_p50_ms": 53.204,
+      "latency_source": "calibrated",
       "frontier_latency_note": "Frontier latency is not measured: no API call was made, so the latency mix covers the local side only.",
       "cost": {
         "estimate": true,
         "input_tokens_per_decision": 328.709875,
         "output_tokens_per_decision": 0.325,
         "token_basis_answers": 1000,
-        "gpu_mean_watts": 344.8281481481481,
-        "seconds_per_decision": 0.0133347389,
-        "local_kwh_per_decision": 1.2772759224794648E-06,
-        "local_gbp_per_decision": 3.3617902279659514E-07,
+        "gpu_mean_watts": 345.2603703703703,
+        "seconds_per_decision": 0.0135546026,
+        "local_kwh_per_decision": 1.2999630871942177E-06,
+        "local_gbp_per_decision": 3.421502845495181E-07,
         "share_escalated": 0.999,
         "rows": [
           {
@@ -9239,9 +9239,9 @@
             "frontier_only_usd_per_million": 1321.3395,
             "frontier_only_gbp_per1k": 0.9970563599100001,
             "frontier_only_gbp_per_million": 997.0563599100001,
-            "cascade_gbp_per1k": 0.9963954825728868,
-            "cascade_gbp_per_million": 996.3954825728867,
-            "saving_gbp_per_million": 0.6608773371133154
+            "cascade_gbp_per1k": 0.9964014538346396,
+            "cascade_gbp_per_million": 996.4014538346396,
+            "saving_gbp_per_million": 0.6549060753604629
           },
           {
             "name": "claude-opus-5-5-batch",
@@ -9254,9 +9254,9 @@
             "frontier_only_usd_per_million": 660.66975,
             "frontier_only_gbp_per1k": 0.49852817995500004,
             "frontier_only_gbp_per_million": 498.52817995500004,
-            "cascade_gbp_per1k": 0.49836583079784164,
-            "cascade_gbp_per_million": 498.3658307978416,
-            "saving_gbp_per_million": 0.1623491571584295
+            "cascade_gbp_per1k": 0.4983718020595946,
+            "cascade_gbp_per_million": 498.3718020595946,
+            "saving_gbp_per_million": 0.1563778954054686
           },
           {
             "name": "claude-sonnet-5",
@@ -9269,9 +9269,9 @@
             "frontier_only_usd_per_million": 660.66975,
             "frontier_only_gbp_per1k": 0.49852817995500004,
             "frontier_only_gbp_per_million": 498.52817995500004,
-            "cascade_gbp_per1k": 0.49836583079784164,
-            "cascade_gbp_per_million": 498.3658307978416,
-            "saving_gbp_per_million": 0.1623491571584295
+            "cascade_gbp_per1k": 0.4983718020595946,
+            "cascade_gbp_per_million": 498.3718020595946,
+            "saving_gbp_per_million": 0.1563778954054686
           },
           {
             "name": "claude-haiku-4-5",
@@ -9284,9 +9284,9 @@
             "frontier_only_usd_per_million": 330.334875,
             "frontier_only_gbp_per1k": 0.24926408997750002,
             "frontier_only_gbp_per_million": 249.26408997750002,
-            "cascade_gbp_per1k": 0.24935100491031914,
-            "cascade_gbp_per_million": 249.35100491031915,
-            "saving_gbp_per_million": -0.08691493281912185
+            "cascade_gbp_per1k": 0.24935697617207206,
+            "cascade_gbp_per_million": 249.35697617207205,
+            "saving_gbp_per_million": -0.09288619457202855
           }
         ],
         "basis": [
@@ -9294,7 +9294,7 @@
           "List prices in US dollars per million tokens, checked 2026-09-27 (https://platform.claude.com/docs/en/about-claude/pricing (checked 2026-09-27)).",
           "USD to GBP at 0.75458 (ECB euro foreign exchange reference rates, 2026-09-25).",
           "Frontier answers for this benchmark came from an interactive Claude Code session, not the API; the costs price what the same work would cost through the API.",
-          "Local energy: 344.8 W mean whole-GPU power \u00D7 0.01333 s per decision (phase duration / items) = 1.277e-6 kWh per decision, at \u00A30.2632 per kWh (https://www.ofgem.gov.uk/news/changes-energy-price-cap-between-1-october-and-31-december-2026). Hardware purchase and depreciation are excluded.",
+          "Local energy: 345.3 W mean whole-GPU power \u00D7 0.01355 s per decision (phase duration / items) = 1.300e-6 kWh per decision, at \u00A30.2632 per kWh (https://www.ofgem.gov.uk/news/changes-energy-price-cap-between-1-october-and-31-december-2026). Hardware purchase and depreciation are excluded.",
           "Cascade: every decision runs locally, and 99.9% are also sent to the frontier model."
         ]
       }
@@ -9328,18 +9328,18 @@
         "rate": 1
       },
       "overrides_used": 0,
-      "local_latency_p50_ms": 52.41,
-      "latency_source": "raw",
+      "local_latency_p50_ms": 53.513999999999996,
+      "latency_source": "calibrated",
       "frontier_latency_note": "Frontier latency is not measured: no API call was made, so the latency mix covers the local side only.",
       "cost": {
         "estimate": true,
         "input_tokens_per_decision": 328.709875,
         "output_tokens_per_decision": 0.325,
         "token_basis_answers": 1000,
-        "gpu_mean_watts": 345.8596296296296,
-        "seconds_per_decision": 0.0134435816,
-        "local_kwh_per_decision": 1.2915533758532508E-06,
-        "local_gbp_per_decision": 3.399368485245756E-07,
+        "gpu_mean_watts": 345.0737037037036,
+        "seconds_per_decision": 0.0137225666,
+        "local_kwh_per_decision": 1.3153602447174275E-06,
+        "local_gbp_per_decision": 3.462028164096269E-07,
         "share_escalated": 0.999,
         "rows": [
           {
@@ -9353,9 +9353,9 @@
             "frontier_only_usd_per_million": 1321.3395,
             "frontier_only_gbp_per1k": 0.9970563599100001,
             "frontier_only_gbp_per_million": 997.0563599100001,
-            "cascade_gbp_per1k": 0.9963992403986147,
-            "cascade_gbp_per_million": 996.3992403986147,
-            "saving_gbp_per_million": 0.6571195113854247
+            "cascade_gbp_per1k": 0.9964055063664996,
+            "cascade_gbp_per_million": 996.4055063664996,
+            "saving_gbp_per_million": 0.6508535435004615
           },
           {
             "name": "claude-opus-5-5-batch",
@@ -9368,9 +9368,9 @@
             "frontier_only_usd_per_million": 660.66975,
             "frontier_only_gbp_per1k": 0.49852817995500004,
             "frontier_only_gbp_per_million": 498.52817995500004,
-            "cascade_gbp_per1k": 0.4983695886235696,
-            "cascade_gbp_per_million": 498.3695886235696,
-            "saving_gbp_per_million": 0.15859133143043044
+            "cascade_gbp_per1k": 0.49837585459145467,
+            "cascade_gbp_per_million": 498.3758545914547,
+            "saving_gbp_per_million": 0.15232536354535878
           },
           {
             "name": "claude-sonnet-5",
@@ -9383,9 +9383,9 @@
             "frontier_only_usd_per_million": 660.66975,
             "frontier_only_gbp_per1k": 0.49852817995500004,
             "frontier_only_gbp_per_million": 498.52817995500004,
-            "cascade_gbp_per1k": 0.4983695886235696,
-            "cascade_gbp_per_million": 498.3695886235696,
-            "saving_gbp_per_million": 0.15859133143043044
+            "cascade_gbp_per1k": 0.49837585459145467,
+            "cascade_gbp_per_million": 498.3758545914547,
+            "saving_gbp_per_million": 0.15232536354535878
           },
           {
             "name": "claude-haiku-4-5",
@@ -9398,9 +9398,9 @@
             "frontier_only_usd_per_million": 330.334875,
             "frontier_only_gbp_per1k": 0.24926408997750002,
             "frontier_only_gbp_per_million": 249.26408997750002,
-            "cascade_gbp_per1k": 0.2493547627360471,
-            "cascade_gbp_per_million": 249.3547627360471,
-            "saving_gbp_per_million": -0.09067275854706672
+            "cascade_gbp_per1k": 0.24936102870393217,
+            "cascade_gbp_per_million": 249.36102870393216,
+            "saving_gbp_per_million": -0.09693872643213837
           }
         ],
         "basis": [
@@ -9408,7 +9408,7 @@
           "List prices in US dollars per million tokens, checked 2026-09-27 (https://platform.claude.com/docs/en/about-claude/pricing (checked 2026-09-27)).",
           "USD to GBP at 0.75458 (ECB euro foreign exchange reference rates, 2026-09-25).",
           "Frontier answers for this benchmark came from an interactive Claude Code session, not the API; the costs price what the same work would cost through the API.",
-          "Local energy: 345.9 W mean whole-GPU power \u00D7 0.01344 s per decision (phase duration / items) = 1.292e-6 kWh per decision, at \u00A30.2632 per kWh (https://www.ofgem.gov.uk/news/changes-energy-price-cap-between-1-october-and-31-december-2026). Hardware purchase and depreciation are excluded.",
+          "Local energy: 345.1 W mean whole-GPU power \u00D7 0.01372 s per decision (phase duration / items) = 1.315e-6 kWh per decision, at \u00A30.2632 per kWh (https://www.ofgem.gov.uk/news/changes-energy-price-cap-between-1-october-and-31-december-2026). Hardware purchase and depreciation are excluded.",
           "Cascade: every decision runs locally, and 99.9% are also sent to the frontier model."
         ]
       }
@@ -9442,18 +9442,18 @@
         "rate": 0.999
       },
       "overrides_used": 0,
-      "local_latency_p50_ms": 43.923,
-      "latency_source": "raw",
+      "local_latency_p50_ms": 44.9545,
+      "latency_source": "calibrated",
       "frontier_latency_note": "Frontier latency is not measured: no API call was made, so the latency mix covers the local side only.",
       "cost": {
         "estimate": true,
         "input_tokens_per_decision": 328.709875,
         "output_tokens_per_decision": 0.325,
         "token_basis_answers": 1000,
-        "gpu_mean_watts": 346.1860869565217,
-        "seconds_per_decision": 0.0112630335,
-        "local_kwh_per_decision": 1.0830848596181158E-06,
-        "local_gbp_per_decision": 2.850679350514881E-07,
+        "gpu_mean_watts": 346.4326086956522,
+        "seconds_per_decision": 0.0114183451,
+        "local_kwh_per_decision": 1.0988019666611716E-06,
+        "local_gbp_per_decision": 2.8920467762522037E-07,
         "share_escalated": 0.999,
         "rows": [
           {
@@ -9467,9 +9467,9 @@
             "frontier_only_usd_per_million": 1321.3395,
             "frontier_only_gbp_per1k": 0.9970563599100001,
             "frontier_only_gbp_per_million": 997.0563599100001,
-            "cascade_gbp_per1k": 0.9963443714851417,
-            "cascade_gbp_per_million": 996.3443714851417,
-            "saving_gbp_per_million": 0.7119884248584819
+            "cascade_gbp_per1k": 0.9963485082277154,
+            "cascade_gbp_per_million": 996.3485082277153,
+            "saving_gbp_per_million": 0.7078516822847745
           },
           {
             "name": "claude-opus-5-5-batch",
@@ -9482,9 +9482,9 @@
             "frontier_only_usd_per_million": 660.66975,
             "frontier_only_gbp_per1k": 0.49852817995500004,
             "frontier_only_gbp_per_million": 498.52817995500004,
-            "cascade_gbp_per1k": 0.49831471971009655,
-            "cascade_gbp_per_million": 498.31471971009654,
-            "saving_gbp_per_million": 0.21346024490348764
+            "cascade_gbp_per1k": 0.49831885645267027,
+            "cascade_gbp_per_million": 498.3188564526703,
+            "saving_gbp_per_million": 0.20932350232978017
           },
           {
             "name": "claude-sonnet-5",
@@ -9497,9 +9497,9 @@
             "frontier_only_usd_per_million": 660.66975,
             "frontier_only_gbp_per1k": 0.49852817995500004,
             "frontier_only_gbp_per_million": 498.52817995500004,
-            "cascade_gbp_per1k": 0.49831471971009655,
-            "cascade_gbp_per_million": 498.31471971009654,
-            "saving_gbp_per_million": 0.21346024490348764
+            "cascade_gbp_per1k": 0.49831885645267027,
+            "cascade_gbp_per_million": 498.3188564526703,
+            "saving_gbp_per_million": 0.20932350232978017
           },
           {
             "name": "claude-haiku-4-5",
@@ -9512,9 +9512,9 @@
             "frontier_only_usd_per_million": 330.334875,
             "frontier_only_gbp_per1k": 0.24926408997750002,
             "frontier_only_gbp_per_million": 249.26408997750002,
-            "cascade_gbp_per1k": 0.24929989382257403,
-            "cascade_gbp_per_million": 249.29989382257403,
-            "saving_gbp_per_million": -0.03580384507400952
+            "cascade_gbp_per1k": 0.24930403056514774,
+            "cascade_gbp_per_million": 249.30403056514774,
+            "saving_gbp_per_million": -0.03994058764771698
           }
         ],
         "basis": [
@@ -9522,7 +9522,7 @@
           "List prices in US dollars per million tokens, checked 2026-09-27 (https://platform.claude.com/docs/en/about-claude/pricing (checked 2026-09-27)).",
           "USD to GBP at 0.75458 (ECB euro foreign exchange reference rates, 2026-09-25).",
           "Frontier answers for this benchmark came from an interactive Claude Code session, not the API; the costs price what the same work would cost through the API.",
-          "Local energy: 346.2 W mean whole-GPU power \u00D7 0.01126 s per decision (phase duration / items) = 1.083e-6 kWh per decision, at \u00A30.2632 per kWh (https://www.ofgem.gov.uk/news/changes-energy-price-cap-between-1-october-and-31-december-2026). Hardware purchase and depreciation are excluded.",
+          "Local energy: 346.4 W mean whole-GPU power \u00D7 0.01142 s per decision (phase duration / items) = 1.099e-6 kWh per decision, at \u00A30.2632 per kWh (https://www.ofgem.gov.uk/news/changes-energy-price-cap-between-1-october-and-31-december-2026). Hardware purchase and depreciation are excluded.",
           "Cascade: every decision runs locally, and 99.9% are also sent to the frontier model."
         ]
       }
@@ -9549,18 +9549,18 @@
       },
       "frontier_only_note": "Frontier only agrees with the frontier model on 100% of items by construction: its answers are the reference, so this is not a result.",
       "overrides_used": 0,
-      "local_latency_p50_ms": 52.8465,
-      "latency_source": "raw",
+      "local_latency_p50_ms": 50.825500000000005,
+      "latency_source": "calibrated",
       "frontier_latency_note": "Frontier latency is not measured: no API call was made, so the latency mix covers the local side only.",
       "cost": {
         "estimate": true,
         "input_tokens_per_decision": 328.709875,
         "output_tokens_per_decision": 0.325,
         "token_basis_answers": 1000,
-        "gpu_mean_watts": 346.6992592592593,
-        "seconds_per_decision": 0.013477587099999999,
-        "local_kwh_per_decision": 1.297963740047819E-06,
-        "local_gbp_per_decision": 3.4162405638058594E-07,
+        "gpu_mean_watts": 342.8421428571428,
+        "seconds_per_decision": 0.013828408700000001,
+        "local_kwh_per_decision": 1.3169336863923214E-06,
+        "local_gbp_per_decision": 3.46616946258459E-07,
         "rows": [
           {
             "name": "claude-opus-5-5",
@@ -9617,7 +9617,7 @@
           "List prices in US dollars per million tokens, checked 2026-09-27 (https://platform.claude.com/docs/en/about-claude/pricing (checked 2026-09-27)).",
           "USD to GBP at 0.75458 (ECB euro foreign exchange reference rates, 2026-09-25).",
           "Frontier answers for this benchmark came from an interactive Claude Code session, not the API; the costs price what the same work would cost through the API.",
-          "Local energy: 346.7 W mean whole-GPU power \u00D7 0.01348 s per decision (phase duration / items) = 1.298e-6 kWh per decision, at \u00A30.2632 per kWh (https://www.ofgem.gov.uk/news/changes-energy-price-cap-between-1-october-and-31-december-2026). Hardware purchase and depreciation are excluded."
+          "Local energy: 342.8 W mean whole-GPU power \u00D7 0.01383 s per decision (phase duration / items) = 1.317e-6 kWh per decision, at \u00A30.2632 per kWh (https://www.ofgem.gov.uk/news/changes-energy-price-cap-between-1-october-and-31-december-2026). Hardware purchase and depreciation are excluded."
         ]
       }
     }
@@ -9834,6 +9834,1263 @@
         "n": 1000,
         "count": 545,
         "rate": 0.545
+      },
+      "threshold": {
+        "model": "minilm-l6-tickets",
+        "target_error": 0.2,
+        "source": "baseline-calibrated",
+        "reference": "frontier",
+        "reachable": true,
+        "tau": 0.44,
+        "calibration_accept_rate": 0.002,
+        "calibration_accepted_accuracy": 1,
+        "held_out_accept_rate": 0.004,
+        "held_out_accepted_accuracy": 0.25,
+        "held_out_accepted": 4,
+        "held_out_items": 1000,
+        "calibration_curve": [
+          {
+            "tau": 0,
+            "accepted": 1000,
+            "accept_rate": 1,
+            "accepted_accuracy": 0.274
+          },
+          {
+            "tau": 0.01,
+            "accepted": 1000,
+            "accept_rate": 1,
+            "accepted_accuracy": 0.274
+          },
+          {
+            "tau": 0.02,
+            "accepted": 1000,
+            "accept_rate": 1,
+            "accepted_accuracy": 0.274
+          },
+          {
+            "tau": 0.03,
+            "accepted": 1000,
+            "accept_rate": 1,
+            "accepted_accuracy": 0.274
+          },
+          {
+            "tau": 0.04,
+            "accepted": 1000,
+            "accept_rate": 1,
+            "accepted_accuracy": 0.274
+          },
+          {
+            "tau": 0.05,
+            "accepted": 1000,
+            "accept_rate": 1,
+            "accepted_accuracy": 0.274
+          },
+          {
+            "tau": 0.06,
+            "accepted": 1000,
+            "accept_rate": 1,
+            "accepted_accuracy": 0.274
+          },
+          {
+            "tau": 0.07,
+            "accepted": 1000,
+            "accept_rate": 1,
+            "accepted_accuracy": 0.274
+          },
+          {
+            "tau": 0.08,
+            "accepted": 1000,
+            "accept_rate": 1,
+            "accepted_accuracy": 0.274
+          },
+          {
+            "tau": 0.09,
+            "accepted": 1000,
+            "accept_rate": 1,
+            "accepted_accuracy": 0.274
+          },
+          {
+            "tau": 0.1,
+            "accepted": 1000,
+            "accept_rate": 1,
+            "accepted_accuracy": 0.274
+          },
+          {
+            "tau": 0.11,
+            "accepted": 1000,
+            "accept_rate": 1,
+            "accepted_accuracy": 0.274
+          },
+          {
+            "tau": 0.12,
+            "accepted": 1000,
+            "accept_rate": 1,
+            "accepted_accuracy": 0.274
+          },
+          {
+            "tau": 0.13,
+            "accepted": 1000,
+            "accept_rate": 1,
+            "accepted_accuracy": 0.274
+          },
+          {
+            "tau": 0.14,
+            "accepted": 1000,
+            "accept_rate": 1,
+            "accepted_accuracy": 0.274
+          },
+          {
+            "tau": 0.15,
+            "accepted": 1000,
+            "accept_rate": 1,
+            "accepted_accuracy": 0.274
+          },
+          {
+            "tau": 0.16,
+            "accepted": 1000,
+            "accept_rate": 1,
+            "accepted_accuracy": 0.274
+          },
+          {
+            "tau": 0.17,
+            "accepted": 1000,
+            "accept_rate": 1,
+            "accepted_accuracy": 0.274
+          },
+          {
+            "tau": 0.18,
+            "accepted": 1000,
+            "accept_rate": 1,
+            "accepted_accuracy": 0.274
+          },
+          {
+            "tau": 0.19,
+            "accepted": 1000,
+            "accept_rate": 1,
+            "accepted_accuracy": 0.274
+          },
+          {
+            "tau": 0.2,
+            "accepted": 1000,
+            "accept_rate": 1,
+            "accepted_accuracy": 0.274
+          },
+          {
+            "tau": 0.21,
+            "accepted": 1000,
+            "accept_rate": 1,
+            "accepted_accuracy": 0.274
+          },
+          {
+            "tau": 0.22,
+            "accepted": 1000,
+            "accept_rate": 1,
+            "accepted_accuracy": 0.274
+          },
+          {
+            "tau": 0.23,
+            "accepted": 1000,
+            "accept_rate": 1,
+            "accepted_accuracy": 0.274
+          },
+          {
+            "tau": 0.24,
+            "accepted": 996,
+            "accept_rate": 0.996,
+            "accepted_accuracy": 0.2751004016064257
+          },
+          {
+            "tau": 0.25,
+            "accepted": 891,
+            "accept_rate": 0.891,
+            "accepted_accuracy": 0.27497194163860833
+          },
+          {
+            "tau": 0.26,
+            "accepted": 491,
+            "accept_rate": 0.491,
+            "accepted_accuracy": 0.2973523421588595
+          },
+          {
+            "tau": 0.27,
+            "accepted": 491,
+            "accept_rate": 0.491,
+            "accepted_accuracy": 0.2973523421588595
+          },
+          {
+            "tau": 0.28,
+            "accepted": 475,
+            "accept_rate": 0.475,
+            "accepted_accuracy": 0.29473684210526313
+          },
+          {
+            "tau": 0.29,
+            "accepted": 359,
+            "accept_rate": 0.359,
+            "accepted_accuracy": 0.29526462395543174
+          },
+          {
+            "tau": 0.3,
+            "accepted": 46,
+            "accept_rate": 0.046,
+            "accepted_accuracy": 0.41304347826086957
+          },
+          {
+            "tau": 0.31,
+            "accepted": 46,
+            "accept_rate": 0.046,
+            "accepted_accuracy": 0.41304347826086957
+          },
+          {
+            "tau": 0.32,
+            "accepted": 15,
+            "accept_rate": 0.015,
+            "accepted_accuracy": 0.6
+          },
+          {
+            "tau": 0.33,
+            "accepted": 15,
+            "accept_rate": 0.015,
+            "accepted_accuracy": 0.6
+          },
+          {
+            "tau": 0.34,
+            "accepted": 15,
+            "accept_rate": 0.015,
+            "accepted_accuracy": 0.6
+          },
+          {
+            "tau": 0.35,
+            "accepted": 15,
+            "accept_rate": 0.015,
+            "accepted_accuracy": 0.6
+          },
+          {
+            "tau": 0.36,
+            "accepted": 15,
+            "accept_rate": 0.015,
+            "accepted_accuracy": 0.6
+          },
+          {
+            "tau": 0.37,
+            "accepted": 15,
+            "accept_rate": 0.015,
+            "accepted_accuracy": 0.6
+          },
+          {
+            "tau": 0.38,
+            "accepted": 15,
+            "accept_rate": 0.015,
+            "accepted_accuracy": 0.6
+          },
+          {
+            "tau": 0.39,
+            "accepted": 15,
+            "accept_rate": 0.015,
+            "accepted_accuracy": 0.6
+          },
+          {
+            "tau": 0.4,
+            "accepted": 15,
+            "accept_rate": 0.015,
+            "accepted_accuracy": 0.6
+          },
+          {
+            "tau": 0.41,
+            "accepted": 15,
+            "accept_rate": 0.015,
+            "accepted_accuracy": 0.6
+          },
+          {
+            "tau": 0.42,
+            "accepted": 15,
+            "accept_rate": 0.015,
+            "accepted_accuracy": 0.6
+          },
+          {
+            "tau": 0.43,
+            "accepted": 15,
+            "accept_rate": 0.015,
+            "accepted_accuracy": 0.6
+          },
+          {
+            "tau": 0.44,
+            "accepted": 2,
+            "accept_rate": 0.002,
+            "accepted_accuracy": 1
+          },
+          {
+            "tau": 0.45,
+            "accepted": 2,
+            "accept_rate": 0.002,
+            "accepted_accuracy": 1
+          },
+          {
+            "tau": 0.46,
+            "accepted": 2,
+            "accept_rate": 0.002,
+            "accepted_accuracy": 1
+          },
+          {
+            "tau": 0.47,
+            "accepted": 2,
+            "accept_rate": 0.002,
+            "accepted_accuracy": 1
+          },
+          {
+            "tau": 0.48,
+            "accepted": 2,
+            "accept_rate": 0.002,
+            "accepted_accuracy": 1
+          },
+          {
+            "tau": 0.49,
+            "accepted": 2,
+            "accept_rate": 0.002,
+            "accepted_accuracy": 1
+          },
+          {
+            "tau": 0.5,
+            "accepted": 2,
+            "accept_rate": 0.002,
+            "accepted_accuracy": 1
+          },
+          {
+            "tau": 0.51,
+            "accepted": 2,
+            "accept_rate": 0.002,
+            "accepted_accuracy": 1
+          },
+          {
+            "tau": 0.52,
+            "accepted": 2,
+            "accept_rate": 0.002,
+            "accepted_accuracy": 1
+          },
+          {
+            "tau": 0.53,
+            "accepted": 2,
+            "accept_rate": 0.002,
+            "accepted_accuracy": 1
+          },
+          {
+            "tau": 0.54,
+            "accepted": 2,
+            "accept_rate": 0.002,
+            "accepted_accuracy": 1
+          },
+          {
+            "tau": 0.55,
+            "accepted": 2,
+            "accept_rate": 0.002,
+            "accepted_accuracy": 1
+          },
+          {
+            "tau": 0.56,
+            "accepted": 2,
+            "accept_rate": 0.002,
+            "accepted_accuracy": 1
+          },
+          {
+            "tau": 0.57,
+            "accepted": 2,
+            "accept_rate": 0.002,
+            "accepted_accuracy": 1
+          },
+          {
+            "tau": 0.58,
+            "accepted": 2,
+            "accept_rate": 0.002,
+            "accepted_accuracy": 1
+          },
+          {
+            "tau": 0.59,
+            "accepted": 2,
+            "accept_rate": 0.002,
+            "accepted_accuracy": 1
+          },
+          {
+            "tau": 0.6,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.61,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.62,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.63,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.64,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.65,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.66,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.67,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.68,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.69,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.7,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.71,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.72,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.73,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.74,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.75,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.76,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.77,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.78,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.79,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.8,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.81,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.82,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.83,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.84,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.85,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.86,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.87,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.88,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.89,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.9,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.91,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.92,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.93,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.94,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.95,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.96,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.97,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.98,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.99,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 1,
+            "accepted": 0,
+            "accept_rate": 0
+          }
+        ],
+        "held_out_curve": [
+          {
+            "tau": 0,
+            "accepted": 1000,
+            "accept_rate": 1,
+            "accepted_accuracy": 0.272
+          },
+          {
+            "tau": 0.01,
+            "accepted": 1000,
+            "accept_rate": 1,
+            "accepted_accuracy": 0.272
+          },
+          {
+            "tau": 0.02,
+            "accepted": 1000,
+            "accept_rate": 1,
+            "accepted_accuracy": 0.272
+          },
+          {
+            "tau": 0.03,
+            "accepted": 1000,
+            "accept_rate": 1,
+            "accepted_accuracy": 0.272
+          },
+          {
+            "tau": 0.04,
+            "accepted": 1000,
+            "accept_rate": 1,
+            "accepted_accuracy": 0.272
+          },
+          {
+            "tau": 0.05,
+            "accepted": 1000,
+            "accept_rate": 1,
+            "accepted_accuracy": 0.272
+          },
+          {
+            "tau": 0.06,
+            "accepted": 1000,
+            "accept_rate": 1,
+            "accepted_accuracy": 0.272
+          },
+          {
+            "tau": 0.07,
+            "accepted": 1000,
+            "accept_rate": 1,
+            "accepted_accuracy": 0.272
+          },
+          {
+            "tau": 0.08,
+            "accepted": 1000,
+            "accept_rate": 1,
+            "accepted_accuracy": 0.272
+          },
+          {
+            "tau": 0.09,
+            "accepted": 1000,
+            "accept_rate": 1,
+            "accepted_accuracy": 0.272
+          },
+          {
+            "tau": 0.1,
+            "accepted": 1000,
+            "accept_rate": 1,
+            "accepted_accuracy": 0.272
+          },
+          {
+            "tau": 0.11,
+            "accepted": 1000,
+            "accept_rate": 1,
+            "accepted_accuracy": 0.272
+          },
+          {
+            "tau": 0.12,
+            "accepted": 1000,
+            "accept_rate": 1,
+            "accepted_accuracy": 0.272
+          },
+          {
+            "tau": 0.13,
+            "accepted": 1000,
+            "accept_rate": 1,
+            "accepted_accuracy": 0.272
+          },
+          {
+            "tau": 0.14,
+            "accepted": 1000,
+            "accept_rate": 1,
+            "accepted_accuracy": 0.272
+          },
+          {
+            "tau": 0.15,
+            "accepted": 1000,
+            "accept_rate": 1,
+            "accepted_accuracy": 0.272
+          },
+          {
+            "tau": 0.16,
+            "accepted": 1000,
+            "accept_rate": 1,
+            "accepted_accuracy": 0.272
+          },
+          {
+            "tau": 0.17,
+            "accepted": 1000,
+            "accept_rate": 1,
+            "accepted_accuracy": 0.272
+          },
+          {
+            "tau": 0.18,
+            "accepted": 1000,
+            "accept_rate": 1,
+            "accepted_accuracy": 0.272
+          },
+          {
+            "tau": 0.19,
+            "accepted": 1000,
+            "accept_rate": 1,
+            "accepted_accuracy": 0.272
+          },
+          {
+            "tau": 0.2,
+            "accepted": 1000,
+            "accept_rate": 1,
+            "accepted_accuracy": 0.272
+          },
+          {
+            "tau": 0.21,
+            "accepted": 1000,
+            "accept_rate": 1,
+            "accepted_accuracy": 0.272
+          },
+          {
+            "tau": 0.22,
+            "accepted": 1000,
+            "accept_rate": 1,
+            "accepted_accuracy": 0.272
+          },
+          {
+            "tau": 0.23,
+            "accepted": 1000,
+            "accept_rate": 1,
+            "accepted_accuracy": 0.272
+          },
+          {
+            "tau": 0.24,
+            "accepted": 992,
+            "accept_rate": 0.992,
+            "accepted_accuracy": 0.27318548387096775
+          },
+          {
+            "tau": 0.25,
+            "accepted": 888,
+            "accept_rate": 0.888,
+            "accepted_accuracy": 0.27702702702702703
+          },
+          {
+            "tau": 0.26,
+            "accepted": 519,
+            "accept_rate": 0.519,
+            "accepted_accuracy": 0.3044315992292871
+          },
+          {
+            "tau": 0.27,
+            "accepted": 517,
+            "accept_rate": 0.517,
+            "accepted_accuracy": 0.3036750483558994
+          },
+          {
+            "tau": 0.28,
+            "accepted": 494,
+            "accept_rate": 0.494,
+            "accepted_accuracy": 0.30364372469635625
+          },
+          {
+            "tau": 0.29,
+            "accepted": 366,
+            "accept_rate": 0.366,
+            "accepted_accuracy": 0.30601092896174864
+          },
+          {
+            "tau": 0.3,
+            "accepted": 42,
+            "accept_rate": 0.042,
+            "accepted_accuracy": 0.42857142857142855
+          },
+          {
+            "tau": 0.31,
+            "accepted": 42,
+            "accept_rate": 0.042,
+            "accepted_accuracy": 0.42857142857142855
+          },
+          {
+            "tau": 0.32,
+            "accepted": 14,
+            "accept_rate": 0.014,
+            "accepted_accuracy": 0.5
+          },
+          {
+            "tau": 0.33,
+            "accepted": 14,
+            "accept_rate": 0.014,
+            "accepted_accuracy": 0.5
+          },
+          {
+            "tau": 0.34,
+            "accepted": 14,
+            "accept_rate": 0.014,
+            "accepted_accuracy": 0.5
+          },
+          {
+            "tau": 0.35,
+            "accepted": 14,
+            "accept_rate": 0.014,
+            "accepted_accuracy": 0.5
+          },
+          {
+            "tau": 0.36,
+            "accepted": 14,
+            "accept_rate": 0.014,
+            "accepted_accuracy": 0.5
+          },
+          {
+            "tau": 0.37,
+            "accepted": 14,
+            "accept_rate": 0.014,
+            "accepted_accuracy": 0.5
+          },
+          {
+            "tau": 0.38,
+            "accepted": 14,
+            "accept_rate": 0.014,
+            "accepted_accuracy": 0.5
+          },
+          {
+            "tau": 0.39,
+            "accepted": 14,
+            "accept_rate": 0.014,
+            "accepted_accuracy": 0.5
+          },
+          {
+            "tau": 0.4,
+            "accepted": 14,
+            "accept_rate": 0.014,
+            "accepted_accuracy": 0.5
+          },
+          {
+            "tau": 0.41,
+            "accepted": 14,
+            "accept_rate": 0.014,
+            "accepted_accuracy": 0.5
+          },
+          {
+            "tau": 0.42,
+            "accepted": 14,
+            "accept_rate": 0.014,
+            "accepted_accuracy": 0.5
+          },
+          {
+            "tau": 0.43,
+            "accepted": 14,
+            "accept_rate": 0.014,
+            "accepted_accuracy": 0.5
+          },
+          {
+            "tau": 0.44,
+            "accepted": 4,
+            "accept_rate": 0.004,
+            "accepted_accuracy": 0.25
+          },
+          {
+            "tau": 0.45,
+            "accepted": 4,
+            "accept_rate": 0.004,
+            "accepted_accuracy": 0.25
+          },
+          {
+            "tau": 0.46,
+            "accepted": 4,
+            "accept_rate": 0.004,
+            "accepted_accuracy": 0.25
+          },
+          {
+            "tau": 0.47,
+            "accepted": 4,
+            "accept_rate": 0.004,
+            "accepted_accuracy": 0.25
+          },
+          {
+            "tau": 0.48,
+            "accepted": 4,
+            "accept_rate": 0.004,
+            "accepted_accuracy": 0.25
+          },
+          {
+            "tau": 0.49,
+            "accepted": 4,
+            "accept_rate": 0.004,
+            "accepted_accuracy": 0.25
+          },
+          {
+            "tau": 0.5,
+            "accepted": 4,
+            "accept_rate": 0.004,
+            "accepted_accuracy": 0.25
+          },
+          {
+            "tau": 0.51,
+            "accepted": 4,
+            "accept_rate": 0.004,
+            "accepted_accuracy": 0.25
+          },
+          {
+            "tau": 0.52,
+            "accepted": 4,
+            "accept_rate": 0.004,
+            "accepted_accuracy": 0.25
+          },
+          {
+            "tau": 0.53,
+            "accepted": 4,
+            "accept_rate": 0.004,
+            "accepted_accuracy": 0.25
+          },
+          {
+            "tau": 0.54,
+            "accepted": 4,
+            "accept_rate": 0.004,
+            "accepted_accuracy": 0.25
+          },
+          {
+            "tau": 0.55,
+            "accepted": 4,
+            "accept_rate": 0.004,
+            "accepted_accuracy": 0.25
+          },
+          {
+            "tau": 0.56,
+            "accepted": 4,
+            "accept_rate": 0.004,
+            "accepted_accuracy": 0.25
+          },
+          {
+            "tau": 0.57,
+            "accepted": 4,
+            "accept_rate": 0.004,
+            "accepted_accuracy": 0.25
+          },
+          {
+            "tau": 0.58,
+            "accepted": 4,
+            "accept_rate": 0.004,
+            "accepted_accuracy": 0.25
+          },
+          {
+            "tau": 0.59,
+            "accepted": 4,
+            "accept_rate": 0.004,
+            "accepted_accuracy": 0.25
+          },
+          {
+            "tau": 0.6,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.61,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.62,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.63,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.64,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.65,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.66,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.67,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.68,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.69,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.7,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.71,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.72,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.73,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.74,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.75,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.76,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.77,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.78,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.79,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.8,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.81,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.82,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.83,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.84,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.85,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.86,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.87,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.88,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.89,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.9,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.91,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.92,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.93,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.94,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.95,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.96,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.97,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.98,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 0.99,
+            "accepted": 0,
+            "accept_rate": 0
+          },
+          {
+            "tau": 1,
+            "accepted": 0,
+            "accept_rate": 0
+          }
+        ],
+        "note": "\u03C4 = 0.44 is the smallest threshold whose calibration-split disagreement is at most 20.0%. On held-out it accepts 0.4% of items with 25.0% agreement with the frontier model."
+      },
+      "cascade": {
+        "model": "minilm-l6-tickets",
+        "source": "baseline-calibrated",
+        "tau": 0.44,
+        "items": 1000,
+        "excluded_failures": 0,
+        "kept_local": 4,
+        "escalated": 996,
+        "missing_frontier": 0,
+        "share_local": 0.004,
+        "share_escalated": 0.996,
+        "reference": "frontier",
+        "local_only_accuracy": {
+          "n": 1000,
+          "count": 272,
+          "rate": 0.272
+        },
+        "frontier_only_accuracy": {
+          "n": 1000,
+          "count": 1000,
+          "rate": 1
+        },
+        "frontier_only_note": "Frontier only agrees with the frontier model on 100% of items by construction: its answers are the reference, so this is not a result.",
+        "blended_accuracy": {
+          "n": 1000,
+          "count": 997,
+          "rate": 0.997
+        },
+        "overrides_used": 0,
+        "frontier_latency_note": "Frontier latency is not measured: no API call was made, so the latency mix covers the local side only.",
+        "cost": {
+          "estimate": true,
+          "input_tokens_per_decision": 328.709875,
+          "output_tokens_per_decision": 0.325,
+          "token_basis_answers": 1000,
+          "share_escalated": 0.996,
+          "rows": [
+            {
+              "name": "claude-opus-5-5",
+              "kind": "headline",
+              "label": "claude-opus-5-5 at list price (the model that produced the frontier answers)",
+              "input_usd_per_m_tok": 4,
+              "output_usd_per_m_tok": 20,
+              "frontier_usd_per_decision": 0.0013213395,
+              "frontier_only_usd_per1k": 1.3213395000000001,
+              "frontier_only_usd_per_million": 1321.3395,
+              "frontier_only_gbp_per1k": 0.9970563599100001,
+              "frontier_only_gbp_per_million": 997.0563599100001,
+              "cascade_gbp_per1k": 0.9930681344703601,
+              "cascade_gbp_per_million": 993.0681344703602,
+              "saving_gbp_per_million": 3.9882254396399546
+            },
+            {
+              "name": "claude-opus-5-5-batch",
+              "kind": "same-model-rate",
+              "label": "claude-opus-5-5-batch: the same model at a different rate",
+              "input_usd_per_m_tok": 2,
+              "output_usd_per_m_tok": 10,
+              "frontier_usd_per_decision": 0.00066066975,
+              "frontier_only_usd_per1k": 0.6606697500000001,
+              "frontier_only_usd_per_million": 660.66975,
+              "frontier_only_gbp_per1k": 0.49852817995500004,
+              "frontier_only_gbp_per_million": 498.52817995500004,
+              "cascade_gbp_per1k": 0.49653406723518007,
+              "cascade_gbp_per_million": 496.5340672351801,
+              "saving_gbp_per_million": 1.9941127198199773
+            },
+            {
+              "name": "claude-sonnet-5",
+              "kind": "what-if",
+              "label": "claude-sonnet-5: price only, if escalations went to this model; its accuracy was not measured",
+              "input_usd_per_m_tok": 2,
+              "output_usd_per_m_tok": 10,
+              "frontier_usd_per_decision": 0.00066066975,
+              "frontier_only_usd_per1k": 0.6606697500000001,
+              "frontier_only_usd_per_million": 660.66975,
+              "frontier_only_gbp_per1k": 0.49852817995500004,
+              "frontier_only_gbp_per_million": 498.52817995500004,
+              "cascade_gbp_per1k": 0.49653406723518007,
+              "cascade_gbp_per_million": 496.5340672351801,
+              "saving_gbp_per_million": 1.9941127198199773
+            },
+            {
+              "name": "claude-haiku-4-5",
+              "kind": "what-if",
+              "label": "claude-haiku-4-5: price only, if escalations went to this model; its accuracy was not measured",
+              "input_usd_per_m_tok": 1,
+              "output_usd_per_m_tok": 5,
+              "frontier_usd_per_decision": 0.000330334875,
+              "frontier_only_usd_per1k": 0.33033487500000003,
+              "frontier_only_usd_per_million": 330.334875,
+              "frontier_only_gbp_per1k": 0.24926408997750002,
+              "frontier_only_gbp_per_million": 249.26408997750002,
+              "cascade_gbp_per1k": 0.24826703361759003,
+              "cascade_gbp_per_million": 248.26703361759004,
+              "saving_gbp_per_million": 0.9970563599099886
+            }
+          ],
+          "basis": [
+            "Frontier tokens are estimated, not counted: characters / 4 (Anthropic\u0027s rule of thumb) \u00D7 1.3 for the tokenizer, averaged over 1,000 cached answers: 328.7 input and 0.3 output tokens per decision.",
+            "List prices in US dollars per million tokens, checked 2026-09-27 (https://platform.claude.com/docs/en/about-claude/pricing (checked 2026-09-27)).",
+            "USD to GBP at 0.75458 (ECB euro foreign exchange reference rates, 2026-09-25).",
+            "Frontier answers for this benchmark came from an interactive Claude Code session, not the API; the costs price what the same work would cost through the API.",
+            "Local energy is not included: no GPU power was measured for the local model, so the cascade figures price the frontier calls only.",
+            "Cascade: every decision runs locally, and 99.6% are also sent to the frontier model."
+          ]
+        }
       }
     }
   ],
@@ -9929,11 +11186,11 @@
     "Label noise: the frontier model disagrees with gold on 76.2% (762 of 1,000). This example is scored against the frontier model\u0027s answers instead of the dataset\u0027s labels; the figures against those labels are kept in a secondary table."
   ],
   "metadata": {
-    "generated_utc": "2026-09-27T13:22:03Z",
+    "generated_utc": "2026-09-27T17:14:12Z",
     "command": "tau report examples/support-tickets/decision.yaml",
     "tool_version": "0.1.0",
     "git": {
-      "commit": "a8b533f3c2e79c3fb9b008e41fed3701dc40c375",
+      "commit": "3a7a557785b6ab85725f6ad878ddb004625cdf35",
       "dirty": true
     },
     "hardware": {

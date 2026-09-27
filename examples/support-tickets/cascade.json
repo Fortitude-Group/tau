@@ -28,18 +28,18 @@
       "rate": 1
     },
     "overrides_used": 0,
-    "local_latency_p50_ms": 52.2845,
-    "latency_source": "raw",
+    "local_latency_p50_ms": 53.204,
+    "latency_source": "calibrated",
     "frontier_latency_note": "Frontier latency is not measured: no API call was made, so the latency mix covers the local side only.",
     "cost": {
       "estimate": true,
       "input_tokens_per_decision": 328.709875,
       "output_tokens_per_decision": 0.325,
       "token_basis_answers": 1000,
-      "gpu_mean_watts": 344.8281481481481,
-      "seconds_per_decision": 0.0133347389,
-      "local_kwh_per_decision": 1.2772759224794648E-06,
-      "local_gbp_per_decision": 3.3617902279659514E-07,
+      "gpu_mean_watts": 345.2603703703703,
+      "seconds_per_decision": 0.0135546026,
+      "local_kwh_per_decision": 1.2999630871942177E-06,
+      "local_gbp_per_decision": 3.421502845495181E-07,
       "share_escalated": 0.999,
       "rows": [
         {
@@ -53,9 +53,9 @@
           "frontier_only_usd_per_million": 1321.3395,
           "frontier_only_gbp_per1k": 0.9970563599100001,
           "frontier_only_gbp_per_million": 997.0563599100001,
-          "cascade_gbp_per1k": 0.9963954825728868,
-          "cascade_gbp_per_million": 996.3954825728867,
-          "saving_gbp_per_million": 0.6608773371133154
+          "cascade_gbp_per1k": 0.9964014538346396,
+          "cascade_gbp_per_million": 996.4014538346396,
+          "saving_gbp_per_million": 0.6549060753604629
         },
         {
           "name": "claude-opus-5-5-batch",
@@ -68,9 +68,9 @@
           "frontier_only_usd_per_million": 660.66975,
           "frontier_only_gbp_per1k": 0.49852817995500004,
           "frontier_only_gbp_per_million": 498.52817995500004,
-          "cascade_gbp_per1k": 0.49836583079784164,
-          "cascade_gbp_per_million": 498.3658307978416,
-          "saving_gbp_per_million": 0.1623491571584295
+          "cascade_gbp_per1k": 0.4983718020595946,
+          "cascade_gbp_per_million": 498.3718020595946,
+          "saving_gbp_per_million": 0.1563778954054686
         },
         {
           "name": "claude-sonnet-5",
@@ -83,9 +83,9 @@
           "frontier_only_usd_per_million": 660.66975,
           "frontier_only_gbp_per1k": 0.49852817995500004,
           "frontier_only_gbp_per_million": 498.52817995500004,
-          "cascade_gbp_per1k": 0.49836583079784164,
-          "cascade_gbp_per_million": 498.3658307978416,
-          "saving_gbp_per_million": 0.1623491571584295
+          "cascade_gbp_per1k": 0.4983718020595946,
+          "cascade_gbp_per_million": 498.3718020595946,
+          "saving_gbp_per_million": 0.1563778954054686
         },
         {
           "name": "claude-haiku-4-5",
@@ -98,9 +98,9 @@
           "frontier_only_usd_per_million": 330.334875,
           "frontier_only_gbp_per1k": 0.24926408997750002,
           "frontier_only_gbp_per_million": 249.26408997750002,
-          "cascade_gbp_per1k": 0.24935100491031914,
-          "cascade_gbp_per_million": 249.35100491031915,
-          "saving_gbp_per_million": -0.08691493281912185
+          "cascade_gbp_per1k": 0.24935697617207206,
+          "cascade_gbp_per_million": 249.35697617207205,
+          "saving_gbp_per_million": -0.09288619457202855
         }
       ],
       "basis": [
@@ -108,7 +108,7 @@
         "List prices in US dollars per million tokens, checked 2026-09-27 (https://platform.claude.com/docs/en/about-claude/pricing (checked 2026-09-27)).",
         "USD to GBP at 0.75458 (ECB euro foreign exchange reference rates, 2026-09-25).",
         "Frontier answers for this benchmark came from an interactive Claude Code session, not the API; the costs price what the same work would cost through the API.",
-        "Local energy: 344.8 W mean whole-GPU power \u00D7 0.01333 s per decision (phase duration / items) = 1.277e-6 kWh per decision, at \u00A30.2632 per kWh (https://www.ofgem.gov.uk/news/changes-energy-price-cap-between-1-october-and-31-december-2026). Hardware purchase and depreciation are excluded.",
+        "Local energy: 345.3 W mean whole-GPU power \u00D7 0.01355 s per decision (phase duration / items) = 1.300e-6 kWh per decision, at \u00A30.2632 per kWh (https://www.ofgem.gov.uk/news/changes-energy-price-cap-between-1-october-and-31-december-2026). Hardware purchase and depreciation are excluded.",
         "Cascade: every decision runs locally, and 99.9% are also sent to the frontier model."
       ]
     }
@@ -142,18 +142,18 @@
       "rate": 1
     },
     "overrides_used": 0,
-    "local_latency_p50_ms": 52.41,
-    "latency_source": "raw",
+    "local_latency_p50_ms": 53.513999999999996,
+    "latency_source": "calibrated",
     "frontier_latency_note": "Frontier latency is not measured: no API call was made, so the latency mix covers the local side only.",
     "cost": {
       "estimate": true,
       "input_tokens_per_decision": 328.709875,
       "output_tokens_per_decision": 0.325,
       "token_basis_answers": 1000,
-      "gpu_mean_watts": 345.8596296296296,
-      "seconds_per_decision": 0.0134435816,
-      "local_kwh_per_decision": 1.2915533758532508E-06,
-      "local_gbp_per_decision": 3.399368485245756E-07,
+      "gpu_mean_watts": 345.0737037037036,
+      "seconds_per_decision": 0.0137225666,
+      "local_kwh_per_decision": 1.3153602447174275E-06,
+      "local_gbp_per_decision": 3.462028164096269E-07,
       "share_escalated": 0.999,
       "rows": [
         {
@@ -167,9 +167,9 @@
           "frontier_only_usd_per_million": 1321.3395,
           "frontier_only_gbp_per1k": 0.9970563599100001,
           "frontier_only_gbp_per_million": 997.0563599100001,
-          "cascade_gbp_per1k": 0.9963992403986147,
-          "cascade_gbp_per_million": 996.3992403986147,
-          "saving_gbp_per_million": 0.6571195113854247
+          "cascade_gbp_per1k": 0.9964055063664996,
+          "cascade_gbp_per_million": 996.4055063664996,
+          "saving_gbp_per_million": 0.6508535435004615
         },
         {
           "name": "claude-opus-5-5-batch",
@@ -182,9 +182,9 @@
           "frontier_only_usd_per_million": 660.66975,
           "frontier_only_gbp_per1k": 0.49852817995500004,
           "frontier_only_gbp_per_million": 498.52817995500004,
-          "cascade_gbp_per1k": 0.4983695886235696,
-          "cascade_gbp_per_million": 498.3695886235696,
-          "saving_gbp_per_million": 0.15859133143043044
+          "cascade_gbp_per1k": 0.49837585459145467,
+          "cascade_gbp_per_million": 498.3758545914547,
+          "saving_gbp_per_million": 0.15232536354535878
         },
         {
           "name": "claude-sonnet-5",
@@ -197,9 +197,9 @@
           "frontier_only_usd_per_million": 660.66975,
           "frontier_only_gbp_per1k": 0.49852817995500004,
           "frontier_only_gbp_per_million": 498.52817995500004,
-          "cascade_gbp_per1k": 0.4983695886235696,
-          "cascade_gbp_per_million": 498.3695886235696,
-          "saving_gbp_per_million": 0.15859133143043044
+          "cascade_gbp_per1k": 0.49837585459145467,
+          "cascade_gbp_per_million": 498.3758545914547,
+          "saving_gbp_per_million": 0.15232536354535878
         },
         {
           "name": "claude-haiku-4-5",
@@ -212,9 +212,9 @@
           "frontier_only_usd_per_million": 330.334875,
           "frontier_only_gbp_per1k": 0.24926408997750002,
           "frontier_only_gbp_per_million": 249.26408997750002,
-          "cascade_gbp_per1k": 0.2493547627360471,
-          "cascade_gbp_per_million": 249.3547627360471,
-          "saving_gbp_per_million": -0.09067275854706672
+          "cascade_gbp_per1k": 0.24936102870393217,
+          "cascade_gbp_per_million": 249.36102870393216,
+          "saving_gbp_per_million": -0.09693872643213837
         }
       ],
       "basis": [
@@ -222,7 +222,7 @@
         "List prices in US dollars per million tokens, checked 2026-09-27 (https://platform.claude.com/docs/en/about-claude/pricing (checked 2026-09-27)).",
         "USD to GBP at 0.75458 (ECB euro foreign exchange reference rates, 2026-09-25).",
         "Frontier answers for this benchmark came from an interactive Claude Code session, not the API; the costs price what the same work would cost through the API.",
-        "Local energy: 345.9 W mean whole-GPU power \u00D7 0.01344 s per decision (phase duration / items) = 1.292e-6 kWh per decision, at \u00A30.2632 per kWh (https://www.ofgem.gov.uk/news/changes-energy-price-cap-between-1-october-and-31-december-2026). Hardware purchase and depreciation are excluded.",
+        "Local energy: 345.1 W mean whole-GPU power \u00D7 0.01372 s per decision (phase duration / items) = 1.315e-6 kWh per decision, at \u00A30.2632 per kWh (https://www.ofgem.gov.uk/news/changes-energy-price-cap-between-1-october-and-31-december-2026). Hardware purchase and depreciation are excluded.",
         "Cascade: every decision runs locally, and 99.9% are also sent to the frontier model."
       ]
     }
@@ -256,18 +256,18 @@
       "rate": 0.999
     },
     "overrides_used": 0,
-    "local_latency_p50_ms": 43.923,
-    "latency_source": "raw",
+    "local_latency_p50_ms": 44.9545,
+    "latency_source": "calibrated",
     "frontier_latency_note": "Frontier latency is not measured: no API call was made, so the latency mix covers the local side only.",
     "cost": {
       "estimate": true,
       "input_tokens_per_decision": 328.709875,
       "output_tokens_per_decision": 0.325,
       "token_basis_answers": 1000,
-      "gpu_mean_watts": 346.1860869565217,
-      "seconds_per_decision": 0.0112630335,
-      "local_kwh_per_decision": 1.0830848596181158E-06,
-      "local_gbp_per_decision": 2.850679350514881E-07,
+      "gpu_mean_watts": 346.4326086956522,
+      "seconds_per_decision": 0.0114183451,
+      "local_kwh_per_decision": 1.0988019666611716E-06,
+      "local_gbp_per_decision": 2.8920467762522037E-07,
       "share_escalated": 0.999,
       "rows": [
         {
@@ -281,9 +281,9 @@
           "frontier_only_usd_per_million": 1321.3395,
           "frontier_only_gbp_per1k": 0.9970563599100001,
           "frontier_only_gbp_per_million": 997.0563599100001,
-          "cascade_gbp_per1k": 0.9963443714851417,
-          "cascade_gbp_per_million": 996.3443714851417,
-          "saving_gbp_per_million": 0.7119884248584819
+          "cascade_gbp_per1k": 0.9963485082277154,
+          "cascade_gbp_per_million": 996.3485082277153,
+          "saving_gbp_per_million": 0.7078516822847745
         },
         {
           "name": "claude-opus-5-5-batch",
@@ -296,9 +296,9 @@
           "frontier_only_usd_per_million": 660.66975,
           "frontier_only_gbp_per1k": 0.49852817995500004,
           "frontier_only_gbp_per_million": 498.52817995500004,
-          "cascade_gbp_per1k": 0.49831471971009655,
-          "cascade_gbp_per_million": 498.31471971009654,
-          "saving_gbp_per_million": 0.21346024490348764
+          "cascade_gbp_per1k": 0.49831885645267027,
+          "cascade_gbp_per_million": 498.3188564526703,
+          "saving_gbp_per_million": 0.20932350232978017
         },
         {
           "name": "claude-sonnet-5",
@@ -311,9 +311,9 @@
           "frontier_only_usd_per_million": 660.66975,
           "frontier_only_gbp_per1k": 0.49852817995500004,
           "frontier_only_gbp_per_million": 498.52817995500004,
-          "cascade_gbp_per1k": 0.49831471971009655,
-          "cascade_gbp_per_million": 498.31471971009654,
-          "saving_gbp_per_million": 0.21346024490348764
+          "cascade_gbp_per1k": 0.49831885645267027,
+          "cascade_gbp_per_million": 498.3188564526703,
+          "saving_gbp_per_million": 0.20932350232978017
         },
         {
           "name": "claude-haiku-4-5",
@@ -326,9 +326,9 @@
           "frontier_only_usd_per_million": 330.334875,
           "frontier_only_gbp_per1k": 0.24926408997750002,
           "frontier_only_gbp_per_million": 249.26408997750002,
-          "cascade_gbp_per1k": 0.24929989382257403,
-          "cascade_gbp_per_million": 249.29989382257403,
-          "saving_gbp_per_million": -0.03580384507400952
+          "cascade_gbp_per1k": 0.24930403056514774,
+          "cascade_gbp_per_million": 249.30403056514774,
+          "saving_gbp_per_million": -0.03994058764771698
         }
       ],
       "basis": [
@@ -336,7 +336,7 @@
         "List prices in US dollars per million tokens, checked 2026-09-27 (https://platform.claude.com/docs/en/about-claude/pricing (checked 2026-09-27)).",
         "USD to GBP at 0.75458 (ECB euro foreign exchange reference rates, 2026-09-25).",
         "Frontier answers for this benchmark came from an interactive Claude Code session, not the API; the costs price what the same work would cost through the API.",
-        "Local energy: 346.2 W mean whole-GPU power \u00D7 0.01126 s per decision (phase duration / items) = 1.083e-6 kWh per decision, at \u00A30.2632 per kWh (https://www.ofgem.gov.uk/news/changes-energy-price-cap-between-1-october-and-31-december-2026). Hardware purchase and depreciation are excluded.",
+        "Local energy: 346.4 W mean whole-GPU power \u00D7 0.01142 s per decision (phase duration / items) = 1.099e-6 kWh per decision, at \u00A30.2632 per kWh (https://www.ofgem.gov.uk/news/changes-energy-price-cap-between-1-october-and-31-december-2026). Hardware purchase and depreciation are excluded.",
         "Cascade: every decision runs locally, and 99.9% are also sent to the frontier model."
       ]
     }
@@ -363,18 +363,18 @@
     },
     "frontier_only_note": "Frontier only agrees with the frontier model on 100% of items by construction: its answers are the reference, so this is not a result.",
     "overrides_used": 0,
-    "local_latency_p50_ms": 52.8465,
-    "latency_source": "raw",
+    "local_latency_p50_ms": 50.825500000000005,
+    "latency_source": "calibrated",
     "frontier_latency_note": "Frontier latency is not measured: no API call was made, so the latency mix covers the local side only.",
     "cost": {
       "estimate": true,
       "input_tokens_per_decision": 328.709875,
       "output_tokens_per_decision": 0.325,
       "token_basis_answers": 1000,
-      "gpu_mean_watts": 346.6992592592593,
-      "seconds_per_decision": 0.013477587099999999,
-      "local_kwh_per_decision": 1.297963740047819E-06,
-      "local_gbp_per_decision": 3.4162405638058594E-07,
+      "gpu_mean_watts": 342.8421428571428,
+      "seconds_per_decision": 0.013828408700000001,
+      "local_kwh_per_decision": 1.3169336863923214E-06,
+      "local_gbp_per_decision": 3.46616946258459E-07,
       "rows": [
         {
           "name": "claude-opus-5-5",
@@ -431,7 +431,7 @@
         "List prices in US dollars per million tokens, checked 2026-09-27 (https://platform.claude.com/docs/en/about-claude/pricing (checked 2026-09-27)).",
         "USD to GBP at 0.75458 (ECB euro foreign exchange reference rates, 2026-09-25).",
         "Frontier answers for this benchmark came from an interactive Claude Code session, not the API; the costs price what the same work would cost through the API.",
-        "Local energy: 346.7 W mean whole-GPU power \u00D7 0.01348 s per decision (phase duration / items) = 1.298e-6 kWh per decision, at \u00A30.2632 per kWh (https://www.ofgem.gov.uk/news/changes-energy-price-cap-between-1-october-and-31-december-2026). Hardware purchase and depreciation are excluded."
+        "Local energy: 342.8 W mean whole-GPU power \u00D7 0.01383 s per decision (phase duration / items) = 1.317e-6 kWh per decision, at \u00A30.2632 per kWh (https://www.ofgem.gov.uk/news/changes-energy-price-cap-between-1-october-and-31-december-2026). Hardware purchase and depreciation are excluded."
       ]
     }
   }
