@@ -1,6 +1,6 @@
 # Tau: finish
 
-Written 27 September 2026 at the end of R3. Nothing has been published, deployed, pushed to a package registry or made public. The repo is private at `Fortitude-Group/tau`.
+Written 27 September 2026 at the end of R3. Update, 27 September 2026 (evening): the repo is **public** at `Fortitude-Group/tau` with rewritten history (the full history stays private in `Fortitude-Group/tau-dev`). The ONNX packages are on the `models-v1` release. The R&D page is live at https://fortitude-omnis.group/rd/tau/. Nothing else is published: no NuGet packages, no Docker image and no posts.
 
 ## What shipped
 
@@ -52,7 +52,7 @@ All measured on one RTX 3080 Ti (12 GB) and i9-11900K, FP32, on 27 September 202
 ## Known gaps
 
 - **Jev never measured.** No key was bought, so there's no conformance or head-to-head run against the hosted service.
-- **Newcomers export the ONNX models themselves.** The README path runs the Python export, which needs a 4.5 GB environment. A cold uv cache also pulls about 3 GB of PyTorch. Publishing the exported ONNX packages as release assets would cut that to a download.
+- **Newcomers now download the exported models** from the `models-v1` release with `scripts/fetch-onnx.ps1` (hash-pinned). The support-tickets fine-tune isn't on the release, because it was trained on non-commercial data.
 - **Frontier labels are session-produced.** They came from batched sheets, not independent per-item API calls. Every report says so. A per-item API run would cost real money and was out of scope.
 - **The ticket dataset is synthetic and non-commercial** (CC-BY-NC-4.0). Its labels are close to arbitrary. Treat the tickets fine-tune as non-commercial as well.
 - **The laya-en tickets calibration missed the 50% target.** It was explained, and the rule wasn't changed after the fact.
@@ -66,11 +66,11 @@ All measured on one RTX 3080 Ti (12 GB) and i9-11900K, FP32, on 27 September 202
 
 1. **Read and edit the drafts** in `docs/articles/`. Approve or change the titles, especially the canonical title and the HN title.
 2. **Decide on JsonSchema.Net.** Keep it (tests only) or swap it for another JSON Schema validator before going public.
-3. **Make the repo public:** `gh repo edit Fortitude-Group/tau --visibility public --accept-visibility-change-consequences`, run as `fortitude-omnis`. After that, the relative links in the drafts need turning into `https://github.com/Fortitude-Group/tau/blob/master/...` URLs (a search and replace on `../../`).
-4. **Optionally publish the exported ONNX models** as a GitHub release, and point the README's quickstart at it.
+3. **Done 2026-09-27. Make the repo public:** `gh repo edit Fortitude-Group/tau --visibility public --accept-visibility-change-consequences`, run as `fortitude-omnis`. After that, the relative links in the drafts need turning into `https://github.com/Fortitude-Group/tau/blob/master/...` URLs (a search and replace on `../../`).
+4. **Done 2026-09-27. Optionally publish the exported ONNX models** as a GitHub release, and point the README's quickstart at it.
 5. **Push the packages** if you want them on NuGet. First run `dotnet pack` for `src/Tau.Contract`, `src/Tau.Client` and `src/Tau.Workbench.Cli`, then `dotnet nuget push artifacts/packages/*.nupkg --source nuget.org --api-key <key>`. Push Tau.Contract before Tau.Client, and set the key with `setx` as usual, never in chat.
 6. **Push the Docker image** if you want it public. Tag `tau-runtime:local` for your registry, then push. It's a CPU image. Mention NVIDIA's terms if you ever ship a CUDA image.
-7. **Build the R&D page** from `docs/articles/apex-page.md`, using the web playbook's R&D generator at `/rd/tau/`:
+7. **Done 2026-09-27. Build the R&D page** from `docs/articles/apex-page.md`, using the web playbook's R&D generator at `/rd/tau/`:
    - copy `docs/articles/img/*.png` to `/images/rd/tau-*.png`
    - add the `rd/projects.json` entry from the draft's front matter
    - deploy with the playbook's process.
