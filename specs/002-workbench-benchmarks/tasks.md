@@ -63,9 +63,9 @@ Serial by necessity: the end-to-end runs (T060+), because they need all lanes an
 ## Phase 6: Lane E (frontier labelling: session tokens)
 
 - [X] T050 Export batches for both examples (`tau label`). Report the pending item and character counts. **Give Rob a usage estimate before T051.**
-- [ ] T051 Answer the `v1` batches via Agent-tool subagents (the session's model), about 200 items per batch, writing `frontier/cache.jsonl`. Validate by re-running `tau label` (0 pending).
-- [ ] T052 Answer the `v1-alt` 200-item subsets likewise.
-- [ ] T053 Commit the caches. Record counts, dates and the session model in DECISIONS.
+- [X] T051 Answer the `v1` batches via Agent-tool subagents (the session's model), about 200 items per batch, writing `frontier/cache.jsonl`. Validate by re-running `tau label` (0 pending).
+- [X] T052 Answer the `v1-alt` 200-item subsets likewise.
+- [X] T053 Commit the caches. Record counts, dates and the session model in DECISIONS.
 
 ## Phase 7: End to end + gate
 

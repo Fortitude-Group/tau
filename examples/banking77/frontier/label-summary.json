@@ -5,46 +5,48 @@
   "eligible_items": 1000,
   "alt_subset_items": 200,
   "pending": {
-    "v1": 1000,
-    "v1-alt": 200
-  },
-  "cached": {
     "v1": 0,
     "v1-alt": 0
   },
-  "pending_batches": [
-    "frontier/pending/v1/batch-001.jsonl",
-    "frontier/pending/v1/batch-002.jsonl",
-    "frontier/pending/v1/batch-003.jsonl",
-    "frontier/pending/v1/batch-004.jsonl",
-    "frontier/pending/v1/batch-005.jsonl",
-    "frontier/pending/v1-alt/batch-001.jsonl"
-  ],
+  "cached": {
+    "v1": 1000,
+    "v1-alt": 200
+  },
+  "pending_batches": [],
   "rejected": [],
   "duplicate_cache_lines": 0,
   "overridden": 0,
   "label_noise": {
-    "n": 0,
-    "count": 0
+    "n": 1000,
+    "count": 58,
+    "rate": 0.058
   },
   "prompt_agreement": {
-    "n": 0,
-    "count": 0
+    "n": 200,
+    "count": 195,
+    "rate": 0.975
   },
   "chars": {
     "v1": {
-      "answers": 0,
-      "input_chars": 0,
-      "output_chars": 0
+      "answers": 1000,
+      "input_chars": 3873466,
+      "output_chars": 19993
     },
     "v1-alt": {
-      "answers": 0,
-      "input_chars": 0,
-      "output_chars": 0
+      "answers": 200,
+      "input_chars": 759120,
+      "output_chars": 3937
     }
   },
-  "provenance_models": [],
-  "provenance_produced_by": [],
-  "provenance_dates": [],
-  "total_pending": 1200
+  "provenance_models": [
+    "claude-opus-5-5"
+  ],
+  "provenance_produced_by": [
+    "claude-code-session: subagent answer sheet; the prompt\u0027s fixed part shown once per batch of up to 200 items, each item judged on its own; no API"
+  ],
+  "provenance_dates": [
+    "2026-09-27",
+    "2026-09-27"
+  ],
+  "total_pending": 0
 }

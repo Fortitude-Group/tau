@@ -6,6 +6,30 @@ this file records the ones I made so the trail is auditable.
 
 ---
 
+## 2026-09-27 · Frontier labels cached (T051–T053), and the ticket gold labels look close to arbitrary
+
+- **Cached:** 1,200 answers per dataset (1,000 `v1` and 200 `v1-alt`), from 12 Opus 5.5
+  subagents in this Claude Code session. No API was used. 0 rejected, 0 pending. The answers are
+  dated 2026-09-27 and have `produced_by` provenance on every line.
+- **Session usage:** about 0.9M subagent tokens in total, as the harness reported: about 64k per
+  Banking77 sheet and 84–92k per ticket sheet. My estimate to Rob was 0.45–0.6M. I
+  underestimated each subagent's fixed context.
+- One `v1-alt` subagent wrote its file with a shell heredoc instead of the Write tool. `ingest`
+  validated the content, so it's unaffected.
+- **Banking77:** the frontier disagrees with gold on 5.8% of 1,000 items, and the two wordings
+  agree on 97.5% of 200. This is what a sound gold set looks like.
+- **Support tickets:** the frontier disagrees with gold on **76.2%**. That's 23.8% agreement,
+  below the 41% a majority-class guess would get. The two wordings agree on only 76.5%.
+  - The mechanism is checked: the mapping is right (gold 1–3 against the frontier's 0–4), and the
+    cross-tab shows the frontier's answer almost independent of the gold label.
+  - Spot checks show sensible frontier answers against arbitrary gold. A suspected data breach
+    exposing medical records is gold "medium", and a one-line request for security details is
+    gold "high".
+  - The MiniLM baseline still reaches 55.6% against gold, so the labels carry some learnable
+    signal, most likely the generator's own patterns rather than urgency as a reader sees it.
+  - This is the synthetic dataset's labels failing, not the frontier failing. How the tickets
+    example should use them is Rob's call (asked 2026-09-27).
+
 ## 2026-09-27 · Fine-tunes and the classic-encoder baseline (T014–T017)
 
 - **Laya fine-tunes** (RTX 3080 Ti, seed 42, 2 epochs, fine-tune split only):
