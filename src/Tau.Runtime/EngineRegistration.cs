@@ -30,7 +30,18 @@ public static class EngineRegistration
                 Preload = options.Preload,
                 CalibratorsDirectory = options.CalibratorsDirectory,
                 VonMaxTokens = options.VonMaxTokens,
-                Session = new OrtSessionSettings { Warn = m => log.LogWarning("{Message}", m) },
+                Session = new OrtSessionSettings
+                {
+                    Warn = m => log.LogWarning("{Message}", m),
+                    GraphOptimizationLevel = options.GraphOptimization.ToLowerInvariant() switch
+                    {
+                        "extended" => Microsoft.ML.OnnxRuntime.GraphOptimizationLevel.ORT_ENABLE_EXTENDED,
+                        "all" => Microsoft.ML.OnnxRuntime.GraphOptimizationLevel.ORT_ENABLE_ALL,
+                        _ => Microsoft.ML.OnnxRuntime.GraphOptimizationLevel.ORT_ENABLE_BASIC,
+                    },
+                    IntraOpThreads = options.IntraOpThreads > 0 ? options.IntraOpThreads : PhysicalCores(),
+                    EnableMemoryPattern = options.MemoryPattern,
+                },
             };
             var engine = new OnnxDecisionEngine(settings);
             log.LogInformation("Tau engine ready: provider {Provider}, models {Models}",
@@ -39,6 +50,9 @@ public static class EngineRegistration
         });
         return services;
     }
+
+    /// <summary>Physical core count (ONNX Runtime's own default for intra-op threads), falling back to logical/2.</summary>
+    private static int PhysicalCores() => Math.Max(1, Environment.ProcessorCount / 2);
 
     /// <summary>
     /// The directory holding <c>models/</c> and <c>native/</c>: next to the executable when published, otherwise

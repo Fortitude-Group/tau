@@ -36,6 +36,15 @@ public sealed class TauOptions
     /// <summary>Von packed-sequence cap in tokens (the reference allows 8192; see DECISIONS).</summary>
     public int VonMaxTokens { get; set; } = 4096;
 
+    /// <summary>ONNX Runtime graph optimisation: <c>basic</c> (default), <c>extended</c> or <c>all</c>.</summary>
+    public string GraphOptimization { get; set; } = "basic";
+
+    /// <summary>CPU intra-op threads per session (0 = one per physical core).</summary>
+    public int IntraOpThreads { get; set; }
+
+    /// <summary>ONNX Runtime memory-pattern planning per input shape.</summary>
+    public bool MemoryPattern { get; set; } = true;
+
     /// <summary>OTLP endpoint for traces and metrics; exporter off when unset.</summary>
     public string? OtlpEndpoint { get; set; }
 }

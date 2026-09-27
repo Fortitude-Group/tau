@@ -14,6 +14,9 @@ internal sealed record BenchOptions
     public int Warmup { get; init; } = 50;
     public int Iterations { get; init; }
     public int Repeat { get; init; } = 2;
+
+    /// <summary>Requests per cell in the varied-inputs pass (each with a state length not seen before); 0 skips it.</summary>
+    public int VariedIterations { get; init; }
     public string? Tag { get; init; }
     public Uri? HttpUrl { get; init; }
     public string? HttpServerLog { get; init; }
@@ -62,7 +65,7 @@ internal sealed record BenchOptions
 
         var known = new HashSet<string>(StringComparer.Ordinal)
         {
-            "provider", "out", "models", "questions", "warmup", "iterations", "repeat", "tag", "http-url", "http-server-log",
+            "provider", "out", "models", "questions", "warmup", "iterations", "repeat", "tag", "http-url", "http-server-log", "varied-iterations",
             "models-dir", "native-dir", "cuda-deps-dir", "invoked-by", "combine",
         };
         foreach (var k in map.Keys)
@@ -115,6 +118,8 @@ internal sealed record BenchOptions
             Warmup = warmup,
             Iterations = iterations,
             Repeat = repeat,
+            VariedIterations = map.TryGetValue("varied-iterations", out var vi) ? int.Parse(vi, System.Globalization.CultureInfo.InvariantCulture)
+                : provider == Tau.Inference.Onnx.OrtProvider.Cpu ? 10 : 150,
             Tag = tag,
             HttpUrl = http,
             HttpServerLog = map.TryGetValue("http-server-log", out var log) ? Resolve(log) : null,

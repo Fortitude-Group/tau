@@ -12,10 +12,23 @@ public sealed record OrtSessionSettings
     public GraphOptimizationLevel GraphOptimizationLevel { get; init; } = GraphOptimizationLevel.ORT_ENABLE_BASIC;
 
     /// <summary>
-    /// Threads for work inside one operator. Fixed rather than ONNX Runtime's machine-dependent default, so the way
-    /// CPU work is split does not change between machines. Default 4.
+    /// Threads for work inside one operator. Default: one per physical core (logical processors / 2), which measured
+    /// fastest on the reference machine (8 threads: 18% faster than 4; 16 was slower again). A given setting always
+    /// splits work the same way, so results stay deterministic for a fixed configuration.
     /// </summary>
-    public int IntraOpThreads { get; init; } = 4;
+    public int IntraOpThreads { get; init; } = Math.Max(1, Environment.ProcessorCount / 2);
+
+    /// <summary>
+    /// ONNX Runtime's deterministic-compute flag. On by default: identical requests must give identical bytes
+    /// (FR-016). Exposed so its cost can be measured, not so it can be turned off in production.
+    /// </summary>
+    public bool DeterministicCompute { get; init; } = true;
+
+    /// <summary>
+    /// ONNX Runtime's memory-pattern optimisation (plans allocations per input shape). Exposed so its effect on
+    /// first-seen shapes can be measured.
+    /// </summary>
+    public bool EnableMemoryPattern { get; init; } = true;
 
     /// <summary>Threads across operators. Default 1 (the graph runs sequentially).</summary>
     public int InterOpThreads { get; init; } = 1;
@@ -141,10 +154,11 @@ public static class OrtSessionFactory
             GraphOptimizationLevel = settings.GraphOptimizationLevel,
             ExecutionMode = ExecutionMode.ORT_SEQUENTIAL,
             IntraOpNumThreads = settings.IntraOpThreads,
+            EnableMemoryPattern = settings.EnableMemoryPattern,
             InterOpNumThreads = settings.InterOpThreads,
             LogId = $"tau-{provider.Flavour()}",
         };
-        OrtCApi.SetDeterministicCompute(options, true);
+        OrtCApi.SetDeterministicCompute(options, settings.DeterministicCompute);
 
         if (settings.EnableProfiling)
         {

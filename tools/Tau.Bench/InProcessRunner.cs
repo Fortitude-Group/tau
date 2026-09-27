@@ -15,7 +15,25 @@ internal static class InProcessRunner
 {
     public static BenchReport Run(BenchOptions o, Workload workload, Func<LoadSample> sampleLoad)
     {
+        // Experiment overrides (recorded in the report's session settings): TAU_GRAPH_OPT=basic|extended|all,
+        // TAU_INTRA_THREADS=n, TAU_DETERMINISTIC=0|1.
         var sessionDefaults = new OrtSessionSettings();
+        if (Environment.GetEnvironmentVariable("TAU_GRAPH_OPT") is { Length: > 0 } g)
+            sessionDefaults = sessionDefaults with
+            {
+                GraphOptimizationLevel = g.ToLowerInvariant() switch
+                {
+                    "basic" => Microsoft.ML.OnnxRuntime.GraphOptimizationLevel.ORT_ENABLE_BASIC,
+                    "extended" => Microsoft.ML.OnnxRuntime.GraphOptimizationLevel.ORT_ENABLE_EXTENDED,
+                    "all" => Microsoft.ML.OnnxRuntime.GraphOptimizationLevel.ORT_ENABLE_ALL,
+                    _ => throw new ArgumentException($"TAU_GRAPH_OPT={g}"),
+                },
+            };
+        if (int.TryParse(Environment.GetEnvironmentVariable("TAU_INTRA_THREADS"), out var th))
+            sessionDefaults = sessionDefaults with { IntraOpThreads = th };
+        if (Environment.GetEnvironmentVariable("TAU_DETERMINISTIC") == "0")
+            sessionDefaults = sessionDefaults with { DeterministicCompute = false };
+        Console.WriteLine($"session: graph {sessionDefaults.GraphOptimizationLevel}, intra-op {sessionDefaults.IntraOpThreads}, deterministic {sessionDefaults.DeterministicCompute}");
         var settings = new EngineSettings
         {
             ModelsDirectory = o.ModelsDir,
@@ -69,6 +87,24 @@ internal static class InProcessRunner
                     Console.WriteLine($"forward p50 {acc.Fwd[^1].P50:0.00} ms  engine p50 {acc.E2e[^1].P50:0.00} ms");
                 }
             }
+            // Varied inputs: every request's state has a length this process hasn't sent before, so GPU runtimes
+            // can't serve it from shape-specific caches. Real traffic looks like this; the fixed workload above doesn't.
+            var variedFwd = new List<Cell>();
+            var variedE2e = new List<Cell>();
+            if (o.VariedIterations > 0)
+            {
+                foreach (var id in ids)
+                foreach (var q in o.Questions)
+                {
+                    Console.Write($"  varied inputs      {id,-22} q={q,-2} ");
+                    var (fwd, e2e, rows, meanTokens) = MeasureVaried(engine, requests[(id, q)], q, o.VariedIterations);
+                    var sf = Stats.Summarise(fwd, q);
+                    var se = Stats.Summarise(e2e, q);
+                    variedFwd.Add(new Cell(id, q, rows, meanTokens, [sf], null));
+                    variedE2e.Add(new Cell(id, q, rows, meanTokens, [se], null));
+                    Console.WriteLine($"forward p50 {sf.P50:0.00} ms  p95 {sf.P95:0.00} ms");
+                }
+            }
             var loadAfter = sampleLoad();
 
             foreach (var id in ids)
@@ -88,10 +124,49 @@ internal static class InProcessRunner
                 new Measurement("engine_end_to_end", "Engine end to end",
                     "Stopwatch around OnnxDecisionEngine.DecideAsync on an already-parsed request: routing, tokenising, building the rows, "
                     + "the forward pass (including host-device copies) and the reference post-processing. No HTTP, no JSON.", endToEnd),
-            };
+            }.Concat(o.VariedIterations > 0 ? new[]
+            {
+                new Measurement("varied_forward", "Model forward pass, varied inputs",
+                    $"As 'Model forward pass', but each of {o.VariedIterations} requests per cell uses the workload's text cut to a different "
+                    + "word count this process hasn't sent before (5 upwards, shuffled with a fixed seed), with no warm-up on those shapes. "
+                    + "This is closer to real traffic than the fixed workload: a GPU runtime can't reuse shape-specific work.", variedFwd),
+                new Measurement("varied_end_to_end", "Engine end to end, varied inputs",
+                    "As 'Engine end to end', with the varied inputs above. The input-tokens column is the mean over the requests.", variedE2e),
+            } : []).ToArray();
 
             return Assemble(o, workload, "in-process", check, ortNative, models, measurements, loadBefore, loadAfter, sessionDefaults);
         }
+    }
+
+    private static (List<double> Fwd, List<double> E2e, int Rows, int MeanTokens) MeasureVaried(
+        OnnxDecisionEngine engine, DecisionRequest template, int q, int n)
+    {
+        var source = template.State is System.Text.Json.Nodes.JsonValue v && v.TryGetValue<string>(out var t) ? t : template.State?.ToJsonString() ?? "";
+        var words = source.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        // Unique word counts within the cell, shuffled deterministically. Cells with a different question count have a
+        // different batch size, so their shapes never coincide with this cell's.
+        var lengths = Enumerable.Range(5, n).ToArray();
+        new Random(42).Shuffle(lengths);
+        var options = new DecisionOptions(Raw: false);
+        var fwd = new List<double>(n);
+        var e2e = new List<double>(n);
+        long tokens = 0;
+        var rows = 0;
+        foreach (var len in lengths)
+        {
+            var text = string.Join(' ', Enumerable.Range(0, len).Select(i => words[i % words.Length]));
+            var request = new DecisionRequest
+            {
+                Model = template.Model, State = System.Text.Json.Nodes.JsonValue.Create(text), Questions = template.Questions,
+            };
+            var t0 = Stopwatch.GetTimestamp();
+            var r = engine.DecideAsync(request, options, CancellationToken.None).GetAwaiter().GetResult();
+            e2e.Add(Stopwatch.GetElapsedTime(t0).TotalMilliseconds);
+            fwd.Add(r.Diagnostics.ModelMilliseconds);
+            tokens += r.Diagnostics.InputTokens;
+            rows = r.Diagnostics.BatchRows;
+        }
+        return (fwd, e2e, rows, (int)(tokens / Math.Max(1, n)));
     }
 
     private static (List<double> Fwd, List<double> E2e, int Rows, int Tokens) Measure(

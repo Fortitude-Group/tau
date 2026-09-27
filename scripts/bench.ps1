@@ -28,9 +28,10 @@ param(
     [ValidateSet('cuda', 'cpu', 'directml')]
     [string[]]$Providers = @('cuda', 'cpu'),
     [int]$Warmup = 50,
-    [int]$CpuWarmup = 50,
+    # CPU FP32 takes about 0.7-7.5 s per request here, so 50/100 would run for about 4 hours; 5/30 keeps it near 1 hour.
+    [int]$CpuWarmup = 5,
     [int]$GpuIterations = 500,
-    [int]$CpuIterations = 100,
+    [int]$CpuIterations = 30,
     [int]$Repeat = 2,
     [string]$Questions = '1,4,10',
     [string]$Models,
