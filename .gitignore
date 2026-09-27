@@ -21,6 +21,11 @@ sidecar/**/env/
 .cache/
 frontier-cache/
 
+# Frontier work files hold item text (ticket rows must never be redistributed). Only cache.jsonl,
+# overrides.jsonl and label-summary.json, which hold keys and answers, are committed.
+examples/*/frontier/pending/
+examples/*/frontier/sheets/
+
 # Committed test data: Python-generated fixtures and the tiny provider-spike model
 !tests/**/data/
 !tests/Tau.Inference.Tests/Onnx/*.onnx
