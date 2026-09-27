@@ -5,10 +5,10 @@
   "actualProvider": "cpu",
   "tag": null,
   "header": {
-    "command": "Tau.Bench --provider cpu --iterations 30 --warmup 5 --out reports/r1 --repeat 2 --questions 1,4,10 --invoked-by \"./scripts/bench.ps1 -Http\"",
-    "invokedBy": "./scripts/bench.ps1 -Http",
-    "dateUtc": "2026-09-27T05:06:43Z",
-    "gitCommit": "c26162e40284fbbff86bc937e482885cbb961b64",
+    "command": "Tau.Bench --provider cpu --iterations 30 --warmup 5 --out reports/r1 --repeat 2 --questions 1,4,10 --invoked-by \"./scripts/bench.ps1 -Http -Models laya-en,laya-multilingual,laya-typed-decisions,von-1.2.0\" --models laya-en,laya-multilingual,laya-typed-decisions,von-1.2.0",
+    "invokedBy": "./scripts/bench.ps1 -Http -Models laya-en,laya-multilingual,laya-typed-decisions,von-1.2.0",
+    "dateUtc": "2026-09-27T16:58:00Z",
+    "gitCommit": "c58502cca4793eef16676242aba2696956d8348b",
     "gitDirty": true,
     "contractVersion": "systemone/2026-09-27",
     "hardware": {
@@ -29,16 +29,16 @@
       "processArchitecture": "x64"
     },
     "loadBefore": {
-      "cpuPercent": 48.7723,
-      "gpuPercent": 0,
-      "gpuMemoryUsedMiB": 892,
+      "cpuPercent": 9.4042,
+      "gpuPercent": 0.3333,
+      "gpuMemoryUsedMiB": 1150,
       "samples": 3,
       "method": "CPU: GetSystemTimes busy share over the sampling window; GPU: mean of 3 nvidia-smi utilization.gpu/memory.used readings 0.5 s apart"
     },
     "loadAfter": {
-      "cpuPercent": 52.4432,
-      "gpuPercent": 0,
-      "gpuMemoryUsedMiB": 969,
+      "cpuPercent": 7.8704,
+      "gpuPercent": 15.6667,
+      "gpuMemoryUsedMiB": 1678.3333,
       "samples": 3,
       "method": "CPU: GetSystemTimes busy share over the sampling window; GPU: mean of 3 nvidia-smi utilization.gpu/memory.used readings 0.5 s apart"
     },
@@ -153,30 +153,30 @@
           "repeats": [
             {
               "n": 30,
-              "mean": 806.7073,
-              "sd": 40.8521,
-              "min": 718.138,
-              "p50": 810.2017,
-              "p95": 862.5745,
-              "p99": 885.745,
-              "max": 894.6263,
-              "p50PerQuestion": 810.2017,
-              "meanPerQuestion": 806.7073
+              "mean": 535.82,
+              "sd": 44.0724,
+              "min": 454.3125,
+              "p50": 528.4429,
+              "p95": 606.3134,
+              "p99": 621.9556,
+              "max": 627.3649,
+              "p50PerQuestion": 528.4429,
+              "meanPerQuestion": 535.82
             },
             {
               "n": 30,
-              "mean": 671.8949,
-              "sd": 22.9751,
-              "min": 628.1099,
-              "p50": 667.7193,
-              "p95": 714.6587,
-              "p99": 724.6903,
-              "max": 726.6483,
-              "p50PerQuestion": 667.7193,
-              "meanPerQuestion": 671.8949
+              "mean": 523.3919,
+              "sd": 43.125,
+              "min": 444.1035,
+              "p50": 525.4373,
+              "p95": 596.876,
+              "p99": 598.3633,
+              "max": 598.7384,
+              "p50PerQuestion": 525.4373,
+              "meanPerQuestion": 523.3919
             }
           ],
-          "p50RepeatDiffPercent": -17.586
+          "p50RepeatDiffPercent": -0.5688
         },
         {
           "model": "laya-en",
@@ -186,30 +186,30 @@
           "repeats": [
             {
               "n": 30,
-              "mean": 3010.47,
-              "sd": 113.7073,
-              "min": 2772.9021,
-              "p50": 3012.138,
-              "p95": 3162.974,
-              "p99": 3229.8098,
-              "max": 3250.4706,
-              "p50PerQuestion": 753.0345,
-              "meanPerQuestion": 752.6175
+              "mean": 2187.9639,
+              "sd": 113.7266,
+              "min": 2024.7027,
+              "p50": 2164.7418,
+              "p95": 2377.7618,
+              "p99": 2446.103,
+              "max": 2464.3417,
+              "p50PerQuestion": 541.1854,
+              "meanPerQuestion": 546.991
             },
             {
               "n": 30,
-              "mean": 2755.5983,
-              "sd": 69.4069,
-              "min": 2641.8293,
-              "p50": 2753.3125,
-              "p95": 2872.39,
-              "p99": 2874.7631,
-              "max": 2875.4168,
-              "p50PerQuestion": 688.3281,
-              "meanPerQuestion": 688.8996
+              "mean": 2255.5012,
+              "sd": 131.6746,
+              "min": 1994.7125,
+              "p50": 2270.4793,
+              "p95": 2458.3741,
+              "p99": 2507.1633,
+              "max": 2513.4011,
+              "p50PerQuestion": 567.6198,
+              "meanPerQuestion": 563.8753
             }
           ],
-          "p50RepeatDiffPercent": -8.5928
+          "p50RepeatDiffPercent": 4.8845
         },
         {
           "model": "laya-en",
@@ -219,30 +219,30 @@
           "repeats": [
             {
               "n": 30,
-              "mean": 6858.4959,
-              "sd": 274.8193,
-              "min": 6381.2856,
-              "p50": 6839.9076,
-              "p95": 7323.3985,
-              "p99": 7364.0714,
-              "max": 7369.5898,
-              "p50PerQuestion": 683.9908,
-              "meanPerQuestion": 685.8496
+              "mean": 5606.5061,
+              "sd": 173.6801,
+              "min": 5300.2183,
+              "p50": 5615.6475,
+              "p95": 5911.8345,
+              "p99": 5950.7568,
+              "max": 5952.0121,
+              "p50PerQuestion": 561.5648,
+              "meanPerQuestion": 560.6506
             },
             {
               "n": 30,
-              "mean": 7193.0586,
-              "sd": 123.9951,
-              "min": 6961.8662,
-              "p50": 7195.9006,
-              "p95": 7375.7592,
-              "p99": 7506.3927,
-              "max": 7545.2064,
-              "p50PerQuestion": 719.5901,
-              "meanPerQuestion": 719.3059
+              "mean": 6291.2785,
+              "sd": 170.876,
+              "min": 6060.3874,
+              "p50": 6262.4667,
+              "p95": 6580.5423,
+              "p99": 6679.4033,
+              "max": 6700.4952,
+              "p50PerQuestion": 626.2467,
+              "meanPerQuestion": 629.1279
             }
           ],
-          "p50RepeatDiffPercent": 5.2046
+          "p50RepeatDiffPercent": 11.5182
         },
         {
           "model": "laya-multilingual",
@@ -252,30 +252,30 @@
           "repeats": [
             {
               "n": 30,
-              "mean": 252.9458,
-              "sd": 21.7624,
-              "min": 215.1338,
-              "p50": 252.4281,
-              "p95": 294.8946,
-              "p99": 304.6034,
-              "max": 305.0241,
-              "p50PerQuestion": 252.4281,
-              "meanPerQuestion": 252.9458
+              "mean": 231.2462,
+              "sd": 23.7393,
+              "min": 186.6451,
+              "p50": 233.4769,
+              "p95": 262.2579,
+              "p99": 279.5916,
+              "max": 286.6639,
+              "p50PerQuestion": 233.4769,
+              "meanPerQuestion": 231.2462
             },
             {
               "n": 30,
-              "mean": 276.5406,
-              "sd": 24.7812,
-              "min": 241.6091,
-              "p50": 276.6013,
-              "p95": 320.6843,
-              "p99": 341.237,
-              "max": 345.1546,
-              "p50PerQuestion": 276.6013,
-              "meanPerQuestion": 276.5406
+              "mean": 214.2224,
+              "sd": 20.208,
+              "min": 177.0453,
+              "p50": 208.2801,
+              "p95": 245.488,
+              "p99": 248.9599,
+              "max": 249.7588,
+              "p50PerQuestion": 208.2801,
+              "meanPerQuestion": 214.2224
             }
           ],
-          "p50RepeatDiffPercent": 9.5763
+          "p50RepeatDiffPercent": -10.792
         },
         {
           "model": "laya-multilingual",
@@ -285,30 +285,30 @@
           "repeats": [
             {
               "n": 30,
-              "mean": 990.3397,
-              "sd": 43.3057,
-              "min": 923.2034,
-              "p50": 983.5443,
-              "p95": 1056.3152,
-              "p99": 1076.3234,
-              "max": 1081.7479,
-              "p50PerQuestion": 245.8861,
-              "meanPerQuestion": 247.5849
+              "mean": 926.6824,
+              "sd": 68.0653,
+              "min": 823.0264,
+              "p50": 905.2476,
+              "p95": 1034.0006,
+              "p99": 1051.8719,
+              "max": 1058.1226,
+              "p50PerQuestion": 226.3119,
+              "meanPerQuestion": 231.6706
             },
             {
               "n": 30,
-              "mean": 1127.8828,
-              "sd": 45.5769,
-              "min": 1044.8896,
-              "p50": 1121.9373,
-              "p95": 1215.3278,
-              "p99": 1225.3164,
-              "max": 1226.5825,
-              "p50PerQuestion": 280.4843,
-              "meanPerQuestion": 281.9707
+              "mean": 896.9266,
+              "sd": 68.7216,
+              "min": 784.7461,
+              "p50": 883.384,
+              "p95": 1007.8197,
+              "p99": 1029.8829,
+              "max": 1035.7349,
+              "p50PerQuestion": 220.846,
+              "meanPerQuestion": 224.2316
             }
           ],
-          "p50RepeatDiffPercent": 14.0708
+          "p50RepeatDiffPercent": -2.4152
         },
         {
           "model": "laya-multilingual",
@@ -318,30 +318,30 @@
           "repeats": [
             {
               "n": 30,
-              "mean": 2633.9207,
-              "sd": 76.5094,
-              "min": 2505.9726,
-              "p50": 2627.0758,
-              "p95": 2766.2503,
-              "p99": 2794.2154,
-              "max": 2803.7836,
-              "p50PerQuestion": 262.7076,
-              "meanPerQuestion": 263.3921
+              "mean": 2503.6337,
+              "sd": 126.0301,
+              "min": 2270.9419,
+              "p50": 2526.8419,
+              "p95": 2640.626,
+              "p99": 2792.3614,
+              "max": 2850.4676,
+              "p50PerQuestion": 252.6842,
+              "meanPerQuestion": 250.3634
             },
             {
               "n": 30,
-              "mean": 2960.0682,
-              "sd": 80.8583,
-              "min": 2821.5148,
-              "p50": 2984.1355,
-              "p95": 3074.2111,
-              "p99": 3087.9303,
-              "max": 3088.9028,
-              "p50PerQuestion": 298.4136,
-              "meanPerQuestion": 296.0068
+              "mean": 2370.0006,
+              "sd": 97.7629,
+              "min": 2200.3056,
+              "p50": 2375.4422,
+              "p95": 2535.3203,
+              "p99": 2550.4161,
+              "max": 2553.5453,
+              "p50PerQuestion": 237.5442,
+              "meanPerQuestion": 237.0001
             }
           ],
-          "p50RepeatDiffPercent": 13.5915
+          "p50RepeatDiffPercent": -5.9917
         },
         {
           "model": "laya-typed-decisions",
@@ -351,30 +351,30 @@
           "repeats": [
             {
               "n": 30,
-              "mean": 575.1236,
-              "sd": 28.3099,
-              "min": 527.1015,
-              "p50": 576.4819,
-              "p95": 620.8454,
-              "p99": 637.884,
-              "max": 641.7515,
-              "p50PerQuestion": 576.4819,
-              "meanPerQuestion": 575.1236
+              "mean": 574.2094,
+              "sd": 37.0234,
+              "min": 490.4842,
+              "p50": 575.8634,
+              "p95": 623.2289,
+              "p99": 637.2203,
+              "max": 642.3144,
+              "p50PerQuestion": 575.8634,
+              "meanPerQuestion": 574.2094
             },
             {
               "n": 30,
-              "mean": 736.9571,
-              "sd": 267.9472,
-              "min": 605.1269,
-              "p50": 673.4877,
-              "p95": 912.455,
-              "p99": 1779.7625,
-              "max": 2102.1748,
-              "p50PerQuestion": 673.4877,
-              "meanPerQuestion": 736.9571
+              "mean": 518.2235,
+              "sd": 30.8527,
+              "min": 462.2562,
+              "p50": 515.7422,
+              "p95": 569.3582,
+              "p99": 576.4378,
+              "max": 578.7995,
+              "p50PerQuestion": 515.7422,
+              "meanPerQuestion": 518.2235
             }
           ],
-          "p50RepeatDiffPercent": 16.8272
+          "p50RepeatDiffPercent": -10.4402
         },
         {
           "model": "laya-typed-decisions",
@@ -384,30 +384,30 @@
           "repeats": [
             {
               "n": 30,
-              "mean": 2641.9679,
-              "sd": 201.0699,
-              "min": 2343.4771,
-              "p50": 2614.5846,
-              "p95": 2961.891,
-              "p99": 3315.9469,
-              "max": 3391.6059,
-              "p50PerQuestion": 653.6462,
-              "meanPerQuestion": 660.492
+              "mean": 2209.8911,
+              "sd": 127.0737,
+              "min": 2000.5782,
+              "p50": 2199.3344,
+              "p95": 2390.7415,
+              "p99": 2498.4225,
+              "max": 2541.9463,
+              "p50PerQuestion": 549.8336,
+              "meanPerQuestion": 552.4728
             },
             {
               "n": 30,
-              "mean": 2672.5298,
-              "sd": 76.6668,
-              "min": 2524.6383,
-              "p50": 2685.9893,
-              "p95": 2777.3789,
-              "p99": 2824.753,
-              "max": 2843.2047,
-              "p50PerQuestion": 671.4973,
-              "meanPerQuestion": 668.1325
+              "mean": 2169.7581,
+              "sd": 100.6519,
+              "min": 2009.8443,
+              "p50": 2163.5087,
+              "p95": 2348.0612,
+              "p99": 2369.5458,
+              "max": 2370.3546,
+              "p50PerQuestion": 540.8772,
+              "meanPerQuestion": 542.4395
             }
           ],
-          "p50RepeatDiffPercent": 2.731
+          "p50RepeatDiffPercent": -1.6289
         },
         {
           "model": "laya-typed-decisions",
@@ -417,30 +417,30 @@
           "repeats": [
             {
               "n": 30,
-              "mean": 7300.1663,
-              "sd": 107.5116,
-              "min": 7039.2278,
-              "p50": 7300.8488,
-              "p95": 7463.9489,
-              "p99": 7545.2314,
-              "max": 7576.5762,
-              "p50PerQuestion": 730.0849,
-              "meanPerQuestion": 730.0166
+              "mean": 5864.2415,
+              "sd": 168.7888,
+              "min": 5576.1904,
+              "p50": 5826.6056,
+              "p95": 6170.5641,
+              "p99": 6226.7027,
+              "max": 6237.1408,
+              "p50PerQuestion": 582.6606,
+              "meanPerQuestion": 586.4242
             },
             {
               "n": 30,
-              "mean": 6916.1032,
-              "sd": 111.9249,
-              "min": 6700.2943,
-              "p50": 6898.9357,
-              "p95": 7083.7286,
-              "p99": 7213.1334,
-              "max": 7263.4823,
-              "p50PerQuestion": 689.8936,
-              "meanPerQuestion": 691.6103
+              "mean": 5809.0098,
+              "sd": 310.1158,
+              "min": 5426.4548,
+              "p50": 5700.8243,
+              "p95": 6455.7195,
+              "p99": 6549.2447,
+              "max": 6549.7584,
+              "p50PerQuestion": 570.0824,
+              "meanPerQuestion": 580.901
             }
           ],
-          "p50RepeatDiffPercent": -5.505
+          "p50RepeatDiffPercent": -2.1587
         },
         {
           "model": "von-1.2.0",
@@ -450,30 +450,30 @@
           "repeats": [
             {
               "n": 30,
-              "mean": 508.0552,
-              "sd": 19.7292,
-              "min": 463.5562,
-              "p50": 510.7915,
-              "p95": 534.3712,
-              "p99": 541.4912,
-              "max": 542.9722,
-              "p50PerQuestion": 510.7915,
-              "meanPerQuestion": 508.0552
+              "mean": 405.5494,
+              "sd": 34.193,
+              "min": 345.4358,
+              "p50": 398.8494,
+              "p95": 453.1499,
+              "p99": 464.1511,
+              "max": 465.6735,
+              "p50PerQuestion": 398.8494,
+              "meanPerQuestion": 405.5494
             },
             {
               "n": 30,
-              "mean": 485.2419,
-              "sd": 18.9995,
-              "min": 461.4356,
-              "p50": 481.6213,
-              "p95": 524.4799,
-              "p99": 537.3891,
-              "max": 540.5862,
-              "p50PerQuestion": 481.6213,
-              "meanPerQuestion": 485.2419
+              "mean": 384.062,
+              "sd": 39.2697,
+              "min": 305.9198,
+              "p50": 379.1052,
+              "p95": 444.8017,
+              "p99": 448.2641,
+              "max": 449.3037,
+              "p50PerQuestion": 379.1052,
+              "meanPerQuestion": 384.062
             }
           ],
-          "p50RepeatDiffPercent": -5.7108
+          "p50RepeatDiffPercent": -4.9503
         },
         {
           "model": "von-1.2.0",
@@ -483,30 +483,30 @@
           "repeats": [
             {
               "n": 30,
-              "mean": 2592.58,
-              "sd": 68.1402,
-              "min": 2444.837,
-              "p50": 2593.7139,
-              "p95": 2675.449,
-              "p99": 2725.0661,
-              "max": 2738.4572,
-              "p50PerQuestion": 648.4285,
-              "meanPerQuestion": 648.145
+              "mean": 2075.5322,
+              "sd": 87.6518,
+              "min": 1934.7301,
+              "p50": 2072.4395,
+              "p95": 2228.8877,
+              "p99": 2261.9442,
+              "max": 2265.1418,
+              "p50PerQuestion": 518.1099,
+              "meanPerQuestion": 518.883
             },
             {
               "n": 30,
-              "mean": 2490.817,
-              "sd": 50.2147,
-              "min": 2406.3633,
-              "p50": 2496.2846,
-              "p95": 2574.8492,
-              "p99": 2583.0526,
-              "max": 2584.7432,
-              "p50PerQuestion": 624.0711,
-              "meanPerQuestion": 622.7043
+              "mean": 2075.27,
+              "sd": 138.0598,
+              "min": 1828.1696,
+              "p50": 2083.1892,
+              "p95": 2319.534,
+              "p99": 2412.4132,
+              "max": 2442.8824,
+              "p50PerQuestion": 520.7973,
+              "meanPerQuestion": 518.8175
             }
           ],
-          "p50RepeatDiffPercent": -3.7564
+          "p50RepeatDiffPercent": 0.5187
         },
         {
           "model": "von-1.2.0",
@@ -516,30 +516,30 @@
           "repeats": [
             {
               "n": 30,
-              "mean": 6893.0572,
-              "sd": 332.8557,
-              "min": 6644.5789,
-              "p50": 6820.3677,
-              "p95": 7051.5989,
-              "p99": 8139.2725,
-              "max": 8573.0102,
-              "p50PerQuestion": 682.0368,
-              "meanPerQuestion": 689.3057
+              "mean": 5587.1987,
+              "sd": 160.6689,
+              "min": 5401.7369,
+              "p50": 5571.1748,
+              "p95": 5900.6204,
+              "p99": 5990.6511,
+              "max": 6017.6758,
+              "p50PerQuestion": 557.1175,
+              "meanPerQuestion": 558.7199
             },
             {
               "n": 30,
-              "mean": 6660.7933,
-              "sd": 284.7327,
-              "min": 6466.1119,
-              "p50": 6616.3409,
-              "p95": 6804.679,
-              "p99": 7727.0031,
-              "max": 8097.6768,
-              "p50PerQuestion": 661.6341,
-              "meanPerQuestion": 666.0793
+              "mean": 5528.0678,
+              "sd": 229.3809,
+              "min": 5256.9536,
+              "p50": 5469.1763,
+              "p95": 6093.5505,
+              "p99": 6111.173,
+              "max": 6116.0411,
+              "p50PerQuestion": 546.9176,
+              "meanPerQuestion": 552.8068
             }
           ],
-          "p50RepeatDiffPercent": -2.9914
+          "p50RepeatDiffPercent": -1.8308
         }
       ]
     },
@@ -556,30 +556,30 @@
           "repeats": [
             {
               "n": 30,
-              "mean": 807.6732,
-              "sd": 40.826,
-              "min": 719.265,
-              "p50": 811.1976,
-              "p95": 863.4982,
-              "p99": 886.665,
-              "max": 895.5205,
-              "p50PerQuestion": 811.1976,
-              "meanPerQuestion": 807.6732
+              "mean": 536.5443,
+              "sd": 44.0772,
+              "min": 454.9043,
+              "p50": 529.2132,
+              "p95": 607.107,
+              "p99": 622.7173,
+              "max": 628.1085,
+              "p50PerQuestion": 529.2132,
+              "meanPerQuestion": 536.5443
             },
             {
               "n": 30,
-              "mean": 672.5768,
-              "sd": 22.9871,
-              "min": 628.7803,
-              "p50": 668.4712,
-              "p95": 715.3172,
-              "p99": 725.4228,
-              "max": 727.4169,
-              "p50PerQuestion": 668.4712,
-              "meanPerQuestion": 672.5768
+              "mean": 523.8973,
+              "sd": 43.1703,
+              "min": 444.5158,
+              "p50": 525.9172,
+              "p95": 597.4207,
+              "p99": 598.933,
+              "max": 599.3405,
+              "p50PerQuestion": 525.9172,
+              "meanPerQuestion": 523.8973
             }
           ],
-          "p50RepeatDiffPercent": -17.5945
+          "p50RepeatDiffPercent": -0.6228
         },
         {
           "model": "laya-en",
@@ -589,30 +589,30 @@
           "repeats": [
             {
               "n": 30,
-              "mean": 3011.7566,
-              "sd": 113.609,
-              "min": 2774.2257,
-              "p50": 3013.3346,
-              "p95": 3164.1014,
-              "p99": 3231.0469,
-              "max": 3251.8721,
-              "p50PerQuestion": 753.3337,
-              "meanPerQuestion": 752.9392
+              "mean": 2188.9531,
+              "sd": 113.821,
+              "min": 2025.6097,
+              "p50": 2165.7028,
+              "p95": 2378.864,
+              "p99": 2447.0478,
+              "max": 2465.1916,
+              "p50PerQuestion": 541.4257,
+              "meanPerQuestion": 547.2383
             },
             {
               "n": 30,
-              "mean": 2756.6683,
-              "sd": 69.453,
-              "min": 2642.6221,
-              "p50": 2754.1672,
-              "p95": 2873.3995,
-              "p99": 2875.7682,
-              "max": 2876.4268,
-              "p50PerQuestion": 688.5418,
-              "meanPerQuestion": 689.1671
+              "mean": 2256.3261,
+              "sd": 131.6975,
+              "min": 1995.4427,
+              "p50": 2271.569,
+              "p95": 2459.0962,
+              "p99": 2507.8436,
+              "max": 2514.0799,
+              "p50PerQuestion": 567.8923,
+              "meanPerQuestion": 564.0815
             }
           ],
-          "p50RepeatDiffPercent": -8.6007
+          "p50RepeatDiffPercent": 4.8883
         },
         {
           "model": "laya-en",
@@ -622,30 +622,30 @@
           "repeats": [
             {
               "n": 30,
-              "mean": 6860.1568,
-              "sd": 274.8508,
-              "min": 6383.2996,
-              "p50": 6841.5531,
-              "p95": 7325.4068,
-              "p99": 7366.1636,
-              "max": 7371.6869,
-              "p50PerQuestion": 684.1553,
-              "meanPerQuestion": 686.0157
+              "mean": 5607.7548,
+              "sd": 173.8181,
+              "min": 5301.1648,
+              "p50": 5616.9057,
+              "p95": 5913.1956,
+              "p99": 5952.1732,
+              "max": 5953.3563,
+              "p50PerQuestion": 561.6906,
+              "meanPerQuestion": 560.7755
             },
             {
               "n": 30,
-              "mean": 7194.8117,
-              "sd": 123.9556,
-              "min": 6963.3623,
-              "p50": 7197.4495,
-              "p95": 7377.1343,
-              "p99": 7507.8238,
-              "max": 7546.7084,
-              "p50PerQuestion": 719.745,
-              "meanPerQuestion": 719.4812
+              "mean": 6292.5892,
+              "sd": 170.8792,
+              "min": 6061.775,
+              "p50": 6263.8914,
+              "p95": 6581.8231,
+              "p99": 6680.6168,
+              "max": 6701.7174,
+              "p50PerQuestion": 626.3891,
+              "meanPerQuestion": 629.2589
             }
           ],
-          "p50RepeatDiffPercent": 5.202
+          "p50RepeatDiffPercent": 11.5185
         },
         {
           "model": "laya-multilingual",
@@ -655,30 +655,30 @@
           "repeats": [
             {
               "n": 30,
-              "mean": 253.4368,
-              "sd": 21.809,
-              "min": 215.6228,
-              "p50": 252.8883,
-              "p95": 295.4017,
-              "p99": 305.0951,
-              "max": 305.503,
-              "p50PerQuestion": 252.8883,
-              "meanPerQuestion": 253.4368
+              "mean": 231.6552,
+              "sd": 23.7729,
+              "min": 186.9622,
+              "p50": 233.9696,
+              "p95": 262.6871,
+              "p99": 280.0082,
+              "max": 287.0586,
+              "p50PerQuestion": 233.9696,
+              "meanPerQuestion": 231.6552
             },
             {
               "n": 30,
-              "mean": 277.0256,
-              "sd": 24.809,
-              "min": 242.1395,
-              "p50": 277.0198,
-              "p95": 321.1977,
-              "p99": 341.801,
-              "max": 345.7283,
-              "p50PerQuestion": 277.0198,
-              "meanPerQuestion": 277.0256
+              "mean": 214.614,
+              "sd": 20.234,
+              "min": 177.3783,
+              "p50": 208.6982,
+              "p95": 245.882,
+              "p99": 249.4563,
+              "max": 250.2877,
+              "p50PerQuestion": 208.6982,
+              "meanPerQuestion": 214.614
             }
           ],
-          "p50RepeatDiffPercent": 9.5424
+          "p50RepeatDiffPercent": -10.8011
         },
         {
           "model": "laya-multilingual",
@@ -688,30 +688,30 @@
           "repeats": [
             {
               "n": 30,
-              "mean": 991.0453,
-              "sd": 43.3441,
-              "min": 923.7588,
-              "p50": 984.2271,
-              "p95": 1057.3231,
-              "p99": 1077.2785,
-              "max": 1082.5626,
-              "p50PerQuestion": 246.0568,
-              "meanPerQuestion": 247.7613
+              "mean": 927.321,
+              "sd": 68.0892,
+              "min": 823.6364,
+              "p50": 905.8437,
+              "p95": 1034.6271,
+              "p99": 1052.5785,
+              "max": 1058.83,
+              "p50PerQuestion": 226.4609,
+              "meanPerQuestion": 231.8302
             },
             {
               "n": 30,
-              "mean": 1128.6804,
-              "sd": 45.5716,
-              "min": 1045.7881,
-              "p50": 1122.813,
-              "p95": 1216.1279,
-              "p99": 1226.1622,
-              "max": 1227.4681,
-              "p50PerQuestion": 280.7032,
-              "meanPerQuestion": 282.1701
+              "mean": 897.5089,
+              "sd": 68.7465,
+              "min": 785.2537,
+              "p50": 884.0274,
+              "p95": 1008.4347,
+              "p99": 1030.557,
+              "max": 1036.4487,
+              "p50PerQuestion": 221.0069,
+              "meanPerQuestion": 224.3772
             }
           ],
-          "p50RepeatDiffPercent": 14.0807
+          "p50RepeatDiffPercent": -2.4084
         },
         {
           "model": "laya-multilingual",
@@ -721,30 +721,30 @@
           "repeats": [
             {
               "n": 30,
-              "mean": 2635.012,
-              "sd": 76.5219,
-              "min": 2507.1574,
-              "p50": 2628.0089,
-              "p95": 2767.3676,
-              "p99": 2795.3342,
-              "max": 2804.9084,
-              "p50PerQuestion": 262.8009,
-              "meanPerQuestion": 263.5012
+              "mean": 2504.6321,
+              "sd": 126.0377,
+              "min": 2271.6986,
+              "p50": 2527.8262,
+              "p95": 2641.6533,
+              "p99": 2793.4063,
+              "max": 2851.4739,
+              "p50PerQuestion": 252.7826,
+              "meanPerQuestion": 250.4632
             },
             {
               "n": 30,
-              "mean": 2961.315,
-              "sd": 80.8683,
-              "min": 2822.7544,
-              "p50": 2985.1402,
-              "p95": 3075.44,
-              "p99": 3089.1535,
-              "max": 3090.1311,
-              "p50PerQuestion": 298.514,
-              "meanPerQuestion": 296.1315
+              "mean": 2370.9614,
+              "sd": 97.7463,
+              "min": 2201.0913,
+              "p50": 2376.3236,
+              "p95": 2536.237,
+              "p99": 2551.2835,
+              "max": 2554.4268,
+              "p50PerQuestion": 237.6324,
+              "meanPerQuestion": 237.0961
             }
           ],
-          "p50RepeatDiffPercent": 13.5894
+          "p50RepeatDiffPercent": -5.9934
         },
         {
           "model": "laya-typed-decisions",
@@ -754,30 +754,30 @@
           "repeats": [
             {
               "n": 30,
-              "mean": 575.7162,
-              "sd": 28.3602,
-              "min": 527.6301,
-              "p50": 576.9957,
-              "p95": 621.6636,
-              "p99": 638.6192,
-              "max": 642.3697,
-              "p50PerQuestion": 576.9957,
-              "meanPerQuestion": 575.7162
+              "mean": 574.7648,
+              "sd": 37.0661,
+              "min": 490.9211,
+              "p50": 576.3938,
+              "p95": 623.8543,
+              "p99": 637.8311,
+              "max": 642.9174,
+              "p50PerQuestion": 576.3938,
+              "meanPerQuestion": 574.7648
             },
             {
               "n": 30,
-              "mean": 738.704,
-              "sd": 273.6781,
-              "min": 605.5888,
-              "p50": 674.1442,
-              "p95": 913.1438,
-              "p99": 1803.5445,
-              "max": 2135.4056,
-              "p50PerQuestion": 674.1442,
-              "meanPerQuestion": 738.704
+              "mean": 518.7035,
+              "sd": 30.875,
+              "min": 462.6999,
+              "p50": 516.2536,
+              "p95": 569.9021,
+              "p99": 576.9878,
+              "max": 579.3749,
+              "p50PerQuestion": 516.2536,
+              "meanPerQuestion": 518.7035
             }
           ],
-          "p50RepeatDiffPercent": 16.837
+          "p50RepeatDiffPercent": -10.4339
         },
         {
           "model": "laya-typed-decisions",
@@ -787,30 +787,30 @@
           "repeats": [
             {
               "n": 30,
-              "mean": 2642.9832,
-              "sd": 201.1505,
-              "min": 2344.1242,
-              "p50": 2615.4763,
-              "p95": 2962.9286,
-              "p99": 3317.0293,
-              "max": 3392.6901,
-              "p50PerQuestion": 653.8691,
-              "meanPerQuestion": 660.7458
+              "mean": 2210.6351,
+              "sd": 127.0977,
+              "min": 2001.4566,
+              "p50": 2200.0661,
+              "p95": 2391.5542,
+              "p99": 2499.1341,
+              "max": 2542.6219,
+              "p50PerQuestion": 550.0165,
+              "meanPerQuestion": 552.6588
             },
             {
               "n": 30,
-              "mean": 2673.5979,
-              "sd": 76.7114,
-              "min": 2525.5286,
-              "p50": 2686.9452,
-              "p95": 2778.4581,
-              "p99": 2825.7656,
-              "max": 2844.1699,
-              "p50PerQuestion": 671.7363,
-              "meanPerQuestion": 668.3995
+              "mean": 2170.5282,
+              "sd": 100.6618,
+              "min": 2010.4127,
+              "p50": 2164.2599,
+              "p95": 2348.892,
+              "p99": 2370.4109,
+              "max": 2371.2538,
+              "p50PerQuestion": 541.065,
+              "meanPerQuestion": 542.6321
             }
           ],
-          "p50RepeatDiffPercent": 2.7325
+          "p50RepeatDiffPercent": -1.6275
         },
         {
           "model": "laya-typed-decisions",
@@ -820,30 +820,30 @@
           "repeats": [
             {
               "n": 30,
-              "mean": 7301.8102,
-              "sd": 107.5178,
-              "min": 7041.1092,
-              "p50": 7302.4049,
-              "p95": 7465.5348,
-              "p99": 7547.2524,
-              "max": 7578.8118,
-              "p50PerQuestion": 730.2405,
-              "meanPerQuestion": 730.181
+              "mean": 5865.4288,
+              "sd": 168.7965,
+              "min": 5577.2078,
+              "p50": 5827.7722,
+              "p95": 6171.7158,
+              "p99": 6227.7357,
+              "max": 6238.1643,
+              "p50PerQuestion": 582.7772,
+              "meanPerQuestion": 586.5429
             },
             {
               "n": 30,
-              "mean": 6917.7797,
-              "sd": 112.0322,
-              "min": 6701.6746,
-              "p50": 6900.7069,
-              "p95": 7085.9958,
-              "p99": 7214.855,
-              "max": 7265.2912,
-              "p50PerQuestion": 690.0707,
-              "meanPerQuestion": 691.778
+              "mean": 5810.1368,
+              "sd": 310.1462,
+              "min": 5427.4264,
+              "p50": 5701.8759,
+              "p95": 6457.1041,
+              "p99": 6550.3852,
+              "max": 6550.7347,
+              "p50PerQuestion": 570.1876,
+              "meanPerQuestion": 581.0137
             }
           ],
-          "p50RepeatDiffPercent": -5.5009
+          "p50RepeatDiffPercent": -2.1603
         },
         {
           "model": "von-1.2.0",
@@ -853,30 +853,30 @@
           "repeats": [
             {
               "n": 30,
-              "mean": 509.6749,
-              "sd": 19.4873,
-              "min": 469.4384,
-              "p50": 512.2074,
-              "p95": 536.129,
-              "p99": 542.8304,
-              "max": 544.2884,
-              "p50PerQuestion": 512.2074,
-              "meanPerQuestion": 509.6749
+              "mean": 406.8209,
+              "sd": 34.4488,
+              "min": 346.4165,
+              "p50": 399.7248,
+              "p95": 456.3208,
+              "p99": 465.1748,
+              "max": 466.6656,
+              "p50PerQuestion": 399.7248,
+              "meanPerQuestion": 406.8209
             },
             {
               "n": 30,
-              "mean": 486.4743,
-              "sd": 18.9775,
-              "min": 462.7923,
-              "p50": 482.6994,
-              "p95": 525.6667,
-              "p99": 538.6694,
-              "max": 541.9378,
-              "p50PerQuestion": 482.6994,
-              "meanPerQuestion": 486.4743
+              "mean": 384.9732,
+              "sd": 39.4537,
+              "min": 306.5257,
+              "p50": 379.8488,
+              "p95": 446.4373,
+              "p99": 449.1901,
+              "max": 450.2401,
+              "p50PerQuestion": 379.8488,
+              "meanPerQuestion": 384.9732
             }
           ],
-          "p50RepeatDiffPercent": -5.7609
+          "p50RepeatDiffPercent": -4.9724
         },
         {
           "model": "von-1.2.0",
@@ -886,30 +886,30 @@
           "repeats": [
             {
               "n": 30,
-              "mean": 2596.4399,
-              "sd": 68.3017,
-              "min": 2447.2401,
-              "p50": 2597.8324,
-              "p95": 2679.2147,
-              "p99": 2729.6056,
-              "max": 2743.453,
-              "p50PerQuestion": 649.4581,
-              "meanPerQuestion": 649.11
+              "mean": 2078.3432,
+              "sd": 87.6111,
+              "min": 1936.9583,
+              "p50": 2074.732,
+              "p95": 2231.9507,
+              "p99": 2264.8429,
+              "max": 2268.027,
+              "p50PerQuestion": 518.683,
+              "meanPerQuestion": 519.5858
             },
             {
               "n": 30,
-              "mean": 2494.3875,
-              "sd": 50.4586,
-              "min": 2409.3304,
-              "p50": 2499.3764,
-              "p95": 2578.6609,
-              "p99": 2586.4212,
-              "max": 2588.2658,
-              "p50PerQuestion": 624.8441,
-              "meanPerQuestion": 623.5969
+              "mean": 2077.8874,
+              "sd": 138.1483,
+              "min": 1831.1428,
+              "p50": 2085.5849,
+              "p95": 2322.3996,
+              "p99": 2415.208,
+              "max": 2445.3278,
+              "p50PerQuestion": 521.3962,
+              "meanPerQuestion": 519.4719
             }
           ],
-          "p50RepeatDiffPercent": -3.7899
+          "p50RepeatDiffPercent": 0.5231
         },
         {
           "model": "von-1.2.0",
@@ -919,30 +919,30 @@
           "repeats": [
             {
               "n": 30,
-              "mean": 6900.7456,
-              "sd": 333.1287,
-              "min": 6652.9505,
-              "p50": 6827.8909,
-              "p95": 7058.6111,
-              "p99": 8147.3183,
-              "max": 8582.196,
-              "p50PerQuestion": 682.7891,
-              "meanPerQuestion": 690.0746
+              "mean": 5593.0963,
+              "sd": 161.0739,
+              "min": 5407.7665,
+              "p50": 5576.4339,
+              "p95": 5905.8857,
+              "p99": 5998.7011,
+              "max": 6026.3779,
+              "p50PerQuestion": 557.6434,
+              "meanPerQuestion": 559.3096
             },
             {
               "n": 30,
-              "mean": 6668.2553,
-              "sd": 284.5975,
-              "min": 6472.9386,
-              "p50": 6624.6311,
-              "p95": 6811.3935,
-              "p99": 7733.7672,
-              "max": 8104.7852,
-              "p50PerQuestion": 662.4631,
-              "meanPerQuestion": 666.8255
+              "mean": 5533.4973,
+              "sd": 229.7451,
+              "min": 5263.4777,
+              "p50": 5473.9269,
+              "p95": 6099.0402,
+              "p99": 6118.7453,
+              "max": 6124.2212,
+              "p50PerQuestion": 547.3927,
+              "meanPerQuestion": 553.3497
             }
           ],
-          "p50RepeatDiffPercent": -2.9769
+          "p50RepeatDiffPercent": -1.8382
         }
       ]
     },
@@ -959,15 +959,15 @@
           "repeats": [
             {
               "n": 10,
-              "mean": 299.1842,
-              "sd": 19.145,
-              "min": 261.4782,
-              "p50": 298.3439,
-              "p95": 323.269,
-              "p99": 328.8941,
-              "max": 330.3004,
-              "p50PerQuestion": 298.3439,
-              "meanPerQuestion": 299.1842
+              "mean": 248.4992,
+              "sd": 18.329,
+              "min": 216.0843,
+              "p50": 245.3181,
+              "p95": 272.3468,
+              "p99": 275.1402,
+              "max": 275.8386,
+              "p50PerQuestion": 245.3181,
+              "meanPerQuestion": 248.4992
             }
           ],
           "p50RepeatDiffPercent": null
@@ -980,15 +980,15 @@
           "repeats": [
             {
               "n": 10,
-              "mean": 1209.1331,
-              "sd": 91.72,
-              "min": 1092.2449,
-              "p50": 1189.1448,
-              "p95": 1348.4499,
-              "p99": 1410.4925,
-              "max": 1426.0031,
-              "p50PerQuestion": 297.2862,
-              "meanPerQuestion": 302.2833
+              "mean": 1044.6634,
+              "sd": 79.3207,
+              "min": 931.8254,
+              "p50": 1031.5563,
+              "p95": 1166.5921,
+              "p99": 1186.9528,
+              "max": 1192.043,
+              "p50PerQuestion": 257.8891,
+              "meanPerQuestion": 261.1658
             }
           ],
           "p50RepeatDiffPercent": null
@@ -1001,15 +1001,15 @@
           "repeats": [
             {
               "n": 10,
-              "mean": 3484.4003,
-              "sd": 262.5847,
-              "min": 3046.9538,
-              "p50": 3452.7814,
-              "p95": 3871.2401,
-              "p99": 4008.6287,
-              "max": 4042.9759,
-              "p50PerQuestion": 345.2781,
-              "meanPerQuestion": 348.44
+              "mean": 2823.6758,
+              "sd": 260.3653,
+              "min": 2396.8811,
+              "p50": 2864.6754,
+              "p95": 3160.3099,
+              "p99": 3177.6763,
+              "max": 3182.0179,
+              "p50PerQuestion": 286.4675,
+              "meanPerQuestion": 282.3676
             }
           ],
           "p50RepeatDiffPercent": null
@@ -1022,15 +1022,15 @@
           "repeats": [
             {
               "n": 10,
-              "mean": 142.7688,
-              "sd": 10.012,
-              "min": 133.9219,
-              "p50": 138.8226,
-              "p95": 159.3137,
-              "p99": 165.7663,
-              "max": 167.3794,
-              "p50PerQuestion": 138.8226,
-              "meanPerQuestion": 142.7688
+              "mean": 94.7407,
+              "sd": 11.6648,
+              "min": 76.0573,
+              "p50": 96.4174,
+              "p95": 110.3112,
+              "p99": 116.3268,
+              "max": 117.8307,
+              "p50PerQuestion": 96.4174,
+              "meanPerQuestion": 94.7407
             }
           ],
           "p50RepeatDiffPercent": null
@@ -1043,15 +1043,15 @@
           "repeats": [
             {
               "n": 10,
-              "mean": 506.7306,
-              "sd": 67.6943,
-              "min": 432.3748,
-              "p50": 491.3262,
-              "p95": 616.8213,
-              "p99": 665.8015,
-              "max": 678.0466,
-              "p50PerQuestion": 122.8315,
-              "meanPerQuestion": 126.6826
+              "mean": 393.5034,
+              "sd": 45.7614,
+              "min": 326.2452,
+              "p50": 393.5236,
+              "p95": 451.0907,
+              "p99": 455.3054,
+              "max": 456.3591,
+              "p50PerQuestion": 98.3809,
+              "meanPerQuestion": 98.3759
             }
           ],
           "p50RepeatDiffPercent": null
@@ -1064,15 +1064,15 @@
           "repeats": [
             {
               "n": 10,
-              "mean": 1384.224,
-              "sd": 131.373,
-              "min": 1198.4561,
-              "p50": 1382.3394,
-              "p95": 1566.0606,
-              "p99": 1621.6597,
-              "max": 1635.5595,
-              "p50PerQuestion": 138.2339,
-              "meanPerQuestion": 138.4224
+              "mean": 1059.9251,
+              "sd": 157.8485,
+              "min": 859.5248,
+              "p50": 1044.6042,
+              "p95": 1316.4727,
+              "p99": 1375.6037,
+              "max": 1390.3865,
+              "p50PerQuestion": 104.4604,
+              "meanPerQuestion": 105.9925
             }
           ],
           "p50RepeatDiffPercent": null
@@ -1085,15 +1085,15 @@
           "repeats": [
             {
               "n": 10,
-              "mean": 339.1043,
-              "sd": 21.3261,
-              "min": 314.1249,
-              "p50": 334.0109,
-              "p95": 374.0518,
-              "p99": 383.6636,
-              "max": 386.0665,
-              "p50PerQuestion": 334.0109,
-              "meanPerQuestion": 339.1043
+              "mean": 269.5321,
+              "sd": 33.5012,
+              "min": 228.0666,
+              "p50": 280.8805,
+              "p95": 313.003,
+              "p99": 326.3977,
+              "max": 329.7464,
+              "p50PerQuestion": 280.8805,
+              "meanPerQuestion": 269.5321
             }
           ],
           "p50RepeatDiffPercent": null
@@ -1106,15 +1106,15 @@
           "repeats": [
             {
               "n": 10,
-              "mean": 1291.9779,
-              "sd": 98.8799,
-              "min": 1150.747,
-              "p50": 1304.0718,
-              "p95": 1426.4811,
-              "p99": 1483.3365,
-              "max": 1497.5503,
-              "p50PerQuestion": 326.018,
-              "meanPerQuestion": 322.9945
+              "mean": 1056.9539,
+              "sd": 136.6022,
+              "min": 861.4234,
+              "p50": 1052.6146,
+              "p95": 1255.1884,
+              "p99": 1345.9161,
+              "max": 1368.598,
+              "p50PerQuestion": 263.1536,
+              "meanPerQuestion": 264.2385
             }
           ],
           "p50RepeatDiffPercent": null
@@ -1127,15 +1127,15 @@
           "repeats": [
             {
               "n": 10,
-              "mean": 3494.4461,
-              "sd": 255.8337,
-              "min": 3121.2324,
-              "p50": 3468.3621,
-              "p95": 3840.2494,
-              "p99": 3936.8945,
-              "max": 3961.0558,
-              "p50PerQuestion": 346.8362,
-              "meanPerQuestion": 349.4446
+              "mean": 2828.4728,
+              "sd": 167.0639,
+              "min": 2621.2106,
+              "p50": 2809.0084,
+              "p95": 3064.8667,
+              "p99": 3112.3951,
+              "max": 3124.2772,
+              "p50PerQuestion": 280.9008,
+              "meanPerQuestion": 282.8473
             }
           ],
           "p50RepeatDiffPercent": null
@@ -1148,15 +1148,15 @@
           "repeats": [
             {
               "n": 10,
-              "mean": 262.6127,
-              "sd": 18.3517,
-              "min": 237.5111,
-              "p50": 264.3082,
-              "p95": 288.0766,
-              "p99": 295.9869,
-              "max": 297.9645,
-              "p50PerQuestion": 264.3082,
-              "meanPerQuestion": 262.6127
+              "mean": 210.0464,
+              "sd": 22.7919,
+              "min": 182.6734,
+              "p50": 206.4769,
+              "p95": 246.0778,
+              "p99": 249.8678,
+              "max": 250.8153,
+              "p50PerQuestion": 206.4769,
+              "meanPerQuestion": 210.0464
             }
           ],
           "p50RepeatDiffPercent": null
@@ -1169,15 +1169,15 @@
           "repeats": [
             {
               "n": 10,
-              "mean": 1201.2749,
-              "sd": 97.1958,
-              "min": 1065.6951,
-              "p50": 1208.4628,
-              "p95": 1334.005,
-              "p99": 1387.9351,
-              "max": 1401.4176,
-              "p50PerQuestion": 302.1157,
-              "meanPerQuestion": 300.3187
+              "mean": 1058.8754,
+              "sd": 92.1588,
+              "min": 952.5019,
+              "p50": 1031.3241,
+              "p95": 1200.678,
+              "p99": 1250.2086,
+              "max": 1262.5912,
+              "p50PerQuestion": 257.831,
+              "meanPerQuestion": 264.7188
             }
           ],
           "p50RepeatDiffPercent": null
@@ -1190,15 +1190,15 @@
           "repeats": [
             {
               "n": 10,
-              "mean": 3274.4588,
-              "sd": 290.3843,
-              "min": 2776.6642,
-              "p50": 3289.7555,
-              "p95": 3677.2604,
-              "p99": 3762.2689,
-              "max": 3783.521,
-              "p50PerQuestion": 328.9755,
-              "meanPerQuestion": 327.4459
+              "mean": 2786.5067,
+              "sd": 219.0509,
+              "min": 2491.2473,
+              "p50": 2814.1805,
+              "p95": 3074.478,
+              "p99": 3147.9278,
+              "max": 3166.2902,
+              "p50PerQuestion": 281.4181,
+              "meanPerQuestion": 278.6507
             }
           ],
           "p50RepeatDiffPercent": null
@@ -1218,15 +1218,15 @@
           "repeats": [
             {
               "n": 10,
-              "mean": 299.6011,
-              "sd": 19.1339,
-              "min": 261.8924,
-              "p50": 298.7527,
-              "p95": 323.6649,
-              "p99": 329.2664,
-              "max": 330.6668,
-              "p50PerQuestion": 298.7527,
-              "meanPerQuestion": 299.6011
+              "mean": 248.8432,
+              "sd": 18.3202,
+              "min": 216.5132,
+              "p50": 245.6224,
+              "p95": 272.7088,
+              "p99": 275.507,
+              "max": 276.2066,
+              "p50PerQuestion": 245.6224,
+              "meanPerQuestion": 248.8432
             }
           ],
           "p50RepeatDiffPercent": null
@@ -1239,15 +1239,15 @@
           "repeats": [
             {
               "n": 10,
-              "mean": 1209.9411,
-              "sd": 91.7402,
-              "min": 1093.113,
-              "p50": 1189.8622,
-              "p95": 1349.3044,
-              "p99": 1411.4198,
-              "max": 1426.9486,
-              "p50PerQuestion": 297.4656,
-              "meanPerQuestion": 302.4853
+              "mean": 1045.3645,
+              "sd": 79.3446,
+              "min": 932.5671,
+              "p50": 1032.1678,
+              "p95": 1167.3978,
+              "p99": 1187.7134,
+              "max": 1192.7923,
+              "p50PerQuestion": 258.042,
+              "meanPerQuestion": 261.3411
             }
           ],
           "p50RepeatDiffPercent": null
@@ -1260,15 +1260,15 @@
           "repeats": [
             {
               "n": 10,
-              "mean": 3486.107,
-              "sd": 262.6192,
-              "min": 3048.6947,
-              "p50": 3454.5431,
-              "p95": 3873.0102,
-              "p99": 4010.5648,
-              "max": 4044.9534,
-              "p50PerQuestion": 345.4543,
-              "meanPerQuestion": 348.6107
+              "mean": 2824.9086,
+              "sd": 260.5387,
+              "min": 2397.8862,
+              "p50": 2865.8917,
+              "p95": 3161.6834,
+              "p99": 3179.0503,
+              "max": 3183.392,
+              "p50PerQuestion": 286.5892,
+              "meanPerQuestion": 282.4909
             }
           ],
           "p50RepeatDiffPercent": null
@@ -1281,15 +1281,15 @@
           "repeats": [
             {
               "n": 10,
-              "mean": 143.163,
-              "sd": 10.0217,
-              "min": 134.3198,
-              "p50": 139.2041,
-              "p95": 159.6961,
-              "p99": 166.1515,
-              "max": 167.7653,
-              "p50PerQuestion": 139.2041,
-              "meanPerQuestion": 143.163
+              "mean": 95.0292,
+              "sd": 11.6542,
+              "min": 76.3419,
+              "p50": 96.7621,
+              "p95": 110.5599,
+              "p99": 116.5727,
+              "max": 118.0759,
+              "p50PerQuestion": 96.7621,
+              "meanPerQuestion": 95.0292
             }
           ],
           "p50RepeatDiffPercent": null
@@ -1302,15 +1302,15 @@
           "repeats": [
             {
               "n": 10,
-              "mean": 507.5085,
-              "sd": 67.8057,
-              "min": 433.138,
-              "p50": 492.029,
-              "p95": 617.8438,
-              "p99": 666.8806,
-              "max": 679.1398,
-              "p50PerQuestion": 123.0073,
-              "meanPerQuestion": 126.8771
+              "mean": 394.0463,
+              "sd": 45.8533,
+              "min": 326.6439,
+              "p50": 394.0619,
+              "p95": 451.7701,
+              "p99": 456.0469,
+              "max": 457.1161,
+              "p50PerQuestion": 98.5155,
+              "meanPerQuestion": 98.5116
             }
           ],
           "p50RepeatDiffPercent": null
@@ -1323,15 +1323,15 @@
           "repeats": [
             {
               "n": 10,
-              "mean": 1385.9458,
-              "sd": 131.6622,
-              "min": 1199.4954,
-              "p50": 1383.6927,
-              "p95": 1567.5393,
-              "p99": 1623.0122,
-              "max": 1636.8804,
-              "p50PerQuestion": 138.3693,
-              "meanPerQuestion": 138.5946
+              "mean": 1060.9804,
+              "sd": 157.9232,
+              "min": 860.2745,
+              "p50": 1045.5343,
+              "p95": 1317.6437,
+              "p99": 1376.8756,
+              "max": 1391.6836,
+              "p50PerQuestion": 104.5534,
+              "meanPerQuestion": 106.098
             }
           ],
           "p50RepeatDiffPercent": null
@@ -1344,15 +1344,15 @@
           "repeats": [
             {
               "n": 10,
-              "mean": 339.586,
-              "sd": 21.3168,
-              "min": 314.619,
-              "p50": 334.431,
-              "p95": 374.5208,
-              "p99": 384.1485,
-              "max": 386.5554,
-              "p50PerQuestion": 334.431,
-              "meanPerQuestion": 339.586
+              "mean": 269.9269,
+              "sd": 33.5143,
+              "min": 228.3613,
+              "p50": 281.3412,
+              "p95": 313.395,
+              "p99": 326.8084,
+              "max": 330.1617,
+              "p50PerQuestion": 281.3412,
+              "meanPerQuestion": 269.9269
             }
           ],
           "p50RepeatDiffPercent": null
@@ -1365,15 +1365,15 @@
           "repeats": [
             {
               "n": 10,
-              "mean": 1292.8589,
-              "sd": 98.9348,
-              "min": 1151.5227,
-              "p50": 1305.0166,
-              "p95": 1427.4574,
-              "p99": 1484.3932,
-              "max": 1498.6272,
-              "p50PerQuestion": 326.2541,
-              "meanPerQuestion": 323.2147
+              "mean": 1057.679,
+              "sd": 136.6162,
+              "min": 861.9689,
+              "p50": 1053.4006,
+              "p95": 1255.9748,
+              "p99": 1346.6488,
+              "max": 1369.3173,
+              "p50PerQuestion": 263.3502,
+              "meanPerQuestion": 264.4197
             }
           ],
           "p50RepeatDiffPercent": null
@@ -1386,15 +1386,15 @@
           "repeats": [
             {
               "n": 10,
-              "mean": 3496.1001,
-              "sd": 255.8932,
-              "min": 3122.6995,
-              "p50": 3469.9965,
-              "p95": 3842.1075,
-              "p99": 3938.5566,
-              "max": 3962.6689,
-              "p50PerQuestion": 346.9996,
-              "meanPerQuestion": 349.61
+              "mean": 2829.7531,
+              "sd": 167.0922,
+              "min": 2622.4329,
+              "p50": 2810.4755,
+              "p95": 3066.1908,
+              "p99": 3113.8627,
+              "max": 3125.7807,
+              "p50PerQuestion": 281.0475,
+              "meanPerQuestion": 282.9753
             }
           ],
           "p50RepeatDiffPercent": null
@@ -1407,15 +1407,15 @@
           "repeats": [
             {
               "n": 10,
-              "mean": 263.2819,
-              "sd": 18.4237,
-              "min": 238.1634,
-              "p50": 264.8751,
-              "p95": 288.7733,
-              "p99": 296.7055,
-              "max": 298.6885,
-              "p50PerQuestion": 264.8751,
-              "meanPerQuestion": 263.2819
+              "mean": 210.544,
+              "sd": 22.8206,
+              "min": 183.0463,
+              "p50": 207.0243,
+              "p95": 246.5683,
+              "p99": 250.4041,
+              "max": 251.363,
+              "p50PerQuestion": 207.0243,
+              "meanPerQuestion": 210.544
             }
           ],
           "p50RepeatDiffPercent": null
@@ -1428,15 +1428,15 @@
           "repeats": [
             {
               "n": 10,
-              "mean": 1202.8383,
-              "sd": 97.3557,
-              "min": 1067.0005,
-              "p50": 1209.8219,
-              "p95": 1335.5278,
-              "p99": 1389.4368,
-              "max": 1402.9141,
-              "p50PerQuestion": 302.4555,
-              "meanPerQuestion": 300.7096
+              "mean": 1060.358,
+              "sd": 92.1717,
+              "min": 953.6603,
+              "p50": 1033.5983,
+              "p95": 1202.0593,
+              "p99": 1251.5799,
+              "max": 1263.96,
+              "p50PerQuestion": 258.3996,
+              "meanPerQuestion": 265.0895
             }
           ],
           "p50RepeatDiffPercent": null
@@ -1449,15 +1449,15 @@
           "repeats": [
             {
               "n": 10,
-              "mean": 3277.5826,
-              "sd": 290.7153,
-              "min": 2778.909,
-              "p50": 3292.4286,
-              "p95": 3680.5428,
-              "p99": 3765.2536,
-              "max": 3786.4313,
-              "p50PerQuestion": 329.2429,
-              "meanPerQuestion": 327.7583
+              "mean": 2789.0098,
+              "sd": 219.2362,
+              "min": 2493.4203,
+              "p50": 2817.1143,
+              "p95": 3076.8163,
+              "p99": 3150.7089,
+              "max": 3169.182,
+              "p50PerQuestion": 281.7114,
+              "meanPerQuestion": 278.901
             }
           ],
           "p50RepeatDiffPercent": null

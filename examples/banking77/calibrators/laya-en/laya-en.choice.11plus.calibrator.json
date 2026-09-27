@@ -1,0 +1,20 @@
+{
+  "format": "tau.calibrator",
+  "version": 1,
+  "model": "laya-en",
+  "modelHash": "866a05b244e47e96820660d18ee050c518c2de0f60c39e2e9a89dfeb056e1eec",
+  "questionType": "choice",
+  "bucket": "11\u002B",
+  "method": "temperature",
+  "temperature": 3.0491195396233484,
+  "fitted": {
+    "n": 1000,
+    "dataset": "banking77",
+    "datasetRevision": "7ff6d7b0974afb66a781fccbeae9f58db38a37ebd2a0398792d5f2550ac6c79e",
+    "date": "2026-09-27",
+    "eceBefore": 0.5000526000000006,
+    "eceAfter": 0.09540399082309994,
+    "tool": "tau-workbench",
+    "toolVersion": "0.1.0"
+  }
+}

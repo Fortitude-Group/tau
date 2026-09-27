@@ -23,8 +23,11 @@ public static class TemperatureScaling
     /// <paramref name="labels"/> under <c>softmax(logits[i] / T)</c>, for each sample <c>i</c>.
     /// </summary>
     /// <param name="logits">
-    /// Per-sample raw logits. Samples may have a different number of options; each
-    /// <c>logits[i]</c> is the full logit vector for sample <c>i</c>.
+    /// Per-sample logits. Samples may have a different number of options; each
+    /// <c>logits[i]</c> is the full logit vector for sample <c>i</c>. For a <c>tau.calibrator</c> v1
+    /// temperature these are <see cref="Calibrator.LogReferenceProbabilities"/> of each sample's
+    /// reference probabilities, which is what <see cref="Calibrator.ApplyToProbabilities"/> divides by
+    /// <c>T</c>.
     /// </param>
     /// <param name="labels">Per-sample index of the correct option within <c>logits[i]</c>.</param>
     /// <returns>

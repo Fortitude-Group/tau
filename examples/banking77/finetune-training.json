@@ -1,0 +1,45 @@
+{
+  "id": "laya-en-ft-banking77",
+  "base": "laya-en",
+  "example": "banking77",
+  "recipe": "NandhaKishorM/laya train_ddp.py @ 4066d5d5, single-GPU",
+  "dataset_manifest_sha256": "e8b79de17edbe15956f31783e93a1d583f4b3bdb0f7eddb2cfffc50f67022f08",
+  "train_items": 8603,
+  "temperature_items": 400,
+  "skipped_items": 0,
+  "epochs": 2,
+  "micro_batch": 4,
+  "grad_accum": 16,
+  "group_size": 4,
+  "lr_encoder": 2.5e-05,
+  "lr_head": 0.0001,
+  "sigma": [
+    0.4,
+    0.1
+  ],
+  "seed": 42,
+  "max_len": 1024,
+  "head_max_len": 896,
+  "fitted_temperature": [
+    2.9469408988952637,
+    1.2514300346374512,
+    1.983399510383606
+  ],
+  "epochs_log": [
+    {
+      "epoch": 1,
+      "avg_loss": 1.4408086882161084,
+      "elapsed_s": 733
+    },
+    {
+      "epoch": 2,
+      "avg_loss": 1.120203296451007,
+      "elapsed_s": 1510
+    }
+  ],
+  "wall_time_s": 1518,
+  "gpu": "NVIDIA GeForce RTX 3080 Ti",
+  "torch": "2.11.0+cu128",
+  "python": "3.12.9",
+  "limit": 0
+}

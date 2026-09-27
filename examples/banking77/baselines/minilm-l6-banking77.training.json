@@ -1,0 +1,91 @@
+{
+  "model": "sentence-transformers/all-MiniLM-L6-v2",
+  "revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+  "licence": "Apache-2.0",
+  "params": 22742861,
+  "example": "banking77",
+  "train_rows": 9003,
+  "max_epochs": 20,
+  "best_epoch": 8,
+  "best_calibration_accuracy": 0.92,
+  "patience": 3,
+  "batch": 32,
+  "lr": 0.0001,
+  "max_len": 128,
+  "seed": 42,
+  "device": "cuda",
+  "gpu": "NVIDIA GeForce RTX 3080 Ti",
+  "epochs_log": [
+    {
+      "epoch": 1,
+      "avg_loss": 4.073531045101225,
+      "calibration_accuracy": 0.48,
+      "elapsed_s": 19
+    },
+    {
+      "epoch": 2,
+      "avg_loss": 2.567159688103322,
+      "calibration_accuracy": 0.722,
+      "elapsed_s": 37
+    },
+    {
+      "epoch": 3,
+      "avg_loss": 1.1766196342887951,
+      "calibration_accuracy": 0.867,
+      "elapsed_s": 49
+    },
+    {
+      "epoch": 4,
+      "avg_loss": 0.5467581464643678,
+      "calibration_accuracy": 0.903,
+      "elapsed_s": 58
+    },
+    {
+      "epoch": 5,
+      "avg_loss": 0.29597694152436704,
+      "calibration_accuracy": 0.911,
+      "elapsed_s": 68
+    },
+    {
+      "epoch": 6,
+      "avg_loss": 0.18163285917948713,
+      "calibration_accuracy": 0.915,
+      "elapsed_s": 77
+    },
+    {
+      "epoch": 7,
+      "avg_loss": 0.11524917024717282,
+      "calibration_accuracy": 0.915,
+      "elapsed_s": 86
+    },
+    {
+      "epoch": 8,
+      "avg_loss": 0.07674017294498202,
+      "calibration_accuracy": 0.92,
+      "elapsed_s": 95
+    },
+    {
+      "epoch": 9,
+      "avg_loss": 0.05025389172591117,
+      "calibration_accuracy": 0.912,
+      "elapsed_s": 104
+    },
+    {
+      "epoch": 10,
+      "avg_loss": 0.034243545015088576,
+      "calibration_accuracy": 0.916,
+      "elapsed_s": 113
+    },
+    {
+      "epoch": 11,
+      "avg_loss": 0.02476055251574511,
+      "calibration_accuracy": 0.92,
+      "elapsed_s": 122
+    }
+  ],
+  "wall_time_s": 123,
+  "heldout_accuracy_quick_check": 0.915,
+  "torch": "2.11.0+cu128",
+  "python": "3.12.9",
+  "limit": 0
+}

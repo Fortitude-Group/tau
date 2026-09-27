@@ -10,6 +10,8 @@
     <PackageVersion Include="Tokenizers.DotNet.runtime.win-x64" Version="1.4.1" />
     <PackageVersion Include="Tokenizers.DotNet.runtime.linux-x64" Version="1.4.1" />
     <PackageVersion Include="JsonSchema.Net" Version="9.4.0" />
+    <!-- YamlDotNet: MIT (nuspec license expression checked 2026-09-27). Workbench decision specs. -->
+    <PackageVersion Include="YamlDotNet" Version="18.1.0" />
     <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.19.1" />
     <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.19.1" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.19.0" />

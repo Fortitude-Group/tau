@@ -6,6 +6,251 @@ this file records the ones I made so the trail is auditable.
 
 ---
 
+## 2026-09-27 · Report summary quotes the best cascade, and the baseline is cascaded too
+
+- **The bug:** the summary quoted the first model's cascade (Von, 4.5% local), which buried the
+  fine-tuned Laya's 73.6%. I repeated that wrong headline to Rob before checking the cascade table.
+- **The fix:** the summary now quotes the cascade that keeps the most local (ties on blended
+  rate, then spec order). It names the least-local model for spread, or says "N models tie"
+  when the shares are equal at the displayed precision.
+- **The MiniLM baseline now goes through the same threshold and cascade code,** with τ picked on
+  its calibration lines only.
+  - Its rows say it wasn't served through Tau, so local latency and energy weren't measured.
+  - A baseline that keeps more local at blended accuracy at least as high is a miss. On Banking77
+    it is: 94.7% local against 73.6%.
+- **Cost change:** with no GPU power sample, the cascade £ now covers the frontier calls only
+  and says so, instead of refusing the figure. Both examples' Tau models had power samples, so
+  their figures are unchanged.
+**Reason:** Rob asked whether the work was worth finishing. The answer depended on a number the
+summary hid. A report whose summary can mislead its own author is a defect, not a style
+choice.
+
+## 2026-09-27 · R1 latency re-run on the quiet machine (T063)
+
+- **First attempt failed.** `bench.ps1` loads every package in `models/`, so it picked up the two
+  R2 fine-tunes as well: six models on a 12 GB card. laya-en went to about 12 s per request at
+  q=10, and `Tau.Bench` then exited 1 with no captured message. VRAM pressure is the likely cause,
+  consistent with R1's all-models-resident finding, but it is not confirmed.
+- **Re-run with `-Models` set to R1's four models,** which is also the like-for-like comparison.
+  Load before the runs: CPU under 10%, GPU under 19%.
+- **CPU p50 fell** now that the orphaned processes are gone. laya-en q=1 went from 811 to 529 ms,
+  q=10 from 6,842 to 5,617 ms, and Von q=1 from 512 to 400 ms. CUDA is essentially unchanged
+  (laya-en q=1 21.6 → 18.6 ms).
+- The reports say "(dirty)" because uncommitted Workbench report-code edits were in the tree during
+  the run. Tau.Bench and Tau.Runtime don't reference Tau.Workbench, so the measured binaries were
+  built from committed code. This is recorded rather than hidden.
+
+## 2026-09-27 · The tickets example is scored against the frontier's answers
+
+Rob's call: the ticket gold labels are too close to arbitrary to score against, so the tickets example
+asks whether a local model can stand in for the frontier call, and whether its confidence says when.
+
+- `decision.yaml` takes `data.reference: gold | frontier` (gold is the default). Tickets use
+  `frontier` and Banking77 stays on gold.
+- Under `frontier`, `tau label` also exports the calibration split (v1 only, capped at 1,000, batches of
+  200) as `frontier/pending/v1/batch-calibration-NNN.jsonl`. The key scheme is unchanged, and
+  `label-summary.json` now has pending and cached counts per split. The cost tally still counts
+  held-out answers only, because cost is per decision served.
+- `ReferenceLabels` is the one place that says what an item's label is. Measure, calibrate, threshold,
+  cascade, baselines and the report all score through it. A missing frontier label stops the stage
+  with "run 'tau label'" and drops nothing. Run files on disk keep the dataset's label.
+- The report re-scores every summary from the run records, so a summary written before the reference
+  changed can't appear under the wrong name. Calibrators, thresholds or cascades fitted under the other
+  reference are listed as misses to re-run.
+- Under `frontier` the report says "agreement with the frontier model" throughout. Frontier-only is
+  shown as 100% by construction, not as a result. A secondary table shows each model, the baseline
+  and the frontier against the dataset's labels.
+- Choices I made: the caption says "synthetic" only when the manifest says so, and "close to
+  arbitrary" only when the frontier's agreement with the labels is no better than always giving the
+  most common label (23.8% against 41% for the tickets). `tau run` stops early while v1 answers are
+  pending, since every later stage needs them. Measure also checks the labels before calling the
+  endpoint, so a missing label doesn't waste a GPU run.
+- Changing `decision.yaml` makes the tickets' raw measurements stale (the spec is a measure input),
+  so the next `tau run` re-measures every model.
+
+## 2026-09-27 · Frontier labels cached (T051–T053), and the ticket gold labels look close to arbitrary
+
+- **Cached:** 1,200 answers per dataset (1,000 `v1` and 200 `v1-alt`), from 12 Opus 5.5
+  subagents in this Claude Code session. No API was used. 0 rejected, 0 pending. The answers are
+  dated 2026-09-27 and have `produced_by` provenance on every line.
+- **Session usage:** about 0.9M subagent tokens in total, as the harness reported: about 64k per
+  Banking77 sheet and 84–92k per ticket sheet. My estimate to Rob was 0.45–0.6M. I
+  underestimated each subagent's fixed context.
+- One `v1-alt` subagent wrote its file with a shell heredoc instead of the Write tool. `ingest`
+  validated the content, so it's unaffected.
+- **Banking77:** the frontier disagrees with gold on 5.8% of 1,000 items, and the two wordings
+  agree on 97.5% of 200. This is what a sound gold set looks like.
+- **Support tickets:** the frontier disagrees with gold on **76.2%**. That's 23.8% agreement,
+  below the 41% a majority-class guess would get. The two wordings agree on only 76.5%.
+  - The mechanism is checked: the mapping is right (gold 1–3 against the frontier's 0–4), and the
+    cross-tab shows the frontier's answer almost independent of the gold label.
+  - Spot checks show sensible frontier answers against arbitrary gold. A suspected data breach
+    exposing medical records is gold "medium", and a one-line request for security details is
+    gold "high".
+  - The MiniLM baseline still reaches 55.6% against gold, so the labels carry some learnable
+    signal, most likely the generator's own patterns rather than urgency as a reader sees it.
+  - This is the synthetic dataset's labels failing, not the frontier failing. How the tickets
+    example should use them is Rob's call (asked 2026-09-27).
+
+## 2026-09-27 · Fine-tunes and the classic-encoder baseline (T014–T017)
+
+- **Laya fine-tunes** (RTX 3080 Ti, seed 42, 2 epochs, fine-tune split only):
+  - `laya-en-ft-banking77` trained on 8,603 items in 1,518 s.
+  - `laya-en-ft-tickets` trained on 7,600 items in 719 s.
+  - Both exported to ONNX and passed parity: max |Δlogit| 2.1e-5 (Banking77) and 1.1e-3 (tickets),
+    against the 2e-3 tolerance. `examples/<name>/finetune-parity.json` holds the reports and
+    `finetune-training.json` the settings.
+  - The tickets model has a 512-token budget, so it rejects one long laya-en case that laya-en
+    itself accepts. That is expected for a derived model.
+- **The MiniLM baseline's recipe changed after its first run, before any held-out number was
+  used.** At 5 epochs and lr 5e-5 its loss was still falling and it scored 80.8% on Banking77. A
+  classic encoder stopped early would be a strawman, and the brainstorm's claim is about properly
+  fine-tuned ones. Now it trains at lr 1e-4 for up to 20 epochs, with early stopping (patience 3)
+  on calibration-split accuracy, and the best epoch is kept.
+  - Banking77: best epoch 8, held-out accuracy 91.5%. The cited third-party figure is 93.2%.
+  - Tickets: best epoch 10, held-out accuracy 55.6%.
+  - The held-out split never influences training. The 80.8% first run is recorded here as a miss
+    in method, not hidden.
+
+## 2026-09-27 · Frontier labels come from compact answer sheets
+
+The Workbench exports one fixed prompt per item, and the cost model counts those characters:
+7.1M for Banking77 and 1.4M for the tickets, which is what an API caller would pay for.
+Answering them in this session uses `tau_sidecar.frontier_sheets`:
+
+- Each batch becomes a sheet showing the prompt's fixed part once (verbatim from the batch),
+  then every item's text.
+- One subagent answers each sheet, and the main and alternative-wording sheets go to different
+  subagents.
+- `ingest` validates every answer and appends it with provenance. `produced_by` states that the
+  answers came from batched sheets with no API.
+
+This is not the same as 1,000 independent calls. A model answering 200 items in one context can
+drift, so the reports say how the labels were made. Pending batches and sheets hold item text,
+so they are gitignored.
+**Reason:** the full per-item prompts would cost about 2M session tokens for the same answers.
+
+## 2026-09-27 · Workbench choices made during lane B, reviewed at merge
+
+- **Isotonic is fitted one-vs-rest on every option's probability, not on max(p).** The shared
+  `Calibrator` maps each option through one curve and renormalises, so the curve has to be fitted
+  on the thing it is applied to. On test data a max(p) fit gave log loss 10.07 against
+  temperature's 0.98, and a one-vs-rest fit gave about 0.95. ECE is still reported on max(p).
+  The method with the lower calibration-split log loss is written, and both scores are kept.
+- **The Runtime loads calibrators from subfolders.** The Workbench writes
+  `examples/<name>/calibrators/<model>/`. Each file names its model and duplicate keys are
+  rejected, so `CalibratorSet.LoadDirectory` now recurses and one Runtime restart, pointed at
+  `examples/<name>/calibrators`, covers every model. A test pins it.
+- **Bucket calibrators duplicate the type-level one** because a spec asks one question with a
+  fixed option count. Both are written, as the plan says, and the report says they match.
+- **The manifest reader accepts what the sidecar writes:** `files.<split>.jsonl.sha256` and
+  `source.commit`. A test loads both committed manifests.
+- **About 5% of ticket texts contain a literal `\n`** (backslash, n) from the source data. Left
+  as is: every model, the baseline and the frontier see the same text, and changing it would
+  change the split hashes for no gain in fairness.
+
+**Reason:** these came up while building and none changes what the spec measures. Recording
+them keeps the trail honest.
+
+## 2026-09-27 · Calibrators act on the log of the reference probabilities (R2 research R-01, T040–T041)
+
+R1's Runtime applied a `tau.calibrator` v1 file to the model's raw logits, before the
+reference temperature. From R2 a v1 file acts on the model's reference probabilities: the
+unrounded distribution an uncalibrated (`x-tau-raw: true`) answer reports. For Laya that is
+`softmax(logits / T_bucket)`. For Von it is `softmax(logits / T_eff)`, taken after the
+zero-shot prior correction for noul. Each probability is clamped at 1e-6 and logged.
+
+- Temperature gives `softmax(log p / T)`, so T now scales the reference's own temperature
+  rather than replacing it.
+- Isotonic maps each clamped, renormalised `p_i` and renormalises again.
+- Noul vectors keep each family's order: Laya `[1−p, p]`, Von `[p_true, p_false]`. Both
+  methods are symmetric across options, so the order doesn't change P(true). A test pins it.
+- The answer is rebuilt from the calibrated vector with the model's own confidence formula.
+  The choice is the argmax under the existing tie rule.
+- `Calibrator.Apply(rawLogits)` is gone. `Calibrator.ApplyToProbabilities` is the one entry
+  point for the Runtime and the Workbench, and `LogReferenceProbabilities` gives the fitting
+  input. The file schema is unchanged, but any v1 file fitted on logits under R1 must be
+  refitted. None was committed.
+
+The Workbench fits on the endpoint's 4-dp output while the Runtime applies to unrounded
+values. They agree within 1e-4 on the pinned test, but near saturation with T > 1 the rounding
+can be magnified. SC-007's equality test (T031) therefore feeds both paths the same vector.
+**Reason:** the Workbench only sees what the endpoint returns, which is probabilities, not
+logits. Calibrating what both sides can see keeps "calibrated" meaning one thing (XV).
+
+## 2026-09-27 · Support-tickets target error is 20%, Banking77's is 5%
+
+Urgency has five ordinal levels and the labels are synthetic and noisy. At 5% target error
+the threshold stage would almost certainly report "unreachable" for every model, which says
+nothing useful. 20% gives a τ that can be compared across models. If even 20% is
+unreachable, the report says so. That's a finding, not a failure.
+**Reason:** a threshold nobody can meet produces an empty cascade table. The number is in
+`examples/support-tickets/decision.yaml` and can be changed with one edit.
+
+## 2026-09-27 · R2 T010–T013: dataset prep facts, checked against the real data
+
+**Banking77** (`tau_sidecar/data_banking77.py`): 10,003 train / 3,080 test rows, 77 classes, matching
+`research.md` exactly. Test is perfectly balanced (40 rows/class), so the 1,000-item stratified held-out
+draw lands at 13/class (12 for one class, remainder rounding). Train class sizes range 35–187. Splits:
+calibration 1,000, held-out 1,000, finetune 9,003. Two runs byte-identical. Raw file sha256s and every
+split file's sha256 are in `examples/banking77/dataset.manifest.json`.
+
+**Support tickets** (`tau_sidecar/data_tickets.py`): the HF repo ships **three** CSVs, not one -
+`aa_dataset-tickets-multi-lang-5-2-50-version.csv` (28,587), `dataset-tickets-multi-lang-4-20k.csv`
+(20,000), `dataset-tickets-german_normalized_50_5_2.csv` (13,178, German only). They sum to 61,765,
+which is where the "61,765 rows, 28,261 English" figures already in this file (2026-09-27, dataset
+correction entry) came from - confirmed by reproducing that exact count. **Decision:** all three are
+concatenated, in that fixed order, and `ticket-<n>` ids are the 0-based position in the concatenation.
+
+Filters, in order (rows removed): language≠en **33,504** (→ 28,261 remain, exact match); vehicle/travel
+queue prefix **0**; vehicle keyword in text **393**; empty body **0**; exact-duplicate text **4,467**.
+Final pool: 23,401 rows. Splits: held-out 1,000, calibration 1,000, finetune 8,000 (capped, as R-02
+specifies), stratified by priority.
+
+- **The queue-prefix filter (step 2) removes nothing on this data.** Checked directly: the
+  `Autos & Vehicles/*` and `Travel & Transportation/*` queues exist **only** in the German-only third
+  CSV. Every English row's `queue` is one of ten broad categories (Technical Support, Product Support,
+  etc.) that never include a vehicle/travel queue. Not a bug - the filter is correct and still needed for
+  robustness against a future revision, it simply has nothing to do here.
+- **English ticket rows carry only 3 of the 5 priority levels.** `very_low` and `critical` appear only in
+  the German-only CSV (1,783 and 1,914 rows respectively, matching the totals already recorded in this
+  file). After the language filter, no English row is `very_low` or `critical`, so every split
+  (calibration/held-out/finetune) has **zero** examples of those two classes. This is a genuine property
+  of the source data, not a filtering defect - verified by checking each raw CSV's own priority
+  distribution before any filtering. **Consequence for later tasks:** the fine-tune and measure stages
+  (Lane D/B) can only train and score on {low, medium, high} for this dataset; `very_low`/`critical`
+  should be reported as "no English examples in this dataset", not silently dropped from a 5-way table.
+- **The 393 vehicle-keyword hits are, on inspection, all false positives - no genuine vehicle content
+  found in the English rows.** Sampled and read the actual matched text for every keyword that hit:
+  "driver(s)" (361 raw matches) is overwhelmingly software/hardware ("updating drivers", "driver
+  conflict", "reinstalling drivers", "driver incompatibility"); "driving" (64 matches) is the marketing
+  idiom "driving brand/business growth"; "garage" (2 matches) is "Smart Garage" (home automation, not
+  automotive). This is expected for a synthetic *IT support* ticket generator - not upstream
+  contamination.
+  **Decision (scope held to what was asked):** the task specified excluding exactly four IT-context
+  phrases for "driver(s)" - "printer driver", "device driver", "driver update", "graphics driver". That
+  exclusion is implemented exactly as specified and catches 34 of the 361 raw "driver" hits; the other
+  327 remain excluded rows even though almost none are genuinely about vehicles. Not expanded into a
+  broader IT-driver heuristic, because that was a scope call for the T011 brief, not this implementation -
+  flagged here so Rob can decide whether to widen the exclusion (it would recover roughly 300+ rows for
+  finetune/calibration/held-out, all currently-excluded IT tickets that happen to say "driver").
+  Every other keyword in the list (vehicle, car, fleet, truck, lorry, van, automotive, telematics, tyre,
+  tire, mileage, dealership, bus, taxi, freight, logistics, delivery van, motorbike, motorcycle, scooter,
+  EV, charging station) matched **zero** English rows.
+- **4,467 exact-duplicate texts (about 16% of the post-filter, pre-dedup pool).** The synthetic generator
+  produces a meaningful share of verbatim-identical subject+body pairs. Dropped by the dedup filter
+  (keep-first, by original row order), so no duplicate text can appear across splits.
+
+`examples/support-tickets/dataset.manifest.json` holds none of the ticket text (checked by a test that
+walks the manifest and fails on any string longer than 200 characters) - only counts, hashes, the keyword
+list and its exclusion note, and provenance. `data/banking77/` and `data/tickets/` are never committed
+(`/data/` is gitignored at the repo root).
+
+`sidecar/finetune/tests/test_data.py` (17 tests): determinism (re-running `prepare()` gives byte-identical
+split files), disjointness across splits, no vehicle keyword survives into any tickets split text,
+manifest row counts and sha256 match the files on disk, label validity, filter-count arithmetic
+(`rows_before` − Σremoved = `rows_after`), and the no-ticket-text-in-manifest check above. All pass.
+
 ## 2026-09-27 · CORRECTION: the ticket dataset is synthetic; Rob chose to keep it, labelled as such
 
 Checked against the dataset card before building on it: `Tobi-Bueck/customer-support-tickets` is

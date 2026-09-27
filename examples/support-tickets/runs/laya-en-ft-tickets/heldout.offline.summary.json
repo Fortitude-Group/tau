@@ -1,0 +1,118 @@
+{
+  "model": "laya-en-ft-tickets",
+  "split": "heldout",
+  "phase": "offline",
+  "model_hash": "9079fee9291e35dc4d3ed8c817a8f1592d97e4413ccbae0539b7a0ee6d9c950a",
+  "model_hashes_seen": [],
+  "calibrators_seen": [],
+  "items": 1000,
+  "measured": 1000,
+  "failures": 0,
+  "failures_by_status": {},
+  "truncated": 0,
+  "metrics": {
+    "n": 1000,
+    "accuracy": 0.353,
+    "ece": 0.067096054332524,
+    "brier": 0.7712904153433995,
+    "log_loss": 1.6103261721648492,
+    "mae": 0.936,
+    "reliability": [
+      {
+        "lower": 0,
+        "upper": 0.06666666666666667,
+        "count": 0
+      },
+      {
+        "lower": 0.06666666666666667,
+        "upper": 0.13333333333333333,
+        "count": 0
+      },
+      {
+        "lower": 0.13333333333333333,
+        "upper": 0.2,
+        "count": 5,
+        "mean_confidence": 0.19999999999999998,
+        "accuracy": 0.4
+      },
+      {
+        "lower": 0.2,
+        "upper": 0.26666666666666666,
+        "count": 419,
+        "mean_confidence": 0.24110386366628672,
+        "accuracy": 0.360381861575179
+      },
+      {
+        "lower": 0.26666666666666666,
+        "upper": 0.3333333333333333,
+        "count": 178,
+        "mean_confidence": 0.28867140885387366,
+        "accuracy": 0.2808988764044944
+      },
+      {
+        "lower": 0.3333333333333333,
+        "upper": 0.4,
+        "count": 241,
+        "mean_confidence": 0.35703338341557145,
+        "accuracy": 0.3775933609958506
+      },
+      {
+        "lower": 0.4,
+        "upper": 0.4666666666666667,
+        "count": 147,
+        "mean_confidence": 0.4195844167355809,
+        "accuracy": 0.36054421768707484
+      },
+      {
+        "lower": 0.4666666666666667,
+        "upper": 0.5333333333333333,
+        "count": 9,
+        "mean_confidence": 0.4795897819880817,
+        "accuracy": 0.5555555555555556
+      },
+      {
+        "lower": 0.5333333333333333,
+        "upper": 0.6,
+        "count": 1,
+        "mean_confidence": 0.5824933863763053,
+        "accuracy": 1
+      },
+      {
+        "lower": 0.6,
+        "upper": 0.6666666666666666,
+        "count": 0
+      },
+      {
+        "lower": 0.6666666666666666,
+        "upper": 0.7333333333333333,
+        "count": 0
+      },
+      {
+        "lower": 0.7333333333333333,
+        "upper": 0.8,
+        "count": 0
+      },
+      {
+        "lower": 0.8,
+        "upper": 0.8666666666666667,
+        "count": 0
+      },
+      {
+        "lower": 0.8666666666666667,
+        "upper": 0.9333333333333333,
+        "count": 0
+      },
+      {
+        "lower": 0.9333333333333333,
+        "upper": 1,
+        "count": 0
+      }
+    ]
+  },
+  "reference": "frontier",
+  "confidence_note": "Confidence for ECE and thresholds is max(p), the probability of the chosen answer, not the contract\u0027s confidence field, which for choice and score questions is not a calibrated probability.",
+  "exclusion_note": "Offline: the Workbench applied the fitted calibrator to the raw probabilities; no endpoint was called. No item failed; the metrics cover every item.",
+  "duration_seconds": 0,
+  "concurrency": 0,
+  "started_utc": ""
+}

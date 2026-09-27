@@ -1,0 +1,28 @@
+{
+  "report": "parity-model",
+  "level": 1,
+  "command": "uv run python -m tau_sidecar.parity --only laya-en-ft-tickets --no-fixtures --report ..\\..\\examples\\support-tickets\\finetune-parity.json",
+  "date": "2026-09-27T07:57:22+00:00",
+  "tolerance": {
+    "logit": 0.002,
+    "prob": 0.001
+  },
+  "results": {
+    "laya-en-ft-tickets": {
+      "cases": 35,
+      "rows": 53,
+      "max_dlogit": 0.0011110305786132812,
+      "max_dprob": 2.205371856689453e-06,
+      "argmax_mismatches": 0,
+      "expected_errors": 1,
+      "failures": [],
+      "pass": true
+    }
+  },
+  "models": {
+    "laya-en-ft-tickets": {
+      "onnx_sha256": "9079fee9291e35dc4d3ed8c817a8f1592d97e4413ccbae0539b7a0ee6d9c950a"
+    }
+  },
+  "elapsed_s": 73
+}

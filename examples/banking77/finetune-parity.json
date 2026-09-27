@@ -1,0 +1,28 @@
+{
+  "report": "parity-model",
+  "level": 1,
+  "command": "uv run python -m tau_sidecar.parity --only laya-en-ft-banking77 --no-fixtures --report ..\\..\\examples\\banking77\\finetune-parity.json",
+  "date": "2026-09-27T07:45:33+00:00",
+  "tolerance": {
+    "logit": 0.002,
+    "prob": 0.001
+  },
+  "results": {
+    "laya-en-ft-banking77": {
+      "cases": 35,
+      "rows": 54,
+      "max_dlogit": 2.09808349609375e-05,
+      "max_dprob": 2.9653310775756836e-06,
+      "argmax_mismatches": 0,
+      "expected_errors": 0,
+      "failures": [],
+      "pass": true
+    }
+  },
+  "models": {
+    "laya-en-ft-banking77": {
+      "onnx_sha256": "198e563957ce43348f944a10739bdf17929bc3d2175f22a72239b4601d421556"
+    }
+  },
+  "elapsed_s": 137
+}

@@ -1,0 +1,45 @@
+{
+  "id": "laya-en-ft-tickets",
+  "base": "laya-en",
+  "example": "support-tickets",
+  "recipe": "NandhaKishorM/laya train_ddp.py @ 4066d5d5, single-GPU",
+  "dataset_manifest_sha256": "4db5e0c34fe5b49510c867b5144adbff0a2f547c94f40fb7cf2d73f7563e2ca7",
+  "train_items": 7600,
+  "temperature_items": 400,
+  "skipped_items": 0,
+  "epochs": 2,
+  "micro_batch": 4,
+  "grad_accum": 16,
+  "group_size": 4,
+  "lr_encoder": 2.5e-05,
+  "lr_head": 0.0001,
+  "sigma": [
+    0.4,
+    0.1
+  ],
+  "seed": 42,
+  "max_len": 512,
+  "head_max_len": 192,
+  "fitted_temperature": [
+    1.6369030475616455,
+    1.612334132194519,
+    1.983399510383606
+  ],
+  "epochs_log": [
+    {
+      "epoch": 1,
+      "avg_loss": 0.9561823934316636,
+      "elapsed_s": 412
+    },
+    {
+      "epoch": 2,
+      "avg_loss": 0.8627290100721936,
+      "elapsed_s": 716
+    }
+  ],
+  "wall_time_s": 719,
+  "gpu": "NVIDIA GeForce RTX 3080 Ti",
+  "torch": "2.11.0+cu128",
+  "python": "3.12.9",
+  "limit": 0
+}

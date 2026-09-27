@@ -1,0 +1,4624 @@
+[
+  {
+    "model": "laya-en",
+    "target_error": 0.2,
+    "source": "offline",
+    "reference": "frontier",
+    "reachable": true,
+    "tau": 0.56,
+    "calibration_accept_rate": 0.001,
+    "calibration_accepted_accuracy": 1,
+    "held_out_accept_rate": 0.001,
+    "held_out_accepted_accuracy": 1,
+    "held_out_accepted": 1,
+    "held_out_items": 1000,
+    "calibration_curve": [
+      {
+        "tau": 0,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.444
+      },
+      {
+        "tau": 0.01,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.444
+      },
+      {
+        "tau": 0.02,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.444
+      },
+      {
+        "tau": 0.03,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.444
+      },
+      {
+        "tau": 0.04,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.444
+      },
+      {
+        "tau": 0.05,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.444
+      },
+      {
+        "tau": 0.06,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.444
+      },
+      {
+        "tau": 0.07,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.444
+      },
+      {
+        "tau": 0.08,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.444
+      },
+      {
+        "tau": 0.09,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.444
+      },
+      {
+        "tau": 0.1,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.444
+      },
+      {
+        "tau": 0.11,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.444
+      },
+      {
+        "tau": 0.12,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.444
+      },
+      {
+        "tau": 0.13,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.444
+      },
+      {
+        "tau": 0.14,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.444
+      },
+      {
+        "tau": 0.15,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.444
+      },
+      {
+        "tau": 0.16,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.444
+      },
+      {
+        "tau": 0.17,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.444
+      },
+      {
+        "tau": 0.18,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.444
+      },
+      {
+        "tau": 0.19,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.444
+      },
+      {
+        "tau": 0.2,
+        "accepted": 909,
+        "accept_rate": 0.909,
+        "accepted_accuracy": 0.41474147414741475
+      },
+      {
+        "tau": 0.21,
+        "accepted": 879,
+        "accept_rate": 0.879,
+        "accepted_accuracy": 0.4072810011376564
+      },
+      {
+        "tau": 0.22,
+        "accepted": 874,
+        "accept_rate": 0.874,
+        "accepted_accuracy": 0.4061784897025172
+      },
+      {
+        "tau": 0.23,
+        "accepted": 717,
+        "accept_rate": 0.717,
+        "accepted_accuracy": 0.3263598326359833
+      },
+      {
+        "tau": 0.24,
+        "accepted": 648,
+        "accept_rate": 0.648,
+        "accepted_accuracy": 0.30246913580246915
+      },
+      {
+        "tau": 0.25,
+        "accepted": 635,
+        "accept_rate": 0.635,
+        "accepted_accuracy": 0.30551181102362207
+      },
+      {
+        "tau": 0.26,
+        "accepted": 584,
+        "accept_rate": 0.584,
+        "accepted_accuracy": 0.3133561643835616
+      },
+      {
+        "tau": 0.27,
+        "accepted": 562,
+        "accept_rate": 0.562,
+        "accepted_accuracy": 0.3220640569395018
+      },
+      {
+        "tau": 0.28,
+        "accepted": 493,
+        "accept_rate": 0.493,
+        "accepted_accuracy": 0.3448275862068966
+      },
+      {
+        "tau": 0.29,
+        "accepted": 457,
+        "accept_rate": 0.457,
+        "accepted_accuracy": 0.3479212253829322
+      },
+      {
+        "tau": 0.3,
+        "accepted": 402,
+        "accept_rate": 0.402,
+        "accepted_accuracy": 0.36318407960199006
+      },
+      {
+        "tau": 0.31,
+        "accepted": 365,
+        "accept_rate": 0.365,
+        "accepted_accuracy": 0.38082191780821917
+      },
+      {
+        "tau": 0.32,
+        "accepted": 306,
+        "accept_rate": 0.306,
+        "accepted_accuracy": 0.3790849673202614
+      },
+      {
+        "tau": 0.33,
+        "accepted": 251,
+        "accept_rate": 0.251,
+        "accepted_accuracy": 0.4063745019920319
+      },
+      {
+        "tau": 0.34,
+        "accepted": 183,
+        "accept_rate": 0.183,
+        "accepted_accuracy": 0.4207650273224044
+      },
+      {
+        "tau": 0.35,
+        "accepted": 94,
+        "accept_rate": 0.094,
+        "accepted_accuracy": 0.35106382978723405
+      },
+      {
+        "tau": 0.36,
+        "accepted": 84,
+        "accept_rate": 0.084,
+        "accepted_accuracy": 0.3333333333333333
+      },
+      {
+        "tau": 0.37,
+        "accepted": 80,
+        "accept_rate": 0.08,
+        "accepted_accuracy": 0.35
+      },
+      {
+        "tau": 0.38,
+        "accepted": 73,
+        "accept_rate": 0.073,
+        "accepted_accuracy": 0.3561643835616438
+      },
+      {
+        "tau": 0.39,
+        "accepted": 68,
+        "accept_rate": 0.068,
+        "accepted_accuracy": 0.35294117647058826
+      },
+      {
+        "tau": 0.4,
+        "accepted": 59,
+        "accept_rate": 0.059,
+        "accepted_accuracy": 0.3728813559322034
+      },
+      {
+        "tau": 0.41,
+        "accepted": 49,
+        "accept_rate": 0.049,
+        "accepted_accuracy": 0.40816326530612246
+      },
+      {
+        "tau": 0.42,
+        "accepted": 48,
+        "accept_rate": 0.048,
+        "accepted_accuracy": 0.4166666666666667
+      },
+      {
+        "tau": 0.43,
+        "accepted": 35,
+        "accept_rate": 0.035,
+        "accepted_accuracy": 0.5428571428571428
+      },
+      {
+        "tau": 0.44,
+        "accepted": 28,
+        "accept_rate": 0.028,
+        "accepted_accuracy": 0.5714285714285714
+      },
+      {
+        "tau": 0.45,
+        "accepted": 15,
+        "accept_rate": 0.015,
+        "accepted_accuracy": 0.7333333333333333
+      },
+      {
+        "tau": 0.46,
+        "accepted": 8,
+        "accept_rate": 0.008,
+        "accepted_accuracy": 0.5
+      },
+      {
+        "tau": 0.47,
+        "accepted": 8,
+        "accept_rate": 0.008,
+        "accepted_accuracy": 0.5
+      },
+      {
+        "tau": 0.48,
+        "accepted": 8,
+        "accept_rate": 0.008,
+        "accepted_accuracy": 0.5
+      },
+      {
+        "tau": 0.49,
+        "accepted": 8,
+        "accept_rate": 0.008,
+        "accepted_accuracy": 0.5
+      },
+      {
+        "tau": 0.5,
+        "accepted": 8,
+        "accept_rate": 0.008,
+        "accepted_accuracy": 0.5
+      },
+      {
+        "tau": 0.51,
+        "accepted": 8,
+        "accept_rate": 0.008,
+        "accepted_accuracy": 0.5
+      },
+      {
+        "tau": 0.52,
+        "accepted": 4,
+        "accept_rate": 0.004,
+        "accepted_accuracy": 0.25
+      },
+      {
+        "tau": 0.53,
+        "accepted": 4,
+        "accept_rate": 0.004,
+        "accepted_accuracy": 0.25
+      },
+      {
+        "tau": 0.54,
+        "accepted": 4,
+        "accept_rate": 0.004,
+        "accepted_accuracy": 0.25
+      },
+      {
+        "tau": 0.55,
+        "accepted": 3,
+        "accept_rate": 0.003,
+        "accepted_accuracy": 0.3333333333333333
+      },
+      {
+        "tau": 0.56,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 1
+      },
+      {
+        "tau": 0.57,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 1
+      },
+      {
+        "tau": 0.58,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.59,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.6,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.61,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.62,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.63,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.64,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.65,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.66,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.67,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.68,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.69,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.7,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.71,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.72,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.73,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.74,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.75,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.76,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.77,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.78,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.79,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.8,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.81,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.82,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.83,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.84,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.85,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.86,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.87,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.88,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.89,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.9,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.91,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.92,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.93,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.94,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.95,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.96,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.97,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.98,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.99,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 1,
+        "accepted": 0,
+        "accept_rate": 0
+      }
+    ],
+    "held_out_curve": [
+      {
+        "tau": 0,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.372
+      },
+      {
+        "tau": 0.01,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.372
+      },
+      {
+        "tau": 0.02,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.372
+      },
+      {
+        "tau": 0.03,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.372
+      },
+      {
+        "tau": 0.04,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.372
+      },
+      {
+        "tau": 0.05,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.372
+      },
+      {
+        "tau": 0.06,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.372
+      },
+      {
+        "tau": 0.07,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.372
+      },
+      {
+        "tau": 0.08,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.372
+      },
+      {
+        "tau": 0.09,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.372
+      },
+      {
+        "tau": 0.1,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.372
+      },
+      {
+        "tau": 0.11,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.372
+      },
+      {
+        "tau": 0.12,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.372
+      },
+      {
+        "tau": 0.13,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.372
+      },
+      {
+        "tau": 0.14,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.372
+      },
+      {
+        "tau": 0.15,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.372
+      },
+      {
+        "tau": 0.16,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.372
+      },
+      {
+        "tau": 0.17,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.372
+      },
+      {
+        "tau": 0.18,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.372
+      },
+      {
+        "tau": 0.19,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.372
+      },
+      {
+        "tau": 0.2,
+        "accepted": 897,
+        "accept_rate": 0.897,
+        "accepted_accuracy": 0.34002229654403565
+      },
+      {
+        "tau": 0.21,
+        "accepted": 869,
+        "accept_rate": 0.869,
+        "accepted_accuracy": 0.33141542002301494
+      },
+      {
+        "tau": 0.22,
+        "accepted": 865,
+        "accept_rate": 0.865,
+        "accepted_accuracy": 0.3283236994219653
+      },
+      {
+        "tau": 0.23,
+        "accepted": 722,
+        "accept_rate": 0.722,
+        "accepted_accuracy": 0.278393351800554
+      },
+      {
+        "tau": 0.24,
+        "accepted": 662,
+        "accept_rate": 0.662,
+        "accepted_accuracy": 0.26435045317220546
+      },
+      {
+        "tau": 0.25,
+        "accepted": 652,
+        "accept_rate": 0.652,
+        "accepted_accuracy": 0.2684049079754601
+      },
+      {
+        "tau": 0.26,
+        "accepted": 606,
+        "accept_rate": 0.606,
+        "accepted_accuracy": 0.2722772277227723
+      },
+      {
+        "tau": 0.27,
+        "accepted": 578,
+        "accept_rate": 0.578,
+        "accepted_accuracy": 0.28027681660899656
+      },
+      {
+        "tau": 0.28,
+        "accepted": 484,
+        "accept_rate": 0.484,
+        "accepted_accuracy": 0.2768595041322314
+      },
+      {
+        "tau": 0.29,
+        "accepted": 452,
+        "accept_rate": 0.452,
+        "accepted_accuracy": 0.2809734513274336
+      },
+      {
+        "tau": 0.3,
+        "accepted": 406,
+        "accept_rate": 0.406,
+        "accepted_accuracy": 0.2832512315270936
+      },
+      {
+        "tau": 0.31,
+        "accepted": 358,
+        "accept_rate": 0.358,
+        "accepted_accuracy": 0.3016759776536313
+      },
+      {
+        "tau": 0.32,
+        "accepted": 295,
+        "accept_rate": 0.295,
+        "accepted_accuracy": 0.31864406779661014
+      },
+      {
+        "tau": 0.33,
+        "accepted": 245,
+        "accept_rate": 0.245,
+        "accepted_accuracy": 0.3142857142857143
+      },
+      {
+        "tau": 0.34,
+        "accepted": 152,
+        "accept_rate": 0.152,
+        "accepted_accuracy": 0.34210526315789475
+      },
+      {
+        "tau": 0.35,
+        "accepted": 90,
+        "accept_rate": 0.09,
+        "accepted_accuracy": 0.2777777777777778
+      },
+      {
+        "tau": 0.36,
+        "accepted": 80,
+        "accept_rate": 0.08,
+        "accepted_accuracy": 0.2625
+      },
+      {
+        "tau": 0.37,
+        "accepted": 78,
+        "accept_rate": 0.078,
+        "accepted_accuracy": 0.2692307692307692
+      },
+      {
+        "tau": 0.38,
+        "accepted": 74,
+        "accept_rate": 0.074,
+        "accepted_accuracy": 0.28378378378378377
+      },
+      {
+        "tau": 0.39,
+        "accepted": 68,
+        "accept_rate": 0.068,
+        "accepted_accuracy": 0.3088235294117647
+      },
+      {
+        "tau": 0.4,
+        "accepted": 56,
+        "accept_rate": 0.056,
+        "accepted_accuracy": 0.2857142857142857
+      },
+      {
+        "tau": 0.41,
+        "accepted": 42,
+        "accept_rate": 0.042,
+        "accepted_accuracy": 0.3333333333333333
+      },
+      {
+        "tau": 0.42,
+        "accepted": 39,
+        "accept_rate": 0.039,
+        "accepted_accuracy": 0.3076923076923077
+      },
+      {
+        "tau": 0.43,
+        "accepted": 29,
+        "accept_rate": 0.029,
+        "accepted_accuracy": 0.3103448275862069
+      },
+      {
+        "tau": 0.44,
+        "accepted": 23,
+        "accept_rate": 0.023,
+        "accepted_accuracy": 0.30434782608695654
+      },
+      {
+        "tau": 0.45,
+        "accepted": 11,
+        "accept_rate": 0.011,
+        "accepted_accuracy": 0.6363636363636364
+      },
+      {
+        "tau": 0.46,
+        "accepted": 6,
+        "accept_rate": 0.006,
+        "accepted_accuracy": 0.5
+      },
+      {
+        "tau": 0.47,
+        "accepted": 5,
+        "accept_rate": 0.005,
+        "accepted_accuracy": 0.4
+      },
+      {
+        "tau": 0.48,
+        "accepted": 4,
+        "accept_rate": 0.004,
+        "accepted_accuracy": 0.5
+      },
+      {
+        "tau": 0.49,
+        "accepted": 4,
+        "accept_rate": 0.004,
+        "accepted_accuracy": 0.5
+      },
+      {
+        "tau": 0.5,
+        "accepted": 3,
+        "accept_rate": 0.003,
+        "accepted_accuracy": 0.6666666666666666
+      },
+      {
+        "tau": 0.51,
+        "accepted": 2,
+        "accept_rate": 0.002,
+        "accepted_accuracy": 0.5
+      },
+      {
+        "tau": 0.52,
+        "accepted": 2,
+        "accept_rate": 0.002,
+        "accepted_accuracy": 0.5
+      },
+      {
+        "tau": 0.53,
+        "accepted": 2,
+        "accept_rate": 0.002,
+        "accepted_accuracy": 0.5
+      },
+      {
+        "tau": 0.54,
+        "accepted": 2,
+        "accept_rate": 0.002,
+        "accepted_accuracy": 0.5
+      },
+      {
+        "tau": 0.55,
+        "accepted": 2,
+        "accept_rate": 0.002,
+        "accepted_accuracy": 0.5
+      },
+      {
+        "tau": 0.56,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 1
+      },
+      {
+        "tau": 0.57,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 1
+      },
+      {
+        "tau": 0.58,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 1
+      },
+      {
+        "tau": 0.59,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 1
+      },
+      {
+        "tau": 0.6,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 1
+      },
+      {
+        "tau": 0.61,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 1
+      },
+      {
+        "tau": 0.62,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 1
+      },
+      {
+        "tau": 0.63,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 1
+      },
+      {
+        "tau": 0.64,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 1
+      },
+      {
+        "tau": 0.65,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 1
+      },
+      {
+        "tau": 0.66,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.67,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.68,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.69,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.7,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.71,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.72,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.73,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.74,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.75,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.76,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.77,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.78,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.79,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.8,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.81,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.82,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.83,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.84,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.85,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.86,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.87,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.88,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.89,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.9,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.91,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.92,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.93,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.94,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.95,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.96,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.97,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.98,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.99,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 1,
+        "accepted": 0,
+        "accept_rate": 0
+      }
+    ],
+    "note": "\u03C4 = 0.56 is the smallest threshold whose calibration-split disagreement is at most 20.0%. On held-out it accepts 0.1% of items with 100.0% agreement with the frontier model."
+  },
+  {
+    "model": "laya-typed-decisions",
+    "target_error": 0.2,
+    "source": "offline",
+    "reference": "frontier",
+    "reachable": true,
+    "tau": 0.39,
+    "calibration_accept_rate": 0.001,
+    "calibration_accepted_accuracy": 1,
+    "held_out_accept_rate": 0.001,
+    "held_out_accepted_accuracy": 1,
+    "held_out_accepted": 1,
+    "held_out_items": 1000,
+    "calibration_curve": [
+      {
+        "tau": 0,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.318
+      },
+      {
+        "tau": 0.01,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.318
+      },
+      {
+        "tau": 0.02,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.318
+      },
+      {
+        "tau": 0.03,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.318
+      },
+      {
+        "tau": 0.04,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.318
+      },
+      {
+        "tau": 0.05,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.318
+      },
+      {
+        "tau": 0.06,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.318
+      },
+      {
+        "tau": 0.07,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.318
+      },
+      {
+        "tau": 0.08,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.318
+      },
+      {
+        "tau": 0.09,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.318
+      },
+      {
+        "tau": 0.1,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.318
+      },
+      {
+        "tau": 0.11,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.318
+      },
+      {
+        "tau": 0.12,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.318
+      },
+      {
+        "tau": 0.13,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.318
+      },
+      {
+        "tau": 0.14,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.318
+      },
+      {
+        "tau": 0.15,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.318
+      },
+      {
+        "tau": 0.16,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.318
+      },
+      {
+        "tau": 0.17,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.318
+      },
+      {
+        "tau": 0.18,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.318
+      },
+      {
+        "tau": 0.19,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.318
+      },
+      {
+        "tau": 0.2,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.318
+      },
+      {
+        "tau": 0.21,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.318
+      },
+      {
+        "tau": 0.22,
+        "accepted": 822,
+        "accept_rate": 0.822,
+        "accepted_accuracy": 0.34793187347931875
+      },
+      {
+        "tau": 0.23,
+        "accepted": 573,
+        "accept_rate": 0.573,
+        "accepted_accuracy": 0.4432809773123909
+      },
+      {
+        "tau": 0.24,
+        "accepted": 557,
+        "accept_rate": 0.557,
+        "accepted_accuracy": 0.4542190305206463
+      },
+      {
+        "tau": 0.25,
+        "accepted": 527,
+        "accept_rate": 0.527,
+        "accepted_accuracy": 0.45351043643263755
+      },
+      {
+        "tau": 0.26,
+        "accepted": 479,
+        "accept_rate": 0.479,
+        "accepted_accuracy": 0.4509394572025052
+      },
+      {
+        "tau": 0.27,
+        "accepted": 384,
+        "accept_rate": 0.384,
+        "accepted_accuracy": 0.4713541666666667
+      },
+      {
+        "tau": 0.28,
+        "accepted": 222,
+        "accept_rate": 0.222,
+        "accepted_accuracy": 0.34684684684684686
+      },
+      {
+        "tau": 0.29,
+        "accepted": 194,
+        "accept_rate": 0.194,
+        "accepted_accuracy": 0.3402061855670103
+      },
+      {
+        "tau": 0.3,
+        "accepted": 139,
+        "accept_rate": 0.139,
+        "accepted_accuracy": 0.3597122302158273
+      },
+      {
+        "tau": 0.31,
+        "accepted": 138,
+        "accept_rate": 0.138,
+        "accepted_accuracy": 0.36231884057971014
+      },
+      {
+        "tau": 0.32,
+        "accepted": 138,
+        "accept_rate": 0.138,
+        "accepted_accuracy": 0.36231884057971014
+      },
+      {
+        "tau": 0.33,
+        "accepted": 136,
+        "accept_rate": 0.136,
+        "accepted_accuracy": 0.36764705882352944
+      },
+      {
+        "tau": 0.34,
+        "accepted": 131,
+        "accept_rate": 0.131,
+        "accepted_accuracy": 0.3816793893129771
+      },
+      {
+        "tau": 0.35,
+        "accepted": 96,
+        "accept_rate": 0.096,
+        "accepted_accuracy": 0.3854166666666667
+      },
+      {
+        "tau": 0.36,
+        "accepted": 93,
+        "accept_rate": 0.093,
+        "accepted_accuracy": 0.3870967741935484
+      },
+      {
+        "tau": 0.37,
+        "accepted": 27,
+        "accept_rate": 0.027,
+        "accepted_accuracy": 0.4074074074074074
+      },
+      {
+        "tau": 0.38,
+        "accepted": 6,
+        "accept_rate": 0.006,
+        "accepted_accuracy": 0.6666666666666666
+      },
+      {
+        "tau": 0.39,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 1
+      },
+      {
+        "tau": 0.4,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 1
+      },
+      {
+        "tau": 0.41,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 1
+      },
+      {
+        "tau": 0.42,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 1
+      },
+      {
+        "tau": 0.43,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 1
+      },
+      {
+        "tau": 0.44,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 1
+      },
+      {
+        "tau": 0.45,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 1
+      },
+      {
+        "tau": 0.46,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.47,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.48,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.49,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.5,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.51,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.52,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.53,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.54,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.55,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.56,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.57,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.58,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.59,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.6,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.61,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.62,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.63,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.64,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.65,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.66,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.67,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.68,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.69,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.7,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.71,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.72,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.73,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.74,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.75,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.76,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.77,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.78,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.79,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.8,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.81,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.82,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.83,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.84,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.85,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.86,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.87,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.88,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.89,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.9,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.91,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.92,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.93,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.94,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.95,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.96,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.97,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.98,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.99,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 1,
+        "accepted": 0,
+        "accept_rate": 0
+      }
+    ],
+    "held_out_curve": [
+      {
+        "tau": 0,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.263
+      },
+      {
+        "tau": 0.01,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.263
+      },
+      {
+        "tau": 0.02,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.263
+      },
+      {
+        "tau": 0.03,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.263
+      },
+      {
+        "tau": 0.04,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.263
+      },
+      {
+        "tau": 0.05,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.263
+      },
+      {
+        "tau": 0.06,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.263
+      },
+      {
+        "tau": 0.07,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.263
+      },
+      {
+        "tau": 0.08,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.263
+      },
+      {
+        "tau": 0.09,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.263
+      },
+      {
+        "tau": 0.1,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.263
+      },
+      {
+        "tau": 0.11,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.263
+      },
+      {
+        "tau": 0.12,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.263
+      },
+      {
+        "tau": 0.13,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.263
+      },
+      {
+        "tau": 0.14,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.263
+      },
+      {
+        "tau": 0.15,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.263
+      },
+      {
+        "tau": 0.16,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.263
+      },
+      {
+        "tau": 0.17,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.263
+      },
+      {
+        "tau": 0.18,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.263
+      },
+      {
+        "tau": 0.19,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.263
+      },
+      {
+        "tau": 0.2,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.263
+      },
+      {
+        "tau": 0.21,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.263
+      },
+      {
+        "tau": 0.22,
+        "accepted": 813,
+        "accept_rate": 0.813,
+        "accepted_accuracy": 0.28044280442804426
+      },
+      {
+        "tau": 0.23,
+        "accepted": 579,
+        "accept_rate": 0.579,
+        "accepted_accuracy": 0.3540587219343696
+      },
+      {
+        "tau": 0.24,
+        "accepted": 567,
+        "accept_rate": 0.567,
+        "accepted_accuracy": 0.35978835978835977
+      },
+      {
+        "tau": 0.25,
+        "accepted": 532,
+        "accept_rate": 0.532,
+        "accepted_accuracy": 0.3684210526315789
+      },
+      {
+        "tau": 0.26,
+        "accepted": 480,
+        "accept_rate": 0.48,
+        "accepted_accuracy": 0.35833333333333334
+      },
+      {
+        "tau": 0.27,
+        "accepted": 403,
+        "accept_rate": 0.403,
+        "accepted_accuracy": 0.34987593052109184
+      },
+      {
+        "tau": 0.28,
+        "accepted": 253,
+        "accept_rate": 0.253,
+        "accepted_accuracy": 0.23715415019762845
+      },
+      {
+        "tau": 0.29,
+        "accepted": 229,
+        "accept_rate": 0.229,
+        "accepted_accuracy": 0.24017467248908297
+      },
+      {
+        "tau": 0.3,
+        "accepted": 159,
+        "accept_rate": 0.159,
+        "accepted_accuracy": 0.2578616352201258
+      },
+      {
+        "tau": 0.31,
+        "accepted": 158,
+        "accept_rate": 0.158,
+        "accepted_accuracy": 0.25949367088607594
+      },
+      {
+        "tau": 0.32,
+        "accepted": 157,
+        "accept_rate": 0.157,
+        "accepted_accuracy": 0.2611464968152866
+      },
+      {
+        "tau": 0.33,
+        "accepted": 155,
+        "accept_rate": 0.155,
+        "accepted_accuracy": 0.2645161290322581
+      },
+      {
+        "tau": 0.34,
+        "accepted": 154,
+        "accept_rate": 0.154,
+        "accepted_accuracy": 0.2662337662337662
+      },
+      {
+        "tau": 0.35,
+        "accepted": 120,
+        "accept_rate": 0.12,
+        "accepted_accuracy": 0.2833333333333333
+      },
+      {
+        "tau": 0.36,
+        "accepted": 118,
+        "accept_rate": 0.118,
+        "accepted_accuracy": 0.288135593220339
+      },
+      {
+        "tau": 0.37,
+        "accepted": 19,
+        "accept_rate": 0.019,
+        "accepted_accuracy": 0.631578947368421
+      },
+      {
+        "tau": 0.38,
+        "accepted": 3,
+        "accept_rate": 0.003,
+        "accepted_accuracy": 1
+      },
+      {
+        "tau": 0.39,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 1
+      },
+      {
+        "tau": 0.4,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 1
+      },
+      {
+        "tau": 0.41,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 1
+      },
+      {
+        "tau": 0.42,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 1
+      },
+      {
+        "tau": 0.43,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 1
+      },
+      {
+        "tau": 0.44,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 1
+      },
+      {
+        "tau": 0.45,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 1
+      },
+      {
+        "tau": 0.46,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.47,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.48,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.49,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.5,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.51,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.52,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.53,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.54,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.55,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.56,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.57,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.58,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.59,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.6,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.61,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.62,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.63,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.64,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.65,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.66,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.67,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.68,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.69,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.7,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.71,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.72,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.73,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.74,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.75,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.76,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.77,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.78,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.79,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.8,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.81,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.82,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.83,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.84,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.85,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.86,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.87,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.88,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.89,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.9,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.91,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.92,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.93,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.94,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.95,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.96,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.97,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.98,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.99,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 1,
+        "accepted": 0,
+        "accept_rate": 0
+      }
+    ],
+    "note": "\u03C4 = 0.39 is the smallest threshold whose calibration-split disagreement is at most 20.0%. On held-out it accepts 0.1% of items with 100.0% agreement with the frontier model."
+  },
+  {
+    "model": "von-1.2.0",
+    "target_error": 0.2,
+    "source": "offline",
+    "reference": "frontier",
+    "reachable": true,
+    "tau": 0.78,
+    "calibration_accept_rate": 0.003,
+    "calibration_accepted_accuracy": 1,
+    "held_out_accept_rate": 0.001,
+    "held_out_accepted_accuracy": 0,
+    "held_out_accepted": 1,
+    "held_out_items": 1000,
+    "calibration_curve": [
+      {
+        "tau": 0,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.474
+      },
+      {
+        "tau": 0.01,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.474
+      },
+      {
+        "tau": 0.02,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.474
+      },
+      {
+        "tau": 0.03,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.474
+      },
+      {
+        "tau": 0.04,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.474
+      },
+      {
+        "tau": 0.05,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.474
+      },
+      {
+        "tau": 0.06,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.474
+      },
+      {
+        "tau": 0.07,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.474
+      },
+      {
+        "tau": 0.08,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.474
+      },
+      {
+        "tau": 0.09,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.474
+      },
+      {
+        "tau": 0.1,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.474
+      },
+      {
+        "tau": 0.11,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.474
+      },
+      {
+        "tau": 0.12,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.474
+      },
+      {
+        "tau": 0.13,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.474
+      },
+      {
+        "tau": 0.14,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.474
+      },
+      {
+        "tau": 0.15,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.474
+      },
+      {
+        "tau": 0.16,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.474
+      },
+      {
+        "tau": 0.17,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.474
+      },
+      {
+        "tau": 0.18,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.474
+      },
+      {
+        "tau": 0.19,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.474
+      },
+      {
+        "tau": 0.2,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.474
+      },
+      {
+        "tau": 0.21,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.474
+      },
+      {
+        "tau": 0.22,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.474
+      },
+      {
+        "tau": 0.23,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.474
+      },
+      {
+        "tau": 0.24,
+        "accepted": 998,
+        "accept_rate": 0.998,
+        "accepted_accuracy": 0.4729458917835671
+      },
+      {
+        "tau": 0.25,
+        "accepted": 995,
+        "accept_rate": 0.995,
+        "accepted_accuracy": 0.4733668341708543
+      },
+      {
+        "tau": 0.26,
+        "accepted": 994,
+        "accept_rate": 0.994,
+        "accepted_accuracy": 0.4738430583501006
+      },
+      {
+        "tau": 0.27,
+        "accepted": 989,
+        "accept_rate": 0.989,
+        "accepted_accuracy": 0.4762386248736097
+      },
+      {
+        "tau": 0.28,
+        "accepted": 986,
+        "accept_rate": 0.986,
+        "accepted_accuracy": 0.4776876267748479
+      },
+      {
+        "tau": 0.29,
+        "accepted": 979,
+        "accept_rate": 0.979,
+        "accepted_accuracy": 0.48008171603677224
+      },
+      {
+        "tau": 0.3,
+        "accepted": 947,
+        "accept_rate": 0.947,
+        "accepted_accuracy": 0.48680042238648363
+      },
+      {
+        "tau": 0.31,
+        "accepted": 936,
+        "accept_rate": 0.936,
+        "accepted_accuracy": 0.4893162393162393
+      },
+      {
+        "tau": 0.32,
+        "accepted": 927,
+        "accept_rate": 0.927,
+        "accepted_accuracy": 0.48975188781014023
+      },
+      {
+        "tau": 0.33,
+        "accepted": 922,
+        "accept_rate": 0.922,
+        "accepted_accuracy": 0.4880694143167028
+      },
+      {
+        "tau": 0.34,
+        "accepted": 890,
+        "accept_rate": 0.89,
+        "accepted_accuracy": 0.4966292134831461
+      },
+      {
+        "tau": 0.35,
+        "accepted": 808,
+        "accept_rate": 0.808,
+        "accepted_accuracy": 0.5086633663366337
+      },
+      {
+        "tau": 0.36,
+        "accepted": 749,
+        "accept_rate": 0.749,
+        "accepted_accuracy": 0.5300400534045394
+      },
+      {
+        "tau": 0.37,
+        "accepted": 729,
+        "accept_rate": 0.729,
+        "accepted_accuracy": 0.5404663923182441
+      },
+      {
+        "tau": 0.38,
+        "accepted": 697,
+        "accept_rate": 0.697,
+        "accepted_accuracy": 0.5451936872309899
+      },
+      {
+        "tau": 0.39,
+        "accepted": 659,
+        "accept_rate": 0.659,
+        "accepted_accuracy": 0.5523520485584219
+      },
+      {
+        "tau": 0.4,
+        "accepted": 645,
+        "accept_rate": 0.645,
+        "accepted_accuracy": 0.5550387596899224
+      },
+      {
+        "tau": 0.41,
+        "accepted": 639,
+        "accept_rate": 0.639,
+        "accepted_accuracy": 0.5555555555555556
+      },
+      {
+        "tau": 0.42,
+        "accepted": 630,
+        "accept_rate": 0.63,
+        "accepted_accuracy": 0.5571428571428572
+      },
+      {
+        "tau": 0.43,
+        "accepted": 589,
+        "accept_rate": 0.589,
+        "accepted_accuracy": 0.567062818336163
+      },
+      {
+        "tau": 0.44,
+        "accepted": 572,
+        "accept_rate": 0.572,
+        "accepted_accuracy": 0.5734265734265734
+      },
+      {
+        "tau": 0.45,
+        "accepted": 562,
+        "accept_rate": 0.562,
+        "accepted_accuracy": 0.5729537366548043
+      },
+      {
+        "tau": 0.46,
+        "accepted": 539,
+        "accept_rate": 0.539,
+        "accepted_accuracy": 0.575139146567718
+      },
+      {
+        "tau": 0.47,
+        "accepted": 472,
+        "accept_rate": 0.472,
+        "accepted_accuracy": 0.586864406779661
+      },
+      {
+        "tau": 0.48,
+        "accepted": 435,
+        "accept_rate": 0.435,
+        "accepted_accuracy": 0.6
+      },
+      {
+        "tau": 0.49,
+        "accepted": 423,
+        "accept_rate": 0.423,
+        "accepted_accuracy": 0.6004728132387707
+      },
+      {
+        "tau": 0.5,
+        "accepted": 417,
+        "accept_rate": 0.417,
+        "accepted_accuracy": 0.6019184652278178
+      },
+      {
+        "tau": 0.51,
+        "accepted": 413,
+        "accept_rate": 0.413,
+        "accepted_accuracy": 0.6029055690072639
+      },
+      {
+        "tau": 0.52,
+        "accepted": 394,
+        "accept_rate": 0.394,
+        "accepted_accuracy": 0.6040609137055838
+      },
+      {
+        "tau": 0.53,
+        "accepted": 359,
+        "accept_rate": 0.359,
+        "accepted_accuracy": 0.6155988857938719
+      },
+      {
+        "tau": 0.54,
+        "accepted": 336,
+        "accept_rate": 0.336,
+        "accepted_accuracy": 0.6160714285714286
+      },
+      {
+        "tau": 0.55,
+        "accepted": 300,
+        "accept_rate": 0.3,
+        "accepted_accuracy": 0.6233333333333333
+      },
+      {
+        "tau": 0.56,
+        "accepted": 270,
+        "accept_rate": 0.27,
+        "accepted_accuracy": 0.6333333333333333
+      },
+      {
+        "tau": 0.57,
+        "accepted": 247,
+        "accept_rate": 0.247,
+        "accepted_accuracy": 0.6234817813765182
+      },
+      {
+        "tau": 0.58,
+        "accepted": 205,
+        "accept_rate": 0.205,
+        "accepted_accuracy": 0.6439024390243903
+      },
+      {
+        "tau": 0.59,
+        "accepted": 185,
+        "accept_rate": 0.185,
+        "accepted_accuracy": 0.6648648648648648
+      },
+      {
+        "tau": 0.6,
+        "accepted": 165,
+        "accept_rate": 0.165,
+        "accepted_accuracy": 0.6909090909090909
+      },
+      {
+        "tau": 0.61,
+        "accepted": 141,
+        "accept_rate": 0.141,
+        "accepted_accuracy": 0.6879432624113475
+      },
+      {
+        "tau": 0.62,
+        "accepted": 127,
+        "accept_rate": 0.127,
+        "accepted_accuracy": 0.6929133858267716
+      },
+      {
+        "tau": 0.63,
+        "accepted": 100,
+        "accept_rate": 0.1,
+        "accepted_accuracy": 0.63
+      },
+      {
+        "tau": 0.64,
+        "accepted": 88,
+        "accept_rate": 0.088,
+        "accepted_accuracy": 0.5909090909090909
+      },
+      {
+        "tau": 0.65,
+        "accepted": 71,
+        "accept_rate": 0.071,
+        "accepted_accuracy": 0.5633802816901409
+      },
+      {
+        "tau": 0.66,
+        "accepted": 54,
+        "accept_rate": 0.054,
+        "accepted_accuracy": 0.5740740740740741
+      },
+      {
+        "tau": 0.67,
+        "accepted": 44,
+        "accept_rate": 0.044,
+        "accepted_accuracy": 0.5909090909090909
+      },
+      {
+        "tau": 0.68,
+        "accepted": 33,
+        "accept_rate": 0.033,
+        "accepted_accuracy": 0.5151515151515151
+      },
+      {
+        "tau": 0.69,
+        "accepted": 29,
+        "accept_rate": 0.029,
+        "accepted_accuracy": 0.4827586206896552
+      },
+      {
+        "tau": 0.7,
+        "accepted": 23,
+        "accept_rate": 0.023,
+        "accepted_accuracy": 0.391304347826087
+      },
+      {
+        "tau": 0.71,
+        "accepted": 19,
+        "accept_rate": 0.019,
+        "accepted_accuracy": 0.3684210526315789
+      },
+      {
+        "tau": 0.72,
+        "accepted": 17,
+        "accept_rate": 0.017,
+        "accepted_accuracy": 0.29411764705882354
+      },
+      {
+        "tau": 0.73,
+        "accepted": 13,
+        "accept_rate": 0.013,
+        "accepted_accuracy": 0.3076923076923077
+      },
+      {
+        "tau": 0.74,
+        "accepted": 10,
+        "accept_rate": 0.01,
+        "accepted_accuracy": 0.4
+      },
+      {
+        "tau": 0.75,
+        "accepted": 7,
+        "accept_rate": 0.007,
+        "accepted_accuracy": 0.42857142857142855
+      },
+      {
+        "tau": 0.76,
+        "accepted": 4,
+        "accept_rate": 0.004,
+        "accepted_accuracy": 0.75
+      },
+      {
+        "tau": 0.77,
+        "accepted": 4,
+        "accept_rate": 0.004,
+        "accepted_accuracy": 0.75
+      },
+      {
+        "tau": 0.78,
+        "accepted": 3,
+        "accept_rate": 0.003,
+        "accepted_accuracy": 1
+      },
+      {
+        "tau": 0.79,
+        "accepted": 3,
+        "accept_rate": 0.003,
+        "accepted_accuracy": 1
+      },
+      {
+        "tau": 0.8,
+        "accepted": 2,
+        "accept_rate": 0.002,
+        "accepted_accuracy": 1
+      },
+      {
+        "tau": 0.81,
+        "accepted": 2,
+        "accept_rate": 0.002,
+        "accepted_accuracy": 1
+      },
+      {
+        "tau": 0.82,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 1
+      },
+      {
+        "tau": 0.83,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 1
+      },
+      {
+        "tau": 0.84,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 1
+      },
+      {
+        "tau": 0.85,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 1
+      },
+      {
+        "tau": 0.86,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 1
+      },
+      {
+        "tau": 0.87,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 1
+      },
+      {
+        "tau": 0.88,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 1
+      },
+      {
+        "tau": 0.89,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 1
+      },
+      {
+        "tau": 0.9,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.91,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.92,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.93,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.94,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.95,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.96,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.97,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.98,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.99,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 1,
+        "accepted": 0,
+        "accept_rate": 0
+      }
+    ],
+    "held_out_curve": [
+      {
+        "tau": 0,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.438
+      },
+      {
+        "tau": 0.01,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.438
+      },
+      {
+        "tau": 0.02,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.438
+      },
+      {
+        "tau": 0.03,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.438
+      },
+      {
+        "tau": 0.04,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.438
+      },
+      {
+        "tau": 0.05,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.438
+      },
+      {
+        "tau": 0.06,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.438
+      },
+      {
+        "tau": 0.07,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.438
+      },
+      {
+        "tau": 0.08,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.438
+      },
+      {
+        "tau": 0.09,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.438
+      },
+      {
+        "tau": 0.1,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.438
+      },
+      {
+        "tau": 0.11,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.438
+      },
+      {
+        "tau": 0.12,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.438
+      },
+      {
+        "tau": 0.13,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.438
+      },
+      {
+        "tau": 0.14,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.438
+      },
+      {
+        "tau": 0.15,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.438
+      },
+      {
+        "tau": 0.16,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.438
+      },
+      {
+        "tau": 0.17,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.438
+      },
+      {
+        "tau": 0.18,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.438
+      },
+      {
+        "tau": 0.19,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.438
+      },
+      {
+        "tau": 0.2,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.438
+      },
+      {
+        "tau": 0.21,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.438
+      },
+      {
+        "tau": 0.22,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.438
+      },
+      {
+        "tau": 0.23,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.438
+      },
+      {
+        "tau": 0.24,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.438
+      },
+      {
+        "tau": 0.25,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.438
+      },
+      {
+        "tau": 0.26,
+        "accepted": 999,
+        "accept_rate": 0.999,
+        "accepted_accuracy": 0.43743743743743746
+      },
+      {
+        "tau": 0.27,
+        "accepted": 997,
+        "accept_rate": 0.997,
+        "accepted_accuracy": 0.4383149448345035
+      },
+      {
+        "tau": 0.28,
+        "accepted": 989,
+        "accept_rate": 0.989,
+        "accepted_accuracy": 0.4408493427704752
+      },
+      {
+        "tau": 0.29,
+        "accepted": 985,
+        "accept_rate": 0.985,
+        "accepted_accuracy": 0.44060913705583754
+      },
+      {
+        "tau": 0.3,
+        "accepted": 959,
+        "accept_rate": 0.959,
+        "accepted_accuracy": 0.443169968717414
+      },
+      {
+        "tau": 0.31,
+        "accepted": 942,
+        "accept_rate": 0.942,
+        "accepted_accuracy": 0.4426751592356688
+      },
+      {
+        "tau": 0.32,
+        "accepted": 936,
+        "accept_rate": 0.936,
+        "accepted_accuracy": 0.4412393162393162
+      },
+      {
+        "tau": 0.33,
+        "accepted": 934,
+        "accept_rate": 0.934,
+        "accepted_accuracy": 0.4421841541755889
+      },
+      {
+        "tau": 0.34,
+        "accepted": 899,
+        "accept_rate": 0.899,
+        "accepted_accuracy": 0.45383759733036705
+      },
+      {
+        "tau": 0.35,
+        "accepted": 784,
+        "accept_rate": 0.784,
+        "accepted_accuracy": 0.47831632653061223
+      },
+      {
+        "tau": 0.36,
+        "accepted": 714,
+        "accept_rate": 0.714,
+        "accepted_accuracy": 0.4943977591036415
+      },
+      {
+        "tau": 0.37,
+        "accepted": 699,
+        "accept_rate": 0.699,
+        "accepted_accuracy": 0.5007153075822603
+      },
+      {
+        "tau": 0.38,
+        "accepted": 662,
+        "accept_rate": 0.662,
+        "accepted_accuracy": 0.5075528700906344
+      },
+      {
+        "tau": 0.39,
+        "accepted": 626,
+        "accept_rate": 0.626,
+        "accepted_accuracy": 0.5079872204472844
+      },
+      {
+        "tau": 0.4,
+        "accepted": 609,
+        "accept_rate": 0.609,
+        "accepted_accuracy": 0.5139573070607554
+      },
+      {
+        "tau": 0.41,
+        "accepted": 609,
+        "accept_rate": 0.609,
+        "accepted_accuracy": 0.5139573070607554
+      },
+      {
+        "tau": 0.42,
+        "accepted": 604,
+        "accept_rate": 0.604,
+        "accepted_accuracy": 0.5165562913907285
+      },
+      {
+        "tau": 0.43,
+        "accepted": 572,
+        "accept_rate": 0.572,
+        "accepted_accuracy": 0.5174825174825175
+      },
+      {
+        "tau": 0.44,
+        "accepted": 546,
+        "accept_rate": 0.546,
+        "accepted_accuracy": 0.521978021978022
+      },
+      {
+        "tau": 0.45,
+        "accepted": 539,
+        "accept_rate": 0.539,
+        "accepted_accuracy": 0.5250463821892394
+      },
+      {
+        "tau": 0.46,
+        "accepted": 510,
+        "accept_rate": 0.51,
+        "accepted_accuracy": 0.5372549019607843
+      },
+      {
+        "tau": 0.47,
+        "accepted": 464,
+        "accept_rate": 0.464,
+        "accepted_accuracy": 0.5431034482758621
+      },
+      {
+        "tau": 0.48,
+        "accepted": 429,
+        "accept_rate": 0.429,
+        "accepted_accuracy": 0.5524475524475524
+      },
+      {
+        "tau": 0.49,
+        "accepted": 417,
+        "accept_rate": 0.417,
+        "accepted_accuracy": 0.5563549160671463
+      },
+      {
+        "tau": 0.5,
+        "accepted": 415,
+        "accept_rate": 0.415,
+        "accepted_accuracy": 0.5566265060240964
+      },
+      {
+        "tau": 0.51,
+        "accepted": 399,
+        "accept_rate": 0.399,
+        "accepted_accuracy": 0.5664160401002506
+      },
+      {
+        "tau": 0.52,
+        "accepted": 381,
+        "accept_rate": 0.381,
+        "accepted_accuracy": 0.5774278215223098
+      },
+      {
+        "tau": 0.53,
+        "accepted": 357,
+        "accept_rate": 0.357,
+        "accepted_accuracy": 0.5742296918767507
+      },
+      {
+        "tau": 0.54,
+        "accepted": 325,
+        "accept_rate": 0.325,
+        "accepted_accuracy": 0.5876923076923077
+      },
+      {
+        "tau": 0.55,
+        "accepted": 296,
+        "accept_rate": 0.296,
+        "accepted_accuracy": 0.6013513513513513
+      },
+      {
+        "tau": 0.56,
+        "accepted": 263,
+        "accept_rate": 0.263,
+        "accepted_accuracy": 0.6349809885931559
+      },
+      {
+        "tau": 0.57,
+        "accepted": 234,
+        "accept_rate": 0.234,
+        "accepted_accuracy": 0.6324786324786325
+      },
+      {
+        "tau": 0.58,
+        "accepted": 177,
+        "accept_rate": 0.177,
+        "accepted_accuracy": 0.6384180790960452
+      },
+      {
+        "tau": 0.59,
+        "accepted": 147,
+        "accept_rate": 0.147,
+        "accepted_accuracy": 0.6462585034013606
+      },
+      {
+        "tau": 0.6,
+        "accepted": 130,
+        "accept_rate": 0.13,
+        "accepted_accuracy": 0.6461538461538462
+      },
+      {
+        "tau": 0.61,
+        "accepted": 115,
+        "accept_rate": 0.115,
+        "accepted_accuracy": 0.6434782608695652
+      },
+      {
+        "tau": 0.62,
+        "accepted": 102,
+        "accept_rate": 0.102,
+        "accepted_accuracy": 0.6470588235294118
+      },
+      {
+        "tau": 0.63,
+        "accepted": 73,
+        "accept_rate": 0.073,
+        "accepted_accuracy": 0.6164383561643836
+      },
+      {
+        "tau": 0.64,
+        "accepted": 61,
+        "accept_rate": 0.061,
+        "accepted_accuracy": 0.6229508196721312
+      },
+      {
+        "tau": 0.65,
+        "accepted": 40,
+        "accept_rate": 0.04,
+        "accepted_accuracy": 0.6
+      },
+      {
+        "tau": 0.66,
+        "accepted": 32,
+        "accept_rate": 0.032,
+        "accepted_accuracy": 0.625
+      },
+      {
+        "tau": 0.67,
+        "accepted": 23,
+        "accept_rate": 0.023,
+        "accepted_accuracy": 0.6521739130434783
+      },
+      {
+        "tau": 0.68,
+        "accepted": 14,
+        "accept_rate": 0.014,
+        "accepted_accuracy": 0.6428571428571429
+      },
+      {
+        "tau": 0.69,
+        "accepted": 12,
+        "accept_rate": 0.012,
+        "accepted_accuracy": 0.75
+      },
+      {
+        "tau": 0.7,
+        "accepted": 11,
+        "accept_rate": 0.011,
+        "accepted_accuracy": 0.8181818181818182
+      },
+      {
+        "tau": 0.71,
+        "accepted": 7,
+        "accept_rate": 0.007,
+        "accepted_accuracy": 0.7142857142857143
+      },
+      {
+        "tau": 0.72,
+        "accepted": 6,
+        "accept_rate": 0.006,
+        "accepted_accuracy": 0.6666666666666666
+      },
+      {
+        "tau": 0.73,
+        "accepted": 5,
+        "accept_rate": 0.005,
+        "accepted_accuracy": 0.6
+      },
+      {
+        "tau": 0.74,
+        "accepted": 5,
+        "accept_rate": 0.005,
+        "accepted_accuracy": 0.6
+      },
+      {
+        "tau": 0.75,
+        "accepted": 5,
+        "accept_rate": 0.005,
+        "accepted_accuracy": 0.6
+      },
+      {
+        "tau": 0.76,
+        "accepted": 4,
+        "accept_rate": 0.004,
+        "accepted_accuracy": 0.5
+      },
+      {
+        "tau": 0.77,
+        "accepted": 3,
+        "accept_rate": 0.003,
+        "accepted_accuracy": 0.3333333333333333
+      },
+      {
+        "tau": 0.78,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 0
+      },
+      {
+        "tau": 0.79,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 0
+      },
+      {
+        "tau": 0.8,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 0
+      },
+      {
+        "tau": 0.81,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 0
+      },
+      {
+        "tau": 0.82,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 0
+      },
+      {
+        "tau": 0.83,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 0
+      },
+      {
+        "tau": 0.84,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 0
+      },
+      {
+        "tau": 0.85,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 0
+      },
+      {
+        "tau": 0.86,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.87,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.88,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.89,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.9,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.91,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.92,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.93,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.94,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.95,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.96,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.97,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.98,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.99,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 1,
+        "accepted": 0,
+        "accept_rate": 0
+      }
+    ],
+    "note": "\u03C4 = 0.78 is the smallest threshold whose calibration-split disagreement is at most 20.0%. On held-out it accepts 0.1% of items with 0.0% agreement with the frontier model."
+  },
+  {
+    "model": "laya-en-ft-tickets",
+    "target_error": 0.2,
+    "source": "offline",
+    "reference": "frontier",
+    "reachable": false,
+    "held_out_items": 1000,
+    "best_achievable_error": 0.4375,
+    "best_achievable_tau": 0.45,
+    "calibration_curve": [
+      {
+        "tau": 0,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.381
+      },
+      {
+        "tau": 0.01,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.381
+      },
+      {
+        "tau": 0.02,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.381
+      },
+      {
+        "tau": 0.03,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.381
+      },
+      {
+        "tau": 0.04,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.381
+      },
+      {
+        "tau": 0.05,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.381
+      },
+      {
+        "tau": 0.06,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.381
+      },
+      {
+        "tau": 0.07,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.381
+      },
+      {
+        "tau": 0.08,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.381
+      },
+      {
+        "tau": 0.09,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.381
+      },
+      {
+        "tau": 0.1,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.381
+      },
+      {
+        "tau": 0.11,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.381
+      },
+      {
+        "tau": 0.12,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.381
+      },
+      {
+        "tau": 0.13,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.381
+      },
+      {
+        "tau": 0.14,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.381
+      },
+      {
+        "tau": 0.15,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.381
+      },
+      {
+        "tau": 0.16,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.381
+      },
+      {
+        "tau": 0.17,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.381
+      },
+      {
+        "tau": 0.18,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.381
+      },
+      {
+        "tau": 0.19,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.381
+      },
+      {
+        "tau": 0.2,
+        "accepted": 992,
+        "accept_rate": 0.992,
+        "accepted_accuracy": 0.3780241935483871
+      },
+      {
+        "tau": 0.21,
+        "accepted": 987,
+        "accept_rate": 0.987,
+        "accepted_accuracy": 0.37487335359675783
+      },
+      {
+        "tau": 0.22,
+        "accepted": 972,
+        "accept_rate": 0.972,
+        "accepted_accuracy": 0.3683127572016461
+      },
+      {
+        "tau": 0.23,
+        "accepted": 792,
+        "accept_rate": 0.792,
+        "accepted_accuracy": 0.3371212121212121
+      },
+      {
+        "tau": 0.24,
+        "accepted": 785,
+        "accept_rate": 0.785,
+        "accepted_accuracy": 0.3375796178343949
+      },
+      {
+        "tau": 0.25,
+        "accepted": 753,
+        "accept_rate": 0.753,
+        "accepted_accuracy": 0.3386454183266932
+      },
+      {
+        "tau": 0.26,
+        "accepted": 594,
+        "accept_rate": 0.594,
+        "accepted_accuracy": 0.3787878787878788
+      },
+      {
+        "tau": 0.27,
+        "accepted": 529,
+        "accept_rate": 0.529,
+        "accepted_accuracy": 0.40264650283553877
+      },
+      {
+        "tau": 0.28,
+        "accepted": 518,
+        "accept_rate": 0.518,
+        "accepted_accuracy": 0.40733590733590735
+      },
+      {
+        "tau": 0.29,
+        "accepted": 507,
+        "accept_rate": 0.507,
+        "accepted_accuracy": 0.40631163708086787
+      },
+      {
+        "tau": 0.3,
+        "accepted": 485,
+        "accept_rate": 0.485,
+        "accepted_accuracy": 0.40824742268041236
+      },
+      {
+        "tau": 0.31,
+        "accepted": 419,
+        "accept_rate": 0.419,
+        "accepted_accuracy": 0.42482100238663484
+      },
+      {
+        "tau": 0.32,
+        "accepted": 416,
+        "accept_rate": 0.416,
+        "accepted_accuracy": 0.42788461538461536
+      },
+      {
+        "tau": 0.33,
+        "accepted": 412,
+        "accept_rate": 0.412,
+        "accepted_accuracy": 0.42718446601941745
+      },
+      {
+        "tau": 0.34,
+        "accepted": 316,
+        "accept_rate": 0.316,
+        "accepted_accuracy": 0.4240506329113924
+      },
+      {
+        "tau": 0.35,
+        "accepted": 305,
+        "accept_rate": 0.305,
+        "accepted_accuracy": 0.419672131147541
+      },
+      {
+        "tau": 0.36,
+        "accepted": 293,
+        "accept_rate": 0.293,
+        "accepted_accuracy": 0.4197952218430034
+      },
+      {
+        "tau": 0.37,
+        "accepted": 263,
+        "accept_rate": 0.263,
+        "accepted_accuracy": 0.40304182509505704
+      },
+      {
+        "tau": 0.38,
+        "accepted": 166,
+        "accept_rate": 0.166,
+        "accepted_accuracy": 0.43373493975903615
+      },
+      {
+        "tau": 0.39,
+        "accepted": 165,
+        "accept_rate": 0.165,
+        "accepted_accuracy": 0.4303030303030303
+      },
+      {
+        "tau": 0.4,
+        "accepted": 162,
+        "accept_rate": 0.162,
+        "accepted_accuracy": 0.41975308641975306
+      },
+      {
+        "tau": 0.41,
+        "accepted": 66,
+        "accept_rate": 0.066,
+        "accepted_accuracy": 0.5
+      },
+      {
+        "tau": 0.42,
+        "accepted": 65,
+        "accept_rate": 0.065,
+        "accepted_accuracy": 0.5076923076923077
+      },
+      {
+        "tau": 0.43,
+        "accepted": 65,
+        "accept_rate": 0.065,
+        "accepted_accuracy": 0.5076923076923077
+      },
+      {
+        "tau": 0.44,
+        "accepted": 65,
+        "accept_rate": 0.065,
+        "accepted_accuracy": 0.5076923076923077
+      },
+      {
+        "tau": 0.45,
+        "accepted": 16,
+        "accept_rate": 0.016,
+        "accepted_accuracy": 0.5625
+      },
+      {
+        "tau": 0.46,
+        "accepted": 16,
+        "accept_rate": 0.016,
+        "accepted_accuracy": 0.5625
+      },
+      {
+        "tau": 0.47,
+        "accepted": 16,
+        "accept_rate": 0.016,
+        "accepted_accuracy": 0.5625
+      },
+      {
+        "tau": 0.48,
+        "accepted": 7,
+        "accept_rate": 0.007,
+        "accepted_accuracy": 0.42857142857142855
+      },
+      {
+        "tau": 0.49,
+        "accepted": 7,
+        "accept_rate": 0.007,
+        "accepted_accuracy": 0.42857142857142855
+      },
+      {
+        "tau": 0.5,
+        "accepted": 7,
+        "accept_rate": 0.007,
+        "accepted_accuracy": 0.42857142857142855
+      },
+      {
+        "tau": 0.51,
+        "accepted": 7,
+        "accept_rate": 0.007,
+        "accepted_accuracy": 0.42857142857142855
+      },
+      {
+        "tau": 0.52,
+        "accepted": 5,
+        "accept_rate": 0.005,
+        "accepted_accuracy": 0.4
+      },
+      {
+        "tau": 0.53,
+        "accepted": 5,
+        "accept_rate": 0.005,
+        "accepted_accuracy": 0.4
+      },
+      {
+        "tau": 0.54,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 0
+      },
+      {
+        "tau": 0.55,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 0
+      },
+      {
+        "tau": 0.56,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 0
+      },
+      {
+        "tau": 0.57,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 0
+      },
+      {
+        "tau": 0.58,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 0
+      },
+      {
+        "tau": 0.59,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.6,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.61,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.62,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.63,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.64,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.65,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.66,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.67,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.68,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.69,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.7,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.71,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.72,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.73,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.74,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.75,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.76,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.77,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.78,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.79,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.8,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.81,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.82,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.83,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.84,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.85,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.86,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.87,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.88,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.89,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.9,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.91,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.92,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.93,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.94,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.95,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.96,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.97,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.98,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.99,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 1,
+        "accepted": 0,
+        "accept_rate": 0
+      }
+    ],
+    "held_out_curve": [
+      {
+        "tau": 0,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.353
+      },
+      {
+        "tau": 0.01,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.353
+      },
+      {
+        "tau": 0.02,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.353
+      },
+      {
+        "tau": 0.03,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.353
+      },
+      {
+        "tau": 0.04,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.353
+      },
+      {
+        "tau": 0.05,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.353
+      },
+      {
+        "tau": 0.06,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.353
+      },
+      {
+        "tau": 0.07,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.353
+      },
+      {
+        "tau": 0.08,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.353
+      },
+      {
+        "tau": 0.09,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.353
+      },
+      {
+        "tau": 0.1,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.353
+      },
+      {
+        "tau": 0.11,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.353
+      },
+      {
+        "tau": 0.12,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.353
+      },
+      {
+        "tau": 0.13,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.353
+      },
+      {
+        "tau": 0.14,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.353
+      },
+      {
+        "tau": 0.15,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.353
+      },
+      {
+        "tau": 0.16,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.353
+      },
+      {
+        "tau": 0.17,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.353
+      },
+      {
+        "tau": 0.18,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.353
+      },
+      {
+        "tau": 0.19,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.353
+      },
+      {
+        "tau": 0.2,
+        "accepted": 995,
+        "accept_rate": 0.995,
+        "accepted_accuracy": 0.3527638190954774
+      },
+      {
+        "tau": 0.21,
+        "accepted": 989,
+        "accept_rate": 0.989,
+        "accepted_accuracy": 0.34984833164812945
+      },
+      {
+        "tau": 0.22,
+        "accepted": 983,
+        "accept_rate": 0.983,
+        "accepted_accuracy": 0.34587995930824006
+      },
+      {
+        "tau": 0.23,
+        "accepted": 798,
+        "accept_rate": 0.798,
+        "accepted_accuracy": 0.3132832080200501
+      },
+      {
+        "tau": 0.24,
+        "accepted": 793,
+        "accept_rate": 0.793,
+        "accepted_accuracy": 0.31525851197982346
+      },
+      {
+        "tau": 0.25,
+        "accepted": 751,
+        "accept_rate": 0.751,
+        "accepted_accuracy": 0.3182423435419441
+      },
+      {
+        "tau": 0.26,
+        "accepted": 578,
+        "accept_rate": 0.578,
+        "accepted_accuracy": 0.3460207612456747
+      },
+      {
+        "tau": 0.27,
+        "accepted": 508,
+        "accept_rate": 0.508,
+        "accepted_accuracy": 0.35826771653543305
+      },
+      {
+        "tau": 0.28,
+        "accepted": 503,
+        "accept_rate": 0.503,
+        "accepted_accuracy": 0.35984095427435386
+      },
+      {
+        "tau": 0.29,
+        "accepted": 492,
+        "accept_rate": 0.492,
+        "accepted_accuracy": 0.3597560975609756
+      },
+      {
+        "tau": 0.3,
+        "accepted": 467,
+        "accept_rate": 0.467,
+        "accepted_accuracy": 0.35974304068522484
+      },
+      {
+        "tau": 0.31,
+        "accepted": 407,
+        "accept_rate": 0.407,
+        "accepted_accuracy": 0.37346437346437344
+      },
+      {
+        "tau": 0.32,
+        "accepted": 405,
+        "accept_rate": 0.405,
+        "accepted_accuracy": 0.3728395061728395
+      },
+      {
+        "tau": 0.33,
+        "accepted": 399,
+        "accept_rate": 0.399,
+        "accepted_accuracy": 0.37593984962406013
+      },
+      {
+        "tau": 0.34,
+        "accepted": 304,
+        "accept_rate": 0.304,
+        "accepted_accuracy": 0.3717105263157895
+      },
+      {
+        "tau": 0.35,
+        "accepted": 289,
+        "accept_rate": 0.289,
+        "accepted_accuracy": 0.3771626297577855
+      },
+      {
+        "tau": 0.36,
+        "accepted": 280,
+        "accept_rate": 0.28,
+        "accepted_accuracy": 0.37857142857142856
+      },
+      {
+        "tau": 0.37,
+        "accepted": 264,
+        "accept_rate": 0.264,
+        "accepted_accuracy": 0.38636363636363635
+      },
+      {
+        "tau": 0.38,
+        "accepted": 163,
+        "accept_rate": 0.163,
+        "accepted_accuracy": 0.39263803680981596
+      },
+      {
+        "tau": 0.39,
+        "accepted": 159,
+        "accept_rate": 0.159,
+        "accepted_accuracy": 0.37735849056603776
+      },
+      {
+        "tau": 0.4,
+        "accepted": 157,
+        "accept_rate": 0.157,
+        "accepted_accuracy": 0.37579617834394907
+      },
+      {
+        "tau": 0.41,
+        "accepted": 56,
+        "accept_rate": 0.056,
+        "accepted_accuracy": 0.48214285714285715
+      },
+      {
+        "tau": 0.42,
+        "accepted": 54,
+        "accept_rate": 0.054,
+        "accepted_accuracy": 0.48148148148148145
+      },
+      {
+        "tau": 0.43,
+        "accepted": 54,
+        "accept_rate": 0.054,
+        "accepted_accuracy": 0.48148148148148145
+      },
+      {
+        "tau": 0.44,
+        "accepted": 53,
+        "accept_rate": 0.053,
+        "accepted_accuracy": 0.49056603773584906
+      },
+      {
+        "tau": 0.45,
+        "accepted": 12,
+        "accept_rate": 0.012,
+        "accepted_accuracy": 0.5
+      },
+      {
+        "tau": 0.46,
+        "accepted": 10,
+        "accept_rate": 0.01,
+        "accepted_accuracy": 0.6
+      },
+      {
+        "tau": 0.47,
+        "accepted": 9,
+        "accept_rate": 0.009,
+        "accepted_accuracy": 0.6666666666666666
+      },
+      {
+        "tau": 0.48,
+        "accepted": 4,
+        "accept_rate": 0.004,
+        "accepted_accuracy": 0.75
+      },
+      {
+        "tau": 0.49,
+        "accepted": 2,
+        "accept_rate": 0.002,
+        "accepted_accuracy": 1
+      },
+      {
+        "tau": 0.5,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 1
+      },
+      {
+        "tau": 0.51,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 1
+      },
+      {
+        "tau": 0.52,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 1
+      },
+      {
+        "tau": 0.53,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 1
+      },
+      {
+        "tau": 0.54,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 1
+      },
+      {
+        "tau": 0.55,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 1
+      },
+      {
+        "tau": 0.56,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 1
+      },
+      {
+        "tau": 0.57,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 1
+      },
+      {
+        "tau": 0.58,
+        "accepted": 1,
+        "accept_rate": 0.001,
+        "accepted_accuracy": 1
+      },
+      {
+        "tau": 0.59,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.6,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.61,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.62,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.63,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.64,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.65,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.66,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.67,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.68,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.69,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.7,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.71,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.72,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.73,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.74,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.75,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.76,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.77,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.78,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.79,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.8,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.81,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.82,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.83,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.84,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.85,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.86,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.87,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.88,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.89,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.9,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.91,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.92,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.93,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.94,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.95,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.96,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.97,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.98,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.99,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 1,
+        "accepted": 0,
+        "accept_rate": 0
+      }
+    ],
+    "note": "No threshold meets the 20.0% target disagreement on the calibration split. The lowest disagreement any threshold reaches is 43.8%, at \u03C4 = 0.45, accepting 1.6% of items. No threshold is invented."
+  }
+]

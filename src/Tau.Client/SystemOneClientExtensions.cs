@@ -5,7 +5,7 @@ using Tau.Contract;
 namespace Tau.Client;
 
 /// <summary>
-/// Typed, single-question helpers built on <see cref="ISystemOneClient.SystemOneAsync"/>. Each
+/// Typed, single-question helpers built on <see cref="ISystemOneClient.SystemOneAsync(DecisionRequest, CancellationToken)"/>. Each
 /// helper builds a <see cref="DecisionRequest"/> with exactly one question (keyed
 /// <c>"decision"</c>), sends it, and interprets the matching answer — so any implementation of
 /// <see cref="ISystemOneClient"/> (the real client, or a test double) gets them for free.

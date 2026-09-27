@@ -2,9 +2,72 @@
 
 Updated after every completed task. On session restart, resume from here without asking.
 
-**Current release:** R1 (Runtime core + ONNX parity), branch `001-runtime-onnx-parity`, merged to `master`.
-**Gate status:** **R1 GATE REACHED. Waiting for Rob's "go" before R2.**
-**Task list:** `specs/001-runtime-onnx-parity/tasks.md` (63/63; T038 carries a recorded deviation).
+**Current release:** R2 (Workbench + benchmarks), branch `002-workbench-benchmarks`. R1 is merged to `master`.
+**Gate status:** **R2 GATE REACHED (2026-09-27). Waiting for Rob's "go" before R3.**
+**Task list:** `specs/002-workbench-benchmarks/tasks.md`.
+
+## R2 log
+
+- Spec, clarify (3 answers), plan, research R-01..R-09, tasks T001–T066 in lanes A–E.
+- Lane D code: `finetune_laya.py`, the manifest/parity changes for local fine-tunes, and `baseline_minilm.py` are committed.
+- Lane C (T040–T042) is merged. Calibrators now act on the log reference probabilities (DECISIONS). The client has per-request headers. Tests: Calibration 107, Client 54, Runtime 43, Contract 113, Inference 1,507 (+3 skipped), model parity 12/12. After the merge, the full non-model suite passes on the branch.
+- Lane A (T002, T010–T013) is merged. Banking77: calibration 1,000, held-out 1,000, fine-tune 9,003. Tickets: after the filters (non-English 33,504, vehicle keywords 393, duplicates 4,467), held-out 1,000, calibration 1,000, fine-tune 8,000. Byte-identical on re-run. 17 data tests pass. Split hashes are in `examples/*/dataset.manifest.json`.
+  - **Finding:** English tickets carry only low/medium/high. `very_low` and `critical` exist only in the German file, so reports must say "no English examples", not show them as a 0% class.
+  - **Finding:** every one of the 393 vehicle-keyword hits was a false positive (software drivers, "driving growth", "Smart Garage"). The rows stay dropped. It costs nothing, since the pool is 23,401 and the splits need 10,000.
+- Lane B (T001, T020–T030) is merged: `src/Tau.Workbench` (spec, data, frontier, measure, calibrate, threshold, cascade, cost, baselines, report) and the `tau` global tool (`src/Tau.Workbench.Cli`, packs as `Tau.Workbench`). 143 tests pass and the solution builds with 0 warnings and 0 errors. Isotonic calibrators are fitted one-vs-rest on every option's probability, because the shared calibrator applies them per option (a max(p) fit gave log loss about 10 on test data). T031 (the Runtime equality test) is still open.
+- Lane D (T014–T017) done. Both Laya fine-tunes are trained, exported and pass parity: Banking77 max |Δlogit| 2.1e-5, tickets 1.1e-3, tolerance 2e-3. The MiniLM baselines, with early stopping on the calibration split, score 91.5% on Banking77 and 55.6% on the tickets (held-out, sidecar quick check). The recipe change after a strawman first run is in DECISIONS. The sidecar tests pass (24).
+- T050: frontier batches exported (1,200 pending per dataset) and turned into 12 compact answer sheets. Rob said yes to labelling.
+- T051–T053 done: 1,200 frontier answers per dataset are cached and committed (no API). They used about 0.9M session tokens, over the 0.45–0.6M estimate. Banking77: the frontier disagrees with gold on 5.8%, and the two wordings agree on 97.5%. **Tickets: it disagrees with gold on 76.2%, and the wordings agree on 76.5%. The synthetic priority labels look close to arbitrary (DECISIONS). Asked Rob how the tickets example should treat them.**
+- Reference mode done: `data.reference: frontier` for the tickets (Banking77 stays gold). Every stage scores through `ReferenceLabels`, and the report says "agreement with the frontier model" and keeps a secondary table against the dataset's labels. `tau label` on the tickets exits 2 with 1,000 calibration items pending in 5 batches. Workbench tests 162 pass, and the solution builds with 0 warnings and 0 errors.
+- T031 done: `CalibratorEquivalenceTests` (Inference tests, `Category=Models`) runs laya-en choice and noul and von-1.2.0 choice through the engine with a temperature and an isotonic calibrator loaded from a directory. The Workbench's offline path gives the engine's unrounded output exactly (max |Δ| 0) from the same unrounded vector, and agrees with the calibrated answer within 2.4e-4 from the 4-dp raw answer (limit 1e-3). The engine gained an internal test hook that exposes each calibrator's input and output.
+- T060 done: `scripts/examples.ps1 -Example <name>` checks data and model packages (printing the prepare, export or fine-tune command when something is missing), starts the Runtime on CUDA on the spec's port, runs `tau run`, restarts with the calibrators for the calibrated phase and the report, and stops only the process it started. `-CheckOnly` passes for both examples. The full run is T061/T062.
+- Tickets calibration split labelled (Rob approved): 1,000 answers from 5 subagents, about 0.43M session tokens, no API. `tau label` reports nothing pending and 0 rejected.
+- T061 done: Banking77 end to end (`examples/banking77/report.html`).
+- T062 done: support tickets end to end against the frontier reference (`examples/support-tickets/report.html`). The report now explains a missed ECE goal when the selection rule picked the method with the clearly worse calibration-split ECE (tested).
+
+## R2 gate: evidence against every requirement (T064)
+
+Reference machine: RTX 3080 Ti 12 GB, i9-11900K, CUDA FP32. Every number below is in a committed report produced by one command (`scripts/examples.ps1 -Example <name>`).
+
+| Requirement | Evidence | Status |
+| --- | --- | --- |
+| SC-001 both examples end to end, one command | `examples/banking77/report.html`, `examples/support-tickets/report.html` via `scripts/examples.ps1` | Met |
+| SC-002 ≥50% ECE cut for the out-of-the-box model, or explained | Banking77 laya-en 0.502 → 0.065 (**87%**), von 79%. Tickets laya-typed-decisions 0.269 → 0.067 (75%), laya-en 0.273 → 0.148 (**46%, miss**, explained in the report: the log-loss rule picked isotonic over a temperature fit with calibration-split ECE 0.016) | Met with one explained miss |
+| SC-003 cascade share, blended vs frontier-only, £ per million | Both reports' cascade and cost tables (Opus 5.5 headline, Batch, Sonnet 5 and Haiku 4.5 what-ifs, basis stated, labelled estimates) | Met |
+| SC-004 no item asked twice, ≤1,000 held-out, zero paid API calls | Cache duplicate lines 0; held-out 1,000 per dataset (plus the tickets calibration split Rob approved); all answers from session subagents, `produced_by` on every line | Met |
+| SC-005 every figure traceable | Report metadata: hardware, endpoint `/v1/models` hashes, manifest hash, prompt versions, UTC date, command, git commit | Met |
+| SC-006 misses published | Label noise (5.8% and 76.2%), least-helped calibration (laya-en-ft-banking77 14%, von on tickets 12%), MiniLM beating Tau on both datasets, unreachable thresholds | Met |
+| SC-007 tests green, incl. Workbench = Runtime | `CalibratorEquivalenceTests` exact (max |Δ| 0) and endpoint 2.4e-4; clean clone of `7776db1` (fetched models, natives and data linked in, as in R1): build 0 warnings / 0 errors, 2,013 .NET tests (2,010 pass, 3 designed GPU-provider skips), sidecar 32/32 | Met |
+| FR-014 fine-tune + parity | `examples/*/finetune-parity.json`: max |Δlogit| 2.1e-5 and 1.1e-3 (tolerance 2e-3) | Met |
+| FR-015 classic baseline | MiniLM-L6: Banking77 91.5%, tickets 55.6% (against gold), in both reports | Met |
+| FR-020 R1 CPU latency re-run on a quiet machine | `reports/r1/latency*.md` (2026-09-27, R1's four models, CPU load under 10%). CPU p50 laya-en q=1 811 → 529 ms. First attempt with six models resident failed (DECISIONS) | Met |
+
+### Headline numbers (held-out, 1,000 items each)
+
+| Dataset | Model | Raw acc. | ECE raw → calibrated |
+| --- | --- | --- | --- |
+| Banking77 (gold) | laya-en | 37.2% | 0.502 → 0.065 |
+| Banking77 (gold) | von-1.2.0 | 77.1% | 0.185 → 0.039 |
+| Banking77 (gold) | laya-en-ft-banking77 | 87.3% | 0.071 → 0.061 |
+| Banking77 (gold) | MiniLM-L6 baseline | 91.5% | calibrated 0.024 |
+| Tickets (vs frontier) | laya-en | 23.2% | 0.273 → 0.148 |
+| Tickets (vs frontier) | laya-typed-decisions | 18.5% | 0.269 → 0.067 |
+| Tickets (vs frontier) | von-1.2.0 | 43.9% | 0.045 → 0.040 |
+| Tickets (vs frontier) | laya-en-ft-tickets | 27.7% | 0.255 → 0.074 |
+| Tickets (vs frontier) | MiniLM-L6 baseline | 27.4% | calibrated 0.015 |
+
+Cascade (τ picked on the calibration split, judged on held-out, £ = list-price estimates):
+
+| Dataset | Model | Kept local | Blended | Frontier only | £ per million (cascade vs frontier) |
+| --- | --- | --- | --- | --- | --- |
+| Banking77, 5% target error | laya-en-ft-banking77 | **73.6%** | 93.2% | 94.2% | **£1,031** vs £3,898 |
+| Banking77 | von-1.2.0 | 4.5% | 94.2% | 94.2% | £3,723 vs £3,898 |
+| Banking77 | laya-en | no τ reaches 5% | | | |
+| Banking77 | MiniLM-L6 baseline (not served via Tau, no energy) | **94.7%** | 94.2% | 94.2% | £207 vs £3,898 |
+| Tickets, 20% target disagreement | every Tau model | 0.1% | 100% agreement (by construction) | | £996 vs £997 |
+| Tickets | MiniLM-L6 baseline | 0.4% | 99.7% | | £993 vs £997 |
+
+The headline: a fine-tuned Laya keeps about three-quarters of Banking77 decisions local at one point below the frontier's accuracy, which cuts the estimated bill by about 74%. A fine-tuned 22.7M MiniLM does better still. On urgency, a judgement call, nothing local stands in for the frontier. An earlier version of this paragraph said "only Von keeps any decisions local". It was copied from a report summary that quoted the first model's cascade rather than the best one. The summary is fixed (DECISIONS).
 
 ---
 
@@ -93,4 +156,6 @@ Updated after every completed task. On session restart, resume from here without
 
 ## Next
 
-- On Rob's "go": R2 (Workbench, fine-tune sidecar, two datasets end to end, calibration and cascade £).
+- Lane A (sidecar data, T002/T010–T013) done. Remaining R2 lanes: B (Workbench core, T020–T031), C (R1
+  adjustments, T040–T042), D (fine-tune + baseline, T014–T017, needs Lane A's splits), E (frontier
+  labelling, T050–T053, needs Lane A's held-out ids + Lane B's batch export), then Phase 7 end-to-end.

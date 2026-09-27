@@ -1,0 +1,77 @@
+{
+  "dataset_revision": "ddf1c81a5475",
+  "frontier_model": "claude-opus-5-5",
+  "held_out_items": 1000,
+  "eligible_items": 1000,
+  "alt_subset_items": 200,
+  "reference": "frontier",
+  "pending": {
+    "v1": 0,
+    "v1-alt": 0
+  },
+  "cached": {
+    "v1": 2000,
+    "v1-alt": 200
+  },
+  "splits": {
+    "heldout": {
+      "items": 1000,
+      "eligible": 1000,
+      "pending": {
+        "v1": 0,
+        "v1-alt": 0
+      },
+      "cached": {
+        "v1": 1000,
+        "v1-alt": 200
+      }
+    },
+    "calibration": {
+      "items": 1000,
+      "eligible": 1000,
+      "pending": {
+        "v1": 0
+      },
+      "cached": {
+        "v1": 1000
+      }
+    }
+  },
+  "pending_batches": [],
+  "rejected": [],
+  "duplicate_cache_lines": 0,
+  "overridden": 0,
+  "label_noise": {
+    "n": 1000,
+    "count": 762,
+    "rate": 0.762
+  },
+  "prompt_agreement": {
+    "n": 200,
+    "count": 153,
+    "rate": 0.765
+  },
+  "chars": {
+    "v1": {
+      "answers": 1000,
+      "input_chars": 1011415,
+      "output_chars": 1000
+    },
+    "v1-alt": {
+      "answers": 200,
+      "input_chars": 194578,
+      "output_chars": 200
+    }
+  },
+  "provenance_models": [
+    "claude-opus-5-5"
+  ],
+  "provenance_produced_by": [
+    "claude-code-session: subagent answer sheet; the prompt\u0027s fixed part shown once per batch of up to 200 items, each item judged on its own; no API"
+  ],
+  "provenance_dates": [
+    "2026-09-27",
+    "2026-09-27"
+  ],
+  "total_pending": 0
+}
