@@ -11,7 +11,8 @@ Updated after every completed task. On session restart, resume from here without
 - Spec, clarify (3 answers), plan, research R-01..R-09, tasks T001–T066 in lanes A–E.
 - Lane D code: `finetune_laya.py`, the manifest/parity changes for local fine-tunes, and `baseline_minilm.py` are committed. They haven't been run yet because they need lane A's splits.
 - Lane C (T040–T042) is merged. Calibrators now act on the log reference probabilities (DECISIONS). The client has per-request headers. Tests: Calibration 107, Client 54, Runtime 43, Contract 113, Inference 1,507 (+3 skipped), model parity 12/12, all green in the agent's worktree. After the merge, the full non-model suite passes on the branch.
-- Still running: lane A (data), lane B (Workbench core + CLI).
+- Lane B (T001, T020–T030) done in its worktree: `src/Tau.Workbench` (spec, data, frontier, measure, calibrate, threshold, cascade, cost, baselines, report), the `tau` global tool (`src/Tau.Workbench.Cli`, packs as `Tau.Workbench`), 143 tests green, solution builds 0/0. Isotonic calibrators are fitted one-vs-rest on every option's probability, because the shared calibrator applies them per option (a max(p) fit gave log loss about 10 on test data). T031 (the Runtime equality test) is still open.
+- Still running: lane A (data).
 
 ---
 

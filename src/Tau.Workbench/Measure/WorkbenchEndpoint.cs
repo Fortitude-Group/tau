@@ -189,9 +189,6 @@ internal sealed class ExchangeCapture
 {
     private readonly Dictionary<string, string> _responseHeaders = new(StringComparer.OrdinalIgnoreCase);
 
-    /// <summary>Headers to add to the outgoing request.</summary>
-    public Dictionary<string, string> RequestHeaders { get; } = new(StringComparer.OrdinalIgnoreCase);
-
     /// <summary>The last response status seen.</summary>
     public int? Status { get; private set; }
 
@@ -209,8 +206,8 @@ internal sealed class ExchangeCapture
 }
 
 /// <summary>
-/// A delegating handler that adds per-call request headers and records response headers for the call
-/// in flight. The call is identified through an <see cref="AsyncLocal{T}"/>, so concurrent calls never
+/// A delegating handler that records the response headers for the call in flight (Tau.Client returns
+/// only the parsed body). The call is identified through an <see cref="AsyncLocal{T}"/>, so concurrent calls never
 /// see each other's headers.
 /// </summary>
 internal sealed class CaptureHandler : DelegatingHandler
@@ -226,15 +223,6 @@ internal sealed class CaptureHandler : DelegatingHandler
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
         var capture = Slot.Value;
-        if (capture is not null)
-        {
-            foreach (var (name, value) in capture.RequestHeaders)
-            {
-                request.Headers.Remove(name);
-                request.Headers.TryAddWithoutValidation(name, value);
-            }
-        }
-
         var response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
         capture?.Record(response);
         return response;

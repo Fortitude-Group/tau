@@ -38,9 +38,10 @@ internal static partial class DecisionSpecParser
         }
 
         var r = new Reader(problems);
-        r.OnlyKeys(root, "", "name", "question", "data", "endpoint", "models", "baselines", "threshold", "frontier", "pricing");
+        r.OnlyKeys(root, "", "name", "title", "question", "data", "endpoint", "models", "baselines", "threshold", "frontier", "pricing");
 
         string name = r.Str(root, "name", "") ?? "";
+        string title = r.Str(root, "title", "", required: false) ?? name;
         if (!SafeName().IsMatch(name))
         {
             problems.Add($"name '{name}' must be a simple identifier (letters, digits, '.', '_' or '-').");
@@ -95,7 +96,7 @@ internal static partial class DecisionSpecParser
             throw new SpecValidationException(specPath, problems);
         }
 
-        return new DecisionSpec(name, question!, data!, endpoint, models, baselines,
+        return new DecisionSpec(name, title, question!,data!, endpoint, models, baselines,
             new ThresholdSpec(targetError), frontier!, pricing!, specPath, repoRoot!);
     }
 
@@ -270,8 +271,8 @@ internal static partial class DecisionSpecParser
             return null;
         }
 
-        r.OnlyKeys(node, "pricing.", "basis_date", "usd_per_mtok", "gbp_per_usd", "electricity_gbp_per_kwh",
-            "tokenizer_factor", "gbp_per_usd_basis", "electricity_basis");
+        r.OnlyKeys(node, "pricing.", "basis_date", "source", "usd_per_mtok", "headline", "gbp_per_usd", "gbp_per_usd_source",
+            "electricity_gbp_per_kwh", "electricity_source", "tokenizer_factor");
         string basisDate = r.Str(node, "basis_date", "pricing.") ?? "";
         if (!DateOnly.TryParseExact(basisDate, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
         {
@@ -296,9 +297,10 @@ internal static partial class DecisionSpecParser
             }
         }
 
-        if (frontier is not null && rows.All(p => p.Name != frontier.Model))
+        string headline = r.Str(node, "headline", "pricing.", required: false) ?? frontier?.Model ?? "";
+        if (rows.All(p => p.Name != headline))
         {
-            problems.Add($"pricing.usd_per_mtok needs a row for the frontier model '{frontier.Model}' (the headline cost).");
+            problems.Add($"pricing.usd_per_mtok needs a row for the headline model '{headline}' (pricing.headline, or frontier.model when that is not set).");
         }
 
         double? gbp = r.Num(node, "gbp_per_usd", "pricing.", required: false);
@@ -314,9 +316,16 @@ internal static partial class DecisionSpecParser
             problems.Add("pricing.tokenizer_factor must be positive.");
         }
 
-        return new PricingSpec(basisDate, rows, gbp is > 0 ? gbp : null, kwh is > 0 ? kwh : null, factor,
-            r.Str(node, "gbp_per_usd_basis", "pricing.", required: false),
-            r.Str(node, "electricity_basis", "pricing.", required: false));
+        return new PricingSpec(
+            basisDate,
+            r.Str(node, "source", "pricing.", required: false),
+            rows,
+            headline,
+            gbp is > 0 ? gbp : null,
+            r.Str(node, "gbp_per_usd_source", "pricing.", required: false),
+            kwh is > 0 ? kwh : null,
+            r.Str(node, "electricity_source", "pricing.", required: false),
+            factor);
     }
 
     private static void CheckNames(IReadOnlyList<string> names, string field, List<string> problems)

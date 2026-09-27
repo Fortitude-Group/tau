@@ -14,6 +14,7 @@ public sealed class DecisionSpec
 
     internal DecisionSpec(
         string name,
+        string title,
         QuestionSpec question,
         DataSpec data,
         Uri? endpoint,
@@ -26,6 +27,7 @@ public sealed class DecisionSpec
         string repoRoot)
     {
         Name = name;
+        Title = title;
         Question = question;
         Data = data;
         Endpoint = endpoint;
@@ -41,6 +43,9 @@ public sealed class DecisionSpec
 
     /// <summary>The example's name (for example <c>banking77</c>).</summary>
     public string Name { get; }
+
+    /// <summary>A human title for the report (defaults to <see cref="Name"/>).</summary>
+    public string Title { get; }
 
     /// <summary>The question.</summary>
     public QuestionSpec Question { get; }

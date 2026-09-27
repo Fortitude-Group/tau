@@ -2,6 +2,8 @@
   <PropertyGroup>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <IsPackable>false</IsPackable>
+    <!-- The global tool owns the package id Tau.Workbench; this library ships inside it. -->
+    <PackageId>Tau.Workbench.Stages</PackageId>
     <Description>Tau Workbench stages: decision spec, frontier labelling, measure, calibrate, threshold, cascade, cost and the HTML report.</Description>
   </PropertyGroup>
   <ItemGroup>

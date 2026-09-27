@@ -100,17 +100,21 @@ public sealed record PriceRow(string Name, double InputUsdPerMTok, double Output
 
 /// <summary>The price basis for the cost estimates.</summary>
 /// <param name="BasisDate">The date the prices were checked (yyyy-MM-dd).</param>
+/// <param name="Source">Where the list prices came from (optional free text).</param>
 /// <param name="Rows">Price rows, in declared order.</param>
+/// <param name="Headline">The headline row: the model that produced the frontier answers.</param>
 /// <param name="GbpPerUsd">USD to GBP rate; null or 0 means unknown, and no pound figure is printed.</param>
+/// <param name="GbpPerUsdSource">Where the exchange rate came from (optional free text).</param>
 /// <param name="ElectricityGbpPerKwh">UK electricity unit price; null or 0 means unknown.</param>
+/// <param name="ElectricitySource">Where the electricity price came from (optional free text).</param>
 /// <param name="TokenizerFactor">Multiplier on chars/4 for the frontier tokenizer.</param>
-/// <param name="GbpPerUsdBasis">Where the exchange rate came from (optional free text).</param>
-/// <param name="ElectricityBasis">Where the electricity price came from (optional free text).</param>
 public sealed record PricingSpec(
     string BasisDate,
+    string? Source,
     IReadOnlyList<PriceRow> Rows,
+    string Headline,
     double? GbpPerUsd,
+    string? GbpPerUsdSource,
     double? ElectricityGbpPerKwh,
-    double TokenizerFactor,
-    string? GbpPerUsdBasis,
-    string? ElectricityBasis);
+    string? ElectricitySource,
+    double TokenizerFactor);

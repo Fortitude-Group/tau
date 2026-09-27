@@ -136,7 +136,7 @@ public static class ThresholdStage
                 HeldOutCurve = heldCurve,
                 Note = best is null
                     ? "No threshold can be chosen: the calibration split has no measured items."
-                    : $"No threshold meets the {targetError:P1} target error on the calibration split. The lowest error any threshold reaches is {1 - best.AcceptedAccuracy!.Value:P1}, at τ = {best.Tau:0.00}, accepting {best.AcceptRate:P1} of items. No threshold is invented.",
+                    : $"No threshold meets the {Fmt.Pct(targetError)} target error on the calibration split. The lowest error any threshold reaches is {Fmt.Pct(1 - best.AcceptedAccuracy!.Value)}, at τ = {Fmt.Num(best.Tau, "0.00")}, accepting {Fmt.Pct(best.AcceptRate)} of items. No threshold is invented.",
             };
         }
 
@@ -157,8 +157,8 @@ public static class ThresholdStage
             CalibrationCurve = calCurve,
             HeldOutCurve = heldCurve,
             Note = held.Accepted == 0
-                ? $"τ = {chosen.Tau:0.00} meets the target on the calibration split but accepts no held-out item."
-                : $"τ = {chosen.Tau:0.00} is the smallest threshold whose calibration-split error is at most {targetError:P1}. On held-out it accepts {held.AcceptRate:P1} of items with {held.AcceptedAccuracy:P1} accuracy.",
+                ? $"τ = {Fmt.Num(chosen.Tau, "0.00")} meets the target on the calibration split but accepts no held-out item."
+                : $"τ = {Fmt.Num(chosen.Tau, "0.00")} is the smallest threshold whose calibration-split error is at most {Fmt.Pct(targetError)}. On held-out it accepts {Fmt.Pct(held.AcceptRate)} of items with {Fmt.Pct(held.AcceptedAccuracy)} accuracy.",
         };
     }
 

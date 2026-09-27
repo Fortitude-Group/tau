@@ -22,7 +22,11 @@ public sealed record FitOutcome(CalibratorFile File, MethodFit Temperature, Meth
 
 /// <summary>
 /// Fits temperature and isotonic calibrators on reference probabilities (research R-01) and keeps the
-/// one with the lower calibration-split log loss. All fitting and scoring is Tau.Calibration's
+/// one with the lower calibration-split log loss. Temperature is fitted on the clamped log probabilities.
+/// Isotonic is fitted one-vs-rest on every option's probability (did this option turn out to be the gold
+/// answer?), because the shared <see cref="Calibrator"/> maps each option's probability through the curve
+/// and renormalises; a curve fitted on max(p) alone maps the non-chosen options badly (on synthetic
+/// four-option data its log loss was about 10, against about 1 for temperature). All fitting and scoring is Tau.Calibration's
 /// (<see cref="TemperatureScaling"/>, <see cref="IsotonicRegression"/>, <see cref="Metrics"/>); this
 /// class only prepares the inputs and chooses.
 /// </summary>
@@ -30,9 +34,6 @@ public static class CalibrationFitter
 {
     /// <summary>The fewest items isotonic regression is fitted on; below it, temperature only.</summary>
     public const int MinIsotonicItems = 200;
-
-    /// <summary>The probability floor before taking logs (research R-01).</summary>
-    public const double ProbabilityFloor = 1e-6;
 
     /// <summary>The tool name written into calibrator provenance.</summary>
     public const string ToolName = "tau-workbench";
@@ -67,7 +68,7 @@ public static class CalibrationFitter
         var (eceBefore, logLossBefore) = Score(probabilities, gold);
         CalibratorFitted Provenance(double eceAfter) => new(n, dataset, datasetRevision, date, eceBefore, eceAfter, ToolName, ToolVersion);
 
-        var logits = probabilities.Select(p => p.Select(x => Math.Log(Math.Max(x, ProbabilityFloor))).ToArray()).ToArray();
+        var logits = probabilities.Select(p => Calibrator.LogReferenceProbabilities(p)).ToArray();
         double t = TemperatureScaling.Fit(logits, gold);
         var tempFile = CalibratorFile.CreateTemperature(model, modelHash, questionType, bucket, t, Provenance(0));
         var (tempEce, tempLoss) = Score(Apply(tempFile, probabilities), gold);
@@ -82,16 +83,29 @@ public static class CalibrationFitter
         }
         else
         {
-            var confidence = probabilities.Select(p => p.Max()).ToArray();
-            var correct = probabilities.Select((p, i) => ArgMax(p) == gold[i] ? 1.0 : 0.0).ToArray();
-            if (confidence.Distinct().Count() < 2)
+            // One-vs-rest: every option's probability against whether that option is the gold answer. The
+            // shared Calibrator maps each option's probability through the curve and renormalises, so the
+            // curve must be fitted on all options, not only on max(p) (see the class remarks).
+            var x = new List<double>(n * probabilities[0].Length);
+            var y = new List<double>(x.Capacity);
+            for (int i = 0; i < n; i++)
             {
-                skipped = "every calibration item had the same confidence, so no isotonic curve could be fitted; temperature scaling was used.";
+                var clamped = Softmax.Compute(Calibrator.LogReferenceProbabilities(probabilities[i]));
+                for (int k = 0; k < clamped.Length; k++)
+                {
+                    x.Add(clamped[k]);
+                    y.Add(k == gold[i] ? 1.0 : 0.0);
+                }
+            }
+
+            if (x.Distinct().Count() < 2)
+            {
+                skipped = "every calibration probability was the same, so no isotonic curve could be fitted; temperature scaling was used.";
             }
             else
             {
-                var knots = CollapseKnots(IsotonicRegression.Fit(confidence, correct));
-                var isoFile =CalibratorFile.CreateIsotonic(model, modelHash, questionType, bucket, knots, Provenance(0));
+                var knots = CollapseKnots(IsotonicRegression.Fit(x, y));
+                var isoFile = CalibratorFile.CreateIsotonic(model, modelHash, questionType, bucket, knots, Provenance(0));
                 var (isoEce, isoLoss) = Score(Apply(isoFile, probabilities), gold);
                 isoFit = new MethodFit("isotonic", null, knots.X.Count, isoEce, isoLoss);
                 if (isoLoss < tempLoss)
@@ -110,10 +124,10 @@ public static class CalibrationFitter
     /// Because PAV output is non-decreasing in sorted order, averages of consecutive runs stay
     /// non-decreasing, so the result is still monotone.
     /// <para>
-    /// When the lowest confidence is above 0, an anchor knot (0, 0) is prepended. The fit is on max(p),
-    /// but the Runtime maps every option's probability through the curve (then renormalises); without the
-    /// anchor, every low-probability option would be lifted to the curve's first y value, which flattens
-    /// a many-option distribution. With it, a probability near 0 stays near 0.
+    /// When the lowest probability is above 0, an anchor knot (0, 0) is prepended, so a probability below
+    /// anything seen in calibration maps towards 0 rather than being lifted to the curve's first value.
+    /// Interior knots of a run with the same y are then dropped (only each run's first and last are
+    /// kept); piecewise-linear interpolation gives exactly the same function with far fewer knots.
     /// </para>
     /// </summary>
     /// <param name="fit">A fitted isotonic regression.</param>
@@ -151,7 +165,19 @@ public static class CalibrationFitter
             ys.Add(y);
         }
 
-        return new IsotonicKnots(xs, ys);
+        var keptX = new List<double>();
+        var keptY = new List<double>();
+        for (int k = 0; k < xs.Count; k++)
+        {
+            bool interior = k > 0 && k < xs.Count - 1 && ys[k] == ys[k - 1] && ys[k] == ys[k + 1];
+            if (!interior)
+            {
+                keptX.Add(xs[k]);
+                keptY.Add(ys[k]);
+            }
+        }
+
+        return new IsotonicKnots(keptX, keptY);
     }
 
     /// <summary>Applies a calibrator to every vector (through the shared Tau.Calibration path).</summary>
