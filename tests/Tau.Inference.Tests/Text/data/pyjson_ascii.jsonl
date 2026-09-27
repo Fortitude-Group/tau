@@ -1,0 +1,71 @@
+{"header": true, "python": "3.12.9", "note": "json.dumps(v, sort_keys=isinstance(v, dict)) (ensure_ascii default True), as von.types._stringify_instructions"}
+{"raw": "{\"b\": 1, \"a\": [3, {\"z\": \"é\", \"y\": null}], \"é\": true}", "sort_keys": true, "expected": "{\"a\": [3, {\"y\": null, \"z\": \"\\u00e9\"}], \"b\": 1, \"\\u00e9\": true}"}
+{"raw": "[\"x\", {\"b\": 2, \"a\": 1}]", "sort_keys": false, "expected": "[\"x\", {\"b\": 2, \"a\": 1}]"}
+{"raw": "{\"emoji\": \"🙏 café ½  \\u0001 \\t\\n\", \"日本\": \"語\"}", "sort_keys": true, "expected": "{\"emoji\": \"\\ud83d\\ude4f caf\\u00e9 \\u00bd \\u007f \\u0001 \\t\\n\", \"\\u65e5\\u672c\": \"\\u8a9e\"}"}
+{"raw": "{\"😀\": 1, \"�\": 2, \"\": 3, \"a\": 4}", "sort_keys": true, "expected": "{\"a\": 4, \"\\ue000\": 3, \"\\ufffd\": 2, \"\\ud83d\\ude00\": 1}"}
+{"raw": "{\"n\": 1e-05, \"f\": 1.0, \"big\": 12345678901234567890, \"neg\": -0.0}", "sort_keys": true, "expected": "{\"big\": 12345678901234567890, \"f\": 1.0, \"n\": 1e-05, \"neg\": -0.0}"}
+{"raw": "\"plain string\"", "sort_keys": false, "expected": "\"plain string\""}
+{"raw": "42", "sort_keys": false, "expected": "42"}
+{"raw": "null", "sort_keys": false, "expected": "null"}
+{"raw": "[]", "sort_keys": false, "expected": "[]"}
+{"raw": "{}", "sort_keys": true, "expected": "{}"}
+{"raw": "{\"R𕶝\": \"txt ü\", \"ؠ𑜸\": null, \"h\": [\"é\", {\"k\": \"v\"}]}", "sort_keys": true, "expected": "{\"R\\ud817\\udd9d\": \"txt \\u00fc\", \"h\": [\"\\u00e9\", {\"k\": \"v\"}], \"\\u0620\\ud805\\udf38\": null}"}
+{"raw": "{\"i\": 1, \"थ\": 1, \"𘽭\": 1, \"j\": 2.5, \"𑀒\": \"txt ü\"}", "sort_keys": true, "expected": "{\"i\": 1, \"j\": 2.5, \"\\u0925\": 1, \"\\ud804\\udc12\": \"txt \\u00fc\", \"\\ud823\\udf6d\": 1}"}
+{"raw": "{\"ⰫṬ\": 2.5, \"?𔳝᚛\": 2.5, \"/\": 2.5, \"𐨉⑗\": 2.5, \"⁩ڝ\\\\\": \"txt ü\"}", "sort_keys": true, "expected": "{\"/\": 2.5, \"?\\ud813\\udcdd\\u169b\": 2.5, \"\\u2069\\u069d\\\\\": \"txt \\u00fc\", \"\\u2c2b\\u1e6c\": 2.5, \"\\ud802\\ude09\\u2457\": 2.5}"}
+{"raw": "{\"𖋃ȑMѥ\": 1, \"ᦥ୅\": true, \"𝴮ⷕw\": 1}", "sort_keys": true, "expected": "{\"\\u19a5\\u0b45\": true, \"\\ud818\\udec3\\u0211M\\u0465\": 1, \"\\ud837\\udd2e\\u2dd5w\": 1}"}
+{"raw": "{\"3𝓂\": 1}", "sort_keys": true, "expected": "{\"3\\ud835\\udcc2\": 1}"}
+{"raw": "{\"𖭀➧𝯴\": true, \"𜱁\": null, \"᧙q(.\": \"txt ü\"}", "sort_keys": true, "expected": "{\"\\u19d9q(.\": \"txt \\u00fc\", \"\\ud81a\\udf40\\u27a7\\ud836\\udff4\": true, \"\\ud833\\udc41\": null}"}
+{"raw": "{\"ܞn\": true}", "sort_keys": true, "expected": "{\"\\u071en\": true}"}
+{"raw": "{\"Ⴤm\": \"txt ü\", \"὞𑨨𗪆4\": true, \"2cᅖ\": 1, \"𘪤𓤙࿲\": [\"é\", {\"k\": \"v\"}]}", "sort_keys": true, "expected": "{\"2c\\u1156\": 1, \"\\u10c4m\": \"txt \\u00fc\", \"\\u1f5e\\ud806\\ude28\\ud81e\\ude864\": true, \"\\ud822\\udea4\\ud80e\\udd19\\u0ff2\": [\"\\u00e9\", {\"k\": \"v\"}]}"}
+{"raw": "{\"𕬆ɩ\": null, \"Ⳳ⻧*\": null}", "sort_keys": true, "expected": "{\"\\u2cf2\\u2ee7*\": null, \"\\ud816\\udf06\\u0269\": null}"}
+{"raw": "{\"𙿂𞣁𑖴\": \"txt ü\", \"{W᧵*\": 1}", "sort_keys": true, "expected": "{\"{W\\u19f5*\": 1, \"\\ud827\\udfc2\\ud83a\\udcc1\\ud805\\uddb4\": \"txt \\u00fc\"}"}
+{"raw": "{\"𜹶𝎖\": null}", "sort_keys": true, "expected": "{\"\\ud833\\ude76\\ud834\\udf96\": null}"}
+{"raw": "{\"f!\": true, \"WႾ\": true, \"𔉥𐾗\": 2.5}", "sort_keys": true, "expected": "{\"W\\u10be\": true, \"f!\": true, \"\\ud810\\ude65\\ud803\\udf97\": 2.5}"}
+{"raw": "{\"`⅌7𗤶\": [\"é\", {\"k\": \"v\"}], \"𕍳\": true, \"-8`𕍛\": true, \"𗏌d\": [\"é\", {\"k\": \"v\"}]}", "sort_keys": true, "expected": "{\"-8`\\ud814\\udf5b\": true, \"`\\u214c7\\ud81e\\udd36\": [\"\\u00e9\", {\"k\": \"v\"}], \"\\ud814\\udf73\": true, \"\\ud81c\\udfccd\": [\"\\u00e9\", {\"k\": \"v\"}]}"}
+{"raw": "{\"඗ᭊ𑊒\": 1, \"฼🂃r@\": [\"é\", {\"k\": \"v\"}], \"𒦬\": 1, \"᰾ᮖ\": 2.5, \"᠋\": true}", "sort_keys": true, "expected": "{\"\\u0d97\\u1b4a\\ud804\\ude92\": 1, \"\\u0e3c\\ud83c\\udc83r@\": [\"\\u00e9\", {\"k\": \"v\"}], \"\\u180b\": true, \"\\u1c3e\\u1b96\": 2.5, \"\\ud80a\\uddac\": 1}"}
+{"raw": "{\"ǈ𔮢(؁\": \"txt ü\", \"࣪v\": true, \"ᖎⲫ)ً\": \"txt ü\", \"(𕛒\": null}", "sort_keys": true, "expected": "{\"(\\ud815\\uded2\": null, \"\\u01c8\\ud812\\udfa2(\\u0601\": \"txt \\u00fc\", \"\\u08eav\": true, \"\\u158e\\u2cab)\\u064b\": \"txt \\u00fc\"}"}
+{"raw": "{\"%.\": 1, \"𔸔𗈘\": [\"é\", {\"k\": \"v\"}], \"B@\": [\"é\", {\"k\": \"v\"}]}", "sort_keys": true, "expected": "{\"%.\": 1, \"B@\": [\"\\u00e9\", {\"k\": \"v\"}], \"\\ud813\\ude14\\ud81c\\ude18\": [\"\\u00e9\", {\"k\": \"v\"}]}"}
+{"raw": "{\"ἂ𝆤\": null, \"ᧈ๥𛪕1\": 1, \"⢧\": null, \"؈𔠬\": 1, \"%ᴨᖭ\": 1}", "sort_keys": true, "expected": "{\"%\\u1d28\\u15ad\": 1, \"\\u0608\\ud812\\udc2c\": 1, \"\\u19c8\\u0e65\\ud82e\\ude951\": 1, \"\\u1f02\\ud834\\udda4\": null, \"\\u28a7\": null}"}
+{"raw": "{\";ᤌC\": 1}", "sort_keys": true, "expected": "{\";\\u190cC\": 1}"}
+{"raw": "{\"+\": 1, \"kF🔧𞒎\": true, \"I𙹣𝌩𖷢\": [\"é\", {\"k\": \"v\"}], \"c𜱇\": [\"é\", {\"k\": \"v\"}], \"*q\": null}", "sort_keys": true, "expected": "{\"*q\": null, \"+\": 1, \"I\\ud827\\ude63\\ud834\\udf29\\ud81b\\udde2\": [\"\\u00e9\", {\"k\": \"v\"}], \"c\\ud833\\udc47\": [\"\\u00e9\", {\"k\": \"v\"}], \"kF\\ud83d\\udd27\\ud839\\udc8e\": true}"}
+{"raw": "{\"𚁐\": [\"é\", {\"k\": \"v\"}], \"ᆁ𞗙\": \"txt ü\", \"~\": 2.5, \"𓬑Ḗ\": \"txt ü\"}", "sort_keys": true, "expected": "{\"~\": 2.5, \"\\u1181\\ud839\\uddd9\": \"txt \\u00fc\", \"\\ud80e\\udf11\\u1e16\": \"txt \\u00fc\", \"\\ud828\\udc50\": [\"\\u00e9\", {\"k\": \"v\"}]}"}
+{"raw": "{\"𚇾9𚛊\": [\"é\", {\"k\": \"v\"}], \"oҁv\": [\"é\", {\"k\": \"v\"}], \"ⷾ[fƾ\": \"txt ü\", \"B)ᅡ𝇹\": true}", "sort_keys": true, "expected": "{\"B)\\u1161\\ud834\\uddf9\": true, \"o\\u0481v\": [\"\\u00e9\", {\"k\": \"v\"}], \"\\u2dfe[f\\u01be\": \"txt \\u00fc\", \"\\ud828\\uddfe9\\ud829\\udeca\": [\"\\u00e9\", {\"k\": \"v\"}]}"}
+{"raw": "{\"៿\": null, \"૎ᵹডᓚ\": \"txt ü\", \"K𞛍E\": null}", "sort_keys": true, "expected": "{\"K\\ud839\\udecdE\": null, \"\\u0ace\\u1d79\\u09a1\\u14da\": \"txt \\u00fc\", \"\\u17ff\": null}"}
+{"raw": "{\"ᰅ\": \"txt ü\", \"𝖭D𖾭\": 2.5, \"O𞧖\": true, \"𐲪T\": [\"é\", {\"k\": \"v\"}]}", "sort_keys": true, "expected": "{\"O\\ud83a\\uddd6\": true, \"\\u1c05\": \"txt \\u00fc\", \"\\ud803\\udcaaT\": [\"\\u00e9\", {\"k\": \"v\"}], \"\\ud835\\uddadD\\ud81b\\udfad\": 2.5}"}
+{"raw": "{\"&ᬭ𛴱𖟽\": 1, \"⑋/෭\": true, \"ᗭV\": 1}", "sort_keys": true, "expected": "{\"&\\u1b2d\\ud82f\\udd31\\ud819\\udffd\": 1, \"\\u15edV\": 1, \"\\u244b/\\u0ded\": true}"}
+{"raw": "{\"␳𔈣\": 1}", "sort_keys": true, "expected": "{\"\\u2433\\ud810\\ude23\": 1}"}
+{"raw": "{\"𛻯ᢾ𔜋𚿏\": true}", "sort_keys": true, "expected": "{\"\\ud82f\\udeef\\u18be\\ud811\\udf0b\\ud82b\\udfcf\": true}"}
+{"raw": "{\"ႆ\": [\"é\", {\"k\": \"v\"}], \"W𖳙\\\\𞸤\": null}", "sort_keys": true, "expected": "{\"W\\ud81b\\udcd9\\\\\\ud83b\\ude24\": null, \"\\u1086\": [\"\\u00e9\", {\"k\": \"v\"}]}"}
+{"raw": "{\"-𑯠\": [\"é\", {\"k\": \"v\"}], \"*𓮊⧯𔁵\": [\"é\", {\"k\": \"v\"}], \"y🆋8𐊭\": 2.5, \"C𓰙ɿz\": \"txt ü\"}", "sort_keys": true, "expected": "{\"*\\ud80e\\udf8a\\u29ef\\ud810\\udc75\": [\"\\u00e9\", {\"k\": \"v\"}], \"-\\ud806\\udfe0\": [\"\\u00e9\", {\"k\": \"v\"}], \"C\\ud80f\\udc19\\u027fz\": \"txt \\u00fc\", \"y\\ud83c\\udd8b8\\ud800\\udead\": 2.5}"}
+{"raw": "{\"v༴Oᙂ\": 2.5, \"Ď~_Ṥ\": 2.5}", "sort_keys": true, "expected": "{\"v\\u0f34O\\u1642\": 2.5, \"\\u010e~_\\u1e64\": 2.5}"}
+{"raw": "{\"n𞤏⚱𐘌\": 1}", "sort_keys": true, "expected": "{\"n\\ud83a\\udd0f\\u26b1\\ud801\\ude0c\": 1}"}
+{"raw": "{\"ѹ\": null, \"}𒽽ẍ\": [\"é\", {\"k\": \"v\"}], \"OÏ*෦\": 2.5, \"χ᡺𕴿ʐ\": 1}", "sort_keys": true, "expected": "{\"O\\u00cf*\\u0de6\": 2.5, \"}\\ud80b\\udf7d\\u1e8d\": [\"\\u00e9\", {\"k\": \"v\"}], \"\\u03c7\\u187a\\ud817\\udd3f\\u0290\": 1, \"\\u0479\": null}"}
+{"raw": "{\"P\": \"txt ü\", \"𞘇៚𔌝\": [\"é\", {\"k\": \"v\"}], \"𐃷lྗ\": [\"é\", {\"k\": \"v\"}], \"Ⴑञ𜵵F\": true}", "sort_keys": true, "expected": "{\"P\": \"txt \\u00fc\", \"\\u10b1\\u091e\\ud833\\udd75F\": true, \"\\ud800\\udcf7l\\u0f97\": [\"\\u00e9\", {\"k\": \"v\"}], \"\\ud839\\ude07\\u17da\\ud810\\udf1d\": [\"\\u00e9\", {\"k\": \"v\"}]}"}
+{"raw": "{\"𕲢Ⅲ4\": [\"é\", {\"k\": \"v\"}], \"⏽\": 1}", "sort_keys": true, "expected": "{\"\\u23fd\": 1, \"\\ud817\\udca2\\u21624\": [\"\\u00e9\", {\"k\": \"v\"}]}"}
+{"raw": "{\")\": 1, \"₇\": 1, \"𗗿𛽻\": [\"é\", {\"k\": \"v\"}], \"𔞆\": 2.5}", "sort_keys": true, "expected": "{\")\": 1, \"\\u2087\": 1, \"\\ud811\\udf86\": 2.5, \"\\ud81d\\uddff\\ud82f\\udf7b\": [\"\\u00e9\", {\"k\": \"v\"}]}"}
+{"raw": "{\"ᅉ?𞉘\": 1, \"(𓬻,\": \"txt ü\", \"ཪ\": 2.5}", "sort_keys": true, "expected": "{\"(\\ud80e\\udf3b,\": \"txt \\u00fc\", \"\\u0f6a\": 2.5, \"\\u1149?\\ud838\\ude58\": 1}"}
+{"raw": "{\"=lO\": null}", "sort_keys": true, "expected": "{\"=lO\": null}"}
+{"raw": "{\"𑬔⸋̅\": 1, \"𐧉\": [\"é\", {\"k\": \"v\"}], \"𖢳౹\": \"txt ü\", \"⁘ᪿ\": [\"é\", {\"k\": \"v\"}], \"𑝕ᨕ\": null}", "sort_keys": true, "expected": "{\"\\u2058\\u1abf\": [\"\\u00e9\", {\"k\": \"v\"}], \"\\ud802\\uddc9\": [\"\\u00e9\", {\"k\": \"v\"}], \"\\ud805\\udf55\\u1a15\": null, \"\\ud806\\udf14\\u2e0b\\u0305\": 1, \"\\ud81a\\udcb3\\u0c79\": \"txt \\u00fc\"}"}
+{"raw": "{\"𔿶᝼\\\"\": null, \":V▚Z\": \"txt ü\", \"𑛊𛲼\": 1}", "sort_keys": true, "expected": "{\":V\\u259aZ\": \"txt \\u00fc\", \"\\ud805\\udeca\\ud82f\\udcbc\": 1, \"\\ud813\\udff6\\u177c\\\"\": null}"}
+{"raw": "{\"Dޖ9\": null, \"𞴙𞝻o\": [\"é\", {\"k\": \"v\"}]}", "sort_keys": true, "expected": "{\"D\\u07969\": null, \"\\ud83b\\udd19\\ud839\\udf7bo\": [\"\\u00e9\", {\"k\": \"v\"}]}"}
+{"raw": "{\"ഭ7⇅M\": [\"é\", {\"k\": \"v\"}], \"𝞭⭞\": \"txt ü\"}", "sort_keys": true, "expected": "{\"\\u0d2d7\\u21c5M\": [\"\\u00e9\", {\"k\": \"v\"}], \"\\ud835\\udfad\\u2b5e\": \"txt \\u00fc\"}"}
+{"raw": "{\"⣁𔻦𖎣ᴸ\": 1, \"⠻\": 1, \"o\\\\ធ𘄜\": [\"é\", {\"k\": \"v\"}], \"%\": [\"é\", {\"k\": \"v\"}]}", "sort_keys": true, "expected": "{\"%\": [\"\\u00e9\", {\"k\": \"v\"}], \"o\\\\\\u1792\\ud820\\udd1c\": [\"\\u00e9\", {\"k\": \"v\"}], \"\\u283b\": 1, \"\\u28c1\\ud813\\udee6\\ud818\\udfa3\\u1d38\": 1}"}
+{"raw": "{\"⃠\": [\"é\", {\"k\": \"v\"}], \"𙴷x\": null, \"𜧓ӑჄ\": true}", "sort_keys": true, "expected": "{\"\\u20e0\": [\"\\u00e9\", {\"k\": \"v\"}], \"\\ud827\\udd37x\": null, \"\\ud832\\uddd3\\u04d1\\u10c4\": true}"}
+{"raw": "{\"ფ𔍋࿑൛\": 1, \"ᖛ𑵵⥙\": null, \"⋨\": [\"é\", {\"k\": \"v\"}]}", "sort_keys": true, "expected": "{\"\\u10e4\\ud810\\udf4b\\u0fd1\\u0d5b\": 1, \"\\u159b\\ud807\\udd75\\u2959\": null, \"\\u22e8\": [\"\\u00e9\", {\"k\": \"v\"}]}"}
+{"raw": "{\"PN𒴿\": [\"é\", {\"k\": \"v\"}], \"↧\": [\"é\", {\"k\": \"v\"}], \"}𔩽𖫭\": 2.5}", "sort_keys": true, "expected": "{\"PN\\ud80b\\udd3f\": [\"\\u00e9\", {\"k\": \"v\"}], \"}\\ud812\\ude7d\\ud81a\\udeed\": 2.5, \"\\u21a7\": [\"\\u00e9\", {\"k\": \"v\"}]}"}
+{"raw": "{\"𙳎%\": true}", "sort_keys": true, "expected": "{\"\\ud827\\udcce%\": true}"}
+{"raw": "{\"𕭮ᬒम\": true, \"4z𒔊ᩙ\": \"txt ü\", \"⒝\": true}", "sort_keys": true, "expected": "{\"4z\\ud809\\udd0a\\u1a59\": \"txt \\u00fc\", \"\\u249d\": true, \"\\ud816\\udf6e\\u1b12\\u092e\": true}"}
+{"raw": "{\"⇀?%S\": \"txt ü\", \"𘴉\": 1, \"𘒬𚗈\": null, \"ᑬ𞎬\": null, \"Გ\": \"txt ü\"}", "sort_keys": true, "expected": "{\"\\u146c\\ud838\\udfac\": null, \"\\u1c92\": \"txt \\u00fc\", \"\\u21c0?%S\": \"txt \\u00fc\", \"\\ud821\\udcac\\ud829\\uddc8\": null, \"\\ud823\\udd09\": 1}"}
+{"raw": "{\"<̛\": [\"é\", {\"k\": \"v\"}], \"𔐗𖾡𔮭\": 1, \"ƙ\": 1, \"ᖋ✚\": [\"é\", {\"k\": \"v\"}]}", "sort_keys": true, "expected": "{\"<\\u031b\": [\"\\u00e9\", {\"k\": \"v\"}], \"\\u0199\": 1, \"\\u158b\\u271a\": [\"\\u00e9\", {\"k\": \"v\"}], \"\\ud811\\udc17\\ud81b\\udfa1\\ud812\\udfad\": 1}"}
+{"raw": "{\"\\\\💨┠𙽤\": \"txt ü\", \"2-\": 2.5, \"y𚒿\": \"txt ü\", \"𑃕\": 2.5, \"𑃡Q\": 1}", "sort_keys": true, "expected": "{\"2-\": 2.5, \"\\\\\\ud83d\\udca8\\u2520\\ud827\\udf64\": \"txt \\u00fc\", \"y\\ud829\\udcbf\": \"txt \\u00fc\", \"\\ud804\\udcd5\": 2.5, \"\\ud804\\udce1Q\": 1}"}
+{"raw": "{\"𑙤\": [\"é\", {\"k\": \"v\"}]}", "sort_keys": true, "expected": "{\"\\ud805\\ude64\": [\"\\u00e9\", {\"k\": \"v\"}]}"}
+{"raw": "{\"𑤍፸ᅖ𐱤\": 2.5, \"⃝ʛ#\": 2.5, \"𘦲;ጀ∡\": \"txt ü\"}", "sort_keys": true, "expected": "{\"\\u20dd\\u029b#\": 2.5, \"\\ud806\\udd0d\\u1378\\u1156\\ud803\\udc64\": 2.5, \"\\ud822\\uddb2;\\u1300\\u2221\": \"txt \\u00fc\"}"}
+{"raw": "{\"𗷑⁇a\": 2.5}", "sort_keys": true, "expected": "{\"\\ud81f\\uddd1\\u2047a\": 2.5}"}
+{"raw": "{\"𑰣𜦴\": true, \"p\": null}", "sort_keys": true, "expected": "{\"p\": null, \"\\ud807\\udc23\\ud832\\uddb4\": true}"}
+{"raw": "{\"⧵\": 1, \"𞚶𖄚𒁻\": true, \"𕎠\": 1, \"␐𗁕@𚒈\": 1}", "sort_keys": true, "expected": "{\"\\u2410\\ud81c\\udc55@\\ud829\\udc88\": 1, \"\\u29f5\": 1, \"\\ud814\\udfa0\": 1, \"\\ud839\\udeb6\\ud818\\udd1a\\ud808\\udc7b\": true}"}
+{"raw": "{\"𜄶o\": 1, \"m>A\": [\"é\", {\"k\": \"v\"}], \"9\": 2.5, \"WqQ\": null, \"𘀟E❃အ\": [\"é\", {\"k\": \"v\"}]}", "sort_keys": true, "expected": "{\"9\": 2.5, \"WqQ\": null, \"m>A\": [\"\\u00e9\", {\"k\": \"v\"}], \"\\ud820\\udc1fE\\u2743\\u1021\": [\"\\u00e9\", {\"k\": \"v\"}], \"\\ud830\\udd36o\": 1}"}
+{"raw": "{\"𛣣rvᱎ\": [\"é\", {\"k\": \"v\"}], \"ဣ\": [\"é\", {\"k\": \"v\"}], \"ᮻ⡧\": true, \"sQ\": \"txt ü\", \"𒤬9i\": [\"é\", {\"k\": \"v\"}]}", "sort_keys": true, "expected": "{\"sQ\": \"txt \\u00fc\", \"\\u1023\": [\"\\u00e9\", {\"k\": \"v\"}], \"\\u1bbb\\u2867\": true, \"\\ud80a\\udd2c9i\": [\"\\u00e9\", {\"k\": \"v\"}], \"\\ud82e\\udce3rv\\u1c4e\": [\"\\u00e9\", {\"k\": \"v\"}]}"}
+{"raw": "{\"ᡌ\": null, \"ⱬ𛪦⥭C\": \"txt ü\", \"𚃩\": [\"é\", {\"k\": \"v\"}], \"j🂟<\": 1}", "sort_keys": true, "expected": "{\"j\\ud83c\\udc9f<\": 1, \"\\u184c\": null, \"\\u2c6c\\ud82e\\udea6\\u296dC\": \"txt \\u00fc\", \"\\ud828\\udce9\": [\"\\u00e9\", {\"k\": \"v\"}]}"}
+{"raw": "{\"𗠚\": true, \"𚪁𔭚\": [\"é\", {\"k\": \"v\"}]}", "sort_keys": true, "expected": "{\"\\ud81e\\udc1a\": true, \"\\ud82a\\ude81\\ud812\\udf5a\": [\"\\u00e9\", {\"k\": \"v\"}]}"}
+{"raw": "{\"𔑵ⲟv|\": [\"é\", {\"k\": \"v\"}], \"ὐ𑗞੦\": null}", "sort_keys": true, "expected": "{\"\\u1f50\\ud805\\uddde\\u0a66\": null, \"\\ud811\\udc75\\u2c9fv|\": [\"\\u00e9\", {\"k\": \"v\"}]}"}
+{"raw": "{\"h\": true}", "sort_keys": true, "expected": "{\"h\": true}"}

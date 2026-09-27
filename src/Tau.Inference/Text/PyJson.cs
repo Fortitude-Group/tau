@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -21,6 +22,10 @@ namespace Tau.Inference.Text;
 /// defaults and <c>default=str</c> never fires for a <c>json.loads</c> result, so it is also <see cref="Dumps"/>.
 /// </para>
 /// <para>
+/// Von serialises structured instructions with <c>json.dumps(v, sort_keys=isinstance(v, dict))</c>, i.e. the
+/// default <c>ensure_ascii=True</c>; that is <see cref="DumpsAscii"/>.
+/// </para>
+/// <para>
 /// Numbers are classified as int or float by their original spelling, so pass nodes parsed from JSON text
 /// (<see cref="JsonNode.Parse(string, JsonNodeOptions?, JsonDocumentOptions)"/>) rather than values rebuilt in
 /// code, which lose it; see <see cref="PyNumber"/> for how code-built values are handled.
@@ -34,7 +39,23 @@ public static class PyJson
     public static string Dumps(JsonNode? node)
     {
         var sb = new StringBuilder();
-        Write(sb, node);
+        Write(sb, node, ascii: false, sortKeys: false);
+        return sb.ToString();
+    }
+
+    /// <summary>
+    /// <c>json.dumps(value, sort_keys=sortKeys)</c> with the default <c>ensure_ascii=True</c>: every character
+    /// outside U+0020..U+007E is escaped (the usual short forms for controls, <c>\uxxxx</c> otherwise, astral
+    /// characters as a surrogate pair). With <paramref name="sortKeys"/>, every object's keys are sorted by code
+    /// point at every depth, as Python sorts strings.
+    /// </summary>
+    /// <param name="node">The parsed JSON value.</param>
+    /// <param name="sortKeys">Sort object keys by code point.</param>
+    /// <returns>The exact text CPython would produce.</returns>
+    public static string DumpsAscii(JsonNode? node, bool sortKeys)
+    {
+        var sb = new StringBuilder();
+        Write(sb, node, ascii: true, sortKeys);
         return sb.ToString();
     }
 
@@ -54,7 +75,7 @@ public static class PyJson
         return Dumps(node);
     }
 
-    private static void Write(StringBuilder sb, JsonNode? node)
+    private static void Write(StringBuilder sb, JsonNode? node, bool ascii, bool sortKeys)
     {
         switch (node)
         {
@@ -71,13 +92,15 @@ public static class PyJson
 
                 sb.Append('{');
                 bool first = true;
-                foreach (var (key, child) in obj)
+                IEnumerable<KeyValuePair<string, JsonNode?>> entries =
+                    sortKeys ? obj.OrderBy(kv => kv.Key, CodePointComparer.Instance) : obj;
+                foreach (var (key, child) in entries)
                 {
                     if (!first) sb.Append(", ");
                     first = false;
-                    WriteString(sb, key);
+                    WriteString(sb, key, ascii);
                     sb.Append(": ");
-                    Write(sb, child);
+                    Write(sb, child, ascii, sortKeys);
                 }
 
                 sb.Append('}');
@@ -94,7 +117,7 @@ public static class PyJson
                 for (int i = 0; i < arr.Count; i++)
                 {
                     if (i > 0) sb.Append(", ");
-                    Write(sb, arr[i]);
+                    Write(sb, arr[i], ascii, sortKeys);
                 }
 
                 sb.Append(']');
@@ -104,7 +127,7 @@ public static class PyJson
                 switch (value.GetValueKind())
                 {
                     case JsonValueKind.String:
-                        WriteString(sb, value.GetValue<string>());
+                        WriteString(sb, value.GetValue<string>(), ascii);
                         return;
                     case JsonValueKind.Number:
                         sb.Append(PyNumber.Format(value, json: true));
@@ -128,7 +151,9 @@ public static class PyJson
     }
 
     // CPython json.encoder: ESCAPE = r'[\x00-\x1f\\"\b\f\n\r\t]', other controls as '\\u{0:04x}'.
-    private static void WriteString(StringBuilder sb, string s)
+    // With ensure_ascii, ESCAPE_ASCII = r'([\\"]|[^\ -~])': everything outside ' '..'~' is escaped too, and a
+    // UTF-16 code unit maps one-to-one onto Python's surrogate-pair escape for an astral character.
+    private static void WriteString(StringBuilder sb, string s, bool ascii)
     {
         sb.Append('"');
         foreach (var c in s)
@@ -143,9 +168,9 @@ public static class PyJson
                 case '\b': sb.Append("\\b"); break;
                 case '\f': sb.Append("\\f"); break;
                 default:
-                    if (c < 0x20)
+                    if (c < 0x20 || (ascii && c > 0x7E))
                     {
-                        sb.Append("\\u00").Append(HexLower((c >> 4) & 0xF)).Append(HexLower(c & 0xF));
+                        sb.Append("\\u").Append(((int)c).ToString("x4", CultureInfo.InvariantCulture));
                     }
                     else
                     {
@@ -159,5 +184,23 @@ public static class PyJson
         sb.Append('"');
     }
 
-    private static char HexLower(int nibble) => (char)(nibble < 10 ? '0' + nibble : 'a' + nibble - 10);
+    /// <summary>Orders strings by Unicode code point, as Python compares <c>str</c>.</summary>
+    private sealed class CodePointComparer : IComparer<string>
+    {
+        public static readonly CodePointComparer Instance = new();
+
+        public int Compare(string? x, string? y)
+        {
+            var a = (x ?? "").EnumerateRunes();
+            var b = (y ?? "").EnumerateRunes();
+            while (true)
+            {
+                var ha = a.MoveNext();
+                var hb = b.MoveNext();
+                if (!ha || !hb) return ha ? 1 : hb ? -1 : 0;
+                var c = a.Current.Value.CompareTo(b.Current.Value);
+                if (c != 0) return c;
+            }
+        }
+    }
 }

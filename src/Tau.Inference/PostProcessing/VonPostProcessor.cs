@@ -100,15 +100,27 @@ public sealed class VonPostProcessor
     /// <param name="stateTokens">State token count.</param>
     public NoulAnswer Noul(ReadOnlySpan<float> logits, ReadOnlySpan<float> nullLogits, int stateTokens)
     {
-        Span<float> z = [logits[0], logits[1]];
+        var z = CorrectNoul(logits, nullLogits);
+        var p = Probabilities(z, stateTokens, 2);
+        return new NoulAnswer { Noul = Numerics.PyRound(Math.Clamp((double)p[0], 0.0, 1.0), 4) };
+    }
+
+    /// <summary>
+    /// The reference's zero-shot noul prior correction: with no explicit criteria, subtract
+    /// <c>a·(null_true − null_false) + b</c> (fitted prior) or <c>0.7·bias</c> (fallback) from the "true" logit.
+    /// </summary>
+    /// <param name="logits">[true, false] logits.</param>
+    /// <param name="nullLogits">[true, false] logits for the empty state, or empty when criteria were explicit.</param>
+    public float[] CorrectNoul(ReadOnlySpan<float> logits, ReadOnlySpan<float> nullLogits)
+    {
+        var z = new[] { logits[0], logits[1] };
         if (!nullLogits.IsEmpty)
         {
             var bias = nullLogits[0] - nullLogits[1];
             var correction = _post.NoulPrior is { } np ? (float)np.A * bias + (float)np.B : 0.7f * bias;
             z[0] = logits[0] - correction;
         }
-        var p = Probabilities(z, stateTokens, 2);
-        return new NoulAnswer { Noul = Numerics.PyRound(Math.Clamp((double)p[0], 0.0, 1.0), 4) };
+        return z;
     }
 
     /// <summary>TypeSafe's margin confidence, rounded to 3 dp: (n·p_max − 1)/(n − 1), clamped; 1 when n ≤ 1.</summary>
