@@ -23,14 +23,14 @@ Serial by necessity: the end-to-end runs (T060+), because they need all lanes an
 ## Phase 1: Setup
 
 - [ ] T001 Add projects `src/Tau.Workbench` (library), `src/Tau.Workbench.Cli` (global tool: `PackAsTool`, `ToolCommandName=tau`), `tests/Tau.Workbench.Tests`. Add YamlDotNet (pinned, MIT) to `Directory.Packages.props`. Add all three to `Tau.slnx`. Build clean.
-- [ ] T002 Add sidecar deps (`datasets`, `pandas`) to `sidecar/finetune/pyproject.toml`, re-lock (`uv lock`), sync.
+- [x] T002 Add sidecar deps (`datasets`, `pandas`) to `sidecar/finetune/pyproject.toml`, re-lock (`uv lock`), sync.
 
 ## Phase 2: Lane A (data)
 
-- [ ] T010 [P] `tau_sidecar/data_banking77.py`: download `train.csv` and `test.csv` from `PolyAI-LDN/task-specific-datasets` @ `9d081458…` into `data/banking77/raw/` and verify sha256 (recorded in the script). Stratified seed-42 splits: calibration 1,000 from train, held-out 1,000 from test, finetune = rest of train. Write `data/banking77/{calibration,heldout,finetune}.jsonl` (`id`, `text`, `label`) and `examples/banking77/dataset.manifest.json` (licence, `synthetic: false`, counts, per-class counts, split sha256s).
-- [ ] T011 [P] `tau_sidecar/data_tickets.py`: download the pinned revision of `Tobi-Bueck/customer-support-tickets` (hf_hub, pinned `ddf1c81a…`). Filters: English. Drop `queue` starting `Autos & Vehicles` or `Travel & Transportation`. Drop rows whose subject or body matches the vehicle/fleet keyword list (word-boundary, case-insensitive, list in the script). Drop exact-duplicate text (subject + body). Text = subject + "\n\n" + body. Label = priority level index (very_low=0 … critical=4). Stratified seed-42 splits: held-out 1,000, calibration 1,000, finetune ≤ 8,000. Write the JSONL to `data/tickets/` (gitignored) and `examples/support-tickets/dataset.manifest.json` (licence CC-BY-NC-4.0, `synthetic: true`, rows removed per filter, counts).
-- [ ] T012 [P] `sidecar/finetune/tests/test_data.py`: split determinism, disjointness, no vehicle keywords in the output, and manifest counts match the files.
-- [ ] T013 Run T010/T011, commit manifests, record facts in DECISIONS.
+- [x] T010 [P] `tau_sidecar/data_banking77.py`: download `train.csv` and `test.csv` from `PolyAI-LDN/task-specific-datasets` @ `9d081458…` into `data/banking77/raw/` and verify sha256 (recorded in the script). Stratified seed-42 splits: calibration 1,000 from train, held-out 1,000 from test, finetune = rest of train. Write `data/banking77/{calibration,heldout,finetune}.jsonl` (`id`, `text`, `label`) and `examples/banking77/dataset.manifest.json` (licence, `synthetic: false`, counts, per-class counts, split sha256s).
+- [x] T011 [P] `tau_sidecar/data_tickets.py`: download the pinned revision of `Tobi-Bueck/customer-support-tickets` (hf_hub, pinned `ddf1c81a…`). Filters: English. Drop `queue` starting `Autos & Vehicles` or `Travel & Transportation`. Drop rows whose subject or body matches the vehicle/fleet keyword list (word-boundary, case-insensitive, list in the script). Drop exact-duplicate text (subject + body). Text = subject + "\n\n" + body. Label = priority level index (very_low=0 … critical=4). Stratified seed-42 splits: held-out 1,000, calibration 1,000, finetune ≤ 8,000. Write the JSONL to `data/tickets/` (gitignored) and `examples/support-tickets/dataset.manifest.json` (licence CC-BY-NC-4.0, `synthetic: true`, rows removed per filter, counts).
+- [x] T012 [P] `sidecar/finetune/tests/test_data.py`: split determinism, disjointness, no vehicle keywords in the output, and manifest counts match the files.
+- [x] T013 Run T010/T011, commit manifests, record facts in DECISIONS.
 
 ## Phase 3: Lane C (R1 adjustments)
 

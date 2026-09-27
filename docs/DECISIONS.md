@@ -41,6 +41,70 @@ unreachable, the report says so. That's a finding, not a failure.
 **Reason:** a threshold nobody can meet produces an empty cascade table. The number is in
 `examples/support-tickets/decision.yaml` and can be changed with one edit.
 
+## 2026-09-27 · R2 T010–T013: dataset prep facts, checked against the real data
+
+**Banking77** (`tau_sidecar/data_banking77.py`): 10,003 train / 3,080 test rows, 77 classes, matching
+`research.md` exactly. Test is perfectly balanced (40 rows/class), so the 1,000-item stratified held-out
+draw lands at 13/class (12 for one class, remainder rounding). Train class sizes range 35–187. Splits:
+calibration 1,000, held-out 1,000, finetune 9,003. Two runs byte-identical. Raw file sha256s and every
+split file's sha256 are in `examples/banking77/dataset.manifest.json`.
+
+**Support tickets** (`tau_sidecar/data_tickets.py`): the HF repo ships **three** CSVs, not one -
+`aa_dataset-tickets-multi-lang-5-2-50-version.csv` (28,587), `dataset-tickets-multi-lang-4-20k.csv`
+(20,000), `dataset-tickets-german_normalized_50_5_2.csv` (13,178, German only). They sum to 61,765,
+which is where the "61,765 rows, 28,261 English" figures already in this file (2026-09-27, dataset
+correction entry) came from - confirmed by reproducing that exact count. **Decision:** all three are
+concatenated, in that fixed order, and `ticket-<n>` ids are the 0-based position in the concatenation.
+
+Filters, in order (rows removed): language≠en **33,504** (→ 28,261 remain, exact match); vehicle/travel
+queue prefix **0**; vehicle keyword in text **393**; empty body **0**; exact-duplicate text **4,467**.
+Final pool: 23,401 rows. Splits: held-out 1,000, calibration 1,000, finetune 8,000 (capped, as R-02
+specifies), stratified by priority.
+
+- **The queue-prefix filter (step 2) removes nothing on this data.** Checked directly: the
+  `Autos & Vehicles/*` and `Travel & Transportation/*` queues exist **only** in the German-only third
+  CSV. Every English row's `queue` is one of ten broad categories (Technical Support, Product Support,
+  etc.) that never include a vehicle/travel queue. Not a bug - the filter is correct and still needed for
+  robustness against a future revision, it simply has nothing to do here.
+- **English ticket rows carry only 3 of the 5 priority levels.** `very_low` and `critical` appear only in
+  the German-only CSV (1,783 and 1,914 rows respectively, matching the totals already recorded in this
+  file). After the language filter, no English row is `very_low` or `critical`, so every split
+  (calibration/held-out/finetune) has **zero** examples of those two classes. This is a genuine property
+  of the source data, not a filtering defect - verified by checking each raw CSV's own priority
+  distribution before any filtering. **Consequence for later tasks:** the fine-tune and measure stages
+  (Lane D/B) can only train and score on {low, medium, high} for this dataset; `very_low`/`critical`
+  should be reported as "no English examples in this dataset", not silently dropped from a 5-way table.
+- **The 393 vehicle-keyword hits are, on inspection, all false positives - no genuine vehicle content
+  found in the English rows.** Sampled and read the actual matched text for every keyword that hit:
+  "driver(s)" (361 raw matches) is overwhelmingly software/hardware ("updating drivers", "driver
+  conflict", "reinstalling drivers", "driver incompatibility"); "driving" (64 matches) is the marketing
+  idiom "driving brand/business growth"; "garage" (2 matches) is "Smart Garage" (home automation, not
+  automotive). This is expected for a synthetic *IT support* ticket generator - not upstream
+  contamination.
+  **Decision (scope held to what was asked):** the task specified excluding exactly four IT-context
+  phrases for "driver(s)" - "printer driver", "device driver", "driver update", "graphics driver". That
+  exclusion is implemented exactly as specified and catches 34 of the 361 raw "driver" hits; the other
+  327 remain excluded rows even though almost none are genuinely about vehicles. Not expanded into a
+  broader IT-driver heuristic, because that was a scope call for the T011 brief, not this implementation -
+  flagged here so Rob can decide whether to widen the exclusion (it would recover roughly 300+ rows for
+  finetune/calibration/held-out, all currently-excluded IT tickets that happen to say "driver").
+  Every other keyword in the list (vehicle, car, fleet, truck, lorry, van, automotive, telematics, tyre,
+  tire, mileage, dealership, bus, taxi, freight, logistics, delivery van, motorbike, motorcycle, scooter,
+  EV, charging station) matched **zero** English rows.
+- **4,467 exact-duplicate texts (about 16% of the post-filter, pre-dedup pool).** The synthetic generator
+  produces a meaningful share of verbatim-identical subject+body pairs. Dropped by the dedup filter
+  (keep-first, by original row order), so no duplicate text can appear across splits.
+
+`examples/support-tickets/dataset.manifest.json` holds none of the ticket text (checked by a test that
+walks the manifest and fails on any string longer than 200 characters) - only counts, hashes, the keyword
+list and its exclusion note, and provenance. `data/banking77/` and `data/tickets/` are never committed
+(`/data/` is gitignored at the repo root).
+
+`sidecar/finetune/tests/test_data.py` (17 tests): determinism (re-running `prepare()` gives byte-identical
+split files), disjointness across splits, no vehicle keyword survives into any tickets split text,
+manifest row counts and sha256 match the files on disk, label validity, filter-count arithmetic
+(`rows_before` − Σremoved = `rows_after`), and the no-ticket-text-in-manifest check above. All pass.
+
 ## 2026-09-27 · CORRECTION: the ticket dataset is synthetic; Rob chose to keep it, labelled as such
 
 Checked against the dataset card before building on it: `Tobi-Bueck/customer-support-tickets` is

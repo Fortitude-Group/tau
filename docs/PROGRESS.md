@@ -7,11 +7,13 @@ Updated after every completed task. On session restart, resume from here without
 **Task list:** `specs/002-workbench-benchmarks/tasks.md`.
 
 ## R2 log
-
 - Spec, clarify (3 answers), plan, research R-01..R-09, tasks T001–T066 in lanes A–E.
-- Lane D code: `finetune_laya.py`, the manifest/parity changes for local fine-tunes, and `baseline_minilm.py` are committed. They haven't been run yet because they need lane A's splits.
-- Lane C (T040–T042) is merged. Calibrators now act on the log reference probabilities (DECISIONS). The client has per-request headers. Tests: Calibration 107, Client 54, Runtime 43, Contract 113, Inference 1,507 (+3 skipped), model parity 12/12, all green in the agent's worktree. After the merge, the full non-model suite passes on the branch.
-- Still running: lane A (data), lane B (Workbench core + CLI).
+- Lane D code: `finetune_laya.py`, the manifest/parity changes for local fine-tunes, and `baseline_minilm.py` are committed.
+- Lane C (T040–T042) is merged. Calibrators now act on the log reference probabilities (DECISIONS). The client has per-request headers. Tests: Calibration 107, Client 54, Runtime 43, Contract 113, Inference 1,507 (+3 skipped), model parity 12/12. After the merge, the full non-model suite passes on the branch.
+- Lane A (T002, T010–T013) is merged. Banking77: calibration 1,000, held-out 1,000, fine-tune 9,003. Tickets: after the filters (non-English 33,504, vehicle keywords 393, duplicates 4,467), held-out 1,000, calibration 1,000, fine-tune 8,000. Byte-identical on re-run. 17 data tests pass. Split hashes are in `examples/*/dataset.manifest.json`.
+  - **Finding:** English tickets carry only low/medium/high. `very_low` and `critical` exist only in the German file, so reports must say "no English examples", not show them as a 0% class.
+  - **Finding:** every one of the 393 vehicle-keyword hits was a false positive (software drivers, "driving growth", "Smart Garage"). The rows stay dropped. It costs nothing, since the pool is 23,401 and the splits need 10,000.
+- Still running: lane B (Workbench core + CLI).
 
 ---
 
@@ -100,4 +102,6 @@ Updated after every completed task. On session restart, resume from here without
 
 ## Next
 
-- On Rob's "go": R2 (Workbench, fine-tune sidecar, two datasets end to end, calibration and cascade £).
+- Lane A (sidecar data, T002/T010–T013) done. Remaining R2 lanes: B (Workbench core, T020–T031), C (R1
+  adjustments, T040–T042), D (fine-tune + baseline, T014–T017, needs Lane A's splits), E (frontier
+  labelling, T050–T053, needs Lane A's held-out ids + Lane B's batch export), then Phase 7 end-to-end.
