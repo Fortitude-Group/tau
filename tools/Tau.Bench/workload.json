@@ -1,0 +1,90 @@
+{
+  "name": "bank-support-duplicate-payment",
+  "description": "One retail-banking support ticket (a duplicated debit card payment that caused an overdraft fee) and ten questions in a fixed order that cycles choice (4 options), score (4 levels), noul. A run with q questions sends the first q.",
+  "state": {
+    "channel": "email",
+    "customer_since": "2019",
+    "product": "current account",
+    "subject": "Charged twice for the same payment",
+    "message": "Hello, I paid my council tax of £142.50 by debit card on Monday and it has come out of my current account twice. The second payment pushed me into my overdraft and I've now been charged a £15 fee as well. I've banked with you for six years and this is the second time it has happened. Please return the duplicate payment and the fee this week, or I'll move my account elsewhere."
+  },
+  "questions": [
+    {
+      "key": "team",
+      "type": "choice",
+      "instructions": "Which team should handle this ticket?",
+      "criteria": {
+        "payments": "duplicate, failed or delayed card payments and direct debits",
+        "fraud": "transactions the customer says they did not make",
+        "lending": "overdrafts, loans and credit limits",
+        "account_services": "closures, switches and personal details"
+      }
+    },
+    {
+      "key": "urgency",
+      "type": "score",
+      "instructions": "How urgent is this ticket?",
+      "criteria": ["low", "medium", "high", "critical"]
+    },
+    {
+      "key": "churn_risk",
+      "type": "noul",
+      "instructions": "Does the customer threaten to leave the bank?"
+    },
+    {
+      "key": "reply_channel",
+      "type": "choice",
+      "instructions": "How should the bank reply?",
+      "criteria": {
+        "email": "a written reply to the same email thread",
+        "phone_call": "a call back from an agent",
+        "secure_message": "a message in online banking",
+        "branch_appointment": "an appointment at a branch"
+      }
+    },
+    {
+      "key": "frustration",
+      "type": "score",
+      "instructions": "How frustrated is the customer?",
+      "criteria": ["calm", "mildly annoyed", "frustrated", "angry"]
+    },
+    {
+      "key": "refund_requested",
+      "type": "noul",
+      "instructions": "Is the customer asking for money to be returned?"
+    },
+    {
+      "key": "product_line",
+      "type": "choice",
+      "instructions": "Which product is the ticket about?",
+      "criteria": {
+        "current_account": "everyday banking, debit cards and overdrafts",
+        "credit_card": "credit card balances, statements and repayments",
+        "mortgage": "home loans and remortgaging",
+        "savings": "savings accounts and interest"
+      }
+    },
+    {
+      "key": "effort",
+      "type": "score",
+      "instructions": "How much work will this take to resolve?",
+      "criteria": ["one-step fix", "a few steps", "needs another team", "needs an investigation"]
+    },
+    {
+      "key": "unauthorised_payment",
+      "type": "noul",
+      "instructions": "Does the ticket describe a payment the customer did not authorise?"
+    },
+    {
+      "key": "first_action",
+      "type": "choice",
+      "instructions": "What should the agent do first?",
+      "criteria": {
+        "refund_duplicate": "reverse the duplicate payment and the overdraft fee",
+        "open_dispute": "raise a card dispute with the merchant",
+        "send_guide": "send a self-service guide",
+        "ask_details": "ask the customer for more information"
+      }
+    }
+  ]
+}
