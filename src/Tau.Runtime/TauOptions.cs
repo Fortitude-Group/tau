@@ -24,9 +24,6 @@ public sealed class TauOptions
     /// <summary>Load every served model at start-up instead of on first use.</summary>
     public bool Preload { get; set; } = true;
 
-    /// <summary>Most model sessions resident at once (least recently used is evicted). The reference router's default is 2.</summary>
-    public int MaxLoaded { get; set; } = 4;
-
     /// <summary>Directory of <c>*.calibrator.json</c> files to apply (none when unset).</summary>
     public string? CalibratorsDirectory { get; set; }
 

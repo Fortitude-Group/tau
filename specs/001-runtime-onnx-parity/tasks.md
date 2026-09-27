@@ -38,7 +38,7 @@ export → fixtures → C# parity chain for one model (a real data dependency), 
 - [X] T005 [P] Create sidecar uv project `sidecar/finetune/pyproject.toml` (Python 3.12, torch CUDA 12 index, transformers 5.x, `laya==0.3.20`, `von-sdk==1.2.3`, onnx, onnxruntime, safetensors, huggingface_hub, pytest) and commit `uv.lock`; `uv run python -c "import laya, von, torch, onnxruntime"` succeeds
 - [X] T006 [P] Write `scripts/fetch-cuda.ps1`: install NVIDIA CUDA 12 runtime, cuBLAS, cuDNN 9, cuFFT and cuRAND pip wheels (free) into `native/cuda-deps/` via `uv pip install --target`, and list the DLL directory
 - [X] T007 [P] Write `scripts/build-test.ps1`: `dotnet build Tau.slnx -c Release` (gate: 0 errors), `dotnet test Tau.slnx`, `uv run pytest` in `sidecar/finetune`; non-zero exit on any failure
-- [ ] T008 Update `docs/PROGRESS.md` (Phase 1 done, evidence: build output and fetched hashes) and commit
+- [X] T008 Update `docs/PROGRESS.md` (Phase 1 done, evidence: build output and fetched hashes) and commit
 
 ---
 
@@ -87,8 +87,8 @@ export → fixtures → C# parity chain for one model (a real data dependency), 
 - [X] T032 [US1] Implement `src/Tau.Inference/Laya/LayaEngine.cs` (collate a request's rows with pad id → ORT run → logits) and `LayaPostProcessor.cs` (clamped temperatures [0.5, 5], bucket lookup, softmax, entropy confidence, 4-dp rounding, choice/score/noul contract answers; drop non-contract fields)
 - [X] T033 [US1] Implement `src/Tau.Inference/Von/VonEngine.cs` (batch all questions + null-prior rows into one pass) and `VonPostProcessor.cs` (input-conditioned temperature map with real token count of the state, `max(eff_temp,1e-4)`, margin confidence rounded to 3 dp, noul prior correction, noul = p[0] rounded to 4 dp, score rounded to 2 dp, argmax on unscaled logits)
 - [X] T034 [US1] Tests `tests/Tau.Inference.Tests/Parity/LogitAndAnswerParityTests.cs` (`Category=Models`, fail loudly if models are missing): C# ORT logits vs `logits.jsonl` (|Δ| ≤ 2e-3, argmax identical); full answers vs `answers.jsonl` (same choice, probs ≤ 1e-3, score ≤ 1e-3×(k−1), noul ≤ 1e-3)
-- [ ] T035 [US1] Write `scripts/export.ps1` (fetch check → `uv run python -m tau_sidecar.export_laya/export_von`) and `scripts/parity.ps1` (sidecar parity + fixtures → `dotnet test --filter Category=Parity|Category=Models` → merge into `reports/r1/parity.{md,json}` with the standard report header: hardware, hashes, versions, date, command)
-- [ ] T036 [US1] Run `scripts/parity.ps1`, commit `reports/r1/parity.*` and fixtures, and update PROGRESS with the evidence
+- [X] T035 [US1] Write `scripts/export.ps1` (fetch check → `uv run python -m tau_sidecar.export_laya/export_von`) and `scripts/parity.ps1` (sidecar parity + fixtures → `dotnet test --filter Category=Parity|Category=Models` → merge into `reports/r1/parity.{md,json}` with the standard report header: hardware, hashes, versions, date, command)
+- [X] T036 [US1] Run `scripts/parity.ps1`, commit `reports/r1/parity.*` and fixtures, and update PROGRESS with the evidence
 
 **Checkpoint**: parity gate green. US2 can start.
 
@@ -106,7 +106,7 @@ export → fixtures → C# parity chain for one model (a real data dependency), 
 - [X] T041 [US2] Tests `tests/Tau.Runtime.Tests/Http/ContractTests.cs` (WebApplicationFactory, `Category=Models`): every response validates against `response.schema.json`; text/object/array/nested/null/empty states answered; every invalid-request class → 422 naming the field; unknown model → 422 listing ids; `jev-latest` routes; `Authorization` ignored; no non-contract fields
 - [X] T042 [US2] Tests `tests/Tau.Runtime.Tests/Http/DeterminismTests.cs` (SC-005): the same request twice gives identical bytes; each question alone vs together gives identical answers; 100 concurrent requests vs sequential give identical answers
 - [X] T043 [US2] Tests `tests/Tau.Runtime.Tests/Http/EdgeCaseTests.cs`: options exceeding the head budget → 422 naming the question; truncated state sets `x-tau-truncated`; `[MASK]` in option keys; duplicate descriptions; 50 questions; unavailable configured provider fails at startup; CPU fallback when allowed
-- [ ] T044 [US2] Update PROGRESS and commit
+- [X] T044 [US2] Update PROGRESS and commit
 
 ---
 
@@ -118,7 +118,7 @@ export → fixtures → C# parity chain for one model (a real data dependency), 
 - [X] T045 [P] [US3] Write the committed request set `tests/conformance/requests/*.json` (≥ 40 requests: every question type, option-count boundaries, structured states, invalid requests with the expected status)
 - [X] T046 [US3] Implement `tools/Tau.Conformance/` (`--tau <url> --peer <url> --out reports/r1`): send each request to both, validate Tau strictly and the peer leniently (extra fields = "peer extension"), classify differences (structural = status/shape mismatch vs contract → fail; model disagreement = different answer values → recorded), write `conformance.{md,json}` with the standard header
 - [X] T047 [US3] Write `scripts/conformance.ps1`: start Tau (built exe, CUDA), start Kev-0.8B via `uv` (clone `jaredpalmer/kev` at a pinned commit into `.cache/kev`, `uv sync --extra serve`, `python -m kev.serve --run jaredpalmer/kev-0.8b`), fallback WSL Ubuntu, fallback `von serve`; record which peer actually ran and its revision in the report; tear both down
-- [ ] T048 [US3] Run the conformance suite, commit `reports/r1/conformance.*`, and record the peer outcome in DECISIONS and PROGRESS
+- [X] T048 [US3] Run the conformance suite, commit `reports/r1/conformance.*`, and record the peer outcome in DECISIONS and PROGRESS
 
 ---
 
@@ -127,7 +127,7 @@ export → fixtures → C# parity chain for one model (a real data dependency), 
 **Goal**: committed latency report on the RTX 3080 Ti and CPU.
 **Independent test**: `./scripts/bench.ps1` regenerates `reports/r1/latency.*`.
 
-- [ ] T049 [US4] Implement `tools/Tau.Bench/`: hardware fingerprint (GPU name/VRAM/driver via `nvidia-smi`, CPU, RAM, OS), in-process model-time runs and end-to-end HTTP runs against a started Runtime, per model × provider (cuda, cpu) × questions (1, 4, 10); warm-up 50; measured 500 (GPU) / 100 (CPU); p50/p95/p99/mean/sd; two back-to-back repeats with variance; precision stated; writes `latency.{md,json}` with the standard header
+- [X] T049 [US4] Implement `tools/Tau.Bench/`: hardware fingerprint (GPU name/VRAM/driver via `nvidia-smi`, CPU, RAM, OS), in-process model-time runs and end-to-end HTTP runs against a started Runtime, per model × provider (cuda, cpu) × questions (1, 4, 10); warm-up 50; measured 500 (GPU) / 100 (CPU); p50/p95/p99/mean/sd; two back-to-back repeats with variance; precision stated; writes `latency.{md,json}` with the standard header
 - [ ] T050 [US4] Write `scripts/bench.ps1` (build Release, run bench for both providers), run it, commit `reports/r1/latency.*`, update PROGRESS
 
 ---
@@ -135,7 +135,7 @@ export → fixtures → C# parity chain for one model (a real data dependency), 
 ## Phase 7: User Story 5: typed .NET client (P3)
 
 - [x] T051 [P] [US5] Implement `src/Tau.Client/`: `SystemOneClient(HttpClient, baseUrl)` with `SystemOneAsync(DecisionRequest)`, typed `DecideAsync<TEnum>(state, instructions, descriptions?)` → `Decision<TEnum>` (value, probabilities per member, confidence), `ScoreAsync`, `NoulAsync`, `SystemOneValidationException` carrying the problem details; NuGet metadata (Apache-2.0, 0.1.0, README), packed locally with `dotnet pack` only
-- [ ] T052 [US5] Tests `tests/Tau.Client.Tests/`: against a stub handler (shape, errors) — **done, 41 tests green** — and, with `Category=Models`, against the in-process Runtime (enum answer round trip) — **blocked**: `Tau.Runtime` is still the empty web template, so this half is deferred until the Runtime host exists
+- [X] T052 [US5] Tests `tests/Tau.Client.Tests/`: against a stub handler (shape, errors) — **done, 41 tests green** — and, with `Category=Models`, against the in-process Runtime (enum answer round trip) — **blocked**: `Tau.Runtime` is still the empty web template, so this half is deferred until the Runtime host exists
 
 ---
 
@@ -149,10 +149,10 @@ export → fixtures → C# parity chain for one model (a real data dependency), 
 ## Phase 9: Polish and gate
 
 - [ ] T055 [P] Single-file publish profile for `src/Tau.Runtime` (win-x64, linux-x64; self-contained exe + `native/` folder) and `src/Tau.Runtime/Dockerfile` (multi-stage, CPU default, CUDA build arg); build the image locally (`tau-runtime:r1-local`), never push; smoke-run the container `/healthz` on CPU
-- [ ] T056 [P] Add XML docs on every public type in `Tau.Contract`, `Tau.Calibration`, `Tau.Client`; enable `GenerateDocumentationFile` (warnings as errors)
-- [ ] T057 [P] Write `src/Tau.Runtime/appsettings.json` defaults + `docs/runtime-config.md` (every option, provider setup, CUDA deps), no secrets
-- [ ] T058 Security pass: path handling for models and calibrators dirs (no traversal), request size limits (body ≤ 1 MB default, configurable), and a `npx @claude-flow/cli@latest security scan` if available (record if unavailable)
-- [ ] T059 [P] Dataset licence check (FR-027): Banking77 and ≥ 2 open support-ticket datasets with urgency/priority labels; record licence, revision and publishability in `docs/DECISIONS.md`; drop anything unpublishable and flag it to Rob at the gate
+- [X] T056 [P] Add XML docs on every public type in `Tau.Contract`, `Tau.Calibration`, `Tau.Client`; enable `GenerateDocumentationFile` (warnings as errors)
+- [X] T057 [P] Write `src/Tau.Runtime/appsettings.json` defaults + `docs/runtime-config.md` (every option, provider setup, CUDA deps), no secrets
+- [X] T058 Security pass: path handling for models and calibrators dirs (no traversal), request size limits (body ≤ 1 MB default, configurable), and a `npx @claude-flow/cli@latest security scan` if available (record if unavailable)
+- [X] T059 [P] Dataset licence check (FR-027): Banking77 and ≥ 2 open support-ticket datasets with urgency/priority labels; record licence, revision and publishability in `docs/DECISIONS.md`; drop anything unpublishable and flag it to Rob at the gate
 - [ ] T060 Run `scripts/build-test.ps1` from a clean `git clean -xdf` + fetch (full reproduction); fix anything found
 - [ ] T061 Re-run parity, conformance and bench from their single commands; confirm the reports regenerate within their stated variance (SC-007); commit
 - [ ] T062 Cross-check every FR/SC in spec.md against evidence and write the checklist into `docs/PROGRESS.md` (R1 gate section)

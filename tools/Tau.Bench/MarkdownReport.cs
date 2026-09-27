@@ -183,10 +183,10 @@ internal static class MarkdownReport
         sb.AppendLine("| Measurement | Model | q | p50 repeat 1 | p50 repeat 2 | Change |");
         sb.AppendLine("|---|---|---:|---:|---:|---:|");
         foreach (var m in r.Measurements)
-        foreach (var c in m.Cells)
+        foreach (var c in m.Cells.Where(c => c.Repeats.Count >= 2))
             sb.AppendLine($"| {m.Title} | {c.Model} | {c.Questions} | {F(c.Repeats[0].P50)} | {F(c.Repeats[1].P50)} | {Signed(c.P50RepeatDiffPercent)} |");
         sb.AppendLine();
-        var worst = r.Measurements.SelectMany(m => m.Cells).Max(c => Math.Abs(c.P50RepeatDiffPercent ?? 0));
+        var worst = r.Measurements.SelectMany(m => m.Cells).Where(c => c.Repeats.Count >= 2).Max(c => Math.Abs(c.P50RepeatDiffPercent ?? 0));
         sb.AppendLine($"The two timed passes ran back to back on the same process and models. The largest p50 change between them is "
                       + $"{F(worst)} %. SC-007 asks that a rerun of the command reproduces the headline figures within the variation "
                       + "a report records, and this is that variation. A change of more than a few percent means the machine wasn't "
@@ -208,7 +208,7 @@ internal static class MarkdownReport
             sb.AppendLine();
             sb.AppendLine("| Model | q | n | mean | sd | min | p50 | p95 | p99 | max |");
             sb.AppendLine("|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|");
-            foreach (var c in m.Cells)
+            foreach (var c in m.Cells.Where(c => c.Repeats.Count >= 2))
             {
                 var s = c.Repeats[0];
                 sb.AppendLine($"| {c.Model} | {c.Questions} | {s.N} | {F(s.Mean)} | {F(s.Sd)} | {F(s.Min)} | {F(s.P50)} | {F(s.P95)} | {F(s.P99)} | {F(s.Max)} |");
