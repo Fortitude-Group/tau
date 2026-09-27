@@ -1,9 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
+    <ServerGarbageCollection>false</ServerGarbageCollection>
+    <ConcurrentGarbageCollection>false</ConcurrentGarbageCollection>
+    <TieredPGO>true</TieredPGO>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Tau.Inference\Tau.Inference.csproj" />
     <ProjectReference Include="..\..\src\Tau.Client\Tau.Client.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="workload.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>
