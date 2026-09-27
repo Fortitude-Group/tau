@@ -274,8 +274,13 @@ public static class ReportBuilder
             var headline = c.Cost?.Rows.FirstOrDefault(r => r.Kind == "headline");
             var least = cascades.Where(x => x.Tau is not null && !ReferenceEquals(x, c))
                 .OrderBy(x => x.ShareLocal ?? 0).ThenBy(x => SpecOrder(spec, x.Model)).FirstOrDefault();
+            // Shares equal at the displayed precision are a tie, not a spread.
+            int tied = cascades.Count(x => x.Tau is not null && Fmt.Pct(x.ShareLocal) == Fmt.Pct(c.ShareLocal));
+            string spread = least is null ? "; "
+                : tied > 1 ? $" ({tied} models tie at that share); "
+                : $", the most of any model ({least.Model}, the least, keeps {Fmt.Pct(least.ShareLocal)}); ";
             parts.Add($"At a {Fmt.Pct(spec.Threshold.TargetError)} {target}, {c.Model} keeps {Fmt.Pct(c.ShareLocal)} of decisions local"
-                + (least is null ? "; " : $", the most of any model ({least.Model}, the least, keeps {Fmt.Pct(least.ShareLocal)}); ")
+                + spread
                 + (vsFrontier
                     ? $"the cascade's served answers agree with {fm} on {Fmt.Pct(c.BlendedAccuracy?.Rate)} (the frontier alone agrees with itself by construction)"
                     : $"the cascade is {Fmt.Pct(c.BlendedAccuracy?.Rate)} accurate against {Fmt.Pct(c.FrontierOnlyAccuracy.Rate)} for {fm} alone")

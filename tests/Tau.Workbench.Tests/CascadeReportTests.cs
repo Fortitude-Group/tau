@@ -45,6 +45,16 @@ public sealed class CascadeReportTests
     }
 
     [Fact]
+    public void ATieAtTheDisplayedShareIsCalledATie()
+    {
+        using var repo = ReportTests.FullRun();
+        WorkbenchJson.WriteJson(repo.Spec.CascadePath, new List<CascadeResult> { Crafted("model-a", 0.001, 0.9), Crafted("model-b", 0.001, 0.8) });
+        var doc = ReportBuilder.Build(repo.Spec, repo.Manifest, ReportTests.FixedContext);
+        Assert.Contains("model-a keeps 0.1% of decisions local (2 models tie at that share); ", doc.Summary, StringComparison.Ordinal);
+        Assert.DoesNotContain("the most of any model", doc.Summary, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void WithOneCascadeTheSummaryNamesNoLeast()
     {
         using var repo = ReportTests.FullRun();
