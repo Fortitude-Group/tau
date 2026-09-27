@@ -57,17 +57,33 @@ public sealed record EndpointCall
 
     /// <summary>The <c>x-tau-calibrators</c> header, when present.</summary>
     public string? Calibrators { get; init; }
+
+    /// <summary>
+    /// True when the endpoint echoed <c>x-tau-precision: full</c>, so the answer's values are unrounded; false when
+    /// it didn't, so they are rounded as the reference rounds them.
+    /// </summary>
+    public bool FullPrecision { get; init; }
 }
 
 /// <summary>
 /// The Workbench's connection to one <c>/v1/systemone</c> endpoint. Requests go through
 /// <see cref="SystemOneClient"/> (Tau.Client); a <see cref="CaptureHandler"/> in the handler chain reads the
-/// <c>x-tau-*</c> response headers, which the client itself does not expose.
+/// <c>x-tau-*</c> response headers, which the client itself does not expose. Every request asks for
+/// <c>x-tau-precision: full</c>, so the stored probabilities are the values the Runtime computed, not the 4-dp
+/// rounding, wherever the endpoint supports it.
 /// </summary>
 public sealed class WorkbenchEndpoint : IDisposable
 {
-    private static readonly IReadOnlyDictionary<string, string> RawHeaders = new Dictionary<string, string> { ["x-tau-raw"] = "true" };
-    private static readonly IReadOnlyDictionary<string, string> NoHeaders = new Dictionary<string, string>();
+    private static readonly IReadOnlyDictionary<string, string> RawHeaders = new Dictionary<string, string>
+    {
+        [TauHeaders.Raw] = "true",
+        [TauHeaders.Precision] = TauHeaders.FullPrecision,
+    };
+
+    private static readonly IReadOnlyDictionary<string, string> CalibratedHeaders = new Dictionary<string, string>
+    {
+        [TauHeaders.Precision] = TauHeaders.FullPrecision,
+    };
     private readonly HttpClient _http;
     private readonly SystemOneClient _client;
 
@@ -134,7 +150,7 @@ public sealed class WorkbenchEndpoint : IDisposable
         var sw = Stopwatch.StartNew();
         try
         {
-            var response = await _client.SystemOneAsync(request, raw ? RawHeaders : NoHeaders, ct).ConfigureAwait(false);
+            var response = await _client.SystemOneAsync(request, raw ? RawHeaders : CalibratedHeaders, ct).ConfigureAwait(false);
             return Build(capture, sw.Elapsed.TotalMilliseconds) with { Response = response };
         }
         catch (SystemOneHttpException e)
@@ -177,6 +193,7 @@ public sealed class WorkbenchEndpoint : IDisposable
         Truncated = c.Header("x-tau-truncated") is { } t ? string.Equals(t, "true", StringComparison.OrdinalIgnoreCase) : null,
         ModelHash = c.Header("x-tau-model-hash"),
         Calibrators = c.Header("x-tau-calibrators"),
+        FullPrecision = string.Equals(c.Header(TauHeaders.Precision)?.Trim(), TauHeaders.FullPrecision, StringComparison.OrdinalIgnoreCase),
     };
 
     private static string Trim(string s) => s.Length <= 2000 ? s : s[..2000] + "...";

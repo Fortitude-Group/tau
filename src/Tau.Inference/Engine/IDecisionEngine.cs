@@ -4,7 +4,12 @@ namespace Tau.Inference.Engine;
 
 /// <summary>Per-request options that sit outside the contract (carried in <c>x-tau-*</c> headers).</summary>
 /// <param name="Raw">Skip Tau calibrators and return the reference post-processing (<c>x-tau-raw: true</c>).</param>
-public sealed record DecisionOptions(bool Raw = false);
+/// <param name="FullPrecision">
+/// Report every value in the answers unrounded, as the engine computed it, instead of rounded as the reference does
+/// (<c>x-tau-precision: full</c>). The Workbench asks for it so calibrators are fitted on the same values the Runtime
+/// applies them to.
+/// </param>
+public sealed record DecisionOptions(bool Raw = false, bool FullPrecision = false);
 
 /// <summary>Diagnostics for one answered request: telemetry and <c>x-tau-*</c> response headers.</summary>
 /// <param name="ModelId">Resolved Tau model id.</param>

@@ -82,6 +82,7 @@ public sealed class CliTests
     [InlineData(new[] { "run", "a.yaml", "--phase", "calibrated" }, "only applies to 'measure'")]
     [InlineData(new[] { "measure", "a.yaml", "--phase", "cooked" }, "--phase must be")]
     [InlineData(new[] { "run", "a.yaml", "--verbose" }, "unknown or incomplete option")]
+    [InlineData(new[] { "measure", "a.yaml", "--force" }, "--force only applies to 'run'")]
     public async Task BadArgumentsExitOneWithTheProblem(string[] args, string expected)
     {
         var (exit, _, err) = await Tau(args);
@@ -127,6 +128,30 @@ public sealed class CliTests
         var report = JsonNode.Parse(File.ReadAllText(repo.Spec.ReportJsonPath))!;
         Assert.Equal("tau run examples/demo/decision.yaml", (string)report["metadata"]!["command"]!);
         Assert.NotNull(report["cascades"]![0]!["cost"]);
+    }
+
+    [Fact]
+    public async Task RunForceRemeasuresAndRefitsCurrentStages()
+    {
+        // Runs recorded before x-tau-precision look current by file time; --force re-measures them at full precision.
+        using var repo = TestRepo.Create(calibration: 240, heldOut: 120, altSubset: 10, targetError: 0.25);
+        var rounding = ModelStub();
+        await Tau(["run", repo.SpecPath], With(rounding));
+        AnswerEverything(repo);
+        Assert.Contains("Probabilities rounded to 4 dp by the endpoint; calibrators fitted on rounded values.",
+            File.ReadAllText(repo.Spec.ReportHtmlPath), StringComparison.Ordinal);
+
+        var honouring = new StubSystemOne { Probabilities = ModelStub().Probabilities, HonoursPrecision = true };
+        var plain = await Tau(["run", repo.SpecPath], With(honouring));
+        Assert.Contains("model-a raw: skipped (current)", plain.Out, StringComparison.Ordinal);
+
+        var forced = await Tau(["run", repo.SpecPath, "--force"], With(honouring));
+        Assert.Equal(0, forced.Exit);
+        Assert.DoesNotContain("model-a raw: skipped (current)", forced.Out, StringComparison.Ordinal);
+        Assert.DoesNotContain("calibrate: model-a: skipped (current)", forced.Out, StringComparison.Ordinal);
+        Assert.Equal(Precisions.Full, WorkbenchJson.ReadJson<MeasureSummary>(repo.Spec.RunSummaryPath("model-a", "calibration", Phases.Raw)).Precision);
+        Assert.Equal(Precisions.Full, WorkbenchJson.ReadJson<Calibrate.CalibrationSummary>(repo.Spec.CalibrationSummaryPath("model-a")).RawPrecision);
+        Assert.DoesNotContain("calibrators fitted on rounded values", File.ReadAllText(repo.Spec.ReportHtmlPath), StringComparison.Ordinal);
     }
 
     [Fact]

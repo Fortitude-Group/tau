@@ -59,7 +59,13 @@ public static partial class HtmlReport
                 }),
                 Phases.Offline => "Workbench applied the calibrator offline; the Runtime's calibrated phase has not run",
                 _ => "not calibrated yet",
-            }).Append("</td></tr>\n");
+            });
+            if (m.Calibration is { } fit && Precisions.CalibratorNote(fit.RawPrecision) is { } precisionNote)
+            {
+                sb.Append(". ").Append(E(precisionNote));
+            }
+
+            sb.Append("</td></tr>\n");
         }
 
         sb.Append("</tbody></table></div>\n<p class=\"caption\">Held-out items only. ECE (expected calibration error) is the average gap between how confident a model is and how often it is right, over 15 confidence bins; lower is better and 0 is perfect. ")

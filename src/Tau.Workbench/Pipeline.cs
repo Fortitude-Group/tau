@@ -31,6 +31,13 @@ public sealed record PipelineOptions
 
     /// <summary>The clock for calibrator provenance.</summary>
     public Func<DateTimeOffset> Clock { get; init; } = () => DateTimeOffset.UtcNow;
+
+    /// <summary>
+    /// <c>tau run --force</c>: re-measure the raw phase and re-fit even when their outputs look current. File times
+    /// can't tell that stored runs were rounded by an endpoint that now honours <c>x-tau-precision: full</c>. The
+    /// calibrated phase needs no forcing: re-fitting rewrites the calibrator files, which makes it stale.
+    /// </summary>
+    public bool Force { get; init; }
 }
 
 /// <summary>Exit codes, per the contract: 0 success, 1 error, 2 blocked.</summary>
@@ -200,7 +207,7 @@ public static class Pipeline
     /// <summary>
     /// <c>tau run</c>: label, measure (raw), calibrate, the calibrated phase when the Runtime has the
     /// calibrators loaded, threshold, cascade and report. Measure and calibrate are skipped when their
-    /// outputs are newer than their inputs. Returns 2 when frontier answers are pending (after still
+    /// outputs are newer than their inputs, unless <see cref="PipelineOptions.Force"/> is set. Returns 2 when frontier answers are pending (after still
     /// producing everything that doesn't need them), 0 otherwise.
     /// </summary>
     /// <param name="spec">The decision spec.</param>
@@ -234,7 +241,7 @@ public static class Pipeline
             foreach (var model in spec.Models)
             {
                 var rawOutputs = Outputs(spec, model, Phases.Raw);
-                if (Staleness.IsCurrent(splitFiles, rawOutputs))
+                if (!options.Force && Staleness.IsCurrent(splitFiles, rawOutputs))
                 {
                     o.WriteLine($"measure: {model} raw: skipped (current).");
                 }
@@ -246,7 +253,7 @@ public static class Pipeline
                 }
 
                 var calibrateOutputs = new[] { spec.CalibrationSummaryPath(model) }.Concat(Outputs(spec, model, Phases.Offline)).ToArray();
-                if (Staleness.IsCurrent(rawOutputs.Concat(labelFiles), calibrateOutputs))
+                if (!options.Force && Staleness.IsCurrent(rawOutputs.Concat(labelFiles), calibrateOutputs))
                 {
                     o.WriteLine($"calibrate: {model}: skipped (current).");
                 }

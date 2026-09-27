@@ -36,6 +36,12 @@ public sealed record CalibrationSummary
     /// <summary>The dataset manifest's sha256 (the calibrators' dataset revision).</summary>
     public required string DatasetRevision { get; init; }
 
+    /// <summary>
+    /// The precision of the raw calibration probabilities the calibrators were fitted on (see
+    /// <see cref="Precisions"/>); null for a fit on a run recorded before the Workbench asked for full precision.
+    /// </summary>
+    public string? RawPrecision { get; init; }
+
     /// <summary>The calibrators written.</summary>
     public required IReadOnlyList<WrittenCalibrator> Calibrators { get; init; }
 
@@ -105,6 +111,11 @@ public static class CalibrateStage
         }
 
         var notes = new List<string>();
+        if (Precisions.CalibratorNote(rawSummary.Precision) is { } precisionNote)
+        {
+            notes.Add(precisionNote);
+        }
+
         var written = new List<WrittenCalibrator>();
         var typeWire = q.Type.ToWireString();
         written.Add(Write(spec, dir, model, modelHash, manifest, date, probs, gold, null, $"{model}.{typeWire}.calibrator.json", "question type"));
@@ -153,6 +164,7 @@ public static class CalibrateStage
             Model = model,
             Reference = reference.Kind,
             ModelHash = modelHash,
+            RawPrecision = rawSummary.Precision,
             DatasetRevision = manifest.Sha256,
             Calibrators = written,
             ExcludedFailures = records.Count - usable.Length,
@@ -186,11 +198,13 @@ public static class CalibrateStage
             ? r.WithVector(q, cal.ApplyToProbabilities(v)) with { LatencyMs = 0, ModelMs = null, Calibrators = null, ModelHash = null }
             : r with { LatencyMs = 0, ModelMs = null, Calibrators = null, ModelHash = null }).ToArray();
         var scored = MeasureStage.Summarise(spec, model, split, Phases.Offline, reference.Apply(q, split, offline));
+        var rawSummaryPath = spec.RunSummaryPath(model, split, Phases.Raw);
         var summary = scored with
         {
             StartedUtc = "",
             Reference = reference.Kind,
             ModelHash = calibrator.ModelHash,
+            Precision = File.Exists(rawSummaryPath) ? WorkbenchJson.ReadJson<MeasureSummary>(rawSummaryPath).Precision : null,
             ExclusionNote = "Offline: the Workbench applied the fitted calibrator to the raw probabilities; no endpoint was called. " + scored.ExclusionNote,
         };
         WorkbenchJson.WriteJsonl(spec.RunPath(model, split, Phases.Offline), offline);

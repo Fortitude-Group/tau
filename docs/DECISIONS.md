@@ -6,6 +6,45 @@ this file records the ones I made so the trail is auditable.
 
 ---
 
+## 2026-09-27 · Calibrators were fitted on rounded probabilities
+
+- **The bug:** the Runtime rounds every probability to 4 dp, as the reference runtimes do. The
+  Workbench fitted calibrators on that rounded raw output. The Runtime applies the same calibrator
+  to the unrounded reference probabilities. So the fit and the application saw different inputs.
+- **Why it mattered on Banking77:** with 77 options most probabilities round to 0.0000 and get
+  floored at 1e-6. laya-en's fitted T of 3.05 turns that floor into about 0.01, while the true tiny
+  values become about 0.03. Against the committed runs (`heldout.calibrated.jsonl` against
+  `heldout.offline.jsonl`), 45% of laya-en's items differ by more than 0.01 on some option (max
+  0.12). von-1.2.0 is at 34% (max 0.15). The fine-tune reaches a max of 0.024.
+- **How it was found:** the report's own "matches the Workbench's offline calibration to within X"
+  figure was far larger than rounding explains.
+- **Why the test missed it:** the endpoint case in `CalibratorEquivalenceTests` skipped any item with
+  a probability under 0.01. That is almost every real 77-option item.
+- **The fix, Runtime:** a request header `x-tau-precision: full` makes every value in the answers
+  unrounded. The Runtime echoes the header when it honoured it. Without the header, raw answers are
+  byte-identical to before, so parity, conformance and determinism are untouched.
+- **The fix, calibrated answers:** two small changes, so that the rounded calibrated answer is
+  exactly the full-precision one rounded to 4 dp.
+  - The answer is now rounded from the calibrator's double output, not from a float32 cast of it.
+  - A noul calibrator now sees `[1 − P(true), P(true)]` built from the one number the answer reports,
+    not the float32 P(false) nobody outside the engine sees. For P(true) close to 1 those differ by
+    far more than rounding.
+  - Either change can move a calibrated value by one step in the 4th decimal place, rarely.
+- **The fix, Workbench:** measure sends `x-tau-precision: full` on every request, raw and calibrated.
+  Each summary records whether the endpoint honoured it (`precision`: full, rounded or mixed).
+  Endpoints that don't (Jev, Kev) still work, and the calibration summary and report say
+  "Probabilities rounded to 4 dp by the endpoint; calibrators fitted on rounded values."
+- **Staleness:** `tau run --force` re-measures the raw phase and re-fits even when file times say
+  the outputs are current. I picked this over a precision-aware staleness check because that check
+  would need a probe call to the endpoint on every run, even a fully current one.
+- **The corrected claim:** "the Workbench and the Runtime agree within 2.4e-4 through the endpoint"
+  was measured only on unsaturated inputs. On realistic inputs they didn't agree. With full
+  precision the rebuilt test, which includes 77-option items and skips nothing, finds a max
+  difference of 1.1e-16, against a tolerance of 1e-9. Without it the same items differ by 0.025
+  (laya-en) and 0.071 (von-1.2.0) with the example's own calibrators.
+**Reason:** a calibrator is only calibrated for the input it was fitted on. The committed Banking77
+numbers need a re-run with `tau run --force` against a Runtime with this change.
+
 ## 2026-09-27 · History rewritten before the repository went public
 
 Before making the repository public, a handful of personal planning notes were reworded throughout the

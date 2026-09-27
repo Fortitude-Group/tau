@@ -149,18 +149,22 @@ public sealed class OnnxDecisionEngine : IDecisionEngine, IDisposable
 
         var answers = new OrderedDictionary<string, Answer>();
         var applied = new List<string>();
+        var full = options.FullPrecision;
         for (var i = 0; i < rows.Count; i++)
         {
             var q = rows[i].Question;
             if (Find(model.Package.Id, q.Type, logits[i].Length, options) is not { } file)
             {
-                answers[q.Key] = post.Decode(q.Type, q.Labels, logits[i]);
+                answers[q.Key] = post.Decode(q.Type, q.Labels, logits[i], full);
                 continue;
             }
 
-            // Noul comes back as [false, true], so FromProbabilities still reads P(true) from index 1.
-            var cal = Calibrate(file, post.ReferenceProbabilities(q.Type, logits[i]), applied);
-            answers[q.Key] = post.FromProbabilities(q.Type, q.Labels, cal, Numerics.ArgMaxTie(cal));
+            // Noul is [false, true]: the calibrator sees [1 − P(true), P(true)], exactly what a raw answer reports,
+            // and FromProbabilities still reads P(true) from index 1.
+            var reference = post.ReferenceProbabilities(q.Type, logits[i]);
+            var cal = Calibrate(file, q.Type == "noul" ? NoulInput(reference[1], trueFirst: false) : Numerics.Widen(reference), applied);
+            // The answer reports cal (rounded unless full precision); the argmax keeps the float32 tie rule.
+            answers[q.Key] = post.FromProbabilities(q.Type, q.Labels, cal, Numerics.ArgMaxTie(Numerics.Narrow(cal)), full);
         }
 
         var tokens = rows.Sum(r => r.InputIds.Length);
@@ -182,6 +186,7 @@ public sealed class OnnxDecisionEngine : IDecisionEngine, IDisposable
 
         var answers = new OrderedDictionary<string, Answer>();
         var applied = new List<string>();
+        var full = options.FullPrecision;
         for (var i = 0; i < rows.Count; i++)
         {
             var row = rows[i];
@@ -193,20 +198,23 @@ public sealed class OnnxDecisionEngine : IDecisionEngine, IDisposable
                     var file = Find(model.Package.Id, "choice", logits[i].Length, options);
                     if (file is null)
                     {
-                        answers[q.Key] = post.Choice(q.Labels, logits[i], stateTokens);
+                        answers[q.Key] = post.Choice(q.Labels, logits[i], stateTokens, full);
                         break;
                     }
-                    var cal = Calibrate(file, post.ReferenceProbabilities(logits[i], stateTokens, q.Labels.Count), applied);
-                    answers[q.Key] = VonPostProcessor.FromChoiceProbabilities(q.Labels, cal, Numerics.ArgMaxTie(cal));
+                    var cal = Calibrate(file, Numerics.Widen(post.ReferenceProbabilities(logits[i], stateTokens, q.Labels.Count)), applied);
+                    answers[q.Key] = VonPostProcessor.FromChoiceProbabilities(q.Labels, cal, Numerics.ArgMaxTie(Numerics.Narrow(cal)), full);
                     break;
                 }
                 case VonRowKind.Score:
                 {
                     var file = Find(model.Package.Id, "score", logits[i].Length, options);
-                    answers[q.Key] = file is null
-                        ? post.Score(q.Labels, logits[i], stateTokens)
-                        : VonPostProcessor.FromScoreProbabilities(q.Labels,
-                            Calibrate(file, post.ReferenceProbabilities(logits[i], stateTokens, q.Labels.Count), applied));
+                    if (file is null)
+                    {
+                        answers[q.Key] = post.Score(q.Labels, logits[i], stateTokens, full);
+                        break;
+                    }
+                    var cal = Calibrate(file, Numerics.Widen(post.ReferenceProbabilities(logits[i], stateTokens, q.Labels.Count)), applied);
+                    answers[q.Key] = VonPostProcessor.FromScoreProbabilities(q.Labels, cal, full);
                     break;
                 }
                 case VonRowKind.Noul:
@@ -214,11 +222,18 @@ public sealed class OnnxDecisionEngine : IDecisionEngine, IDisposable
                     var hasNull = i + 1 < rows.Count && rows[i + 1].Kind == VonRowKind.NoulNull;
                     var nullLogits = hasNull ? logits[i + 1] : [];
                     var file = Find(model.Package.Id, "noul", 2, options);
-                    // Von's noul probabilities are [true, false] (after the prior correction), so P(true) stays at index 0.
-                    answers[q.Key] = file is null
-                        ? post.Noul(logits[i], nullLogits, stateTokens)
-                        : VonPostProcessor.FromNoulProbabilities(
-                            Calibrate(file, post.NoulReferenceProbabilities(logits[i], nullLogits, stateTokens), applied));
+                    // Von's noul probabilities are [true, false] (after the prior correction), so P(true) stays at
+                    // index 0. The calibrator sees [P(true), 1 − P(true)], exactly what a raw answer reports.
+                    if (file is null)
+                    {
+                        answers[q.Key] = post.Noul(logits[i], nullLogits, stateTokens, full);
+                    }
+                    else
+                    {
+                        var pTrue = post.NoulReferenceProbabilities(logits[i], nullLogits, stateTokens)[0];
+                        var cal = Calibrate(file, NoulInput(pTrue, trueFirst: true), applied);
+                        answers[q.Key] = VonPostProcessor.FromNoulProbabilities(cal, full);
+                    }
                     if (hasNull) i++;
                     break;
                 }
@@ -239,21 +254,29 @@ public sealed class OnnxDecisionEngine : IDecisionEngine, IDisposable
 
     /// <summary>
     /// Applies a calibrator to the question's reference probabilities, the unrounded vector a raw answer reports
-    /// (format v1 semantics, research R-01), and records it as applied.
+    /// (format v1 semantics, research R-01), and records it as applied. Returns the calibrator's unrounded output.
     /// </summary>
-    private float[] Calibrate(CalibratorFile file, float[] referenceProbabilities, List<string> applied)
+    private double[] Calibrate(CalibratorFile file, double[] reference, List<string> applied)
     {
-        var reference = referenceProbabilities.Select(x => (double)x).ToArray();
         var p = new Calibrator(file).ApplyToProbabilities(reference);
         CalibrationObserver?.Invoke(new CalibrationTrace(file, reference, p));
         var id = file.Bucket is { } b ? $"{file.Model}:{file.QuestionType.ToWireString()}:{b.ToWireString()}" : $"{file.Model}:{file.QuestionType.ToWireString()}";
         if (!applied.Contains(id)) applied.Add(id);
-        return p.Select(x => (float)x).ToArray();
+        return p;
     }
 
     /// <summary>
+    /// The calibrator input for a noul question: a noul answer reports only P(true), so the input is built from that
+    /// one number, the way the Workbench reads a raw answer, rather than from the float32 P(false) the answer never
+    /// shows. Fitting and applying then see the same vector.
+    /// </summary>
+    private static double[] NoulInput(double pTrue, bool trueFirst) =>
+        trueFirst ? [pTrue, 1 - pTrue] : [1 - pTrue, pTrue];
+
+
+    /// <summary>
     /// Test hook (SC-007): called with every calibrator application, holding the unrounded reference vector the
-    /// calibrator was given and its unrounded output, before the float cast and the answer's rounding. Null in
+    /// calibrator was given and its unrounded output, before the answer's rounding. Null in
     /// production.
     /// </summary>
     internal Action<CalibrationTrace>? CalibrationObserver { get; set; }
@@ -276,5 +299,5 @@ public sealed class OnnxDecisionEngine : IDecisionEngine, IDisposable
 /// <summary>One calibrator application inside the engine (see <c>OnnxDecisionEngine.CalibrationObserver</c>).</summary>
 /// <param name="File">The calibrator applied.</param>
 /// <param name="Reference">The unrounded reference probabilities it was given, in the model's option order.</param>
-/// <param name="Calibrated">Its unrounded output, before the float cast and the answer's rounding.</param>
+/// <param name="Calibrated">Its unrounded output, before the answer's rounding (a full-precision answer reports it as is).</param>
 internal sealed record CalibrationTrace(CalibratorFile File, double[] Reference, double[] Calibrated);

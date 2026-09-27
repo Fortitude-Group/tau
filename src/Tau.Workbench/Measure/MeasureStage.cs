@@ -144,6 +144,7 @@ public static class MeasureStage
         var started = options.Clock();
         var (sampler, gpuReason) = options.StartGpuSampler();
         var records = new MeasuredItem[items.Count];
+        var fullPrecision = new bool[items.Count];
         var wall = Stopwatch.StartNew();
         using (var gate = new SemaphoreSlim(Math.Max(1, options.Concurrency)))
         {
@@ -154,6 +155,7 @@ public static class MeasureStage
                 {
                     var call = await endpoint.DecideAsync(BuildRequest(spec.Question, model, item.Text), phase == Phases.Raw, ct).ConfigureAwait(false);
                     records[index] = ToRecord(spec.Question, item, call);
+                    fullPrecision[index] = call.FullPrecision;
                 }
                 finally
                 {
@@ -187,6 +189,9 @@ public static class MeasureStage
             ModelHash = identity.HashOf(model),
             ModelHashesSeen = records.Where(r => r.ModelHash is not null).Select(r => r.ModelHash!).Distinct().Order(StringComparer.Ordinal).ToArray(),
             CalibratorsSeen = calibratorsSeen,
+            Precision = Precisions.Of(
+                records.Where((r, i) => r.Error is null && fullPrecision[i]).Count(),
+                records.Count(r => r.Error is null)),
             DurationSeconds = duration,
             Concurrency = Math.Max(1, options.Concurrency),
             Gpu = gpu,

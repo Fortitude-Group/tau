@@ -77,6 +77,37 @@ public sealed class MeasureTests
         Assert.Equal(["model-a.choice"], s.CalibratorsSeen);
     }
 
+    [Theory]
+    [InlineData(true, Precisions.Full)]
+    [InlineData(false, Precisions.Rounded)]
+    public async Task EveryRequestAsksForFullPrecisionAndTheSummaryRecordsWhetherItWasHonoured(bool honours, string expected)
+    {
+        using var repo = TestRepo.Create(heldOut: 5);
+        var raw = new StubSystemOne { HonoursPrecision = honours };
+        var rawSummary = await Measure(repo, raw);
+        var calibrated = new StubSystemOne { HonoursPrecision = honours, Calibrators = "model-a.choice" };
+        var calSummary = await Measure(repo, calibrated, phase: Phases.Calibrated);
+
+        Assert.Equal(5, raw.PrecisionRequested.Count);
+        Assert.All(raw.PrecisionRequested, Assert.True);
+        Assert.All(calibrated.PrecisionRequested, Assert.True);
+        Assert.Equal(expected, rawSummary.Precision);
+        Assert.Equal(expected, calSummary.Precision);
+        Assert.Equal(expected, WorkbenchJson.ReadJson<MeasureSummary>(repo.Spec.RunSummaryPath("model-a", "heldout", Phases.Raw)).Precision);
+    }
+
+    [Fact]
+    public void PrecisionOfAPhaseAndItsCalibratorNote()
+    {
+        Assert.Equal(Precisions.Full, Precisions.Of(3, 3));
+        Assert.Equal(Precisions.Rounded, Precisions.Of(0, 3));
+        Assert.Equal(Precisions.Mixed, Precisions.Of(1, 3));
+        Assert.Null(Precisions.CalibratorNote(Precisions.Full));
+        Assert.Equal("Probabilities rounded to 4 dp by the endpoint; calibrators fitted on rounded values.", Precisions.CalibratorNote(Precisions.Rounded));
+        Assert.Contains("calibrators fitted on rounded values", Precisions.CalibratorNote(null), StringComparison.Ordinal);
+        Assert.Contains("fitted partly on rounded values", Precisions.CalibratorNote(Precisions.Mixed), StringComparison.Ordinal);
+    }
+
     [Fact]
     public async Task FailuresAreRecordedExcludedAndCounted()
     {

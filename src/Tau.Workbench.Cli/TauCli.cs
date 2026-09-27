@@ -16,7 +16,7 @@ internal static class TauCli
 tau: measure, calibrate and cost any /v1/systemone endpoint against a labelled decision.
 
 Usage:
-  tau <stage> <decision.yaml> [--endpoint URL] [--phase raw|calibrated]
+  tau <stage> <decision.yaml> [--endpoint URL] [--phase raw|calibrated] [--force]
 
 Stages:
   label      Ingest cached frontier answers and export pending batches (exit 2 while any are pending).
@@ -31,6 +31,8 @@ Stages:
 Options:
   --endpoint URL   Measure this endpoint instead of the one in the spec.
   --phase PHASE    For 'measure': raw (default) or calibrated.
+  --force          For 'run': re-measure the raw phase and re-fit even when their outputs look current
+                   (for example after the endpoint started honouring x-tau-precision: full).
   -h, --help       Show this help.
   --version        Show the version.
 
@@ -59,7 +61,7 @@ The Workbench never calls a paid API: frontier answers arrive as files in fronti
             return ExitCodes.Ok;
         }
 
-        if (!Parse(args, out var stage, out var specPath, out var endpoint, out var phase, out var problem))
+        if (!Parse(args, out var stage, out var specPath, out var endpoint, out var phase, out var force, out var problem))
         {
             stderr.WriteLine($"tau: {problem}");
             stderr.WriteLine("Run 'tau --help' for usage.");
@@ -72,6 +74,7 @@ The Workbench never calls a paid API: frontier answers arrive as files in fronti
             var options = new PipelineOptions
             {
                 Endpoint = endpoint,
+                Force = force,
                 Out = stdout,
                 Report = new ReportContext { Command = CommandLine(spec, stage!, args) },
             };
@@ -100,12 +103,13 @@ The Workbench never calls a paid API: frontier answers arrive as files in fronti
     }
 
     /// <summary>Parses the arguments; false (with a problem) for anything malformed.</summary>
-    internal static bool Parse(string[] args, out string? stage, out string? specPath, out Uri? endpoint, out string phase, out string? problem)
+    internal static bool Parse(string[] args, out string? stage, out string? specPath, out Uri? endpoint, out string phase, out bool force, out string? problem)
     {
         stage = args.Length > 0 ? args[0] : null;
         specPath = null;
         endpoint = null;
         phase = Phases.Raw;
+        force = false;
         problem = null;
         if (stage is null || !Stages.Contains(stage))
         {
@@ -139,6 +143,15 @@ The Workbench never calls a paid API: frontier answers arrive as files in fronti
                         return false;
                     }
 
+                    break;
+                case "--force":
+                    if (stage != "run")
+                    {
+                        problem = "--force only applies to 'run' (the other stages never skip work).";
+                        return false;
+                    }
+
+                    force = true;
                     break;
                 case var a when a.StartsWith('-'):
                     problem = $"unknown or incomplete option '{a}'.";
@@ -175,6 +188,10 @@ The Workbench never calls a paid API: frontier answers arrive as files in fronti
             {
                 rest.Add(args[i]);
                 rest.Add(args[++i]);
+            }
+            else if (args[i] == "--force")
+            {
+                rest.Add(args[i]);
             }
         }
 

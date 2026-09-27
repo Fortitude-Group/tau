@@ -34,8 +34,9 @@ public sealed class LayaPostProcessor
     /// <param name="type">choice, score or noul.</param>
     /// <param name="labels">Choice keys in order, or score legend texts in order; ignored for noul.</param>
     /// <param name="logits">The question's k option logits (padding slots already removed).</param>
-    public Answer Decode(string type, IReadOnlyList<string> labels, ReadOnlySpan<float> logits) =>
-        FromProbabilities(type, labels, ReferenceProbabilities(type, logits), Numerics.ArgMaxTie(logits));
+    /// <param name="fullPrecision">True to report the values unrounded (<c>x-tau-precision: full</c>).</param>
+    public Answer Decode(string type, IReadOnlyList<string> labels, ReadOnlySpan<float> logits, bool fullPrecision = false) =>
+        FromProbabilities(type, labels, Numerics.Widen(ReferenceProbabilities(type, logits)), Numerics.ArgMaxTie(logits), fullPrecision);
 
     /// <summary>
     /// The reference probability vector for one question: the float32 softmax of the logits divided by the
@@ -48,27 +49,31 @@ public sealed class LayaPostProcessor
         Numerics.SoftmaxF32(Numerics.Scale(logits, TemperatureFor(type, logits.Length)));
 
     /// <summary>
-    /// Builds the contract answer from probabilities (the reference's output, or a Tau calibrator's).
+    /// Builds the contract answer from probabilities (the reference's output, or a Tau calibrator's). The reference
+    /// computes in float32, so a caller reproducing it passes float32 values widened to double; the entropy
+    /// confidence is always computed in float32.
     /// </summary>
     /// <param name="type">choice, score or noul.</param>
     /// <param name="labels">Choice keys or score legend texts, in order.</param>
     /// <param name="p">Probabilities over the k options (noul: [false, true]).</param>
     /// <param name="argMax">Index of the chosen option.</param>
-    public Answer FromProbabilities(string type, IReadOnlyList<string> labels, ReadOnlySpan<float> p, int argMax)
+    /// <param name="fullPrecision">True to report every value unrounded (<c>x-tau-precision: full</c>).</param>
+    public Answer FromProbabilities(string type, IReadOnlyList<string> labels, ReadOnlySpan<double> p, int argMax, bool fullPrecision = false)
     {
         var k = p.Length;
+        double Round(double x) => Numerics.Report(x, _post.Rounding, fullPrecision);
         switch (type)
         {
             case "choice":
             {
                 var probs = new OrderedDictionary<string, double>(k);
                 for (var i = 0; i < k; i++) probs[labels[i]] = Round(p[i]);
-                return new ChoiceAnswer { Choice = labels[argMax], Probabilities = probs, Confidence = Round(EntropyConfidence(p)) };
+                return new ChoiceAnswer { Choice = labels[argMax], Probabilities = probs, Confidence = Round(EntropyConfidence(Numerics.Narrow(p))) };
             }
             case "score":
             {
                 double expected = 0;
-                for (var i = 0; i < k; i++) expected += i * (double)p[i];  // int64 × float32 → float64 in NumPy
+                for (var i = 0; i < k; i++) expected += i * p[i];  // int64 × float32 → float64 in NumPy
                 var probs = new OrderedDictionary<string, double>(k);
                 var legend = new OrderedDictionary<string, string>(k);
                 for (var i = 0; i < k; i++)
@@ -76,7 +81,7 @@ public sealed class LayaPostProcessor
                     probs[i.ToString(System.Globalization.CultureInfo.InvariantCulture)] = Round(p[i]);
                     legend[i.ToString(System.Globalization.CultureInfo.InvariantCulture)] = labels[i];
                 }
-                return new ScoreAnswer { Score = Round(expected), Legend = legend, Probabilities = probs, Confidence = Round(EntropyConfidence(p)) };
+                return new ScoreAnswer { Score = Round(expected), Legend = legend, Probabilities = probs, Confidence = Round(EntropyConfidence(Numerics.Narrow(p))) };
             }
             case "noul":
                 return new NoulAnswer { Noul = Round(p[1]) };
@@ -94,6 +99,4 @@ public sealed class LayaPostProcessor
         var c = 1f - (float)(Numerics.EntropyF32(p) / Math.Log(k));
         return Math.Clamp(c, 0f, 1f);
     }
-
-    private double Round(double x) => Numerics.PyRound(x, _post.Rounding);
 }

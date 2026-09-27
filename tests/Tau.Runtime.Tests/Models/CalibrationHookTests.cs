@@ -95,6 +95,42 @@ public sealed class CalibrationHookTests : IDisposable
     }
 
     [Fact]
+    public async Task Full_precision_calibrated_choice_equals_the_calibrator_applied_to_the_full_precision_raw_response()
+    {
+        // With x-tau-precision: full on both calls, the rounding gap closes: fitting and applying see one vector.
+        var file = CalibratorFile.CreateTemperature("laya-en", LayaEnHash(), QuestionType.Choice, null, 2.0, Fitted);
+        file.Write(Path.Combine(_dir, "laya-en-choice.calibrator.json"));
+        await using var factory = new RealEngineFactory { Settings = new() { ["Tau:CalibratorsDirectory"] = _dir, ["Tau:Models:0"] = "laya-en" } };
+        var client = factory.CreateClient();
+        var body = Http.Request("laya-en", Ticket, Http.Three);
+
+        var (_, calBody, calRes) = await Http.PostAsync(client, body, r => r.Headers.Add("x-tau-precision", "full"));
+        var (_, rawBody, rawRes) = await Http.PostAsync(client, body, r =>
+        {
+            r.Headers.Add("x-tau-raw", "true");
+            r.Headers.Add("x-tau-precision", "full");
+        });
+        var (_, roundedBody, roundedRes) = await Http.PostAsync(client, body);
+        Http.AssertContractValid(calBody);
+        Http.AssertContractValid(rawBody);
+        Assert.Equal("full", calRes.Headers.GetValues("x-tau-precision").Single());
+        Assert.Equal("full", rawRes.Headers.GetValues("x-tau-precision").Single());
+        Assert.False(roundedRes.Headers.Contains("x-tau-precision"));
+        double[] Probs(string json) => JsonNode.Parse(json)!["answers"]!["queue"]!["probabilities"]!.AsObject()
+            .Select(kv => kv.Value!.GetValue<double>()).ToArray();
+
+        var expected = new Calibrator(file).ApplyToProbabilities(Probs(rawBody));
+        var actual = Probs(calBody);
+        var rounded = Probs(roundedBody);
+        Assert.Equal(expected.Length, actual.Length);
+        for (var i = 0; i < expected.Length; i++)
+        {
+            Assert.Equal(expected[i], actual[i], 1e-9);
+            Assert.Equal(Math.Round(actual[i], 4, MidpointRounding.ToEven), rounded[i], 1e-12);
+        }
+    }
+
+    [Fact]
     public async Task Isotonic_calibrator_is_applied_and_renormalised()
     {
         CalibratorFile.CreateIsotonic("laya-en", LayaEnHash(), QuestionType.Choice, null,

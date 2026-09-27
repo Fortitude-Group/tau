@@ -15,6 +15,41 @@ public static class Phases
     public const string Offline = "offline";
 }
 
+/// <summary>
+/// The precision of a phase's stored probabilities. The Workbench asks for <c>x-tau-precision: full</c> on every
+/// request; a Tau Runtime honours it, other endpoints (Jev, Kev) round to 4 dp regardless.
+/// </summary>
+public static class Precisions
+{
+    /// <summary>Every answer was unrounded (the endpoint echoed <c>x-tau-precision: full</c>).</summary>
+    public const string Full = "full";
+
+    /// <summary>No answer was unrounded: the endpoint rounded them.</summary>
+    public const string Rounded = "rounded";
+
+    /// <summary>Some answers were unrounded and some weren't.</summary>
+    public const string Mixed = "mixed";
+
+    /// <summary>The precision of a phase from how many of its answered calls honoured full precision.</summary>
+    /// <param name="honoured">Answered calls that echoed <c>x-tau-precision: full</c>.</param>
+    /// <param name="answered">Answered calls.</param>
+    public static string Of(int honoured, int answered) =>
+        answered > 0 && honoured == answered ? Full : honoured == 0 ? Rounded : Mixed;
+
+    /// <summary>
+    /// What a phase's precision means for calibrators fitted on it, or null when they were fitted on unrounded values.
+    /// A null precision is a run recorded before the Workbench asked for full precision, so it was rounded.
+    /// </summary>
+    /// <param name="precision">The raw phase's precision.</param>
+    public static string? CalibratorNote(string? precision) => precision switch
+    {
+        Full => null,
+        Mixed => "Some probabilities were rounded to 4 dp by the endpoint, so the calibrators were fitted partly on rounded values.",
+        Rounded => "Probabilities rounded to 4 dp by the endpoint; calibrators fitted on rounded values.",
+        _ => "Probabilities rounded to 4 dp by the endpoint (measured before the Workbench asked for x-tau-precision: full); calibrators fitted on rounded values. Re-measure with 'tau run --force' to fit on unrounded values.",
+    };
+}
+
 /// <summary>A failed call, excluded from metrics.</summary>
 /// <param name="Status">HTTP status, or 0 for a connection failure or timeout.</param>
 /// <param name="Body">The response body or error message (truncated to 2,000 characters).</param>
@@ -151,6 +186,13 @@ public sealed record MeasureSummary
 
     /// <summary>Distinct <c>x-tau-calibrators</c> values seen in responses.</summary>
     public IReadOnlyList<string> CalibratorsSeen { get; init; } = [];
+
+    /// <summary>
+    /// Whether the stored probabilities are unrounded: <see cref="Precisions.Full"/>,
+    /// <see cref="Precisions.Rounded"/> or <see cref="Precisions.Mixed"/>. Null in runs recorded before
+    /// the Workbench asked for full precision, which were rounded.
+    /// </summary>
+    public string? Precision { get; init; }
 
     /// <summary>Items sent.</summary>
     public required int Items { get; init; }
