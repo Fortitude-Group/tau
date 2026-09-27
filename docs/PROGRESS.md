@@ -2,9 +2,48 @@
 
 Updated after every completed task. On session restart, resume from here without asking.
 
-**Current release:** R1 (Runtime core + ONNX parity), branch `001-runtime-onnx-parity`, merged to `master`.
-**Gate status:** **R1 GATE REACHED. Waiting for Rob's "go" before R2.**
-**Task list:** `specs/001-runtime-onnx-parity/tasks.md` (63/63; T038 carries a recorded deviation).
+**Current release:** R2 (Workbench + benchmarks on two datasets), branch `002-workbench-benchmarks`.
+**Gate status:** R1 merged to `master`. R2 approved by Rob (DECISIONS 2026-09-27); in progress.
+**Task list:** `specs/001-runtime-onnx-parity/tasks.md` (63/63 R1) and `specs/002-workbench-benchmarks/tasks.md` (R2, in progress).
+
+## R2 progress: Lane A (sidecar data), T002 + T010–T013
+
+- **T002:** `sidecar/finetune/pyproject.toml` gained `datasets>=3.0` and `pandas>=2.2`; `uv lock` and
+  `uv sync` ran clean (`pandas` 3.0.6, `datasets` 5.0.1 resolved).
+- **T010** (`tau_sidecar/data_banking77.py`): downloads `banking_data/{train,test}.csv` from
+  `PolyAI-LDN/task-specific-datasets` @ `9d081458…`, sha256-verified against hashes hard-coded in the
+  script. Stratified (seed 42) splits: calibration 1,000 / held-out 1,000 / finetune 9,003. Held-out is
+  a perfect 13-per-class draw from test's exactly-balanced 40-per-class. Two runs produce byte-identical
+  split files (checked). `examples/banking77/dataset.manifest.json` committed.
+- **T011** (`tau_sidecar/data_tickets.py`): pulls `Tobi-Bueck/customer-support-tickets` @ `ddf1c81a…` via
+  `huggingface_hub.snapshot_download`. The dataset ships as **three** CSVs (28,587 + 20,000 + 13,178 =
+  61,765 rows); concatenating all three is where the 61,765/28,261-English figures in the dataset-licence
+  DECISIONS entry come from. Filters (in order, rows removed): language≠en 33,504; vehicle/travel queue
+  prefix **0**; vehicle keyword in text 393; empty body 0; exact duplicate text 4,467. Splits: held-out
+  1,000 / calibration 1,000 / finetune 8,000 (capped, stratified by priority). `examples/support-tickets/
+  dataset.manifest.json` committed; no ticket row or text is committed anywhere (`/data/` gitignored,
+  manifest holds only counts/hashes/keywords).
+  - **Finding, not assumed - checked against the raw counts:** English-language ticket rows carry only
+    three of the five priority levels (low/medium/high). `very_low` and `critical` exist only in the
+    German-only third CSV, so every split has **zero** `very_low`/`critical` examples. Flagged for the
+    fine-tune and calibration stages (Lane D/B) - those two classes can't be trained or measured on this
+    dataset.
+  - **Finding:** the vehicle-keyword filter's 393 English hits are, on inspection, **all false positives
+    for actual vehicles** - "driver(s)" almost entirely means software/hardware drivers ("updating
+    drivers", "driver conflict"), "driving" is the marketing idiom ("driving brand growth"), "garage" is
+    "Smart Garage" (home automation). The four specified IT-context exclusions (printer/device/graphics
+    driver, driver update) only catch 34 of 361 raw "driver" hits; the rest still get dropped by design
+    (scope: T011 asked for exactly those four exclusions, not a broader IT-driver heuristic - recorded
+    for Rob to expand later if the false-drop rate matters for finetune volume).
+  - **Finding:** 4,467 exact-duplicate texts (about 16% of the post-filter pool) - the synthetic generator
+    produces a meaningful share of verbatim-identical tickets.
+- **T012** (`tests/test_data.py`): 17 tests - determinism (re-run `prepare()`, compare file hashes),
+  disjointness across splits, no vehicle keyword survives into any tickets split, manifest row counts and
+  sha256 match the files on disk, label validity, and (tickets) that the manifest itself never holds
+  ticket text. All pass (`uv run --frozen pytest -q tests/test_data.py`: 17 passed).
+- **T013:** both scripts run clean; manifests, scripts, `dataset_common.py`, tests and the `uv.lock`
+  update are committed. `sidecar/finetune/tests/test_parity.py`'s 8 failures are pre-existing (no models
+  fetched/exported in this worktree) and unrelated to this change.
 
 ---
 
@@ -93,4 +132,6 @@ Updated after every completed task. On session restart, resume from here without
 
 ## Next
 
-- On Rob's "go": R2 (Workbench, fine-tune sidecar, two datasets end to end, calibration and cascade £).
+- Lane A (sidecar data, T002/T010–T013) done. Remaining R2 lanes: B (Workbench core, T020–T031), C (R1
+  adjustments, T040–T042), D (fine-tune + baseline, T014–T017, needs Lane A's splits), E (frontier
+  labelling, T050–T053, needs Lane A's held-out ids + Lane B's batch export), then Phase 7 end-to-end.
