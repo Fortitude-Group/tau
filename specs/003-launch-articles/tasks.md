@@ -36,7 +36,7 @@
 ## Lane D and E: derived drafts (after T011)
 
 - [ ] T040 [US2] `hn.md` (a Show HN post and first comment), `devto.md` (tutorial, canonical URL placeholder), `reddit.md` (r/LocalLLaMA, r/dotnet and r/MachineLearning [P] variants, with a subreddit-rules note) and `linkedin.md` (short post, one image). All derive from the canonical piece, and the checker passes on each.
-- [ ] T050 [US5] `apex-page.md`: title, summary, sections with copy, figures with their sources, calls to action and byline, following the web playbook's style guide. No deploy steps and no credentials. The checker passes.
+- [x] T050 [US5] `apex-page.md`: title, summary, sections with copy, figures with their sources, calls to action and byline, following the web playbook's style guide. No deploy steps and no credentials. The checker passes.
 
 ## Lane F: finish
 
