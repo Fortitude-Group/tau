@@ -11,9 +11,8 @@ You need:
 - Windows or Linux on x64
 - the [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
 - [PowerShell 7](https://learn.microsoft.com/powershell/scripting/install/installing-powershell) (`pwsh`), which runs the scripts
-- [uv](https://docs.astral.sh/uv/), which runs the one-off ONNX export and fetches its own Python 3.12
 - `curl` and `git`
-- about 12 GB of free disk. Most of it is the export's PyTorch environment and uv's download cache.
+- about 3 GB of free disk
 
 Run every command from the repository root, in `pwsh`.
 
@@ -24,31 +23,25 @@ git clone https://github.com/Fortitude-Group/tau.git
 cd tau
 ```
 
-**2. Fetch the model checkpoint.** This downloads laya-en (about 850 MB) from Hugging Face at a pinned revision and checks every file's SHA-256.
+**2. Fetch the exported model.** This downloads the laya-en ONNX package (about 1.3 GB) from the repository's `models-v1` release, checks its SHA-256 against the value pinned in the script, and unpacks it to `models/laya-en/`. These are the exact files the committed reports were measured with.
 
 ```powershell
-./scripts/fetch-models.ps1 -Only laya-en
+./scripts/fetch-onnx.ps1 -Only laya-en
 ```
 
-**3. Export it to ONNX.** The export runs once, on CPU, and writes the model package to `models/laya-en/`. The first run downloads PyTorch and the other Python dependencies (about 3 GB). After that, the export itself takes a minute or two.
-
-```powershell
-./scripts/export.ps1 -Only laya-en
-```
-
-**4. Fetch the ONNX Runtime native library** for your platform. Use `-Rid linux-x64` on Linux.
+**3. Fetch the ONNX Runtime native library** for your platform. Use `-Rid linux-x64` on Linux.
 
 ```powershell
 ./scripts/fetch-natives.ps1 -Flavour cpu -Rid win-x64
 ```
 
-**5. Start the Runtime.** Leave it running in this terminal. It's ready when it prints `Tau engine ready: provider Cpu, models laya-en`.
+**4. Start the Runtime.** Leave it running in this terminal. It's ready when it prints `Tau engine ready: provider Cpu, models laya-en`.
 
 ```powershell
 dotnet run --project src/Tau.Runtime -c Release -- --urls http://localhost:8088
 ```
 
-**6. Ask it something.** In a second terminal, from the repository root, send the example request in [`examples/quickstart/request.json`](examples/quickstart/request.json). It asks one choice question and one yes/no question about a short support message.
+**5. Ask it something.** In a second terminal, from the repository root, send the example request in [`examples/quickstart/request.json`](examples/quickstart/request.json). It asks one choice question and one yes/no question about a short support message.
 
 ```powershell
 curl -s http://localhost:8088/v1/systemone -H "Content-Type: application/json" -d "@examples/quickstart/request.json"
@@ -88,11 +81,22 @@ On Windows, `-Flavour directml` and `--Tau:Provider=directml` run on any DirectX
 
 ### How do I serve the other models?
 
-Drop `-Only laya-en` from steps 2 and 3 to fetch and export all four: `laya-en`, `laya-multilingual`, `laya-typed-decisions` and `von-1.2.0`. That's about 5.5 GB of downloads. The Runtime serves every package it finds in `models/`, or only the ones you list with `--Tau:Models:0=laya-en --Tau:Models:1=von-1.2.0`.
+Drop `-Only laya-en` from step 2 to fetch all five packages: `laya-en`, `laya-multilingual`, `laya-typed-decisions`, `von-1.2.0` and the fine-tuned `laya-en-ft-banking77`. That's about 6.5 GB of downloads. The Runtime serves every package it finds in `models/`, or only the ones you list with `--Tau:Models:0=laya-en --Tau:Models:1=von-1.2.0`.
+
+### How do I build the models from source instead?
+
+Fetch the checkpoints from Hugging Face at their pinned revisions, then export them to ONNX yourself. The export needs [uv](https://docs.astral.sh/uv/), which fetches its own Python 3.12 and about 3 GB of PyTorch, so allow about 12 GB of disk.
+
+```powershell
+./scripts/fetch-models.ps1 -Only laya-en
+./scripts/export.ps1 -Only laya-en
+```
+
+A fresh export gives the same answers to 4 decimal places but isn't byte-identical to the release files. The committed calibrators are bound to the release hashes, so use `fetch-onnx.ps1` if you want the reports to reproduce exactly.
 
 ### How do I run it in Docker?
 
-The image carries the Runtime and the ONNX Runtime natives but no models. Export them on the host first (steps 2 and 3), then mount the folder read-only:
+The image carries the Runtime and the ONNX Runtime natives but no models. Fetch them on the host first (step 2), then mount the folder read-only:
 
 ```powershell
 docker build -f src/Tau.Runtime/Dockerfile -t tau-runtime:local .
