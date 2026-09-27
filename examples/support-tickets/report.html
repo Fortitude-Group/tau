@@ -77,8 +77,8 @@ ul.misses li { margin: 4px 0; } ul.basis { font-size: 13px; color: var(--ink2); 
 <p class="kicker">Tau Workbench report</p>
 <h1>Synthetic support tickets: how urgent is this ticket?</h1>
 <p><span class="badge-synthetic">Synthetic data</span> Every item in this dataset was generated, not written by real customers. Treat the numbers as a demonstration of the method, not as evidence about real traffic.</p>
-<p class="lede">This report measures how far 4 model(s) can be trusted on &quot;How urgent is this customer support ticket?&quot;, using synthetic tickets data (1,000 held-out items). Reference: claude-opus-5-5&#39;s answers, not the dataset&#39;s labels. The question here is whether a local model can stand in for the frontier call, and whether its confidence says when, so every rate below is agreement with the frontier model. Out of the box, laya-en agrees with claude-opus-5-5 on 23.2% of held-out items with a calibration error (ECE) of 0.273; after calibration its ECE is 0.148, 46.0% lower, short of the 50% goal. At a 20.0% target disagreement, laya-en keeps 0.1% of decisions local, the most of any model (laya-typed-decisions, the least, keeps 0.1%); the cascade&#39;s served answers agree with claude-opus-5-5 on 100.0% (the frontier alone agrees with itself by construction), at an estimated &#163;996 per million decisions against &#163;997 (list prices, 2026-09-27). The dataset&#39;s own labels are reported as a finding, not used: claude-opus-5-5 agrees with them on only 23.8% of 1,000 items, and a secondary table shows every model against them.</p>
-<p class="caption">Generated 2026-09-27T17:14:12Z (UTC) on NVIDIA GeForce RTX 3080 Ti. Every number below is in report.json beside this file; the metadata block at the end says how to reproduce it.</p>
+<p class="lede">This report measures how far 4 model(s) can be trusted on &quot;How urgent is this customer support ticket?&quot;, using synthetic tickets data (1,000 held-out items). Reference: claude-opus-5-5&#39;s answers, not the dataset&#39;s labels. The question here is whether a local model can stand in for the frontier call, and whether its confidence says when, so every rate below is agreement with the frontier model. Out of the box, laya-en agrees with claude-opus-5-5 on 23.2% of held-out items with a calibration error (ECE) of 0.273; after calibration its ECE is 0.148, 46.0% lower, short of the 50% goal. At a 20.0% target disagreement, laya-en keeps 0.1% of decisions local (3 models tie at that share); the cascade&#39;s served answers agree with claude-opus-5-5 on 100.0% (the frontier alone agrees with itself by construction), at an estimated &#163;996 per million decisions against &#163;997 (list prices, 2026-09-27). The dataset&#39;s own labels are reported as a finding, not used: claude-opus-5-5 agrees with them on only 23.8% of 1,000 items, and a secondary table shows every model against them.</p>
+<p class="caption">Generated 2026-09-27T17:15:20Z (UTC) on NVIDIA GeForce RTX 3080 Ti. Every number below is in report.json beside this file; the metadata block at the end says how to reproduce it.</p>
 </header>
 <section id="dataset">
 <h2>Dataset</h2>
@@ -334,9 +334,9 @@ ul.misses li { margin: 4px 0; } ul.basis { font-size: 13px; color: var(--ink2); 
 <section id="metadata">
 <h2>Run metadata</h2>
 <dl class="facts mono">
-<dt>Date (UTC)</dt><dd>2026-09-27T17:14:12Z</dd>
+<dt>Date (UTC)</dt><dd>2026-09-27T17:15:20Z</dd>
 <dt>Command</dt><dd>tau report examples/support-tickets/decision.yaml</dd>
-<dt>Git commit</dt><dd>3a7a557785b6ab85725f6ad878ddb004625cdf35 (uncommitted changes outside this run&#39;s outputs)</dd>
+<dt>Git commit</dt><dd>8954e9b095b40f68ee34139ca7c413fad4386300 (uncommitted changes outside this run&#39;s outputs)</dd>
 <dt>Workbench</dt><dd>0.1.0</dd>
 <dt>GPU</dt><dd>NVIDIA GeForce RTX 3080 Ti (driver 610.47)</dd>
 <dt>CPU</dt><dd>11th Gen Intel(R) Core(TM) i9-11900K @ 3.50GHz, 16 logical processors</dd>

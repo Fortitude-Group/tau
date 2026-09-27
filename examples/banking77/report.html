@@ -77,7 +77,7 @@ ul.misses li { margin: 4px 0; } ul.basis { font-size: 13px; color: var(--ink2); 
 <p class="kicker">Tau Workbench report</p>
 <h1>Banking77: which of 77 intents is this customer message?</h1>
 <p class="lede">This report measures how far 3 model(s) can be trusted on &quot;Which banking customer-service intent does this message express?&quot;, using banking77 data (1,000 held-out items). Reference: the dataset&#39;s gold labels; every rate below is accuracy against them. Out of the box, laya-en is 37.2% accurate with a calibration error (ECE) of 0.502; after calibration its ECE is 0.065, 87.1% lower, which meets the 50% goal. At a 5.0% target error, laya-en-ft-banking77 keeps 73.6% of decisions local, the most of any model (von-1.2.0, the least, keeps 4.5%); the cascade is 93.2% accurate against 94.2% for claude-opus-5-5 alone, at an estimated &#163;1,031 per million decisions against &#163;3,898 (list prices, 2026-09-27). The classic baseline minilm-l6-banking77 (not served through Tau) does better, keeping 94.7% local at 94.2% blended accuracy. The frontier model disagrees with the gold labels on 5.8% of 1,000 items, which bounds how much any accuracy figure here can be trusted.</p>
-<p class="caption">Generated 2026-09-27T17:14:10Z (UTC) on NVIDIA GeForce RTX 3080 Ti. Every number below is in report.json beside this file; the metadata block at the end says how to reproduce it.</p>
+<p class="caption">Generated 2026-09-27T17:15:19Z (UTC) on NVIDIA GeForce RTX 3080 Ti. Every number below is in report.json beside this file; the metadata block at the end says how to reproduce it.</p>
 </header>
 <section id="dataset">
 <h2>Dataset</h2>
@@ -329,9 +329,9 @@ ul.misses li { margin: 4px 0; } ul.basis { font-size: 13px; color: var(--ink2); 
 <section id="metadata">
 <h2>Run metadata</h2>
 <dl class="facts mono">
-<dt>Date (UTC)</dt><dd>2026-09-27T17:14:10Z</dd>
+<dt>Date (UTC)</dt><dd>2026-09-27T17:15:19Z</dd>
 <dt>Command</dt><dd>tau report examples/banking77/decision.yaml</dd>
-<dt>Git commit</dt><dd>3a7a557785b6ab85725f6ad878ddb004625cdf35 (clean, outputs excluded)</dd>
+<dt>Git commit</dt><dd>8954e9b095b40f68ee34139ca7c413fad4386300 (clean, outputs excluded)</dd>
 <dt>Workbench</dt><dd>0.1.0</dd>
 <dt>GPU</dt><dd>NVIDIA GeForce RTX 3080 Ti (driver 610.47)</dd>
 <dt>CPU</dt><dd>11th Gen Intel(R) Core(TM) i9-11900K @ 3.50GHz, 16 logical processors</dd>

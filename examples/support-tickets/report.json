@@ -12,7 +12,7 @@
     "4"
   ],
   "target_error": 0.2,
-  "summary": "This report measures how far 4 model(s) can be trusted on \u0022How urgent is this customer support ticket?\u0022, using synthetic tickets data (1,000 held-out items). Reference: claude-opus-5-5\u0027s answers, not the dataset\u0027s labels. The question here is whether a local model can stand in for the frontier call, and whether its confidence says when, so every rate below is agreement with the frontier model. Out of the box, laya-en agrees with claude-opus-5-5 on 23.2% of held-out items with a calibration error (ECE) of 0.273; after calibration its ECE is 0.148, 46.0% lower, short of the 50% goal. At a 20.0% target disagreement, laya-en keeps 0.1% of decisions local, the most of any model (laya-typed-decisions, the least, keeps 0.1%); the cascade\u0027s served answers agree with claude-opus-5-5 on 100.0% (the frontier alone agrees with itself by construction), at an estimated \u00A3996 per million decisions against \u00A3997 (list prices, 2026-09-27). The dataset\u0027s own labels are reported as a finding, not used: claude-opus-5-5 agrees with them on only 23.8% of 1,000 items, and a secondary table shows every model against them.",
+  "summary": "This report measures how far 4 model(s) can be trusted on \u0022How urgent is this customer support ticket?\u0022, using synthetic tickets data (1,000 held-out items). Reference: claude-opus-5-5\u0027s answers, not the dataset\u0027s labels. The question here is whether a local model can stand in for the frontier call, and whether its confidence says when, so every rate below is agreement with the frontier model. Out of the box, laya-en agrees with claude-opus-5-5 on 23.2% of held-out items with a calibration error (ECE) of 0.273; after calibration its ECE is 0.148, 46.0% lower, short of the 50% goal. At a 20.0% target disagreement, laya-en keeps 0.1% of decisions local (3 models tie at that share); the cascade\u0027s served answers agree with claude-opus-5-5 on 100.0% (the frontier alone agrees with itself by construction), at an estimated \u00A3996 per million decisions against \u00A3997 (list prices, 2026-09-27). The dataset\u0027s own labels are reported as a finding, not used: claude-opus-5-5 agrees with them on only 23.8% of 1,000 items, and a secondary table shows every model against them.",
   "reference": "frontier",
   "dataset_labels": {
     "caption": "The dataset\u0027s labels are synthetic and close to arbitrary; the frontier model agrees with them on 23.8%. That is no better than the 41.0% a model would get by always giving the most common label. This table is a secondary view: every other figure in the report is agreement with the frontier model, because this example asks whether a local model can stand in for the frontier call.",
@@ -11186,11 +11186,11 @@
     "Label noise: the frontier model disagrees with gold on 76.2% (762 of 1,000). This example is scored against the frontier model\u0027s answers instead of the dataset\u0027s labels; the figures against those labels are kept in a secondary table."
   ],
   "metadata": {
-    "generated_utc": "2026-09-27T17:14:12Z",
+    "generated_utc": "2026-09-27T17:15:20Z",
     "command": "tau report examples/support-tickets/decision.yaml",
     "tool_version": "0.1.0",
     "git": {
-      "commit": "3a7a557785b6ab85725f6ad878ddb004625cdf35",
+      "commit": "8954e9b095b40f68ee34139ca7c413fad4386300",
       "dirty": true
     },
     "hardware": {
