@@ -21,19 +21,33 @@ namespace Tau.Inference.Tokenization;
 /// The special-token strings come from <c>tokenizer_config.json</c> beside the file and are resolved to ids
 /// through the file's added tokens, then its vocabulary.
 /// </para>
-/// <para>Thread-safe: calls into the native library are serialised.</para>
+/// <para>
+/// Thread-safe. Every call into the native library, across all instances (load, encode, dispose), goes through
+/// one process-wide lock. Tokenizers.DotNet 1.4.1 keeps shared native state: 16 threads each creating and
+/// disposing their own instances (and encoding) hung in 4 of 5 runs and threw in the fifth, and creation and
+/// disposal alone hung in 1 of 2, while the same work under one lock
+/// finished in 3 of 3. Concurrent encodes on separate, already-built instances did not fail in 2 runs, but
+/// encodes still share the lock because an encode can overlap another instance's creation or disposal.
+/// Encoding a sentence takes microseconds, so the lock is not a practical bottleneck.
+/// </para>
 /// </remarks>
 public sealed class HfTokenizer : IDisposable
 {
     private static readonly string[] StrippedSections = ["post_processor", "truncation", "padding"];
 
+    // Process-wide: see the remarks. Also taken by the finaliser, so an undisposed instance cannot release
+    // native state while another thread is inside the library.
+    private static readonly Lock NativeGate = new();
+
     private readonly Tokenizer _tokenizer;
-    private readonly Lock _gate = new();
     private bool _disposed;
 
     private HfTokenizer(Tokenizer tokenizer, SpecialTokens specials)
     {
         _tokenizer = tokenizer;
+
+        // The wrapper's own finaliser would release native state without the lock; ours does it under the lock.
+        GC.SuppressFinalize(tokenizer);
         ClsToken = specials.Cls.Token;
         ClsId = specials.Cls.Id;
         SepToken = specials.Sep.Token;
@@ -99,7 +113,13 @@ public sealed class HfTokenizer : IDisposable
         try
         {
             File.WriteAllBytes(tempPath, NullOutTopLevelSections(bytes, StrippedSections));
-            return new HfTokenizer(new Tokenizer(tempPath), specials);
+            Tokenizer native;
+            lock (NativeGate)
+            {
+                native = new Tokenizer(tempPath);
+            }
+
+            return new HfTokenizer(native, specials);
         }
         finally
         {
@@ -124,7 +144,7 @@ public sealed class HfTokenizer : IDisposable
     {
         ArgumentNullException.ThrowIfNull(text);
         uint[] raw;
-        lock (_gate)
+        lock (NativeGate)
         {
             ObjectDisposedException.ThrowIf(_disposed, this);
             raw = _tokenizer.Encode(text);
@@ -150,10 +170,19 @@ public sealed class HfTokenizer : IDisposable
         return ids.Length <= maxTokens ? ids : ids[..maxTokens];
     }
 
+    /// <summary>Releases the native tokeniser under the process-wide lock if the instance was never disposed.</summary>
+    ~HfTokenizer() => Release();
+
     /// <inheritdoc />
     public void Dispose()
     {
-        lock (_gate)
+        Release();
+        GC.SuppressFinalize(this);
+    }
+
+    private void Release()
+    {
+        lock (NativeGate)
         {
             if (_disposed)
             {
