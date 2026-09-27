@@ -4,7 +4,7 @@ LinkedIn doesn't render Markdown links: post the prose without them, and keep th
 write-up as the only URL. Replace the placeholder once the R&D page is live.
 -->
 
-# How many AI decisions actually need a frontier model?
+# How many AI decisions need a frontier model?
 
 *Rob Hill, Fortitude Omnis*
 
