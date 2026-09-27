@@ -6,6 +6,20 @@ this file records the ones I made so the trail is auditable.
 
 ---
 
+## 2026-09-27 · R3 launch decisions
+
+- **Rob's clarify answers:**
+  - MiniLM is teased in the title and revealed in paragraph two.
+  - The tickets result gets its own section ("the benchmark that lied").
+  - Canonical title: "Three-quarters of my Claude classification calls could run on a gaming GPU. The surprise is which model." It keeps "could", as Rob chose it.
+- **The R&D page URL is `/rd/tau/`, not `/apex/tau`.** Every other R&D page on the Fortitude Omnis site lives under `/rd/<slug>/`, and the site's generator builds it with no special handling. The DEV.to canonical URL and every draft use it as a placeholder.
+- **Extra banned terms are passed to `check-articles.ps1` at run time.** They're never written into the repo.
+- **Tau.Contract now packs.** Tau.Client depends on it, so it couldn't be restored without it.
+- **`export.ps1 -Only <one id>` was fixed.** The README walkthrough found it passing the id as the letter `l`.
+- **DEV.to's title uses "can run" rather than "could run".** That keeps the banned word out of a second title.
+- **LinkedIn's title drops "actually".**
+**Reason:** recorded so the drafts' small departures from the brief are traceable.
+
 ## 2026-09-27 · Report summary quotes the best cascade, and the baseline is cascaded too
 
 - **The bug:** the summary quoted the first model's cascade (Von, 4.5% local), which buried the

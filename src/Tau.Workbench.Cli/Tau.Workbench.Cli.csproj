@@ -8,9 +8,11 @@
     <ToolCommandName>tau</ToolCommandName>
     <PackageId>Tau.Workbench</PackageId>
     <Description>The tau command: measure, calibrate and cost any /v1/systemone endpoint against a labelled decision, and write a self-contained HTML report.</Description>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Tau.Workbench\Tau.Workbench.csproj" />
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" Link="README.md" />
   </ItemGroup>
   <ItemGroup>
     <InternalsVisibleTo Include="Tau.Workbench.Tests" />

@@ -1,10 +1,11 @@
-# Tau Runtime container. Built locally only; never pushed in R1 (constitution Principle X).
+# Tau Runtime container. Built locally only; never pushed without Rob's go (constitution Principle X).
 #
-#   docker build -f src/Tau.Runtime/Dockerfile -t tau-runtime:r1-local .                      # CPU
-#   docker build -f src/Tau.Runtime/Dockerfile --build-arg FLAVOUR=cuda -t tau-runtime:r1-cuda .  # CUDA
+#   docker build -f src/Tau.Runtime/Dockerfile -t tau-runtime:local .                         # CPU
+#   docker build -f src/Tau.Runtime/Dockerfile --build-arg FLAVOUR=cuda -t tau-runtime:cuda .    # CUDA
 #
-# Models aren't baked in (they're multi-GB and pinned by hash). Mount them:
-#   docker run --rm -p 8088:8080 -v ${PWD}/models:/models tau-runtime:r1-local
+# Models aren't baked in (they're multi-GB and pinned by hash). Mount them read-only, and name the
+# models to serve (otherwise every package under /models is loaded):
+#   docker run --rm -p 8088:8080 -v ${PWD}/models:/models:ro -e Tau__Models__0=laya-en tau-runtime:local
 # For CUDA add `--gpus all` and build with FLAVOUR=cuda (the base image then carries CUDA 12 + cuDNN 9).
 
 ARG FLAVOUR=cpu

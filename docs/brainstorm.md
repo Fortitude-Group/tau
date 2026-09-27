@@ -122,14 +122,14 @@ Tau wraps and proves existing open models; it doesn't compete with them.
 
 Done means both components work end to end on two public datasets, the numbers are measured and reproducible, and four articles sit ready for Rob to publish.
 
-- [ ] Runtime answers the full `/v1/systemone` contract; conformance suite passes against Kev (and Jev if a key is available).
-- [ ] ONNX outputs match the PyTorch reference within an agreed tolerance on every test case.
-- [ ] Runtime latency measured on Rob's hardware for single and batched questions, published with hardware specs.
-- [ ] Workbench shows ECE before and after calibration on both datasets; the after figure is materially lower.
-- [ ] Cascade simulation reports share kept local, blended accuracy vs Claude-only, and £ per million decisions.
-- [ ] Every number in every article traces to a committed report file. One command reproduces each report.
-- [ ] Repo, NuGet package and Docker image ready to go public; README gets a newcomer to a first decision in under 10 minutes.
-- [ ] Articles drafted for LinkedIn, DEV.to, Reddit and HN (Hacker News), each fitted to its channel. Rob approves before anything publishes.
+- [x] Runtime answers the full `/v1/systemone` contract; conformance suite passes against Kev (and Jev if a key is available). *Evidence: [reports/r1/conformance.md](../reports/r1/conformance.md), Tau 45 of 45. Jev not run: no key, by decision.*
+- [x] ONNX outputs match the PyTorch reference within an agreed tolerance on every test case. *Evidence: [reports/r1/parity.md](../reports/r1/parity.md) and both `examples/*/finetune-parity.json`.*
+- [x] Runtime latency measured on Rob's hardware for single and batched questions, published with hardware specs. *Evidence: [reports/r1/latency.md](../reports/r1/latency.md), re-run on a quiet machine in R2.*
+- [x] Workbench shows ECE before and after calibration on both datasets; the after figure is materially lower. *Evidence: both `examples/*/report.html`. One explained miss (laya-en on tickets, 46%).*
+- [x] Cascade simulation reports share kept local, blended accuracy vs Claude-only, and £ per million decisions. *Evidence: the cascade and cost tables in both reports.*
+- [x] Every number in every article traces to a committed report file. One command reproduces each report. *Evidence: `scripts/check-articles.ps1` (0 problems over every draft) and `scripts/examples.ps1 -Example <name>`.*
+- [x] Repo, NuGet package and Docker image ready to go public; README gets a newcomer to a first decision in under 10 minutes. *Evidence: README walkthrough 117 s excluding downloads, packages and image built and tested locally, secret scan clean. Caveats in [FINISH.md](FINISH.md).*
+- [x] Articles drafted for LinkedIn, DEV.to, Reddit and HN (Hacker News), each fitted to its channel. Rob approves before anything publishes. *Evidence: `docs/articles/`. Drafted, and awaiting Rob's approval.*
 
 ## Risks and mitigations
 

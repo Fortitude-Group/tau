@@ -11,6 +11,9 @@
     <Authors>Rob Hill; Fortitude Omnis</Authors>
     <Copyright>Copyright 2026 Fortitude Omnis</Copyright>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/Fortitude-Group/tau</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Fortitude-Group/tau</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
     <Version>0.1.0</Version>
   </PropertyGroup>
 </Project>
