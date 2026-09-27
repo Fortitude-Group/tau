@@ -68,6 +68,34 @@ public class HfTokenizerTests
     }
 
     [Fact]
+    public async Task Separate_instances_can_be_used_concurrently()
+    {
+        // Regression: Tokenizers.DotNet can hang when instances are created and disposed on several threads at
+        // once, so HfTokenizer serialises native calls process-wide. The hang is intermittent, so this is a guard
+        // rather than a reliable reproducer; a hang fails here after 120 s instead of stalling the run.
+        var expected = Encode(LayaEn, "ticket 7 wants a refund");
+        var tasks = Enumerable.Range(0, 16).Select(t => Task.Run(() =>
+        {
+            for (int round = 0; round < 10; round++)
+            {
+                using var tok = HfTokenizer.Load(t % 2 == 0 ? LayaEn : Von);
+                for (int i = 0; i < 20; i++)
+                {
+                    var ids = tok.Encode("ticket 7 wants a refund");
+                    Assert.Equal(expected, ids); // Laya English and Von share the ModernBERT vocabulary
+                }
+            }
+        })).ToArray();
+        await Task.WhenAll(tasks).WaitAsync(TimeSpan.FromSeconds(120), TestContext.Current.CancellationToken);
+    }
+
+    private static int[] Encode(string path, string text)
+    {
+        using var tok = HfTokenizer.Load(path);
+        return tok.Encode(text);
+    }
+
+    [Fact]
     public void Throws_after_dispose()
     {
         var tok = HfTokenizer.Load(LayaEn);
