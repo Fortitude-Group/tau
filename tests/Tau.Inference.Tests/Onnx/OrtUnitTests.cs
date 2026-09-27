@@ -104,8 +104,11 @@ public class OrtUnitTests
     {
         var s = new OrtSessionSettings();
         Assert.Equal(GraphOptimizationLevel.ORT_ENABLE_BASIC, s.GraphOptimizationLevel);
-        Assert.Equal(4, s.IntraOpThreads);
+        // One per physical core: measured fastest on the reference machine (DECISIONS "Performance findings").
+        Assert.Equal(Math.Max(1, Environment.ProcessorCount / 2), s.IntraOpThreads);
         Assert.Equal(1, s.InterOpThreads);
+        Assert.True(s.DeterministicCompute);
+        Assert.True(s.EnableMemoryPattern);
         Assert.Equal(0, s.DeviceId);
         Assert.False(s.AllowCpuFallback);
     }
