@@ -34,11 +34,18 @@ public sealed class LayaPostProcessor
     /// <param name="type">choice, score or noul.</param>
     /// <param name="labels">Choice keys in order, or score legend texts in order; ignored for noul.</param>
     /// <param name="logits">The question's k option logits (padding slots already removed).</param>
-    public Answer Decode(string type, IReadOnlyList<string> labels, ReadOnlySpan<float> logits)
-    {
-        var p = Numerics.SoftmaxF32(Numerics.Scale(logits, TemperatureFor(type, logits.Length)));
-        return FromProbabilities(type, labels, p, Numerics.ArgMaxTie(logits));
-    }
+    public Answer Decode(string type, IReadOnlyList<string> labels, ReadOnlySpan<float> logits) =>
+        FromProbabilities(type, labels, ReferenceProbabilities(type, logits), Numerics.ArgMaxTie(logits));
+
+    /// <summary>
+    /// The reference probability vector for one question: the float32 softmax of the logits divided by the
+    /// clamped per-bucket temperature, unrounded. This is what a raw answer reports (before rounding) and what
+    /// a Tau calibrator is applied to. For noul the order is [false, true].
+    /// </summary>
+    /// <param name="type">choice, score or noul.</param>
+    /// <param name="logits">The question's k option logits (padding slots already removed).</param>
+    public float[] ReferenceProbabilities(string type, ReadOnlySpan<float> logits) =>
+        Numerics.SoftmaxF32(Numerics.Scale(logits, TemperatureFor(type, logits.Length)));
 
     /// <summary>
     /// Builds the contract answer from probabilities (the reference's output, or a Tau calibrator's).
