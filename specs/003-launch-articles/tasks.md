@@ -40,10 +40,10 @@
 
 ## Lane F: finish
 
-- [ ] T060 [US4] `docs/FINISH.md`: what shipped, the headline numbers with links, known gaps, and Rob's ordered go-public steps.
-- [ ] T061 Tick the brainstorm finish-line boxes with evidence, or give the reason.
-- [ ] T062 Checker over every draft, full test suite green, merge to `master`, push to the private repo.
-- [ ] T063 **FINISH: stop.** Report to Rob.
+- [x] T060 [US4] `docs/FINISH.md`: what shipped, the headline numbers with links, known gaps, and Rob's ordered go-public steps.
+- [x] T061 Tick the brainstorm finish-line boxes with evidence, or give the reason.
+- [x] T062 Checker over every draft, full test suite green, merge to `master`, push to the private repo.
+- [x] T063 **FINISH: stop.** Report to Rob.
 
 ## Dependencies
 

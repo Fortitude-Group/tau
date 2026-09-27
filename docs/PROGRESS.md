@@ -2,11 +2,16 @@
 
 Updated after every completed task. On session restart, resume from here without asking.
 
-**Current release:** R2 (Workbench + benchmarks), branch `002-workbench-benchmarks`. R1 is merged to `master`.
-**Gate status:** **R2 GATE REACHED (2026-09-27). Waiting for Rob's "go" before R3.**
-**Task list:** `specs/002-workbench-benchmarks/tasks.md`.
+**Current release:** R3 (launch drafts and public readiness), branch `003-launch-articles`. R1 and R2 are merged to `master`.
+**Gate status:** **FINISH LINE REACHED (2026-09-27). Drafts only: nothing published, deployed or made public. See `docs/FINISH.md`.**
+**Task list:** `specs/003-launch-articles/tasks.md`.
 
 ## R3 log
+
+- T010–T011: canonical article `docs/articles/tau-canonical.md`, checker 0 problems.
+- T030–T031: `scripts/check-articles.ps1` (5 Pester tests pass) and five report screenshots.
+- T040: HN, DEV.to, Reddit (3 variants) and LinkedIn drafts. T050: APEX page draft at the `/rd/tau/` convention. Checker 0 problems over all six drafts.
+- T060–T061: `docs/FINISH.md` written. All 8 brainstorm finish-line boxes ticked with evidence.
 
 - T020: `README.md` written. Quickstart on CPU serving laya-en: fetch-models, export, fetch-natives, `dotnet run`, one curl with `examples/quickstart/request.json`. Also a C# `Tau.Client` snippet, GPU, Docker, Workbench, layout, reproduction and licence sections.
 - T021: README walkthrough on a fresh clone of `003-launch-articles` (cloned from the local repo, since the GitHub repo isn't public). First walk failed at step 3: `export.ps1 -Only laya-en` passed the id as the letter `l` (a single filtered id splatted as a string). Fixed in the script (`9109daa`). Second walk, from a new clone, reached a first decision: **121 s in total, 117 s excluding the model and native downloads.** Steps: clone 0.6 s, fetch-models 1.0 s, export 103 s (uv installed 76 packages from its local cache in 14 s), fetch-natives 3.2 s (a real 125 MB download), Runtime build and start 8.2 s, curl 0.4 s. The README's C# snippet then answered too (`Billing`). The laya-en checkpoint was linked into the clone with a directory junction to `models/src/laya-en`, so the real fetch wasn't timed: a 200 MB sample from Hugging Face ran at 65 MB/s, which puts the laya-en fetch at about 13 s and all four models at about 85 s. A cold uv cache also downloads about 3 GB of PyTorch wheels. The re-exported `model.onnx` hash differs from the main tree's (`cf8bc443…` against `866a05b2…`) but the answers match to 4 dp. README disk estimate raised from 10 to 12 GB after measuring the 4.5 GB venv.
