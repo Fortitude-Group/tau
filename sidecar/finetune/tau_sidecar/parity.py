@@ -105,21 +105,28 @@ class Stats:
                 "pass": not self.failures}
 
 
+def case_model(model_id: str) -> str:
+    """Local fine-tunes of laya-en use laya-en's cases."""
+    return "laya-en" if model_id.startswith("laya-en-ft-") else model_id
+
+
 def run_laya(model_id: str, fx: bool) -> Dict[str, Any]:
     ref, sess, st = LayaReference(model_id), ort_session(model_id), Stats()
     seq_out, log_out, ans_out = [header(model_id)], [header(model_id)], [header(model_id)]
-    for case in [c for c in all_cases() if model_id in c["models"]]:
+    derived = case_model(model_id) != model_id
+    for case in [c for c in all_cases() if case_model(model_id) in c["models"]]:
         cid, state, qs = case["id"], case["state"], case["questions"]
         st.cases += 1
         try:
             rows = ref.rows(state, qs)
         except ValueError as e:
-            if not case.get("expect_error"):
+            # A fine-tune can have a different token budget: its own reference decides what it rejects.
+            if not case.get("expect_error") and not derived:
                 st.failures.append(f"{cid}: unexpected reference error {e}")
             st.errors_expected += 1
             ans_out.append({"id": cid, "request": {"state": state, "questions": qs}, "error": str(e)})
             continue
-        if case.get("expect_error"):
+        if case.get("expect_error") and not derived:
             st.failures.append(f"{cid}: expected an error, reference answered")
         b = ref.collate(rows)
         # Tau pads K to >= 2 (the head's topk(2)); do the same for ONNX. The reference path itself
@@ -195,6 +202,7 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--only", nargs="*", default=ALL_IDS)
     ap.add_argument("--no-fixtures", action="store_true")
+    ap.add_argument("--report", default=None, help="report path (default reports/r1/parity-model.json)")
     a = ap.parse_args(argv)
     t0, results = time.time(), {}
     for mid in a.only:
@@ -207,12 +215,14 @@ def main(argv=None) -> int:
         for f in s["failures"][:10]:
             print("   ", f)
     REPORTS.mkdir(parents=True, exist_ok=True)
-    report = {"report": "parity-model", "level": 1, "command": "uv run python -m tau_sidecar.parity",
+    report = {"report": "parity-model", "level": 1, "command": "uv run python -m tau_sidecar.parity " + " ".join(argv or sys.argv[1:]),
               "date": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
               "tolerance": {"logit": TOL_LOGIT, "prob": TOL_PROB}, "results": results,
               "models": {m: {"onnx_sha256": sha256(MODELS_DIR / m / "model.onnx")} for m in results},
               "elapsed_s": round(time.time() - t0)}
-    (REPORTS / "parity-model.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+    out = Path(a.report) if a.report else REPORTS / "parity-model.json"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     return 0 if all(r["pass"] for r in results.values()) else 1
 
 

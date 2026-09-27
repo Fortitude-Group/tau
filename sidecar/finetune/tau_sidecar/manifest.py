@@ -19,11 +19,19 @@ def sha256(path: Path) -> str:
 
 
 def lock_entry(model_id: str) -> Dict[str, Any]:
+    """The pinned upstream entry, or, for a locally fine-tuned model, a synthetic one: repo
+    `local-finetune`, revision = sha1 of its training.json (40 hex, like a commit), files hashed on disk."""
     lock = json.loads((REPO / "models.lock.json").read_text())
     for m in lock["models"]:
         if m["id"] == model_id:
             return m
-    raise KeyError(model_id)
+    training = src_dir(model_id) / "training.json"
+    if not training.exists():
+        raise KeyError(f"{model_id}: not in models.lock.json and no training.json (not a local fine-tune)")
+    files = {str(f.relative_to(src_dir(model_id))).replace("\\", "/"): {"sha256": sha256(f)}
+             for f in sorted(src_dir(model_id).rglob("*")) if f.is_file()}
+    return {"id": model_id, "repo": "local-finetune",
+            "revision": hashlib.sha1(training.read_bytes()).hexdigest(), "subfolder": None, "files": files}
 
 
 def package_dir(model_id: str) -> Path:
@@ -54,6 +62,8 @@ def write_manifest(model_id: str, family: str, onnx_path: Path, exporter: str, o
             "revision": lock["revision"],
             "subfolder": lock["subfolder"],
             "files": {k: v["sha256"] for k, v in lock["files"].items()},
+            **({"training": json.loads((src_dir(model_id) / "training.json").read_text(encoding="utf-8"))}
+               if lock["repo"] == "local-finetune" else {}),
         },
         "onnx": {"file": onnx_path.name, "sha256": sha256(onnx_path), "opset": opset,
                  "exporter": exporter, "precision": "fp32",
