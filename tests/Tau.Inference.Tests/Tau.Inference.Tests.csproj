@@ -13,4 +13,9 @@
   <ItemGroup>
     <Using Include="Xunit" />
   </ItemGroup>
+  <ItemGroup>
+    <!-- Committed fixtures and the provider-spike model; the generator scripts stay in the source tree. -->
+    <None Include="**\data\**\*" Exclude="**\data\**\*.py" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="Onnx\*.onnx" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

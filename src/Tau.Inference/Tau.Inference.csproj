@@ -3,6 +3,9 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <InternalsVisibleTo Include="Tau.Inference.Tests" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Tau.Contract\Tau.Contract.csproj" />
     <ProjectReference Include="..\Tau.Calibration\Tau.Calibration.csproj" />
   </ItemGroup>
