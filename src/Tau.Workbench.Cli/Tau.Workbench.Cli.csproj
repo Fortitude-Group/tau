@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <AssemblyName>tau</AssemblyName>
+    <RootNamespace>Tau.Workbench.Cli</RootNamespace>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>tau</ToolCommandName>
+    <PackageId>Tau.Workbench</PackageId>
+    <Description>The tau command: measure, calibrate and cost any /v1/systemone endpoint against a labelled decision, and write a self-contained HTML report.</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Tau.Workbench\Tau.Workbench.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Tau.Workbench.Tests" />
+  </ItemGroup>
+</Project>

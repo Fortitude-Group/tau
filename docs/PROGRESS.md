@@ -7,13 +7,15 @@ Updated after every completed task. On session restart, resume from here without
 **Task list:** `specs/002-workbench-benchmarks/tasks.md`.
 
 ## R2 log
+
 - Spec, clarify (3 answers), plan, research R-01..R-09, tasks T001–T066 in lanes A–E.
 - Lane D code: `finetune_laya.py`, the manifest/parity changes for local fine-tunes, and `baseline_minilm.py` are committed.
 - Lane C (T040–T042) is merged. Calibrators now act on the log reference probabilities (DECISIONS). The client has per-request headers. Tests: Calibration 107, Client 54, Runtime 43, Contract 113, Inference 1,507 (+3 skipped), model parity 12/12. After the merge, the full non-model suite passes on the branch.
 - Lane A (T002, T010–T013) is merged. Banking77: calibration 1,000, held-out 1,000, fine-tune 9,003. Tickets: after the filters (non-English 33,504, vehicle keywords 393, duplicates 4,467), held-out 1,000, calibration 1,000, fine-tune 8,000. Byte-identical on re-run. 17 data tests pass. Split hashes are in `examples/*/dataset.manifest.json`.
   - **Finding:** English tickets carry only low/medium/high. `very_low` and `critical` exist only in the German file, so reports must say "no English examples", not show them as a 0% class.
   - **Finding:** every one of the 393 vehicle-keyword hits was a false positive (software drivers, "driving growth", "Smart Garage"). The rows stay dropped. It costs nothing, since the pool is 23,401 and the splits need 10,000.
-- Still running: lane B (Workbench core + CLI).
+- Lane B (T001, T020–T030) is merged: `src/Tau.Workbench` (spec, data, frontier, measure, calibrate, threshold, cascade, cost, baselines, report) and the `tau` global tool (`src/Tau.Workbench.Cli`, packs as `Tau.Workbench`). 143 tests pass and the solution builds with 0 warnings and 0 errors. Isotonic calibrators are fitted one-vs-rest on every option's probability, because the shared calibrator applies them per option (a max(p) fit gave log loss about 10 on test data). T031 (the Runtime equality test) is still open.
+- Lane D: the Banking77 Laya fine-tune is running on the GPU.
 
 ---
 

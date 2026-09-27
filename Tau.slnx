@@ -5,6 +5,8 @@
     <Project Path="src/Tau.Contract/Tau.Contract.csproj" />
     <Project Path="src/Tau.Inference/Tau.Inference.csproj" />
     <Project Path="src/Tau.Runtime/Tau.Runtime.csproj" />
+    <Project Path="src/Tau.Workbench/Tau.Workbench.csproj" />
+    <Project Path="src/Tau.Workbench.Cli/Tau.Workbench.Cli.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/Tau.Calibration.Tests/Tau.Calibration.Tests.csproj" />
@@ -12,6 +14,7 @@
     <Project Path="tests/Tau.Contract.Tests/Tau.Contract.Tests.csproj" />
     <Project Path="tests/Tau.Inference.Tests/Tau.Inference.Tests.csproj" />
     <Project Path="tests/Tau.Runtime.Tests/Tau.Runtime.Tests.csproj" />
+    <Project Path="tests/Tau.Workbench.Tests/Tau.Workbench.Tests.csproj" />
   </Folder>
   <Folder Name="/tools/">
     <Project Path="tools/Tau.Bench/Tau.Bench.csproj" />

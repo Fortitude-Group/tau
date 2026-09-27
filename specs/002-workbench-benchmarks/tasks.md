@@ -22,7 +22,7 @@ Serial by necessity: the end-to-end runs (T060+), because they need all lanes an
 
 ## Phase 1: Setup
 
-- [ ] T001 Add projects `src/Tau.Workbench` (library), `src/Tau.Workbench.Cli` (global tool: `PackAsTool`, `ToolCommandName=tau`), `tests/Tau.Workbench.Tests`. Add YamlDotNet (pinned, MIT) to `Directory.Packages.props`. Add all three to `Tau.slnx`. Build clean.
+- [X] T001 Add projects `src/Tau.Workbench` (library), `src/Tau.Workbench.Cli` (global tool: `PackAsTool`, `ToolCommandName=tau`), `tests/Tau.Workbench.Tests`. Add YamlDotNet (pinned, MIT) to `Directory.Packages.props`. Add all three to `Tau.slnx`. Build clean.
 - [x] T002 Add sidecar deps (`datasets`, `pandas`) to `sidecar/finetune/pyproject.toml`, re-lock (`uv lock`), sync.
 
 ## Phase 2: Lane A (data)
@@ -40,17 +40,17 @@ Serial by necessity: the end-to-end runs (T060+), because they need all lanes an
 
 ## Phase 4: Lane B (Workbench core)
 
-- [ ] T020 [P] `DecisionSpec` (YamlDotNet): load, validate (type-specific options, models, pricing), and resolve paths relative to the spec file. Tests.
-- [ ] T021 [P] `Dataset`: read prepared JSONL splits and the manifest, and verify split sha256 against the manifest. Tests.
-- [ ] T022 [P] `Frontier`: batch export (versioned prompt templates `v1`, `v1-alt`; ≤1,000 held-out per dataset; alt subset 200 chosen with seed 42; skip cached keys), cache ingest with validation, overrides, provenance, and a character tally for cost. `tau label` exits 2 when answers are pending. Tests (never re-export cached keys, cap enforced, invalid answers rejected).
-- [ ] T023 [P] `Measure`: POST each item via `Tau.Client` with `x-tau-raw: true` (raw phase) or without (calibrated phase), with bounded concurrency (4), deterministic output order, per-item record, and failures captured. Summary metrics via `Tau.Calibration` (accuracy, ECE max-p 15 bins, Brier, log loss, MAE for score). Endpoint identity from `/v1/models`. GPU power sampled via nvidia-smi when local. Tests against a stub endpoint.
-- [ ] T024 [P] `Calibrate`: per question type (and option-count bucket where n ≥ 200), fit temperature on the calibration split's log reference probabilities, and isotonic on max-p confidence (with fallback to temperature when n < 200). Write R1 calibrator files, choosing the method with lower calibration-split log loss and recording both. Tests on synthetic data (recovers T, isotonic monotone).
-- [ ] T025 [P] `Threshold`: τ from calibration-split calibrated confidences for the target error. Held-out accept rate and accuracy. Curve (τ grid of 0.00–1.00 by 0.01). "Unreachable" result when no τ meets the target. Tests.
-- [ ] T026 [P] `Cascade`: blend local (≥ τ) with frontier answers from the cache. Shares, accuracies (local-only, frontier-only, blended), local latency p50. Tests with hand-made inputs.
-- [ ] T027 [P] `Cost`: frontier tokens from the character tally (chars/4 × tokenizer factor), prices per row, USD→GBP, local kWh from power × time, per 1,000 and per million. Every figure labelled an estimate. Tests with hand-computed values.
-- [ ] T028 `Report`: `report.json` plus a self-contained `report.html` (inline SVG reliability diagrams before/after per model, trade-off curve, cost table, confusion matrix or top-confusions table, label noise, baseline table, metadata block, and a what/why/what-follows sentence per figure). Load the `dataviz` skill before writing chart code. No scripts, no external assets. Snapshot test on a fixed input.
-- [ ] T029 `Baselines`: read sidecar probability files and compute the same metrics via `Tau.Calibration`.
-- [ ] T030 `tau` CLI: `label`, `measure`, `calibrate`, `threshold`, `cascade`, `report`, `run` (skips stages whose artefacts are newer than their inputs). Exit codes per contracts. `dotnet pack` works locally, not pushed.
+- [X] T020 [P] `DecisionSpec` (YamlDotNet): load, validate (type-specific options, models, pricing), and resolve paths relative to the spec file. Tests.
+- [X] T021 [P] `Dataset`: read prepared JSONL splits and the manifest, and verify split sha256 against the manifest. Tests.
+- [X] T022 [P] `Frontier`: batch export (versioned prompt templates `v1`, `v1-alt`; ≤1,000 held-out per dataset; alt subset 200 chosen with seed 42; skip cached keys), cache ingest with validation, overrides, provenance, and a character tally for cost. `tau label` exits 2 when answers are pending. Tests (never re-export cached keys, cap enforced, invalid answers rejected).
+- [X] T023 [P] `Measure`: POST each item via `Tau.Client` with `x-tau-raw: true` (raw phase) or without (calibrated phase), with bounded concurrency (4), deterministic output order, per-item record, and failures captured. Summary metrics via `Tau.Calibration` (accuracy, ECE max-p 15 bins, Brier, log loss, MAE for score). Endpoint identity from `/v1/models`. GPU power sampled via nvidia-smi when local. Tests against a stub endpoint.
+- [X] T024 [P] `Calibrate`: per question type (and option-count bucket where n ≥ 200), fit temperature on the calibration split's log reference probabilities, and isotonic on max-p confidence (with fallback to temperature when n < 200). Write R1 calibrator files, choosing the method with lower calibration-split log loss and recording both. Tests on synthetic data (recovers T, isotonic monotone).
+- [X] T025 [P] `Threshold`: τ from calibration-split calibrated confidences for the target error. Held-out accept rate and accuracy. Curve (τ grid of 0.00–1.00 by 0.01). "Unreachable" result when no τ meets the target. Tests.
+- [X] T026 [P] `Cascade`: blend local (≥ τ) with frontier answers from the cache. Shares, accuracies (local-only, frontier-only, blended), local latency p50. Tests with hand-made inputs.
+- [X] T027 [P] `Cost`: frontier tokens from the character tally (chars/4 × tokenizer factor), prices per row, USD→GBP, local kWh from power × time, per 1,000 and per million. Every figure labelled an estimate. Tests with hand-computed values.
+- [X] T028 `Report`: `report.json` plus a self-contained `report.html` (inline SVG reliability diagrams before/after per model, trade-off curve, cost table, confusion matrix or top-confusions table, label noise, baseline table, metadata block, and a what/why/what-follows sentence per figure). Load the `dataviz` skill before writing chart code. No scripts, no external assets. Snapshot test on a fixed input.
+- [X] T029 `Baselines`: read sidecar probability files and compute the same metrics via `Tau.Calibration`.
+- [X] T030 `tau` CLI: `label`, `measure`, `calibrate`, `threshold`, `cascade`, `report`, `run` (skips stages whose artefacts are newer than their inputs). Exit codes per contracts. `dotnet pack` works locally, not pushed.
 - [ ] T031 SC-007 test: the same calibrator file gives identical probabilities through the Workbench path and through the Runtime (in-process, `Category=Models`).
 
 ## Phase 5: Lane D (fine-tune + baseline, GPU)
