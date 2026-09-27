@@ -16,8 +16,8 @@
 
 ## Lane A: canonical article
 
-- [ ] T010 [US1] Write `docs/articles/tau-canonical.md` under the agreed title, in the agreed order, with every number linked to its report and the caveats at the first mention (FR-001, FR-003–FR-007).
-- [ ] T011 [US1] Run the checker (T030) on it. Zero dead links, zero mismatches, zero banned terms.
+- [x] T010 [US1] Write `docs/articles/tau-canonical.md` under the agreed title, in the agreed order, with every number linked to its report and the caveats at the first mention (FR-001, FR-003–FR-007).
+- [x] T011 [US1] Run the checker (T030) on it. Zero dead links, zero mismatches, zero banned terms.
 
 ## Lane B: public readiness
 
