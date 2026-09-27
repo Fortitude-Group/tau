@@ -6,6 +6,28 @@ this file records the ones I made so the trail is auditable.
 
 ---
 
+## 2026-09-27 · Workbench choices made during lane B, reviewed at merge
+
+- **Isotonic is fitted one-vs-rest on every option's probability, not on max(p).** The shared
+  `Calibrator` maps each option through one curve and renormalises, so the curve has to be fitted
+  on the thing it is applied to. On test data a max(p) fit gave log loss 10.07 against
+  temperature's 0.98, and a one-vs-rest fit gave about 0.95. ECE is still reported on max(p).
+  The method with the lower calibration-split log loss is written, and both scores are kept.
+- **The Runtime loads calibrators from subfolders.** The Workbench writes
+  `examples/<name>/calibrators/<model>/`. Each file names its model and duplicate keys are
+  rejected, so `CalibratorSet.LoadDirectory` now recurses and one Runtime restart, pointed at
+  `examples/<name>/calibrators`, covers every model. A test pins it.
+- **Bucket calibrators duplicate the type-level one** because a spec asks one question with a
+  fixed option count. Both are written, as the plan says, and the report says they match.
+- **The manifest reader accepts what the sidecar writes:** `files.<split>.jsonl.sha256` and
+  `source.commit`. A test loads both committed manifests.
+- **About 5% of ticket texts contain a literal `\n`** (backslash, n) from the source data. Left
+  as is: every model, the baseline and the frontier see the same text, and changing it would
+  change the split hashes for no gain in fairness.
+
+**Reason:** these came up while building and none changes what the spec measures. Recording
+them keeps the trail honest.
+
 ## 2026-09-27 · Calibrators act on the log of the reference probabilities (R2 research R-01, T040–T041)
 
 R1's Runtime applied a `tau.calibrator` v1 file to the model's raw logits, before the

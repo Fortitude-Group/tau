@@ -17,9 +17,11 @@ public sealed class CalibratorSet
     public IReadOnlyList<CalibratorFile> All => _entries.Select(e => e.File).ToArray();
 
     /// <summary>
-    /// Loads and validates every <c>*.calibrator.json</c> file directly under <paramref name="directory"/>.
+    /// Loads and validates every <c>*.calibrator.json</c> file under <paramref name="directory"/>,
+    /// including subfolders, so one directory can hold the Workbench's <c>calibrators/&lt;model&gt;/</c> tree.
+    /// Each file names its own model, and two files for the same key are rejected.
     /// </summary>
-    /// <param name="directory">The directory to scan (non-recursive).</param>
+    /// <param name="directory">The directory to scan (recursive).</param>
     /// <exception cref="CalibratorValidationException">
     /// Thrown when any file fails to load/validate, or two files resolve to the same
     /// (model, questionType, bucket) key.
@@ -31,7 +33,7 @@ public sealed class CalibratorSet
         var entries = new List<(string Path, CalibratorFile File)>();
         var seen = new Dictionary<(string Model, QuestionType QuestionType, OptionBucket? Bucket), string>();
 
-        foreach (string path in Directory.EnumerateFiles(directory, "*.calibrator.json").OrderBy(p => p, StringComparer.Ordinal))
+        foreach (string path in Directory.EnumerateFiles(directory, "*.calibrator.json", SearchOption.AllDirectories).OrderBy(p => p, StringComparer.Ordinal))
         {
             CalibratorFile file = CalibratorFile.Load(path);
             var key = (file.Model, file.QuestionType, file.Bucket);

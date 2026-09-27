@@ -169,7 +169,7 @@ public static class MeasureStage
             && calibratorsSeen.All(c => string.Equals(c, "none", StringComparison.OrdinalIgnoreCase)))
         {
             throw new StageBlockedException(
-                $"The calibrated phase for '{model}' got answers with no calibrator applied (x-tau-calibrators: none). Restart the Runtime with Tau:CalibratorsDirectory={spec.CalibratorsDirectory(model)}, then run 'tau measure <spec> --phase calibrated'.");
+                $"The calibrated phase for '{model}' got answers with no calibrator applied (x-tau-calibrators: none). Restart the Runtime with Tau:CalibratorsDirectory={spec.CalibratorsRoot}, then run 'tau measure <spec> --phase calibrated'.");
         }
 
         var summary = Summarise(spec, model, split, phase, records) with

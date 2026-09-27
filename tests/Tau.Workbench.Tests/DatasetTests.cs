@@ -64,6 +64,19 @@ public sealed class DatasetTests
         Assert.Equal(sha[..12], manifest.CacheRevision);
     }
 
+    [Theory]
+    [InlineData("banking77", "9d081458ff52")]
+    [InlineData("support-tickets", "ddf1c81a5475")]
+    public void TheCommittedSidecarManifestsAreRead(string example, string revision)
+    {
+        var root = Tau.Workbench.Spec.DecisionSpec.FindRepoRoot(AppContext.BaseDirectory)!;
+        var manifest = DatasetManifest.Load(Path.Combine(root, "examples", example, "dataset.manifest.json"));
+        Assert.Equal(["calibration", "finetune", "heldout"], manifest.SplitSha256.Keys.Order(StringComparer.Ordinal));
+        Assert.All(manifest.SplitSha256.Values, h => Assert.Equal(64, h.Length));
+        Assert.Equal(revision, manifest.CacheRevision);
+        Assert.Equal(example == "support-tickets", manifest.Synthetic);
+    }
+
     [Fact]
     public void CacheRevisionPrefersThePinnedSourceRevision()
     {

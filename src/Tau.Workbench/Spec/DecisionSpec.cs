@@ -122,7 +122,10 @@ public sealed class DecisionSpec
     /// <param name="phase">raw, calibrated or offline.</param>
     public string RunSummaryPath(string model, string split, string phase) => Path.Combine(RunsDirectory(model), $"{split}.{phase}.summary.json");
 
-    /// <summary>The calibrators directory for one model (what the Runtime's <c>Tau:CalibratorsDirectory</c> points at).</summary>
+    /// <summary>The root of every model's calibrators: what the Runtime's <c>Tau:CalibratorsDirectory</c> points at (it loads subfolders).</summary>
+    public string CalibratorsRoot => Path.Combine(SpecDirectory, "calibrators");
+
+    /// <summary>The calibrators directory for one model, under <see cref="CalibratorsRoot"/>.</summary>
     /// <param name="model">The model id.</param>
     public string CalibratorsDirectory(string model) => Path.Combine(SpecDirectory, "calibrators", model);
 

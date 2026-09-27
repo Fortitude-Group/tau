@@ -117,7 +117,7 @@ public static class Pipeline
         foreach (var model in spec.Models)
         {
             var s = CalibrateStage.Run(spec, model, manifest, options.Clock);
-            options.Out.WriteLine($"calibrate: {model}: {string.Join("; ", s.Calibrators.Select(c => $"{c.Scope} -> {c.Chosen}"))}; offline held-out ECE {Fmt.Num(s.RawHeldOut?.Ece)} -> {Fmt.Num(s.OfflineHeldOut?.Ece)}. Load {spec.CalibratorsDirectory(model)} into the Runtime for the calibrated phase.");
+            options.Out.WriteLine($"calibrate: {model}: {string.Join("; ", s.Calibrators.Select(c => $"{c.Scope} -> {c.Chosen}"))}; offline held-out ECE {Fmt.Num(s.RawHeldOut?.Ece)} -> {Fmt.Num(s.OfflineHeldOut?.Ece)}. Point the Runtime's Tau:CalibratorsDirectory at {spec.CalibratorsRoot} for the calibrated phase.");
         }
 
         return ExitCodes.Ok;
@@ -235,7 +235,7 @@ public static class Pipeline
                 identity ??= await endpoint.IdentifyAsync(ct).ConfigureAwait(false);
                 if (!identity.IsTau || !await CalibratorsLoadedAsync(spec, model, splits["calibration"], endpoint, ct).ConfigureAwait(false))
                 {
-                    o.WriteLine($"measure: {model} calibrated: skipped: the endpoint has not loaded calibrators for it. The report uses the Workbench's offline calibration. To measure the Runtime's own calibrated output, restart it with Tau:CalibratorsDirectory={spec.CalibratorsDirectory(model)} and run 'tau measure <spec> --phase calibrated'.");
+                    o.WriteLine($"measure: {model} calibrated: skipped: the endpoint has not loaded calibrators for it. The report uses the Workbench's offline calibration. To measure the Runtime's own calibrated output, restart it with Tau:CalibratorsDirectory={spec.CalibratorsRoot} and run 'tau measure <spec> --phase calibrated'.");
                     continue;
                 }
 

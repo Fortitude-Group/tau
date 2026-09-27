@@ -45,6 +45,30 @@ public class CalibratorSetTests
     }
 
     [Fact]
+    public void LoadDirectory_ReadsPerModelSubfolders()
+    {
+        string dir = NewTempDirectory();
+        try
+        {
+            Directory.CreateDirectory(Path.Combine(dir, "laya"));
+            Directory.CreateDirectory(Path.Combine(dir, "von"));
+            CalibratorFile.CreateTemperature("laya", ModelHash, QuestionType.Choice, null, 1.5, Fitted())
+                .Write(Path.Combine(dir, "laya", "choice.calibrator.json"));
+            CalibratorFile.CreateTemperature("von", ModelHash, QuestionType.Choice, null, 2.0, Fitted())
+                .Write(Path.Combine(dir, "von", "choice.calibrator.json"));
+
+            var set = CalibratorSet.LoadDirectory(dir);
+
+            Assert.Equal(1.5, set.Find("laya", QuestionType.Choice, 4)!.Temperature);
+            Assert.Equal(2.0, set.Find("von", QuestionType.Choice, 4)!.Temperature);
+        }
+        finally
+        {
+            Directory.Delete(dir, recursive: true);
+        }
+    }
+
+    [Fact]
     public void Find_NoMatch_ReturnsNull()
     {
         string dir = NewTempDirectory();

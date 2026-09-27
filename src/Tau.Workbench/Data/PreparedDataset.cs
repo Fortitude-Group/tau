@@ -40,8 +40,9 @@ public sealed record DatasetManifest(
         : Sha256[..12];
 
     /// <summary>
-    /// Reads a manifest. The split hashes are read from <c>splits.&lt;name&gt;.sha256</c> (the documented
-    /// shape) or, failing that, from a flat <c>sha256.&lt;name&gt;</c> or <c>split_sha256.&lt;name&gt;</c> map.
+    /// Reads a manifest. The split hashes are read from <c>splits.&lt;name&gt;.sha256</c>, then
+    /// <c>files.&lt;name&gt;.jsonl.sha256</c> (what the sidecar data scripts write), then a flat
+    /// <c>sha256.&lt;name&gt;</c> or <c>split_sha256.&lt;name&gt;</c> map.
     /// </summary>
     /// <param name="path">The manifest file.</param>
     /// <exception cref="WorkbenchException">The manifest is missing or unreadable.</exception>
@@ -76,6 +77,18 @@ public sealed record DatasetManifest(
             }
         }
 
+        // The sidecar data scripts write files.<split>.jsonl.sha256.
+        if (hashes.Count == 0 && doc["files"] is JsonObject files)
+        {
+            foreach (var (name, node) in files)
+            {
+                if (name.EndsWith(".jsonl", StringComparison.Ordinal) && node?["sha256"] is JsonValue v && v.TryGetValue<string>(out var s))
+                {
+                    hashes[name[..^".jsonl".Length]] = s.ToLowerInvariant();
+                }
+            }
+        }
+
         foreach (var flat in new[] { "split_sha256", "sha256" })
         {
             if (hashes.Count == 0 && doc[flat] is JsonObject map)
@@ -90,7 +103,7 @@ public sealed record DatasetManifest(
             }
         }
 
-        string? revision = Text(doc["revision"]) ?? Text(doc["source"]?["revision"]);
+        string? revision = Text(doc["revision"]) ?? Text(doc["source"]?["revision"]) ?? Text(doc["source"]?["commit"]);
         string? source = Text(doc["source"]) ?? Text(doc["source"]?["repo"]) ?? Text(doc["source"]?["name"]);
         string? licence = Text(doc["licence"]) ?? Text(doc["license"]);
         bool synthetic = doc["synthetic"] is JsonValue sv && sv.TryGetValue<bool>(out var b) && b;
