@@ -6,6 +6,16 @@ this file records the ones I made so the trail is auditable.
 
 ---
 
+## 2026-09-27 · Rob's R1 gate answers: go for R2, dataset approved, private repo
+
+- **R2 approved.**
+- **Urgency dataset: `Tobi-Bueck/customer-support-tickets`** (CC-BY-NC-4.0), approved by Rob on the terms
+  proposed. A script downloads it at a pinned revision, only measurements and derived calibrators are
+  published, and no rows are redistributed in the repo. Banking77 (CC-BY-4.0) is the other dataset.
+- **Repo:** `Fortitude-Group/tau` created **private** and pushed (`master` + `001-runtime-onnx-parity`).
+  Before the push: no secrets found; the only fleet/vehicle strings are words in the upstream tokeniser
+  vocabularies (third-party model files), not data or examples. Making it public still waits for Rob.
+
 ## 2026-09-27 · Performance findings before the R1 benchmark (measured, not assumed)
 
 - **CUDA is compute-bound in FP32.** Graph optimisation (basic against all), deterministic compute on or
