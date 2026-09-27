@@ -6,9 +6,9 @@ A summary of the per-run reports listed below, all measured on the reference mac
 
 | Report | Kind | Provider | Measured (UTC) | Commit | Timed iterations | Load before (CPU / GPU) | Largest p50 change between repeats |
 |---|---|---|---|---|---:|---|---:|
-| [latency-cuda.md](latency-cuda.md) | in-process | CUDA | 2026-09-27T02:08:27Z | `77a47a7e0eb6` (dirty) | 500 x 2 | 46.19 % / 0.00 % | 66.89 % |
-| [latency-cpu.md](latency-cpu.md) | in-process | CPU | 2026-09-27T02:53:14Z | `77a47a7e0eb6` (dirty) | 30 x 2 | 39.89 % / 0.00 % | 24.67 % |
-| [latency-http-cuda.md](latency-http-cuda.md) | http | CUDA | 2026-09-27T03:06:00Z | `77a47a7e0eb6` (dirty) | 500 x 2 | 44.61 % / 0.00 % | 6.76 % |
+| [latency-cuda.md](latency-cuda.md) | in-process | CUDA | 2026-09-27T04:22:38Z | `c26162e40284` (dirty) | 500 x 2 | 49.94 % / 0.00 % | 19.94 % |
+| [latency-cpu.md](latency-cpu.md) | in-process | CPU | 2026-09-27T05:06:43Z | `c26162e40284` (dirty) | 30 x 2 | 48.77 % / 0.00 % | 17.59 % |
+| [latency-http-cuda.md](latency-http-cuda.md) | http | CUDA | 2026-09-27T05:19:25Z | `c26162e40284` (dirty) | 500 x 2 | 49.66 % / 0.00 % | 14.44 % |
 
 ## Reference machine
 
@@ -24,18 +24,18 @@ A summary of the per-run reports listed below, all measured on the reference mac
 
 | Model | q | CUDA | CPU | CPU / CUDA | CUDA per question | CPU per question |
 |---|---:|---:|---:|---:|---:|---:|
-| laya-en | 1 | 20.26 | 917.29 | 45.28x | 20.26 | 917.29 |
-| laya-en | 4 | 51.95 | 3254.86 | 62.66x | 12.99 | 813.71 |
-| laya-en | 10 | 112.84 | 7319.57 | 64.87x | 11.28 | 731.96 |
-| laya-multilingual | 1 | 16.27 | 258.01 | 15.86x | 16.27 | 258.01 |
-| laya-multilingual | 4 | 24.80 | 1046.50 | 42.19x | 6.20 | 261.63 |
-| laya-multilingual | 10 | 53.07 | 2704.49 | 50.97x | 5.31 | 270.45 |
-| laya-typed-decisions | 1 | 21.04 | 594.85 | 28.27x | 21.04 | 594.85 |
-| laya-typed-decisions | 4 | 52.90 | 2492.69 | 47.12x | 13.23 | 623.17 |
-| laya-typed-decisions | 10 | 114.45 | 7385.54 | 64.53x | 11.45 | 738.55 |
-| von-1.2.0 | 1 | 19.24 | 523.95 | 27.24x | 19.24 | 523.95 |
-| von-1.2.0 | 4 | 53.31 | 2615.89 | 49.07x | 13.33 | 653.97 |
-| von-1.2.0 | 10 | 124.21 | 6962.20 | 56.05x | 12.42 | 696.22 |
+| laya-en | 1 | 21.57 | 811.20 | 37.60x | 21.57 | 811.20 |
+| laya-en | 4 | 51.99 | 3013.33 | 57.96x | 13.00 | 753.33 |
+| laya-en | 10 | 112.44 | 6841.55 | 60.85x | 11.24 | 684.16 |
+| laya-multilingual | 1 | 18.73 | 252.89 | 13.50x | 18.73 | 252.89 |
+| laya-multilingual | 4 | 24.62 | 984.23 | 39.97x | 6.16 | 246.06 |
+| laya-multilingual | 10 | 53.28 | 2628.01 | 49.33x | 5.33 | 262.80 |
+| laya-typed-decisions | 1 | 25.95 | 577.00 | 22.24x | 25.95 | 577.00 |
+| laya-typed-decisions | 4 | 53.08 | 2615.48 | 49.28x | 13.27 | 653.87 |
+| laya-typed-decisions | 10 | 113.15 | 7302.40 | 64.54x | 11.31 | 730.24 |
+| von-1.2.0 | 1 | 19.75 | 512.21 | 25.93x | 19.75 | 512.21 |
+| von-1.2.0 | 4 | 52.87 | 2597.83 | 49.13x | 13.22 | 649.46 |
+| von-1.2.0 | 10 | 122.97 | 6827.89 | 55.52x | 12.30 | 682.79 |
 
 This is the per-request cost for a .NET program that embeds the engine, on each provider. The ratio column says how many times slower the CPU is than the GPU for the same request. The per-question columns are the batched p50 divided by the number of questions. Compare providers at the question count you'll send most often, since the gap between them changes with q.
 
@@ -43,18 +43,18 @@ This is the per-request cost for a .NET program that embeds the engine, on each 
 
 | Model | q | CUDA | CPU | CPU / CUDA | CUDA per question | CPU per question |
 |---|---:|---:|---:|---:|---:|---:|
-| laya-en | 1 | 19.68 | 916.17 | 46.55x | 19.68 | 916.17 |
-| laya-en | 4 | 51.23 | 3253.72 | 63.51x | 12.81 | 813.43 |
-| laya-en | 10 | 111.68 | 7317.86 | 65.53x | 11.17 | 731.79 |
-| laya-multilingual | 1 | 15.93 | 257.55 | 16.16x | 15.93 | 257.55 |
-| laya-multilingual | 4 | 24.20 | 1045.74 | 43.22x | 6.05 | 261.44 |
-| laya-multilingual | 10 | 52.14 | 2703.14 | 51.84x | 5.21 | 270.31 |
-| laya-typed-decisions | 1 | 20.55 | 594.25 | 28.92x | 20.55 | 594.25 |
-| laya-typed-decisions | 4 | 52.18 | 2491.82 | 47.76x | 13.04 | 622.95 |
-| laya-typed-decisions | 10 | 113.28 | 7383.67 | 65.18x | 11.33 | 738.37 |
-| von-1.2.0 | 1 | 18.35 | 522.60 | 28.48x | 18.35 | 522.60 |
-| von-1.2.0 | 4 | 50.85 | 2612.10 | 51.37x | 12.71 | 653.02 |
-| von-1.2.0 | 10 | 118.85 | 6954.07 | 58.51x | 11.89 | 695.41 |
+| laya-en | 1 | 21.09 | 810.20 | 38.42x | 21.09 | 810.20 |
+| laya-en | 4 | 51.23 | 3012.14 | 58.80x | 12.81 | 753.03 |
+| laya-en | 10 | 111.12 | 6839.91 | 61.55x | 11.11 | 683.99 |
+| laya-multilingual | 1 | 18.33 | 252.43 | 13.77x | 18.33 | 252.43 |
+| laya-multilingual | 4 | 23.96 | 983.54 | 41.04x | 5.99 | 245.89 |
+| laya-multilingual | 10 | 52.24 | 2627.08 | 50.29x | 5.22 | 262.71 |
+| laya-typed-decisions | 1 | 25.37 | 576.48 | 22.72x | 25.37 | 576.48 |
+| laya-typed-decisions | 4 | 52.24 | 2614.58 | 50.05x | 13.06 | 653.65 |
+| laya-typed-decisions | 10 | 111.83 | 7300.85 | 65.28x | 11.18 | 730.08 |
+| von-1.2.0 | 1 | 18.84 | 510.79 | 27.11x | 18.84 | 510.79 |
+| von-1.2.0 | 4 | 50.38 | 2593.71 | 51.49x | 12.59 | 648.43 |
+| von-1.2.0 | 10 | 116.94 | 6820.37 | 58.33x | 11.69 | 682.04 |
 
 This is the model alone, without Tau's tokenising and post-processing. Where the engine figure above is much larger than this, the difference is Tau's own code rather than the model.
 
@@ -62,18 +62,18 @@ This is the model alone, without Tau's tokenising and post-processing. Where the
 
 | Model | q | HTTP p50 | HTTP p95 | HTTP per question | Engine p50 (in-process) | Added by HTTP |
 |---|---:|---:|---:|---:|---:|---:|
-| laya-en | 1 | 19.92 | 25.10 | 19.92 | 20.26 | -0.34 |
-| laya-en | 4 | 51.93 | 53.14 | 12.98 | 51.95 | -0.01 |
-| laya-en | 10 | 112.37 | 113.73 | 11.24 | 112.84 | -0.47 |
-| laya-multilingual | 1 | 16.41 | 23.10 | 16.41 | 16.27 | 0.14 |
-| laya-multilingual | 4 | 24.86 | 26.64 | 6.22 | 24.80 | 0.06 |
-| laya-multilingual | 10 | 53.19 | 54.50 | 5.32 | 53.07 | 0.13 |
-| laya-typed-decisions | 1 | 23.35 | 34.44 | 23.35 | 21.04 | 2.31 |
-| laya-typed-decisions | 4 | 52.91 | 54.43 | 13.23 | 52.90 | 0.01 |
-| laya-typed-decisions | 10 | 113.04 | 114.73 | 11.30 | 114.45 | -1.41 |
-| von-1.2.0 | 1 | 18.85 | 25.00 | 18.85 | 19.24 | -0.38 |
-| von-1.2.0 | 4 | 52.41 | 54.34 | 13.10 | 53.31 | -0.90 |
-| von-1.2.0 | 10 | 121.46 | 124.03 | 12.15 | 124.21 | -2.74 |
+| laya-en | 1 | 20.86 | 27.69 | 20.86 | 21.57 | -0.72 |
+| laya-en | 4 | 52.37 | 53.68 | 13.09 | 51.99 | 0.38 |
+| laya-en | 10 | 112.24 | 113.53 | 11.22 | 112.44 | -0.20 |
+| laya-multilingual | 1 | 14.90 | 21.03 | 14.90 | 18.73 | -3.83 |
+| laya-multilingual | 4 | 24.81 | 26.32 | 6.20 | 24.62 | 0.19 |
+| laya-multilingual | 10 | 53.13 | 54.32 | 5.31 | 53.28 | -0.15 |
+| laya-typed-decisions | 1 | 21.71 | 29.62 | 21.71 | 25.95 | -4.24 |
+| laya-typed-decisions | 4 | 53.00 | 54.70 | 13.25 | 53.08 | -0.08 |
+| laya-typed-decisions | 10 | 113.10 | 114.64 | 11.31 | 113.15 | -0.05 |
+| von-1.2.0 | 1 | 18.91 | 24.65 | 18.91 | 19.75 | -0.84 |
+| von-1.2.0 | 4 | 52.34 | 54.09 | 13.09 | 52.87 | -0.53 |
+| von-1.2.0 | 10 | 121.29 | 125.37 | 12.13 | 122.97 | -1.69 |
 
 This is what a client on the same machine waits for one request. The last column is the HTTP p50 minus the in-process engine p50 from a separate run, so it's an estimate of what HTTP, JSON and ASP.NET add, not a direct measurement. A negative value means the overhead is smaller than the run-to-run noise between the two runs. A remote client adds its network round trip on top.
 

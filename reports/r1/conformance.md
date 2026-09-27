@@ -1,8 +1,8 @@
 # Tau /v1/systemone conformance report
 
 - **Command**: `dotnet run --project tools/Tau.Conformance -- --tau http://localhost:8088 --out reports/r1 --requests tests/conformance/requests --peer http://127.0.0.1:8009 --peer-name kev-0.8b --peer-revision 5920c5fe4ca8e0970ed4209ac2c9b8e18bea5109`
-- **Date (UTC)**: 2026-09-27T01:18:05Z
-- **Git commit**: 29d2fe3eaaac569e160752302dd4be1fb2495fa9
+- **Date (UTC)**: 2026-09-27T04:05:24Z
+- **Git commit**: c26162e40284fbbff86bc937e482885cbb961b64
 - **Contract version**: `systemone/2026-09-27`
 - **GPU**: NVIDIA GeForce RTX 3080 Ti, 12288 MiB, 610.47
 - **CPU**: Intel64 Family 6 Model 167 Stepping 1, GenuineIntel
@@ -34,8 +34,8 @@ A single noul question with no other question types in the request.
 
 Expected status: **200**.
 
-- **Tau**: status 200, 1165.9 ms, contract **PASS**.
-- **Peer**: status 200, 910 ms, contract **PASS**.
+- **Tau**: status 200, 935.6 ms, contract **PASS**.
+- **Peer**: status 200, 538.3 ms, contract **PASS**.
   - peer extension: top-level field 'latency_ms'
 Model disagreements:
 - `is_urgent` (noul): Tau said `0.2273`, peer said `0.5082`.
@@ -46,8 +46,8 @@ A single choice question with no other question types in the request.
 
 Expected status: **200**.
 
-- **Tau**: status 200, 991.5 ms, contract **PASS**.
-- **Peer**: status 200, 1356.1 ms, contract **PASS**.
+- **Tau**: status 200, 786.9 ms, contract **PASS**.
+- **Peer**: status 200, 1131.8 ms, contract **PASS**.
   - peer extension: top-level field 'latency_ms'
 ### score question alone (`03_score_alone.json`)
 
@@ -55,8 +55,8 @@ A single score question with no other question types in the request.
 
 Expected status: **200**.
 
-- **Tau**: status 200, 1268.5 ms, contract **PASS**.
-- **Peer**: status 200, 1287.6 ms, contract **PASS**.
+- **Tau**: status 200, 1001.7 ms, contract **PASS**.
+- **Peer**: status 200, 1064 ms, contract **PASS**.
   - peer extension: top-level field 'latency_ms'
 Model disagreements:
 - `satisfaction_risk` (score): Tau said `1.3674`, peer said `2.0244`.
@@ -67,8 +67,8 @@ One noul, one choice and one score question in the same request.
 
 Expected status: **200**.
 
-- **Tau**: status 200, 1276.4 ms, contract **PASS**.
-- **Peer**: status 200, 1265.7 ms, contract **PASS**.
+- **Tau**: status 200, 1083.5 ms, contract **PASS**.
+- **Peer**: status 200, 1173.7 ms, contract **PASS**.
   - peer extension: top-level field 'latency_ms'
 Model disagreements:
 - `needs_escalation` (noul): Tau said `0.6642`, peer said `0.5041`.
@@ -81,8 +81,8 @@ A request containing exactly one question.
 
 Expected status: **200**.
 
-- **Tau**: status 200, 1292.2 ms, contract **PASS**.
-- **Peer**: status 200, 1340.2 ms, contract **PASS**.
+- **Tau**: status 200, 1068.4 ms, contract **PASS**.
+- **Peer**: status 200, 1171 ms, contract **PASS**.
   - peer extension: top-level field 'latency_ms'
 Model disagreements:
 - `is_resolved` (noul): Tau said `0.1086`, peer said `0.2653`.
@@ -93,8 +93,8 @@ A request containing exactly two questions.
 
 Expected status: **200**.
 
-- **Tau**: status 200, 1232.6 ms, contract **PASS**.
-- **Peer**: status 200, 1574.2 ms, contract **PASS**.
+- **Tau**: status 200, 1120.4 ms, contract **PASS**.
+- **Peer**: status 200, 1268.2 ms, contract **PASS**.
   - peer extension: top-level field 'latency_ms'
 Model disagreements:
 - `is_bug` (noul): Tau said `0.8688`, peer said `0.8079`.
@@ -105,8 +105,8 @@ A request containing ten questions, cycling through all three question types.
 
 Expected status: **200**.
 
-- **Tau**: status 200, 1305.1 ms, contract **PASS**.
-- **Peer**: status 200, 2147.2 ms, contract **PASS**.
+- **Tau**: status 200, 1130.2 ms, contract **PASS**.
+- **Peer**: status 200, 1255.4 ms, contract **PASS**.
   - peer extension: top-level field 'latency_ms'
 Model disagreements:
 - `noul_1` (noul): Tau said `0.2452`, peer said `0.6618`.
@@ -123,8 +123,8 @@ A request containing fifty questions, cycling through all three question types.
 
 Expected status: **200**.
 
-- **Tau**: status 200, 14654.6 ms, contract **PASS**.
-- **Peer**: status 200, 8408.9 ms, contract **PASS**.
+- **Tau**: status 200, 1728.1 ms, contract **PASS**.
+- **Peer**: status 200, 3349.8 ms, contract **PASS**.
   - peer extension: top-level field 'latency_ms'
 Model disagreements:
 - `noul_1` (noul): Tau said `0.2452`, peer said `0.6618`.
@@ -167,8 +167,8 @@ A choice question with a single option.
 
 Expected status: **200**.
 
-- **Tau**: status 200, 5418.4 ms, contract **PASS**.
-- **Peer**: status 200, 9641.2 ms, contract **PASS**.
+- **Tau**: status 200, 284.5 ms, contract **PASS**.
+- **Peer**: status 200, 1475.9 ms, contract **PASS**.
   - peer extension: top-level field 'latency_ms'
 ### choice with 2 options (`10_choice_options_2.json`)
 
@@ -176,8 +176,8 @@ A choice question with two options.
 
 Expected status: **200**.
 
-- **Tau**: status 200, 7578.3 ms, contract **PASS**.
-- **Peer**: status 200, 18699.5 ms, contract **PASS**.
+- **Tau**: status 200, 1167.5 ms, contract **PASS**.
+- **Peer**: status 200, 1393.6 ms, contract **PASS**.
   - peer extension: top-level field 'latency_ms'
 Model disagreements:
 - `binary_choice` (choice): Tau said `option_01`, peer said `option_02`.
@@ -188,8 +188,8 @@ A choice question with five options.
 
 Expected status: **200**.
 
-- **Tau**: status 200, 9582.4 ms, contract **PASS**.
-- **Peer**: status 200, 10672.7 ms, contract **PASS**.
+- **Tau**: status 200, 1350.7 ms, contract **PASS**.
+- **Peer**: status 200, 1470.1 ms, contract **PASS**.
   - peer extension: top-level field 'latency_ms'
 Model disagreements:
 - `category` (choice): Tau said `option_01`, peer said `option_05`.
@@ -200,8 +200,8 @@ A choice question with thirty options, well under the contract's maximum of 255.
 
 Expected status: **200**.
 
-- **Tau**: status 200, 8222.7 ms, contract **PASS**.
-- **Peer**: status 200, 15200.4 ms, contract **PASS**.
+- **Tau**: status 200, 1315.6 ms, contract **PASS**.
+- **Peer**: status 200, 1417.7 ms, contract **PASS**.
   - peer extension: top-level field 'latency_ms'
 Model disagreements:
 - `reason_code` (choice): Tau said `option_09`, peer said `option_30`.
@@ -212,8 +212,8 @@ A choice question with seventy-seven options (the Banking77-style option count).
 
 Expected status: **200**.
 
-- **Tau**: status 200, 8127.7 ms, contract **PASS**.
-- **Peer**: status 200, 14137.6 ms, contract **PASS**.
+- **Tau**: status 200, 1313.3 ms, contract **PASS**.
+- **Peer**: status 200, 1649.7 ms, contract **PASS**.
   - peer extension: top-level field 'latency_ms'
 Model disagreements:
 - `intent` (choice): Tau said `option_05`, peer said `option_02`.
@@ -224,8 +224,8 @@ A choice question whose option descriptions are all JSON null, which the contrac
 
 Expected status: **200**.
 
-- **Tau**: status 200, 7803.1 ms, contract **PASS**.
-- **Peer**: status 200, 12956.1 ms, contract **PASS**.
+- **Tau**: status 200, 1155.4 ms, contract **PASS**.
+- **Peer**: status 200, 1335.6 ms, contract **PASS**.
   - peer extension: top-level field 'latency_ms'
 ### choice with empty string descriptions (`15_choice_empty_descriptions.json`)
 
@@ -233,8 +233,8 @@ A choice question whose option descriptions are all empty strings.
 
 Expected status: **200**.
 
-- **Tau**: status 200, 8351.1 ms, contract **PASS**.
-- **Peer**: status 200, 10933.9 ms, contract **PASS**.
+- **Tau**: status 200, 1358.6 ms, contract **PASS**.
+- **Peer**: status 200, 1355.3 ms, contract **PASS**.
   - peer extension: top-level field 'latency_ms'
 ### score with 2 levels (`16_score_levels_2.json`)
 
@@ -242,8 +242,8 @@ A score question at the contract's minimum of two levels.
 
 Expected status: **200**.
 
-- **Tau**: status 200, 10164.7 ms, contract **PASS**.
-- **Peer**: status 200, 7405.5 ms, contract **PASS**.
+- **Tau**: status 200, 1362.7 ms, contract **PASS**.
+- **Peer**: status 200, 1364.3 ms, contract **PASS**.
   - peer extension: top-level field 'latency_ms'
 Model disagreements:
 - `satisfied` (score): Tau said `0.1691`, peer said `0.3759`.
@@ -254,8 +254,8 @@ A score question at the contract's maximum of ten levels.
 
 Expected status: **200**.
 
-- **Tau**: status 200, 7538.1 ms, contract **PASS**.
-- **Peer**: status 200, 8245.7 ms, contract **PASS**.
+- **Tau**: status 200, 1312 ms, contract **PASS**.
+- **Peer**: status 200, 1343.2 ms, contract **PASS**.
   - peer extension: top-level field 'latency_ms'
 Model disagreements:
 - `satisfaction` (score): Tau said `2.5661`, peer said `4.6596`.
@@ -266,8 +266,8 @@ A noul question that supplies true/false criteria descriptions.
 
 Expected status: **200**.
 
-- **Tau**: status 200, 11060.4 ms, contract **PASS**.
-- **Peer**: status 200, 8009.2 ms, contract **PASS**.
+- **Tau**: status 200, 1338.2 ms, contract **PASS**.
+- **Peer**: status 200, 1328.7 ms, contract **PASS**.
   - peer extension: top-level field 'latency_ms'
 Model disagreements:
 - `is_fraud` (noul): Tau said `0.5725`, peer said `0.3239`.
@@ -278,8 +278,8 @@ A noul question with no criteria field, which the contract makes optional.
 
 Expected status: **200**.
 
-- **Tau**: status 200, 11758.4 ms, contract **PASS**.
-- **Peer**: status 200, 9674.5 ms, contract **PASS**.
+- **Tau**: status 200, 1309.3 ms, contract **PASS**.
+- **Peer**: status 200, 1352.7 ms, contract **PASS**.
   - peer extension: top-level field 'latency_ms'
 Model disagreements:
 - `is_fraud` (noul): Tau said `0.3557`, peer said `0.4534`.
@@ -290,8 +290,8 @@ State given as a plain string.
 
 Expected status: **200**.
 
-- **Tau**: status 200, 7561.3 ms, contract **PASS**.
-- **Peer**: status 200, 14441.2 ms, contract **PASS**.
+- **Tau**: status 200, 1339.3 ms, contract **PASS**.
+- **Peer**: status 200, 1479 ms, contract **PASS**.
   - peer extension: top-level field 'latency_ms'
 Model disagreements:
 - `is_urgent` (noul): Tau said `0.1561`, peer said `0.4375`.
@@ -302,8 +302,8 @@ State given as a JSON object rather than a string.
 
 Expected status: **200**.
 
-- **Tau**: status 200, 5678 ms, contract **PASS**.
-- **Peer**: status 200, 8453.5 ms, contract **PASS**.
+- **Tau**: status 200, 1299.4 ms, contract **PASS**.
+- **Peer**: status 200, 1532.5 ms, contract **PASS**.
   - peer extension: top-level field 'latency_ms'
 Model disagreements:
 - `is_billing_error` (noul): Tau said `0.8686`, peer said `0.8358`.
@@ -314,8 +314,8 @@ State given as a JSON array of message turns.
 
 Expected status: **200**.
 
-- **Tau**: status 200, 5540 ms, contract **PASS**.
-- **Peer**: status 200, 10372.9 ms, contract **PASS**.
+- **Tau**: status 200, 1213.3 ms, contract **PASS**.
+- **Peer**: status 200, 1443.7 ms, contract **PASS**.
   - peer extension: top-level field 'latency_ms'
 Model disagreements:
 - `needs_investigation` (noul): Tau said `0.0942`, peer said `0.633`.
@@ -326,8 +326,8 @@ State given as a deeply nested object and array structure.
 
 Expected status: **200**.
 
-- **Tau**: status 200, 10860.1 ms, contract **PASS**.
-- **Peer**: status 200, 10237.8 ms, contract **PASS**.
+- **Tau**: status 200, 1301.6 ms, contract **PASS**.
+- **Peer**: status 200, 1517.6 ms, contract **PASS**.
   - peer extension: top-level field 'latency_ms'
 Model disagreements:
 - `wants_cancellation` (noul): Tau said `0.904`, peer said `0.9603`.
@@ -338,8 +338,8 @@ State explicitly given as JSON null, which the contract permits.
 
 Expected status: **200**.
 
-- **Tau**: status 200, 7163.1 ms, contract **PASS**.
-- **Peer**: status 200, 12492.7 ms, contract **PASS**.
+- **Tau**: status 200, 1284.4 ms, contract **PASS**.
+- **Peer**: status 200, 1512.6 ms, contract **PASS**.
   - peer extension: top-level field 'latency_ms'
 Model disagreements:
 - `is_urgent` (noul): Tau said `0.1758`, peer said `0.4161`.
@@ -350,8 +350,8 @@ State given as an empty string.
 
 Expected status: **200**.
 
-- **Tau**: status 200, 7703.7 ms, contract **PASS**.
-- **Peer**: status 200, 8624.3 ms, contract **PASS**.
+- **Tau**: status 200, 1258 ms, contract **PASS**.
+- **Peer**: status 200, 1318.7 ms, contract **PASS**.
   - peer extension: top-level field 'latency_ms'
 Model disagreements:
 - `is_urgent` (noul): Tau said `0.1898`, peer said `0.4495`.
@@ -362,8 +362,8 @@ State is a long free-text narrative of 6100 characters.
 
 Expected status: **200**.
 
-- **Tau**: status 200, 9303.2 ms, contract **PASS**.
-- **Peer**: status 200, 14022.2 ms, contract **PASS**.
+- **Tau**: status 200, 1444.3 ms, contract **PASS**.
+- **Peer**: status 200, 1630.1 ms, contract **PASS**.
   - peer extension: top-level field 'latency_ms'
 Model disagreements:
 - `root_cause_is_otp_delay` (noul): Tau said `0.9514`, peer said `0.9547`.
@@ -374,8 +374,8 @@ State containing emoji and accented Latin characters.
 
 Expected status: **200**.
 
-- **Tau**: status 200, 23326.2 ms, contract **PASS**.
-- **Peer**: status 200, 10013.2 ms, contract **PASS**.
+- **Tau**: status 200, 1018.9 ms, contract **PASS**.
+- **Peer**: status 200, 1369.4 ms, contract **PASS**.
   - peer extension: top-level field 'latency_ms'
 Model disagreements:
 - `is_angry` (noul): Tau said `0.6127`, peer said `0.8216`.
@@ -386,8 +386,8 @@ State written in Japanese and Arabic script rather than Latin characters.
 
 Expected status: **200**.
 
-- **Tau**: status 200, 9557.2 ms, contract **PASS**.
-- **Peer**: status 200, 10654.8 ms, contract **PASS**.
+- **Tau**: status 200, 1364.2 ms, contract **PASS**.
+- **Peer**: status 200, 1418.7 ms, contract **PASS**.
   - peer extension: top-level field 'latency_ms'
 Model disagreements:
 - `needs_translation_support` (noul): Tau said `0.6639`, peer said `0.6077`.
@@ -398,8 +398,8 @@ The question's instructions field is a structured object rather than a string.
 
 Expected status: **200**.
 
-- **Tau**: status 200, 15177.4 ms, contract **PASS**.
-- **Peer**: status 200, 6853.7 ms, contract **PASS**.
+- **Tau**: status 200, 1395.9 ms, contract **PASS**.
+- **Peer**: status 200, 1401.2 ms, contract **PASS**.
   - peer extension: top-level field 'latency_ms'
 Model disagreements:
 - `is_bug` (noul): Tau said `0.8168`, peer said `0.906`.
@@ -410,8 +410,8 @@ The question's instructions field is an array of instruction fragments rather th
 
 Expected status: **200**.
 
-- **Tau**: status 200, 8230 ms, contract **PASS**.
-- **Peer**: status 200, 7240.5 ms, contract **PASS**.
+- **Tau**: status 200, 1362.4 ms, contract **PASS**.
+- **Peer**: status 200, 1399.3 ms, contract **PASS**.
   - peer extension: top-level field 'latency_ms'
 Model disagreements:
 - `urgency` (score): Tau said `1.0639`, peer said `1.1999`.
@@ -422,8 +422,8 @@ The request pins the model alias jev-latest.
 
 Expected status: **200**.
 
-- **Tau**: status 200, 9513.8 ms, contract **PASS**.
-- **Peer**: status 200, 8985.7 ms, contract **PASS**.
+- **Tau**: status 200, 1331.1 ms, contract **PASS**.
+- **Peer**: status 200, 1416.6 ms, contract **PASS**.
   - peer extension: top-level field 'latency_ms'
 Model disagreements:
 - `is_urgent` (noul): Tau said `0.2623`, peer said `0.5352`.
@@ -434,8 +434,8 @@ The request uses the auto-routing model alias.
 
 Expected status: **200**.
 
-- **Tau**: status 200, 8597.4 ms, contract **PASS**.
-- **Peer**: status 200, 10465.6 ms, contract **PASS**.
+- **Tau**: status 200, 1391.8 ms, contract **PASS**.
+- **Peer**: status 200, 1406.6 ms, contract **PASS**.
   - peer extension: top-level field 'latency_ms'
 Model disagreements:
 - `is_urgent` (noul): Tau said `0.2623`, peer said `0.5352`.
@@ -446,8 +446,8 @@ The request pins a specific model id, laya-en, rather than an alias.
 
 Expected status: **200**.
 
-- **Tau**: status 200, 10775.5 ms, contract **PASS**.
-- **Peer**: status 200, 16870 ms, contract **PASS**.
+- **Tau**: status 200, 1384.8 ms, contract **PASS**.
+- **Peer**: status 200, 1323.1 ms, contract **PASS**.
   - peer extension: top-level field 'latency_ms'
 Model disagreements:
 - `is_urgent` (noul): Tau said `0.2623`, peer said `0.5352`.
@@ -458,8 +458,8 @@ The request omits the required top-level model field.
 
 Expected status: **422**.
 
-- **Tau**: status 422, 1352.7 ms, contract **PASS**.
-- **Peer**: status 200, 195.7 ms, contract **FAIL**.
+- **Tau**: status 422, 3.8 ms, contract **PASS**.
+- **Peer**: status 200, 19.5 ms, contract **FAIL**.
   - error: status mismatch: expected 422, got 200
 ### invalid: missing state field (`35_invalid_missing_state.json`)
 
@@ -468,55 +468,55 @@ The request omits the required top-level state field entirely (distinct from sta
 Expected status: **422**.
 
 - **Tau**: status 422, 0.4 ms, contract **PASS**.
-- **Peer**: status 422, 1533.3 ms, contract **PASS**.
+- **Peer**: status 422, 3.7 ms, contract **PASS**.
 ### invalid: missing questions field (`36_invalid_missing_questions.json`)
 
 The request omits the required top-level questions field.
 
 Expected status: **422**.
 
-- **Tau**: status 422, 0.4 ms, contract **PASS**.
-- **Peer**: status 422, 14.1 ms, contract **PASS**.
+- **Tau**: status 422, 0.3 ms, contract **PASS**.
+- **Peer**: status 422, 1.3 ms, contract **PASS**.
 ### invalid: empty questions map (`37_invalid_empty_questions.json`)
 
 The request supplies questions as an empty object, violating the minimum of one question.
 
 Expected status: **422**.
 
-- **Tau**: status 422, 1 ms, contract **PASS**.
-- **Peer**: status 422, 21.2 ms, contract **PASS**.
+- **Tau**: status 422, 0.2 ms, contract **PASS**.
+- **Peer**: status 422, 2.1 ms, contract **PASS**.
 ### invalid: unknown question type (`38_invalid_unknown_type.json`)
 
 The question's type field is a value outside noul, choice and score.
 
 Expected status: **422**.
 
-- **Tau**: status 422, 0.9 ms, contract **PASS**.
-- **Peer**: status 422, 3.5 ms, contract **PASS**.
+- **Tau**: status 422, 0.3 ms, contract **PASS**.
+- **Peer**: status 422, 2.8 ms, contract **PASS**.
 ### invalid: choice with 0 options (`39_invalid_choice_0_options.json`)
 
 A choice question whose criteria map is empty, violating the minimum of one option.
 
 Expected status: **422**.
 
-- **Tau**: status 422, 0.6 ms, contract **PASS**.
-- **Peer**: status 422, 401.9 ms, contract **PASS**.
+- **Tau**: status 422, 0.3 ms, contract **PASS**.
+- **Peer**: status 422, 2.3 ms, contract **PASS**.
 ### invalid: choice with 256 options (`40_invalid_choice_256_options.json`)
 
 A choice question with 256 options, one more than the contract's maximum of 255.
 
 Expected status: **422**.
 
-- **Tau**: status 422, 0.6 ms, contract **PASS**.
-- **Peer**: status 422, 4.8 ms, contract **PASS**.
+- **Tau**: status 422, 0.5 ms, contract **PASS**.
+- **Peer**: status 422, 2.3 ms, contract **PASS**.
 ### invalid: score with 1 level (`41_invalid_score_1_level.json`)
 
 A score question with only one level, below the contract's minimum of two.
 
 Expected status: **422**.
 
-- **Tau**: status 422, 0.5 ms, contract **PASS**.
-- **Peer**: status 200, 192.2 ms, contract **FAIL**.
+- **Tau**: status 422, 0.3 ms, contract **PASS**.
+- **Peer**: status 200, 21.7 ms, contract **FAIL**.
   - error: status mismatch: expected 422, got 200
 ### invalid: score with 11 levels (`42_invalid_score_11_levels.json`)
 
@@ -525,7 +525,7 @@ A score question with eleven levels, one more than the contract's maximum of ten
 Expected status: **422**.
 
 - **Tau**: status 422, 0.4 ms, contract **PASS**.
-- **Peer**: status 200, 142.5 ms, contract **FAIL**.
+- **Peer**: status 200, 21.1 ms, contract **FAIL**.
   - error: status mismatch: expected 422, got 200
 ### invalid: noul criteria with a maybe key (`43_invalid_noul_maybe_key.json`)
 
@@ -534,7 +534,7 @@ A noul question's criteria object includes a maybe key, which the contract does 
 Expected status: **422**.
 
 - **Tau**: status 422, 0.4 ms, contract **PASS**.
-- **Peer**: status 200, 123.9 ms, contract **FAIL**.
+- **Peer**: status 200, 19.7 ms, contract **FAIL**.
   - error: status mismatch: expected 422, got 200
 ### invalid: unknown top-level field (`44_invalid_unknown_top_level_field.json`)
 
@@ -542,8 +542,8 @@ The request body includes an extra top-level field not permitted by the contract
 
 Expected status: **422**.
 
-- **Tau**: status 422, 76.8 ms, contract **PASS**.
-- **Peer**: status 200, 105.5 ms, contract **FAIL**.
+- **Tau**: status 422, 0.3 ms, contract **PASS**.
+- **Peer**: status 200, 18.8 ms, contract **FAIL**.
   - error: status mismatch: expected 422, got 200
 ### invalid: malformed JSON body (`45_invalid_malformed_json.json`)
 
@@ -551,5 +551,5 @@ The raw request body is not valid JSON at all (a trailing comma and an untermina
 
 Expected status: **422**.
 
-- **Tau**: status 422, 239.5 ms, contract **PASS**.
-- **Peer**: status 422, 1.7 ms, contract **PASS**.
+- **Tau**: status 422, 5 ms, contract **PASS**.
+- **Peer**: status 422, 1.1 ms, contract **PASS**.

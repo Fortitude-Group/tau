@@ -128,7 +128,7 @@ export → fixtures → C# parity chain for one model (a real data dependency), 
 **Independent test**: `./scripts/bench.ps1` regenerates `reports/r1/latency.*`.
 
 - [X] T049 [US4] Implement `tools/Tau.Bench/`: hardware fingerprint (GPU name/VRAM/driver via `nvidia-smi`, CPU, RAM, OS), in-process model-time runs and end-to-end HTTP runs against a started Runtime, per model × provider (cuda, cpu) × questions (1, 4, 10); warm-up 50; measured 500 (GPU) / 100 (CPU); p50/p95/p99/mean/sd; two back-to-back repeats with variance; precision stated; writes `latency.{md,json}` with the standard header
-- [ ] T050 [US4] Write `scripts/bench.ps1` (build Release, run bench for both providers), run it, commit `reports/r1/latency.*`, update PROGRESS
+- [X] T050 [US4] Write `scripts/bench.ps1` (build Release, run bench for both providers), run it, commit `reports/r1/latency.*`, update PROGRESS
 
 ---
 
@@ -148,16 +148,16 @@ export → fixtures → C# parity chain for one model (a real data dependency), 
 
 ## Phase 9: Polish and gate
 
-- [ ] T055 [P] Single-file publish profile for `src/Tau.Runtime` (win-x64, linux-x64; self-contained exe + `native/` folder) and `src/Tau.Runtime/Dockerfile` (multi-stage, CPU default, CUDA build arg); build the image locally (`tau-runtime:r1-local`), never push; smoke-run the container `/healthz` on CPU
+- [X] T055 [P] Single-file publish profile for `src/Tau.Runtime` (win-x64, linux-x64; self-contained exe + `native/` folder) and `src/Tau.Runtime/Dockerfile` (multi-stage, CPU default, CUDA build arg); build the image locally (`tau-runtime:r1-local`), never push; smoke-run the container `/healthz` on CPU
 - [X] T056 [P] Add XML docs on every public type in `Tau.Contract`, `Tau.Calibration`, `Tau.Client`; enable `GenerateDocumentationFile` (warnings as errors)
 - [X] T057 [P] Write `src/Tau.Runtime/appsettings.json` defaults + `docs/runtime-config.md` (every option, provider setup, CUDA deps), no secrets
 - [X] T058 Security pass: path handling for models and calibrators dirs (no traversal), request size limits (body ≤ 1 MB default, configurable), and a `npx @claude-flow/cli@latest security scan` if available (record if unavailable)
 - [X] T059 [P] Dataset licence check (FR-027): Banking77 and ≥ 2 open support-ticket datasets with urgency/priority labels; record licence, revision and publishability in `docs/DECISIONS.md`; drop anything unpublishable and flag it to Rob at the gate
-- [ ] T060 Run `scripts/build-test.ps1` from a clean `git clean -xdf` + fetch (full reproduction); fix anything found
-- [ ] T061 Re-run parity, conformance and bench from their single commands; confirm the reports regenerate within their stated variance (SC-007); commit
-- [ ] T062 Cross-check every FR/SC in spec.md against evidence and write the checklist into `docs/PROGRESS.md` (R1 gate section)
-- [ ] T063 Merge `001-runtime-onnx-parity` into `master` (no PR; local only, no remote push until the repo exists and Rob says so)
-- [ ] T064 **R1 GATE: stop.** Report to Rob: what's done, evidence links, misses, and a rough estimate for R2. Wait for "go".
+- [X] T060 Run `scripts/build-test.ps1` from a clean `git clean -xdf` + fetch (full reproduction); fix anything found
+- [X] T061 Re-run parity, conformance and bench from their single commands; confirm the reports regenerate within their stated variance (SC-007); commit
+- [X] T062 Cross-check every FR/SC in spec.md against evidence and write the checklist into `docs/PROGRESS.md` (R1 gate section)
+- [X] T063 Merge `001-runtime-onnx-parity` into `master` (no PR; local only, no remote push until the repo exists and Rob says so)
+- [X] T064 **R1 GATE: stop.** Report to Rob: what's done, evidence links, misses, and a rough estimate for R2. Wait for "go".
 
 ---
 

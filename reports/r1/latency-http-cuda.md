@@ -4,10 +4,10 @@ These are measurements from the reference machine described below, at the precis
 
 ## Run
 
-- **Measured (UTC)**: 2026-09-27T03:06:00Z
+- **Measured (UTC)**: 2026-09-27T05:19:25Z
 - **Reproduce with**: `./scripts/bench.ps1 -Http`
 - **Bench command**: `Tau.Bench --provider cuda --iterations 500 --http-url http://127.0.0.1:18088 --http-server-log C:\projects\personal\Tau\.cache\bench-run\runtime-18088.log --warmup 50 --out reports/r1 --repeat 2 --questions 1,4,10 --invoked-by "./scripts/bench.ps1 -Http"`
-- **Git commit**: `77a47a7e0eb6da7c0049e4506c3fe1461fd20805` (working tree had uncommitted changes)
+- **Git commit**: `c26162e40284fbbff86bc937e482885cbb961b64` (working tree had uncommitted changes)
 - **Contract**: `systemone/2026-09-27`
 - **GPU**: NVIDIA GeForce RTX 3080 Ti, 12288 MiB, driver 610.47
 - **CPU**: 11th Gen Intel(R) Core(TM) i9-11900K @ 3.50GHz, 8 physical cores, 16 logical processors
@@ -20,8 +20,8 @@ These are measurements from the reference machine described below, at the precis
 - **Precision**: fp32 for every model
 - **Session**: graph optimisation ORT_ENABLE_BASIC, sequential execution, intra-op threads 8, inter-op threads 1, deterministic compute on, CUDA: use_tf32=0, cudnn_conv_algo_search=DEFAULT, no Tau calibrators loaded (reference post-processing)
 - **Sampling**: 50 warm-up iterations per cell, not timed. Then 500 timed iterations per cell, and the whole timed pass run 2 time(s) back to back. Timer: System.Diagnostics.Stopwatch (high resolution). Percentiles: linear interpolation between closest ranks (Hyndman-Fan type 7, the NumPy and Excel PERCENTILE.INC default).
-- **Machine load just before timing (models already loaded)**: CPU 44.61 %, GPU 0.00 %, GPU memory in use 9585 MiB
-- **Machine load just after timing**: CPU 43.64 %, GPU 21.33 %, GPU memory in use 11711 MiB
+- **Machine load just before timing (models already loaded)**: CPU 49.66 %, GPU 0.00 %, GPU memory in use 9596 MiB
+- **Machine load just after timing**: CPU 48.01 %, GPU 30.67 %, GPU memory in use 11720 MiB
   - CPU: GetSystemTimes busy share over the sampling window; GPU: mean of 3 nvidia-smi utilization.gpu/memory.used readings 0.5 s apart. A snapshot, so it shows whether the machine was busy, not what happened during every iteration.
 - **Note**: The working tree had uncommitted changes when this ran, so the commit above doesn't fully describe the code measured.
 - **Note**: Server: http://127.0.0.1:18088/. Batch rows aren't visible over HTTP, so they're recorded as -1; input tokens come from the response's usage block.
@@ -62,10 +62,10 @@ Client-side wall time for one POST /v1/systemone over a kept-alive localhost con
 
 | Model | q=1 p50 / p95 / p99 | q=4 p50 / p95 / p99 | q=4 per question (p50) | q=10 p50 / p95 / p99 | q=10 per question (p50) |
 |---|---:|---:|---:|---:|---:|
-| laya-en | 19.92 / 25.10 / 30.25 | 51.93 / 53.14 / 53.75 | 12.98 | 112.37 / 113.73 / 114.50 | 11.24 |
-| laya-multilingual | 16.41 / 23.10 / 27.28 | 24.86 / 26.64 / 28.39 | 6.22 | 53.19 / 54.50 / 55.23 | 5.32 |
-| laya-typed-decisions | 23.35 / 34.44 / 37.49 | 52.91 / 54.43 / 55.10 | 13.23 | 113.04 / 114.73 / 115.71 | 11.30 |
-| von-1.2.0 | 18.85 / 25.00 / 28.87 | 52.41 / 54.34 / 55.94 | 13.10 | 121.46 / 124.03 / 125.81 | 12.15 |
+| laya-en | 20.86 / 27.69 / 29.94 | 52.37 / 53.68 / 54.18 | 13.09 | 112.24 / 113.53 / 114.19 | 11.22 |
+| laya-multilingual | 14.90 / 21.03 / 24.12 | 24.81 / 26.32 / 27.65 | 6.20 | 53.13 / 54.32 / 54.71 | 5.31 |
+| laya-typed-decisions | 21.71 / 29.62 / 32.58 | 53.00 / 54.70 / 55.76 | 13.25 | 113.10 / 114.64 / 115.89 | 11.31 |
+| von-1.2.0 | 18.91 / 24.65 / 26.17 | 52.34 / 54.09 / 55.18 | 13.09 | 121.29 / 125.37 / 137.95 | 12.13 |
 
 This is what a client on the same machine waits for one request. Set it against the in-process engine figure for the same provider to see what HTTP, JSON and ASP.NET add. A client on another machine adds its network round trip on top.
 
@@ -75,10 +75,10 @@ The x-tau-model-ms response header of the same requests: the forward-pass time m
 
 | Model | q=1 p50 / p95 / p99 | q=4 p50 / p95 / p99 | q=4 per question (p50) | q=10 p50 / p95 / p99 | q=10 per question (p50) |
 |---|---:|---:|---:|---:|---:|
-| laya-en | 18.97 / 24.06 / 28.63 | 50.85 / 51.65 / 52.23 | 12.71 | 110.78 / 111.58 / 112.01 | 11.08 |
-| laya-multilingual | 15.62 / 22.15 / 26.53 | 23.80 / 25.13 / 27.16 | 5.95 | 51.69 / 52.54 / 52.88 | 5.17 |
-| laya-typed-decisions | 22.31 / 32.39 / 36.36 | 51.70 / 52.70 / 53.15 | 12.92 | 111.38 / 112.24 / 112.84 | 11.14 |
-| von-1.2.0 | 17.75 / 23.82 / 27.62 | 50.18 / 50.97 / 51.61 | 12.55 | 116.84 / 117.34 / 117.63 | 11.68 |
+| laya-en | 19.81 / 26.03 / 28.67 | 51.17 / 52.05 / 52.54 | 12.79 | 110.70 / 111.32 / 111.69 | 11.07 |
+| laya-multilingual | 14.19 / 20.04 / 23.09 | 23.76 / 24.97 / 26.15 | 5.94 | 51.66 / 52.41 / 52.65 | 5.17 |
+| laya-typed-decisions | 20.74 / 28.46 / 31.23 | 51.76 / 52.93 / 53.90 | 12.94 | 111.40 / 112.14 / 112.80 | 11.14 |
+| von-1.2.0 | 17.77 / 23.36 / 25.17 | 50.09 / 50.77 / 51.07 | 12.52 | 116.75 / 117.74 / 120.15 | 11.68 |
 
 This should match the in-process forward pass on the same provider. If it's clearly higher, something else was using the GPU or CPU during the HTTP run and the HTTP figures above should be re-measured before anyone quotes them.
 
@@ -86,32 +86,32 @@ This should match the in-process forward pass on the same provider. If it's clea
 
 | Measurement | Model | q | p50 repeat 1 | p50 repeat 2 | Change |
 |---|---|---:|---:|---:|---:|
-| HTTP end to end | laya-en | 1 | 19.92 | 21.22 | +6.54 % |
-| HTTP end to end | laya-en | 4 | 51.93 | 53.10 | +2.25 % |
-| HTTP end to end | laya-en | 10 | 112.37 | 113.58 | +1.08 % |
-| HTTP end to end | laya-multilingual | 1 | 16.41 | 17.12 | +4.33 % |
-| HTTP end to end | laya-multilingual | 4 | 24.86 | 25.27 | +1.63 % |
-| HTTP end to end | laya-multilingual | 10 | 53.19 | 53.52 | +0.62 % |
-| HTTP end to end | laya-typed-decisions | 1 | 23.35 | 21.89 | -6.26 % |
-| HTTP end to end | laya-typed-decisions | 4 | 52.91 | 53.19 | +0.51 % |
-| HTTP end to end | laya-typed-decisions | 10 | 113.04 | 114.47 | +1.26 % |
-| HTTP end to end | von-1.2.0 | 1 | 18.85 | 20.01 | +6.14 % |
-| HTTP end to end | von-1.2.0 | 4 | 52.41 | 53.05 | +1.22 % |
-| HTTP end to end | von-1.2.0 | 10 | 121.46 | 123.35 | +1.55 % |
-| Model forward pass as reported by the Runtime | laya-en | 1 | 18.97 | 20.26 | +6.76 % |
-| Model forward pass as reported by the Runtime | laya-en | 4 | 50.85 | 51.95 | +2.16 % |
-| Model forward pass as reported by the Runtime | laya-en | 10 | 110.78 | 111.88 | +0.99 % |
-| Model forward pass as reported by the Runtime | laya-multilingual | 1 | 15.62 | 16.29 | +4.28 % |
-| Model forward pass as reported by the Runtime | laya-multilingual | 4 | 23.80 | 24.19 | +1.66 % |
-| Model forward pass as reported by the Runtime | laya-multilingual | 10 | 51.69 | 52.01 | +0.62 % |
-| Model forward pass as reported by the Runtime | laya-typed-decisions | 1 | 22.31 | 20.89 | -6.38 % |
-| Model forward pass as reported by the Runtime | laya-typed-decisions | 4 | 51.70 | 51.94 | +0.47 % |
-| Model forward pass as reported by the Runtime | laya-typed-decisions | 10 | 111.38 | 112.64 | +1.13 % |
-| Model forward pass as reported by the Runtime | von-1.2.0 | 1 | 17.75 | 18.81 | +5.98 % |
-| Model forward pass as reported by the Runtime | von-1.2.0 | 4 | 50.18 | 50.59 | +0.81 % |
-| Model forward pass as reported by the Runtime | von-1.2.0 | 10 | 116.84 | 118.32 | +1.27 % |
+| HTTP end to end | laya-en | 1 | 20.86 | 20.94 | +0.38 % |
+| HTTP end to end | laya-en | 4 | 52.37 | 53.05 | +1.29 % |
+| HTTP end to end | laya-en | 10 | 112.24 | 113.37 | +1.00 % |
+| HTTP end to end | laya-multilingual | 1 | 14.90 | 17.05 | +14.44 % |
+| HTTP end to end | laya-multilingual | 4 | 24.81 | 25.22 | +1.65 % |
+| HTTP end to end | laya-multilingual | 10 | 53.13 | 53.41 | +0.53 % |
+| HTTP end to end | laya-typed-decisions | 1 | 21.71 | 21.45 | -1.19 % |
+| HTTP end to end | laya-typed-decisions | 4 | 53.00 | 53.19 | +0.36 % |
+| HTTP end to end | laya-typed-decisions | 10 | 113.10 | 114.19 | +0.97 % |
+| HTTP end to end | von-1.2.0 | 1 | 18.91 | 19.19 | +1.48 % |
+| HTTP end to end | von-1.2.0 | 4 | 52.34 | 52.93 | +1.12 % |
+| HTTP end to end | von-1.2.0 | 10 | 121.29 | 122.93 | +1.36 % |
+| Model forward pass as reported by the Runtime | laya-en | 1 | 19.81 | 20.07 | +1.27 % |
+| Model forward pass as reported by the Runtime | laya-en | 4 | 51.17 | 51.89 | +1.39 % |
+| Model forward pass as reported by the Runtime | laya-en | 10 | 110.70 | 111.71 | +0.91 % |
+| Model forward pass as reported by the Runtime | laya-multilingual | 1 | 14.19 | 16.23 | +14.38 % |
+| Model forward pass as reported by the Runtime | laya-multilingual | 4 | 23.76 | 24.10 | +1.45 % |
+| Model forward pass as reported by the Runtime | laya-multilingual | 10 | 51.66 | 51.88 | +0.43 % |
+| Model forward pass as reported by the Runtime | laya-typed-decisions | 1 | 20.74 | 20.50 | -1.13 % |
+| Model forward pass as reported by the Runtime | laya-typed-decisions | 4 | 51.76 | 51.94 | +0.34 % |
+| Model forward pass as reported by the Runtime | laya-typed-decisions | 10 | 111.40 | 112.42 | +0.91 % |
+| Model forward pass as reported by the Runtime | von-1.2.0 | 1 | 17.77 | 18.02 | +1.41 % |
+| Model forward pass as reported by the Runtime | von-1.2.0 | 4 | 50.09 | 50.49 | +0.79 % |
+| Model forward pass as reported by the Runtime | von-1.2.0 | 10 | 116.75 | 117.97 | +1.04 % |
 
-The two timed passes ran back to back on the same process and models. The largest p50 change between them is 6.76 %. SC-007 asks that a rerun of the command reproduces the headline figures within the variation a report records, and this is that variation. A change of more than a few percent means the machine wasn't quiet, and the figures should be re-measured before they're quoted.
+The two timed passes ran back to back on the same process and models. The largest p50 change between them is 14.44 %. SC-007 asks that a rerun of the command reproduces the headline figures within the variation a report records, and this is that variation. A change of more than a few percent means the machine wasn't quiet, and the figures should be re-measured before they're quoted.
 
 ## Full distributions (repeat 1)
 
@@ -121,33 +121,33 @@ Standard deviation is the sample standard deviation. Later repeats are in the JS
 
 | Model | q | n | mean | sd | min | p50 | p95 | p99 | max |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| laya-en | 1 | 500 | 20.78 | 2.24 | 18.43 | 19.92 | 25.10 | 30.25 | 31.64 |
-| laya-en | 4 | 500 | 51.97 | 0.97 | 50.52 | 51.93 | 53.14 | 53.75 | 66.00 |
-| laya-en | 10 | 500 | 112.54 | 1.27 | 111.27 | 112.37 | 113.73 | 114.50 | 136.87 |
-| laya-multilingual | 1 | 500 | 16.95 | 3.60 | 12.22 | 16.41 | 23.10 | 27.28 | 30.07 |
-| laya-multilingual | 4 | 500 | 25.05 | 0.87 | 23.67 | 24.86 | 26.64 | 28.39 | 30.33 |
-| laya-multilingual | 10 | 500 | 53.29 | 0.68 | 52.03 | 53.19 | 54.50 | 55.23 | 55.82 |
-| laya-typed-decisions | 1 | 500 | 24.48 | 4.52 | 19.03 | 23.35 | 34.44 | 37.49 | 42.08 |
-| laya-typed-decisions | 4 | 500 | 53.05 | 0.77 | 51.46 | 52.91 | 54.43 | 55.10 | 56.38 |
-| laya-typed-decisions | 10 | 500 | 113.26 | 1.06 | 112.07 | 113.04 | 114.73 | 115.71 | 129.74 |
-| von-1.2.0 | 1 | 500 | 19.86 | 2.45 | 17.19 | 18.85 | 25.00 | 28.87 | 31.83 |
-| von-1.2.0 | 4 | 500 | 52.64 | 1.11 | 50.76 | 52.41 | 54.34 | 55.94 | 62.64 |
-| von-1.2.0 | 10 | 500 | 121.68 | 1.67 | 119.06 | 121.46 | 124.03 | 125.81 | 145.19 |
+| laya-en | 1 | 500 | 21.88 | 2.69 | 19.03 | 20.86 | 27.69 | 29.94 | 32.61 |
+| laya-en | 4 | 500 | 52.45 | 0.66 | 51.10 | 52.37 | 53.68 | 54.18 | 55.33 |
+| laya-en | 10 | 500 | 112.38 | 1.08 | 111.10 | 112.24 | 113.53 | 114.19 | 132.58 |
+| laya-multilingual | 1 | 500 | 15.55 | 2.64 | 12.33 | 14.90 | 21.03 | 24.12 | 25.04 |
+| laya-multilingual | 4 | 500 | 24.97 | 0.80 | 23.76 | 24.81 | 26.32 | 27.65 | 30.25 |
+| laya-multilingual | 10 | 500 | 53.21 | 0.59 | 52.06 | 53.13 | 54.32 | 54.71 | 55.49 |
+| laya-typed-decisions | 1 | 500 | 23.10 | 3.38 | 18.97 | 21.71 | 29.62 | 32.58 | 38.76 |
+| laya-typed-decisions | 4 | 500 | 53.19 | 0.99 | 51.59 | 53.00 | 54.70 | 55.76 | 60.21 |
+| laya-typed-decisions | 10 | 500 | 113.34 | 1.09 | 112.20 | 113.10 | 114.64 | 115.89 | 130.56 |
+| von-1.2.0 | 1 | 500 | 19.83 | 2.12 | 17.43 | 18.91 | 24.65 | 26.17 | 29.11 |
+| von-1.2.0 | 4 | 500 | 52.47 | 0.90 | 50.76 | 52.34 | 54.09 | 55.18 | 56.93 |
+| von-1.2.0 | 10 | 500 | 122.17 | 4.11 | 119.40 | 121.29 | 125.37 | 137.95 | 172.65 |
 
 ### Model forward pass as reported by the Runtime
 
 | Model | q | n | mean | sd | min | p50 | p95 | p99 | max |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| laya-en | 1 | 500 | 19.87 | 2.12 | 17.79 | 18.97 | 24.06 | 28.63 | 30.65 |
-| laya-en | 4 | 500 | 50.86 | 0.84 | 49.64 | 50.85 | 51.65 | 52.23 | 64.82 |
-| laya-en | 10 | 500 | 110.87 | 1.05 | 110.02 | 110.78 | 111.58 | 112.01 | 132.83 |
-| laya-multilingual | 1 | 500 | 16.17 | 3.49 | 11.66 | 15.62 | 22.15 | 26.53 | 28.82 |
-| laya-multilingual | 4 | 500 | 23.96 | 0.75 | 22.88 | 23.80 | 25.13 | 27.16 | 28.97 |
-| laya-multilingual | 10 | 500 | 51.77 | 0.43 | 50.95 | 51.69 | 52.54 | 52.88 | 53.81 |
-| laya-typed-decisions | 1 | 500 | 23.46 | 4.37 | 18.36 | 22.31 | 32.39 | 36.36 | 40.34 |
-| laya-typed-decisions | 4 | 500 | 51.78 | 0.54 | 50.59 | 51.70 | 52.70 | 53.15 | 54.33 |
-| laya-typed-decisions | 10 | 500 | 111.51 | 0.88 | 110.70 | 111.38 | 112.24 | 112.84 | 127.97 |
-| von-1.2.0 | 1 | 500 | 18.72 | 2.29 | 16.45 | 17.75 | 23.82 | 27.62 | 30.29 |
-| von-1.2.0 | 4 | 500 | 50.28 | 0.70 | 49.30 | 50.18 | 50.97 | 51.61 | 59.07 |
-| von-1.2.0 | 10 | 500 | 116.91 | 1.08 | 116.25 | 116.84 | 117.34 | 117.63 | 140.18 |
+| laya-en | 1 | 500 | 20.83 | 2.50 | 18.27 | 19.81 | 26.03 | 28.67 | 30.97 |
+| laya-en | 4 | 500 | 51.21 | 0.45 | 50.14 | 51.17 | 52.05 | 52.54 | 53.24 |
+| laya-en | 10 | 500 | 110.77 | 0.98 | 109.57 | 110.70 | 111.32 | 111.69 | 131.19 |
+| laya-multilingual | 1 | 500 | 14.80 | 2.57 | 11.82 | 14.19 | 20.04 | 23.09 | 24.21 |
+| laya-multilingual | 4 | 500 | 23.89 | 0.65 | 22.96 | 23.76 | 24.97 | 26.15 | 28.79 |
+| laya-multilingual | 10 | 500 | 51.70 | 0.37 | 51.06 | 51.66 | 52.41 | 52.65 | 52.95 |
+| laya-typed-decisions | 1 | 500 | 22.13 | 3.25 | 18.24 | 20.74 | 28.46 | 31.23 | 35.91 |
+| laya-typed-decisions | 4 | 500 | 51.88 | 0.77 | 50.66 | 51.76 | 52.93 | 53.90 | 58.44 |
+| laya-typed-decisions | 10 | 500 | 111.52 | 0.85 | 110.86 | 111.40 | 112.14 | 112.80 | 127.59 |
+| von-1.2.0 | 1 | 500 | 18.67 | 2.01 | 16.49 | 17.77 | 23.36 | 25.17 | 27.16 |
+| von-1.2.0 | 4 | 500 | 50.13 | 0.37 | 49.27 | 50.09 | 50.77 | 51.07 | 51.38 |
+| von-1.2.0 | 10 | 500 | 116.92 | 1.00 | 116.00 | 116.75 | 117.74 | 120.15 | 129.82 |
 

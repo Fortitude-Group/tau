@@ -2,7 +2,7 @@
   "report": "parity-model",
   "level": 1,
   "command": "uv run python -m tau_sidecar.parity",
-  "date": "2026-09-27T00:55:39+00:00",
+  "date": "2026-09-27T05:28:57+00:00",
   "tolerance": {
     "logit": 0.002,
     "prob": 0.001
@@ -63,5 +63,5 @@
       "onnx_sha256": "0777bb988636663b770775ae0b4eb961d6fbee176c9bea1d1da823723b1eb3f3"
     }
   },
-  "elapsed_s": 408
+  "elapsed_s": 439
 }
