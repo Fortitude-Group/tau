@@ -54,10 +54,13 @@ public static class Numerics
         return z;
     }
 
-    /// <summary>Python's <c>round(x, digits)</c>: round half to even.</summary>
+    /// <summary>
+    /// Python's <c>round(x, digits)</c> exactly: rounds the exact binary value half to even. Not
+    /// <c>Math.Round(x, digits, ToEven)</c>, which scales first and differs (0.00625 → 0.0062; Python 0.0063).
+    /// </summary>
     /// <param name="x">Value.</param>
     /// <param name="digits">Decimal places.</param>
-    public static double PyRound(double x, int digits) => Math.Round(x, digits, MidpointRounding.ToEven);
+    public static double PyRound(double x, int digits) => Routing.PyRound.Round(x, digits);
 
     /// <summary>Normalised Shannon entropy of <paramref name="p"/> in float32, divided by ln(n) in double.</summary>
     /// <param name="p">Probabilities.</param>

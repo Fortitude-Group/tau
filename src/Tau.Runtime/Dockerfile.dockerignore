@@ -1,0 +1,13 @@
+**/bin/
+**/obj/
+.git/
+.claude/
+.cache/
+models/
+native/
+artifacts/
+sidecar/finetune/.venv/
+**/*.onnx
+**/*.onnx.data
+.env
+*.env

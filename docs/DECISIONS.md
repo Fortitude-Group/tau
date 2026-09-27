@@ -6,6 +6,44 @@ this file records the ones I made so the trail is auditable.
 
 ---
 
+## 2026-09-27 · Providers proven on the reference machine (T026)
+
+`scripts/provider-smoke.ps1`, RTX 3080 Ti, driver 610.47. The provider that actually ran is read from
+ONNX Runtime's own profile (every node must name the requested provider). The loaded DLL paths are
+checked too: `onnxruntime.dll` from `native/<flavour>`, `DirectML.dll` from `native/directml` rather
+than the old System32 copy, and CUDA from `native/cuda-deps`.
+
+| Provider | Result | Tests | Skipped (by design) |
+| --- | --- | --- | --- |
+| cpu | PASS | 7 | 2 (GPU-only) |
+| cuda | PASS | 7 | 0 |
+| directml | PASS | 7 | 1 (CUDA-only) |
+
+The CUDA provider imports `cudart64_12`, `cublas64_12`, `cublasLt64_12`, `cufft64_11` and `cudnn64_9`,
+read from its import table. Without them it fails with "cublasLt64_12.dll … missing (Error 126)".
+Pinned free wheels: cuda-runtime 12.8.90, cublas 12.8.4.1, cufft 11.3.3.83, curand 10.3.9.90,
+cudnn 9.10.2.21. That matches ORT 1.24's documented build (CUDA 12.8, cuDNN 9). CUDA sessions set
+`use_tf32=0`, because TF32 on Ampere would break the FP32 parity tolerance.
+
+## 2026-09-27 · Tokenizers.DotNet serialised behind a process-wide lock
+
+Tokenizers.DotNet 1.4.1 isn't safe when instances are created and disposed on several threads at once.
+A stress test hung in 4 of 5 runs and threw in the fifth, and the full test suite hung once on this
+machine. **Decision:** `HfTokenizer` takes one process-wide lock for load, encode and dispose.
+**Cost:** tokenisation is serialised across requests. It's under a millisecond against a 30+ ms forward
+pass, so this is acceptable for R1. The latency report will show whether it matters.
+The library also always adds special tokens, so `HfTokenizer` loads a copy of `tokenizer.json` with the
+post-processor, truncation and padding set to null. That reproduces `add_special_tokens=False`, and it
+drops Von's baked-in 8,192-token truncation, which transformers disables for a plain call.
+
+## 2026-09-27 · Answer rounding uses an exact port of Python's `round()`
+
+`Math.Round(x, n, ToEven)` scales before rounding, so it differs from Python on real values
+(0.00625 gives 0.0062 where Python gives 0.0063, and 0.00035 gives 0.0004 where Python gives 0.0003).
+The routing port found this. Every rounded number Tau emits now goes through the exact `PyRound`.
+
+---
+
 ## 2026-09-27 · ONNX export spike: approach A failed, approach B passed for all four models
 
 - **Approach A** (TorchScript `torch.onnx.export`, opset 17) exported `laya-en` in 19 s, but the graph
