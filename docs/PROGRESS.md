@@ -40,7 +40,7 @@ Reference machine: RTX 3080 Ti 12 GB, i9-11900K, CUDA FP32. Every number below i
 | SC-007 tests green, incl. Workbench = Runtime | `CalibratorEquivalenceTests` exact (max |Δ| 0) and endpoint 2.4e-4; full suite at the clean-clone step (T065) | Pending T065 |
 | FR-014 fine-tune + parity | `examples/*/finetune-parity.json`: max |Δlogit| 2.1e-5 and 1.1e-3 (tolerance 2e-3) | Met |
 | FR-015 classic baseline | MiniLM-L6: Banking77 91.5%, tickets 55.6% (against gold), in both reports | Met |
-| FR-020 R1 CPU latency re-run on a quiet machine | Running (T063) | Pending |
+| FR-020 R1 CPU latency re-run on a quiet machine | `reports/r1/latency*.md` (2026-09-27, R1's four models, CPU load under 10%). CPU p50 laya-en q=1 811 → 529 ms. First attempt with six models resident failed (DECISIONS) | Met |
 
 ### Headline numbers (held-out, 1,000 items each)
 

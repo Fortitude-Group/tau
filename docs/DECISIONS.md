@@ -6,6 +6,21 @@ this file records the ones I made so the trail is auditable.
 
 ---
 
+## 2026-09-27 · R1 latency re-run on the quiet machine (T063)
+
+- **First attempt failed.** `bench.ps1` loads every package in `models/`, so it picked up the two
+  R2 fine-tunes as well: six models on a 12 GB card. laya-en went to about 12 s per request at
+  q=10, and `Tau.Bench` then exited 1 with no captured message. VRAM pressure is the likely cause,
+  consistent with R1's all-models-resident finding, but it is not confirmed.
+- **Re-run with `-Models` set to R1's four models,** which is also the like-for-like comparison.
+  Load before the runs: CPU under 10%, GPU under 19%.
+- **CPU p50 fell** now that the orphaned processes are gone. laya-en q=1 went from 811 to 529 ms,
+  q=10 from 6,842 to 5,617 ms, and Von q=1 from 512 to 400 ms. CUDA is essentially unchanged
+  (laya-en q=1 21.6 → 18.6 ms).
+- The reports say "(dirty)" because uncommitted Workbench report-code edits were in the tree during
+  the run. Tau.Bench and Tau.Runtime don't reference Tau.Workbench, so the measured binaries were
+  built from committed code. This is recorded rather than hidden.
+
 ## 2026-09-27 · The tickets example is scored against the frontier's answers
 
 Rob's call: the ticket gold labels are too close to arbitrary to score against, so the tickets example
