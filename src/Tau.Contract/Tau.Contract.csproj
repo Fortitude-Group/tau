@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\contracts\systemone\2026-09-27\*.schema.json" LinkBase="Schemas" />
+  </ItemGroup>
+</Project>

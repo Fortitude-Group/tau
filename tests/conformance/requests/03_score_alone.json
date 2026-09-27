@@ -1,0 +1,24 @@
+{
+  "name": "score question alone",
+  "description": "A single score question with no other question types in the request.",
+  "request": {
+    "model": "jev-latest",
+    "state": "Chat transcript: Customer asks for a refund on a duplicate transfer of £120 sent to the wrong recipient yesterday. They have not yet contacted the recipient's bank.",
+    "questions": {
+      "satisfaction_risk": {
+        "type": "score",
+        "instructions": "How dissatisfied is this customer likely to become if the refund is delayed?",
+        "criteria": [
+          "not at all",
+          "slightly",
+          "moderately",
+          "very",
+          "extremely"
+        ]
+      }
+    }
+  },
+  "expect": {
+    "status": 200
+  }
+}

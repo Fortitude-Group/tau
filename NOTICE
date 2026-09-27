@@ -1,0 +1,17 @@
+Tau
+Copyright 2026 Fortitude Omnis
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+Tau runs and measures third-party models and uses third-party libraries. Their
+licences are their own:
+
+- Laya (Convai Innovations), convaiinnovations/laya: Apache License 2.0
+- Von (wfzyx/von): Apache License 2.0
+- ModernBERT (Answer.AI) and mmBERT (JHU CLSP) encoders, which the models above
+  are built on: Apache License 2.0 and MIT respectively, per their model cards
+- ONNX Runtime (Microsoft): MIT License
+- Tokenizers.DotNet (sappho192), wrapping Hugging Face tokenizers: MIT / Apache License 2.0
+
+Model weights aren't redistributed in this repository. Scripts download them
+from their original locations at pinned revisions.

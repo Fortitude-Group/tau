@@ -1,0 +1,20 @@
+{
+  "name": "choice with 1 option",
+  "description": "A choice question with a single option.",
+  "request": {
+    "model": "jev-latest",
+    "state": "Customer emailed support: \"My card was declined twice today at the supermarket even though my balance shows plenty of funds. Is there a block on my account? This is the second time this month.\"",
+    "questions": {
+      "only_choice": {
+        "type": "choice",
+        "instructions": "Confirm the single applicable category.",
+        "criteria": {
+          "option_01": "Reason number 1"
+        }
+      }
+    }
+  },
+  "expect": {
+    "status": 200
+  }
+}

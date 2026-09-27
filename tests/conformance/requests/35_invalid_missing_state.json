@@ -1,0 +1,16 @@
+{
+  "name": "invalid: missing state field",
+  "description": "The request omits the required top-level state field entirely (distinct from state: null).",
+  "request": {
+    "model": "jev-latest",
+    "questions": {
+      "is_urgent": {
+        "type": "noul",
+        "instructions": "Is this urgent?"
+      }
+    }
+  },
+  "expect": {
+    "status": 422
+  }
+}

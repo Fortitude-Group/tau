@@ -1,0 +1,18 @@
+{
+  "name": "invalid: unknown top-level field",
+  "description": "The request body includes an extra top-level field not permitted by the contract and not x-tau- prefixed.",
+  "request": {
+    "model": "jev-latest",
+    "state": "Customer emailed support: \"My card was declined twice today at the supermarket even though my balance shows plenty of funds. Is there a block on my account? This is the second time this month.\"",
+    "questions": {
+      "is_urgent": {
+        "type": "noul",
+        "instructions": "Is this urgent?"
+      }
+    },
+    "temperature": 0.7
+  },
+  "expect": {
+    "status": 422
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "report": "parity-model",
+  "level": 1,
+  "command": "uv run python -m tau_sidecar.parity",
+  "date": "2026-09-27T05:28:57+00:00",
+  "tolerance": {
+    "logit": 0.002,
+    "prob": 0.001
+  },
+  "results": {
+    "laya-en": {
+      "cases": 35,
+      "rows": 53,
+      "max_dlogit": 3.24249267578125e-05,
+      "max_dprob": 1.8477439880371094e-06,
+      "argmax_mismatches": 0,
+      "expected_errors": 1,
+      "failures": [],
+      "pass": true
+    },
+    "laya-multilingual": {
+      "cases": 47,
+      "rows": 79,
+      "max_dlogit": 4.673004150390625e-05,
+      "max_dprob": 1.9669532775878906e-06,
+      "argmax_mismatches": 0,
+      "expected_errors": 0,
+      "failures": [],
+      "pass": true
+    },
+    "laya-typed-decisions": {
+      "cases": 35,
+      "rows": 54,
+      "max_dlogit": 2.014636993408203e-05,
+      "max_dprob": 1.5795230865478516e-06,
+      "argmax_mismatches": 0,
+      "expected_errors": 0,
+      "failures": [],
+      "pass": true
+    },
+    "von-1.2.0": {
+      "cases": 46,
+      "rows": 107,
+      "max_dlogit": 5.4836273193359375e-05,
+      "max_dprob": 3.993511199951172e-06,
+      "argmax_mismatches": 0,
+      "expected_errors": 0,
+      "failures": [],
+      "pass": true
+    }
+  },
+  "models": {
+    "laya-en": {
+      "onnx_sha256": "866a05b244e47e96820660d18ee050c518c2de0f60c39e2e9a89dfeb056e1eec"
+    },
+    "laya-multilingual": {
+      "onnx_sha256": "62be63b71dd97ed1d2b6582965702d06d9fb387a1c9be103fe365d6d9c82ed0d"
+    },
+    "laya-typed-decisions": {
+      "onnx_sha256": "2b7a961ac37157d1cfa8105e3283106baf1ba2a5cc30fb3a673253f06aa1e1c5"
+    },
+    "von-1.2.0": {
+      "onnx_sha256": "0777bb988636663b770775ae0b4eb961d6fbee176c9bea1d1da823723b1eb3f3"
+    }
+  },
+  "elapsed_s": 439
+}

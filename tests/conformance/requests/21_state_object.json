@@ -1,0 +1,22 @@
+{
+  "name": "structured object state",
+  "description": "State given as a JSON object rather than a string.",
+  "request": {
+    "model": "jev-latest",
+    "state": {
+      "channel": "webchat",
+      "customer_tier": "standard",
+      "message": "I was charged twice for the same annual fee.",
+      "account_age_months": 14
+    },
+    "questions": {
+      "is_billing_error": {
+        "type": "noul",
+        "instructions": "Does this describe a billing error?"
+      }
+    }
+  },
+  "expect": {
+    "status": 200
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "invalid: unknown question type",
+  "description": "The question's type field is a value outside noul, choice and score.",
+  "request": {
+    "model": "jev-latest",
+    "state": "Customer emailed support: \"My card was declined twice today at the supermarket even though my balance shows plenty of funds. Is there a block on my account? This is the second time this month.\"",
+    "questions": {
+      "weird": {
+        "type": "essay",
+        "instructions": "Write a short essay about this ticket."
+      }
+    }
+  },
+  "expect": {
+    "status": 422
+  }
+}

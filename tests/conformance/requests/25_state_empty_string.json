@@ -1,0 +1,17 @@
+{
+  "name": "empty string state",
+  "description": "State given as an empty string.",
+  "request": {
+    "model": "jev-latest",
+    "state": "",
+    "questions": {
+      "is_urgent": {
+        "type": "noul",
+        "instructions": "Without any content in the state, should this default to non-urgent?"
+      }
+    }
+  },
+  "expect": {
+    "status": 200
+  }
+}

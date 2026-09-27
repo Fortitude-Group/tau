@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "tau.calibrator v1",
+  "type": "object",
+  "required": ["format", "version", "model", "modelHash", "questionType", "method", "fitted"],
+  "properties": {
+    "format": { "const": "tau.calibrator" },
+    "version": { "const": 1 },
+    "model": { "type": "string" },
+    "modelHash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "questionType": { "enum": ["choice", "score", "noul"] },
+    "bucket": { "enum": ["2", "3-5", "6-10", "11+"] },
+    "method": { "enum": ["temperature", "isotonic"] },
+    "temperature": { "type": "number", "exclusiveMinimum": 0 },
+    "isotonic": {
+      "type": "object",
+      "required": ["x", "y"],
+      "properties": {
+        "x": { "type": "array", "minItems": 2, "items": { "type": "number", "minimum": 0, "maximum": 1 } },
+        "y": { "type": "array", "minItems": 2, "items": { "type": "number", "minimum": 0, "maximum": 1 } }
+      },
+      "additionalProperties": false
+    },
+    "fitted": {
+      "type": "object",
+      "required": ["n", "dataset", "date", "tool", "toolVersion"],
+      "properties": {
+        "n": { "type": "integer", "minimum": 1 },
+        "dataset": { "type": "string" },
+        "datasetRevision": { "type": "string" },
+        "date": { "type": "string" },
+        "eceBefore": { "type": "number" },
+        "eceAfter": { "type": "number" },
+        "tool": { "type": "string" },
+        "toolVersion": { "type": "string" }
+      }
+    }
+  },
+  "allOf": [
+    { "if": { "properties": { "method": { "const": "temperature" } } }, "then": { "required": ["temperature"] } },
+    { "if": { "properties": { "method": { "const": "isotonic" } } }, "then": { "required": ["isotonic"] } }
+  ],
+  "additionalProperties": false
+}

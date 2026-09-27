@@ -1,0 +1,20 @@
+{
+  "name": "invalid: score with 1 level",
+  "description": "A score question with only one level, below the contract's minimum of two.",
+  "request": {
+    "model": "jev-latest",
+    "state": "Chat transcript: Customer asks for a refund on a duplicate transfer of £120 sent to the wrong recipient yesterday. They have not yet contacted the recipient's bank.",
+    "questions": {
+      "satisfaction": {
+        "type": "score",
+        "instructions": "Rate satisfaction.",
+        "criteria": [
+          "only level"
+        ]
+      }
+    }
+  },
+  "expect": {
+    "status": 422
+  }
+}

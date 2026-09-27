@@ -1,0 +1,210 @@
+{
+  "report": "parity",
+  "release": "R1",
+  "command": "./scripts/parity.ps1",
+  "date": "2026-09-27T05:21:35Z",
+  "git_commit": "3f0066e35566ad1b40b830e8e583433fca4349e9",
+  "contract": "systemone/2026-09-27",
+  "hardware": {
+    "gpu": "NVIDIA GeForce RTX 3080 Ti, 12288 MiB, 610.47",
+    "cpu": "11th Gen Intel(R) Core(TM) i9-11900K @ 3.50GHz",
+    "ram_gb": 64.0,
+    "os": "Microsoft Windows 10 Pro"
+  },
+  "software": {
+    "dotnet": "10.0.400",
+    "onnxruntime_csharp": "1.24.4 (CPU)",
+    "python": "3.12.9",
+    "torch": "2.11.0+cu128",
+    "transformers": "5.17.0",
+    "onnxruntime_python": "1.30.0",
+    "laya": "0.3.20",
+    "von_sdk": "1.2.3"
+  },
+  "tolerance": {
+    "logit": 0.002,
+    "prob": 0.001,
+    "argmax": "identical (ties within 1e-4 resolved to the lowest index)"
+  },
+  "models": [
+    {
+      "id": "laya-en",
+      "repo": "convaiinnovations/laya",
+      "revision": "55cf4c4ebb4ebe31b2550e8bdf3bd21b99753851",
+      "onnx_sha256": "866a05b244e47e96820660d18ee050c518c2de0f60c39e2e9a89dfeb056e1eec",
+      "reference": "laya==0.3.20"
+    },
+    {
+      "id": "laya-multilingual",
+      "repo": "convaiinnovations/laya",
+      "revision": "55cf4c4ebb4ebe31b2550e8bdf3bd21b99753851",
+      "onnx_sha256": "62be63b71dd97ed1d2b6582965702d06d9fb387a1c9be103fe365d6d9c82ed0d",
+      "reference": "laya==0.3.20"
+    },
+    {
+      "id": "laya-typed-decisions",
+      "repo": "convaiinnovations/laya",
+      "revision": "55cf4c4ebb4ebe31b2550e8bdf3bd21b99753851",
+      "onnx_sha256": "2b7a961ac37157d1cfa8105e3283106baf1ba2a5cc30fb3a673253f06aa1e1c5",
+      "reference": "laya==0.3.20"
+    },
+    {
+      "id": "von-1.2.0",
+      "repo": "wfzyx/von",
+      "revision": "5df8185a4f2327ad0a7cd117cc4f701ac557b9ae",
+      "onnx_sha256": "0777bb988636663b770775ae0b4eb961d6fbee176c9bea1d1da823723b1eb3f3",
+      "reference": "von-sdk==1.2.3"
+    }
+  ],
+  "level1": {
+    "laya-en": {
+      "cases": 35,
+      "rows": 53,
+      "max_dlogit": 3.24249267578125E-05,
+      "max_dprob": 1.8477439880371094E-06,
+      "argmax_mismatches": 0,
+      "expected_errors": 1,
+      "failures": [],
+      "pass": true
+    },
+    "laya-multilingual": {
+      "cases": 47,
+      "rows": 79,
+      "max_dlogit": 4.673004150390625E-05,
+      "max_dprob": 1.9669532775878906E-06,
+      "argmax_mismatches": 0,
+      "expected_errors": 0,
+      "failures": [],
+      "pass": true
+    },
+    "laya-typed-decisions": {
+      "cases": 35,
+      "rows": 54,
+      "max_dlogit": 2.014636993408203E-05,
+      "max_dprob": 1.5795230865478516E-06,
+      "argmax_mismatches": 0,
+      "expected_errors": 0,
+      "failures": [],
+      "pass": true
+    },
+    "von-1.2.0": {
+      "cases": 46,
+      "rows": 107,
+      "max_dlogit": 5.4836273193359375E-05,
+      "max_dprob": 3.993511199951172E-06,
+      "argmax_mismatches": 0,
+      "expected_errors": 0,
+      "failures": [],
+      "pass": true
+    }
+  },
+  "csharp": [
+    {
+      "gate": "logits",
+      "model": "laya-en",
+      "rows": 53,
+      "max_dlogit": 5.066394805908203E-05,
+      "max_dprob": 5.245208740234375E-06,
+      "failures": 0
+    },
+    {
+      "gate": "logits",
+      "model": "laya-typed-decisions",
+      "rows": 54,
+      "max_dlogit": 2.3856759071350098E-05,
+      "max_dprob": 3.0100345611572266E-06,
+      "failures": 0
+    },
+    {
+      "gate": "logits",
+      "model": "laya-multilingual",
+      "rows": 79,
+      "max_dlogit": 2.574920654296875E-05,
+      "max_dprob": 1.8477439880371094E-06,
+      "failures": 0
+    },
+    {
+      "gate": "logits",
+      "model": "von-1.2.0",
+      "rows": 107,
+      "max_dlogit": 6.246566772460938E-05,
+      "max_dprob": 7.867813110351562E-06,
+      "failures": 0
+    },
+    {
+      "gate": "sequences",
+      "model": "laya-multilingual",
+      "cases": 47,
+      "failures": 0
+    },
+    {
+      "gate": "sequences",
+      "model": "laya-en",
+      "cases": 35,
+      "failures": 0
+    },
+    {
+      "gate": "sequences",
+      "model": "laya-typed-decisions",
+      "cases": 35,
+      "failures": 0
+    },
+    {
+      "gate": "sequences",
+      "model": "von-1.2.0",
+      "cases": 46,
+      "failures": 0
+    },
+    {
+      "gate": "answers",
+      "model": "laya-typed-decisions",
+      "cases": 35,
+      "answers": 54,
+      "failures": 0
+    },
+    {
+      "gate": "answers",
+      "model": "von-1.2.0",
+      "cases": 46,
+      "answers": 77,
+      "failures": 0
+    },
+    {
+      "gate": "answers",
+      "model": "laya-en",
+      "cases": 35,
+      "answers": 53,
+      "failures": 0
+    },
+    {
+      "gate": "answers",
+      "model": "laya-multilingual",
+      "cases": 47,
+      "answers": 79,
+      "failures": 0
+    }
+  ],
+  "gates": {
+    "C# model parity (sequences, logits, answers)": {
+      "tests": 12,
+      "failed": 0,
+      "pass": true
+    },
+    "Tokeniser parity": {
+      "tests": 3,
+      "failed": 0,
+      "pass": true
+    },
+    "Serialiser parity (json.dumps, str)": {
+      "tests": 8,
+      "failed": 0,
+      "pass": true
+    },
+    "Routing parity (script router)": {
+      "tests": 1372,
+      "failed": 0,
+      "pass": true
+    }
+  },
+  "pass": true
+}

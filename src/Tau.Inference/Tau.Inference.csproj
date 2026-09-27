@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Tau.Inference.Tests" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Tau.Contract\Tau.Contract.csproj" />
+    <ProjectReference Include="..\Tau.Calibration\Tau.Calibration.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ML.OnnxRuntime.Managed" />
+    <PackageReference Include="Tokenizers.DotNet" />
+    <PackageReference Include="Tokenizers.DotNet.runtime.win-x64" />
+    <PackageReference Include="Tokenizers.DotNet.runtime.linux-x64" />
+  </ItemGroup>
+</Project>

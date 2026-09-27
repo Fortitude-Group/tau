@@ -1,0 +1,17 @@
+{
+  "name": "exactly one question",
+  "description": "A request containing exactly one question.",
+  "request": {
+    "model": "jev-latest",
+    "state": "Support ticket #48213: Customer reports the mobile app crashes every time they try to open their statement PDF. Already tried reinstalling. Requests a callback before end of day.",
+    "questions": {
+      "is_resolved": {
+        "type": "noul",
+        "instructions": "Has this ticket already been resolved?"
+      }
+    }
+  },
+  "expect": {
+    "status": 200
+  }
+}
