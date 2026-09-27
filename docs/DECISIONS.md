@@ -6,6 +6,22 @@ this file records the ones I made so the trail is auditable.
 
 ---
 
+## 2026-09-27 · CORRECTION: the ticket dataset is synthetic; Rob chose to keep it, labelled as such
+
+Checked against the dataset card before building on it: `Tobi-Bueck/customer-support-tickets` is
+**synthetic** ("Synthetic IT Ticket Generator"). The licence research called it "real support tickets", I
+repeated that in the R1 gate report, and Rob approved it on that basis. Put back to Rob with the facts.
+**Rob's decision (2026-09-27): keep it**, and say "synthetic support tickets" in every report and article.
+Banking77 stays the real-data benchmark.
+Other facts verified from the dataset server: 61,765 rows, 28,261 English and 33,504 German. `priority` has
+five levels (very_low 1,783, low 12,765, medium 23,378, high 21,925, critical 1,914). The `queue` field
+includes "Autos & Vehicles/*" and "Travel & Transportation/*". **Those rows are excluded**, along with any
+row whose text matches a vehicle or fleet keyword, under constitution Principle XVII.
+The MIT alternative (`nerofinal012/TicketingToolDataset`) is manually gated, and its card doesn't say
+whether the data is real. Not used.
+Banking77's Hugging Face repo is a loader script, and the data lives at `PolyAI-LDN/task-specific-datasets`,
+pinned at commit `9d081458ff52e53cf7e848f414e6e9344e4e6696` (`banking_data/train.csv`, `test.csv`).
+
 ## 2026-09-27 · Rob's R1 gate answers: go for R2, dataset approved, private repo
 
 - **R2 approved.**
@@ -166,7 +182,7 @@ reference was right and the case was fixed.
 Verified from the HF API and dataset cards by a research agent. Key facts rechecked where they matter.
 - **Banking77** (`PolyAI/banking77` @ `90d4e2ee…`): **CC-BY-4.0**. 13,083 rows (10,003/3,080), 77
   gold intents. Publishable with attribution.
-- **Tobi-Bueck/customer-support-tickets** (@ `ddf1c81a…`): the best urgency set. 61,765 real tickets, a
+- **Tobi-Bueck/customer-support-tickets** (@ `ddf1c81a…`): the best urgency set. 61,765 tickets (synthetic, see correction above), a
   5-level `priority` field, English and German. **CC-BY-NC-4.0, non-commercial.** It's fine for
   measuring and for Rob's articles, but redistributing samples inside an Apache-2.0 repo, or using it
   on a company page, is a grey area. **Put to Rob at the R1 gate** with a recommendation.
