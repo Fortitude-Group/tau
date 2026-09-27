@@ -18,7 +18,7 @@ public sealed class CliTests
     }
 
     /// <summary>A stub whose answers are right about 70% of the time and overconfident.</summary>
-    private static StubSystemOne ModelStub(string calibrators = "none") => new()
+    internal static StubSystemOne ModelStub(string calibrators = "none") => new()
     {
         Calibrators = calibrators,
         Probabilities = (text, _) =>
@@ -36,7 +36,7 @@ public sealed class CliTests
         Report = ReportTests.FixedContext with { Command = o.Report.Command },
     };
 
-    private static void AnswerEverything(TestRepo repo)
+    internal static void AnswerEverything(TestRepo repo)
     {
         var spec = repo.Spec;
         var held = Data.PreparedDataset.LoadSplit(spec, repo.Manifest, "heldout");
@@ -135,7 +135,7 @@ public sealed class CliTests
     {
         // Runs recorded before x-tau-precision look current by file time; --force re-measures them at full precision.
         using var repo = TestRepo.Create(calibration: 240, heldOut: 120, altSubset: 10, targetError: 0.25);
-        var rounding = ModelStub();
+        var rounding = new StubSystemOne { Probabilities = ModelStub().Probabilities, RoundTo = 4 };
         await Tau(["run", repo.SpecPath], With(rounding));
         AnswerEverything(repo);
         Assert.Contains("Probabilities rounded to 4 dp by the endpoint; calibrators fitted on rounded values.",

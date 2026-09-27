@@ -24,7 +24,8 @@ public sealed class DecisionSpec
         FrontierSpec frontier,
         PricingSpec pricing,
         string specPath,
-        string repoRoot)
+        string repoRoot,
+        IReadOnlyList<ExternalModelSpec>? external = null)
     {
         Name = name;
         Title = title;
@@ -32,6 +33,8 @@ public sealed class DecisionSpec
         Data = data;
         Endpoint = endpoint;
         Models = models;
+        External = external ?? [];
+        AllModels = [.. models, .. External.Select(e => e.Id)];
         Baselines = baselines;
         Threshold = threshold;
         Frontier = frontier;
@@ -58,6 +61,19 @@ public sealed class DecisionSpec
 
     /// <summary>Model ids to measure, in declared order.</summary>
     public IReadOnlyList<string> Models { get; }
+
+    /// <summary>Hosted endpoints measured alongside <see cref="Models"/> (<c>external:</c>), in declared order.</summary>
+    public IReadOnlyList<ExternalModelSpec> External { get; }
+
+    /// <summary>
+    /// Every measured model id: the local <see cref="Models"/> first, then each hosted endpoint's id. The threshold,
+    /// cascade and report stages go through this list, so a hosted endpoint gets exactly the same treatment.
+    /// </summary>
+    public IReadOnlyList<string> AllModels { get; }
+
+    /// <summary>The hosted endpoint with this id, or null when <paramref name="model"/> is a local model.</summary>
+    /// <param name="model">A model id or hosted endpoint id.</param>
+    public ExternalModelSpec? ExternalFor(string model) => External.FirstOrDefault(e => e.Id == model);
 
     /// <summary>Baseline probability files to include (names under <c>baselines/</c>).</summary>
     public IReadOnlyList<string> Baselines { get; }

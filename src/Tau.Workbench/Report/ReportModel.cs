@@ -59,11 +59,14 @@ public sealed record ReportMetadata
 
     /// <summary>The reference in words.</summary>
     public string ReferenceNote { get; init; } = "";
+
+    /// <summary>Every hosted endpoint measured, with its identity and estimated spend.</summary>
+    public IReadOnlyList<HostedModelReport> Hosted { get; init; } = [];
 }
 
 /// <summary>One row of the secondary view against the dataset's own labels.</summary>
 /// <param name="Model">The model or baseline name.</param>
-/// <param name="Kind">tau, baseline or frontier.</param>
+/// <param name="Kind">tau, hosted, baseline or frontier.</param>
 /// <param name="Raw">Held-out agreement with the dataset's labels before calibration (for the frontier, its own answers).</param>
 /// <param name="Calibrated">Held-out agreement after calibration, or null when there is no calibrated view.</param>
 public sealed record DatasetLabelRow(string Model, string Kind, CountedRate? Raw, CountedRate? Calibrated);
@@ -120,6 +123,12 @@ public sealed record ModelReport
 
     /// <summary>The model's ONNX sha256, when known.</summary>
     public string? ModelHash { get; init; }
+
+    /// <summary>
+    /// For a hosted endpoint, what was measured over the network: identity, usage and spend, from the raw runs.
+    /// Null for a local model.
+    /// </summary>
+    public HostedModelReport? Hosted { get; init; }
 
     /// <summary>Raw held-out summary.</summary>
     public MeasureSummary? RawHeldOut { get; init; }

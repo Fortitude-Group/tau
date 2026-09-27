@@ -120,9 +120,17 @@ public static partial class HtmlReport
             Fact(sb, "/v1/models: " + model.Id, $"sha256 {model.OnnxSha256 ?? "n/a"}, revision {model.Revision ?? "n/a"}");
         }
 
-        foreach (var (model, hash) in m.ModelHashes)
+        foreach (var (model, hash) in m.ModelHashes.Where(kv => m.Hosted.All(h => h.Id != kv.Key)))
         {
             Fact(sb, "Measured model " + model, hash ?? "hash unknown (endpoint is not Tau, or not measured)");
+        }
+
+        foreach (var h in m.Hosted)
+        {
+            Fact(sb, "Hosted endpoint " + h.Id, $"{h.Endpoint}, requested model {h.RequestedModel}, answered as {(h.ModelsReturned.Count == 0 ? "unknown" : string.Join(", ", h.ModelsReturned))} (no model hash: a hosted endpoint has no /v1/models hash, so the returned model string is its identity)");
+            Fact(sb, "Hosted usage " + h.Id, $"{Fmt.Int(h.InputTokens)} input and {Fmt.Int(h.OutputTokens)} output tokens; estimated spend {Fmt.Usd(h.EstimatedSpendUsd)} at ${Fmt.Num(h.InputUsdPerMTok, "0.####")} and ${Fmt.Num(h.OutputUsdPerMTok, "0.####")} per million tokens (the spec's estimate, not a bill), against a {Fmt.Usd(h.BudgetUsd)} budget{(h.StoppedAtBudget ? $"; stopped by the spend guard with {Fmt.Int(h.NotSent)} item(s) not sent" : "")}");
+            Fact(sb, "Hosted headers " + h.Id, h.HeadersNote);
+            Fact(sb, "Hosted latency " + h.Id, h.LatencyNote);
         }
 
         Fact(sb, "Dataset manifest sha256", m.DatasetManifestSha256);

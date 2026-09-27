@@ -46,6 +46,21 @@ public sealed record CostRow
     public double? SavingGbpPerMillion { get; init; }
 }
 
+/// <summary>
+/// The local side of a cascade whose "local" model is a hosted endpoint: each first-line decision is a call to it,
+/// priced at the spec's price × its measured usage, not GPU energy.
+/// </summary>
+/// <param name="Id">The hosted endpoint's id.</param>
+/// <param name="InputTokensPerDecision">Mean input tokens per call, from the responses' usage.</param>
+/// <param name="OutputTokensPerDecision">Mean output tokens per call.</param>
+/// <param name="InputUsdPerMTok">The spec's input price, USD per million tokens.</param>
+/// <param name="OutputUsdPerMTok">The spec's output price, USD per million tokens.</param>
+public sealed record HostedLocalCost(string Id, double InputTokensPerDecision, double OutputTokensPerDecision, double InputUsdPerMTok, double OutputUsdPerMTok)
+{
+    /// <summary>The estimated cost of one call, USD.</summary>
+    public double UsdPerDecision => (InputTokensPerDecision * InputUsdPerMTok / 1e6) + (OutputTokensPerDecision * OutputUsdPerMTok / 1e6);
+}
+
 /// <summary>The cost estimate for one cascade, with its whole basis stated.</summary>
 public sealed record CostEstimate
 {
@@ -72,6 +87,9 @@ public sealed record CostEstimate
 
     /// <summary>Estimated local cost per decision, GBP.</summary>
     public double? LocalGbpPerDecision { get; init; }
+
+    /// <summary>When the local side is a hosted endpoint, its per-call price basis (then no GPU energy is counted).</summary>
+    public HostedLocalCost? HostedLocal { get; init; }
 
     /// <summary>The share of decisions escalated, used for the cascade rows.</summary>
     public double? ShareEscalated { get; init; }
@@ -104,8 +122,13 @@ public static class CostModel
     /// <param name="shareEscalated">Share of decisions the cascade sends to the frontier, or null for no cascade.</param>
     /// <param name="gpuMeanWatts">Mean GPU power during the local run, or null when not sampled (local energy is then omitted).</param>
     /// <param name="secondsPerDecision">Local seconds per decision, or null when unknown.</param>
+    /// <param name="hostedLocal">
+    /// When the "local" model is a hosted endpoint, its per-call price: the local share is then priced at that, not
+    /// GPU energy. Null for a local model.
+    /// </param>
     /// <exception cref="WorkbenchException">No frontier answer is cached, so there is nothing to estimate tokens from.</exception>
-    public static CostEstimate Estimate(PricingSpec pricing, CharTally chars, double? shareEscalated, double? gpuMeanWatts, double? secondsPerDecision)
+    public static CostEstimate Estimate(
+        PricingSpec pricing, CharTally chars, double? shareEscalated, double? gpuMeanWatts, double? secondsPerDecision, HostedLocalCost? hostedLocal = null)
     {
         ArgumentNullException.ThrowIfNull(pricing);
         ArgumentNullException.ThrowIfNull(chars);
@@ -129,8 +152,10 @@ public static class CostModel
         }
 
         string? gbpRefused = missing.Count == 0 ? null : $"No pound figures: the spec is missing {string.Join(" and ", missing)}.";
-        double? kwh = gpuMeanWatts is { } w && secondsPerDecision is { } s ? w * s / 3_600_000.0 : null;
-        double? localGbp = gbpRefused is null && kwh is { } k ? k * pricing.ElectricityGbpPerKwh!.Value : null;
+        double? kwh = hostedLocal is null && gpuMeanWatts is { } w && secondsPerDecision is { } s ? w * s / 3_600_000.0 : null;
+        double? localGbp = gbpRefused is not null ? null
+            : hostedLocal is { } h ? h.UsdPerDecision * pricing.GbpPerUsd!.Value
+            : kwh is { } k ? k * pricing.ElectricityGbpPerKwh!.Value : null;
         // Without GPU power (not sampled, or a model not served through Tau) local energy is left out, not guessed.
         string? cascadeRefused = gbpRefused
             ?? (shareEscalated is null ? "No cascade: no threshold met the target, so there is nothing to price." : null);
@@ -172,7 +197,11 @@ public static class CostModel
             gbpRefused ?? $"USD to GBP at {Fmt.Num(pricing.GbpPerUsd, "0.#####")}{(pricing.GbpPerUsdSource is null ? "" : $" ({pricing.GbpPerUsdSource})")}.",
             "Frontier answers for this benchmark came from an interactive Claude Code session, not the API; the costs price what the same work would cost through the API.",
         };
-        if (kwh is not null)
+        if (hostedLocal is { } hosted)
+        {
+            basis.Add($"The first-line model here is the hosted endpoint {hosted.Id}, not a local GPU, so each of its decisions is priced as a call: {Fmt.Num(hosted.InputTokensPerDecision, "0.#")} input and {Fmt.Num(hosted.OutputTokensPerDecision, "0.#")} output tokens per decision (its measured usage) at ${Fmt.Num(hosted.InputUsdPerMTok, "0.####")} and ${Fmt.Num(hosted.OutputUsdPerMTok, "0.####")} per million (the spec's estimate), {Fmt.Usd(hosted.UsdPerDecision)} per decision. No GPU energy is counted.");
+        }
+        else if (kwh is not null)
         {
             basis.Add($"Local energy: {Fmt.Num(gpuMeanWatts, "0.#")} W mean whole-GPU power × {Fmt.Num(secondsPerDecision, "0.#####")} s per decision (phase duration / items) = {Fmt.Num(kwh, "0.000e0")} kWh per decision{(pricing.ElectricityGbpPerKwh is { } e ? $", at £{Fmt.Num(e, "0.####")} per kWh{(pricing.ElectricitySource is null ? "" : $" ({pricing.ElectricitySource})")}" : "")}. Hardware purchase and depreciation are excluded.");
         }
@@ -183,7 +212,9 @@ public static class CostModel
 
         if (shareEscalated is not null)
         {
-            basis.Add($"Cascade: every decision runs locally, and {Fmt.Pct(shareEscalated)} are also sent to the frontier model.");
+            basis.Add(hostedLocal is null
+                ? $"Cascade: every decision runs locally, and {Fmt.Pct(shareEscalated)} are also sent to the frontier model."
+                : $"Cascade: every decision goes to {hostedLocal.Id} first, and {Fmt.Pct(shareEscalated)} are also sent to the frontier model.");
         }
 
         return new CostEstimate
@@ -195,6 +226,7 @@ public static class CostModel
             SecondsPerDecision = secondsPerDecision,
             LocalKwhPerDecision = kwh,
             LocalGbpPerDecision = localGbp,
+            HostedLocal = hostedLocal,
             ShareEscalated = shareEscalated,
             Rows = rows,
             GbpRefused = gbpRefused,

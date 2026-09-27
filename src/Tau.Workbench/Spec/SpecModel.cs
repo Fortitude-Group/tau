@@ -132,3 +132,32 @@ public sealed record PricingSpec(
     double? ElectricityGbpPerKwh,
     string? ElectricitySource,
     double TokenizerFactor);
+
+/// <summary>
+/// A hosted <c>/v1/systemone</c> endpoint measured alongside the local models (<c>external:</c> in the spec), for
+/// example TypeSafe's Jev. It is measured over the network with an API key read from the environment at run time,
+/// under a hard spend limit, and goes through every later stage like a local model.
+/// </summary>
+/// <param name="Id">The name used in reports and run folders (a simple name, distinct from every model and baseline).</param>
+/// <param name="Endpoint">The endpoint's base URL.</param>
+/// <param name="Model">The request's <c>model</c> field (for example <c>jev-latest</c>).</param>
+/// <param name="ApiKeyEnv">
+/// The environment variable holding the API key: read from the process first, then the Windows User scope. The key
+/// itself is never in the spec, on disk, or in any output.
+/// </param>
+/// <param name="InputUsdPerMTok">The input price the spend guard and the cost table use, USD per million tokens (an estimate).</param>
+/// <param name="OutputUsdPerMTok">The output price, USD per million tokens (an estimate).</param>
+/// <param name="BudgetUsd">The hard spend limit for one measure run, USD.</param>
+/// <param name="Concurrency">Requests in flight at once.</param>
+public sealed record ExternalModelSpec(
+    string Id, Uri Endpoint, string Model, string ApiKeyEnv, double InputUsdPerMTok, double OutputUsdPerMTok, double BudgetUsd, int Concurrency)
+{
+    /// <summary>How a hosted endpoint is labelled wherever it sits beside the local models.</summary>
+    public const string Label = "hosted endpoint, measured over the network";
+
+    /// <summary>The estimated cost of one request from its reported usage, USD.</summary>
+    /// <param name="inputTokens">Input tokens.</param>
+    /// <param name="outputTokens">Output tokens.</param>
+    public double CostUsd(long inputTokens, long outputTokens) =>
+        (inputTokens * InputUsdPerMTok / 1e6) + (outputTokens * OutputUsdPerMTok / 1e6);
+}

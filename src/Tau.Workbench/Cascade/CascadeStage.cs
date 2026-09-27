@@ -16,6 +16,12 @@ public sealed record CascadeResult
     /// <summary>Which measurement the confidences came from.</summary>
     public required string Source { get; init; }
 
+    /// <summary>
+    /// Set for a hosted endpoint: its label ("hosted endpoint, measured over the network"). Its local share is a call
+    /// to it, priced at its own price, and its latency is wall clock with the network included.
+    /// </summary>
+    public string? Hosted { get; init; }
+
     /// <summary>The threshold, or null when none met the target.</summary>
     public double? Tau { get; init; }
 
@@ -109,9 +115,11 @@ public static class CascadeStage
     /// <param name="chars">Primary-prompt character tallies, for the cost estimate.</param>
     /// <param name="gpuMeanWatts">Mean GPU power during the local run.</param>
     /// <param name="secondsPerDecision">Local seconds per decision.</param>
+    /// <param name="hostedLocal">For a hosted endpoint, its per-call price; null for a local model.</param>
     public static CascadeResult Simulate(
         DecisionSpec spec, ThresholdResult threshold, IReadOnlyList<MeasuredItem> heldOut, FrontierState frontier,
-        IReadOnlyList<MeasuredItem>? latency, string? latencySource, CharTally chars, double? gpuMeanWatts, double? secondsPerDecision)
+        IReadOnlyList<MeasuredItem>? latency, string? latencySource, CharTally chars, double? gpuMeanWatts, double? secondsPerDecision,
+        HostedLocalCost? hostedLocal = null)
     {
         ArgumentNullException.ThrowIfNull(spec);
         ArgumentNullException.ThrowIfNull(threshold);
@@ -147,7 +155,7 @@ public static class CascadeStage
                 return null;
             }
 
-            return CostModel.Estimate(spec.Pricing, chars, share, gpuMeanWatts, secondsPerDecision);
+            return CostModel.Estimate(spec.Pricing, chars, share, gpuMeanWatts, secondsPerDecision, hostedLocal);
         }
 
         if (threshold.Tau is not { } tau)
@@ -157,6 +165,7 @@ public static class CascadeStage
             {
                 Model = threshold.Model,
                 Source = threshold.Source,
+                Hosted = spec.ExternalFor(threshold.Model) is null ? null : ExternalModelSpec.Label,
                 NotSimulated = $"No cascade: no threshold met the {Fmt.Pct(threshold.TargetError)} target {(reference == ReferenceKind.Frontier ? "disagreement" : "error")} on the calibration split.",
                 Items = ok.Length,
                 ExcludedFailures = failures,
@@ -200,6 +209,7 @@ public static class CascadeStage
         {
             Model = threshold.Model,
             Source = threshold.Source,
+            Hosted = spec.ExternalFor(threshold.Model) is null ? null : ExternalModelSpec.Label,
             Tau = tau,
             Items = ok.Length,
             ExcludedFailures = failures,
@@ -248,8 +258,11 @@ public static class CascadeStage
             MeasureSummary? summary = File.Exists(spec.RunSummaryPath(t.Model, "heldout", latencyPhase))
                 ? WorkbenchJson.ReadJson<MeasureSummary>(spec.RunSummaryPath(t.Model, "heldout", latencyPhase)) : null;
             double? secondsPerDecision = summary is { Items: > 0 } s ? s.DurationSeconds / s.Items : null;
+            var hostedLocal = summary?.Hosted is { PricedResponses: > 0 } h
+                ? new HostedLocalCost(t.Model, (double)h.InputTokens / h.PricedResponses, (double)h.OutputTokens / h.PricedResponses, h.InputUsdPerMTok, h.OutputUsdPerMTok)
+                : null;
             results.Add(Simulate(spec, t, records, frontier, latencyRecords, latencyRecords is null ? null : latencyPhase,
-                chars, summary?.Gpu?.MeanWatts, secondsPerDecision));
+                chars, summary?.Gpu?.MeanWatts, secondsPerDecision, hostedLocal));
         }
 
         WorkbenchJson.WriteJson(spec.CascadePath, results);

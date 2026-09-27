@@ -102,10 +102,12 @@ public sealed class MeasureTests
         Assert.Equal(Precisions.Full, Precisions.Of(3, 3));
         Assert.Equal(Precisions.Rounded, Precisions.Of(0, 3));
         Assert.Equal(Precisions.Mixed, Precisions.Of(1, 3));
-        Assert.Null(Precisions.CalibratorNote(Precisions.Full));
-        Assert.Equal("Probabilities rounded to 4 dp by the endpoint; calibrators fitted on rounded values.", Precisions.CalibratorNote(Precisions.Rounded));
-        Assert.Contains("calibrators fitted on rounded values", Precisions.CalibratorNote(null), StringComparison.Ordinal);
-        Assert.Contains("fitted partly on rounded values", Precisions.CalibratorNote(Precisions.Mixed), StringComparison.Ordinal);
+        Assert.Null(Precisions.CalibratorNote(Precisions.Full, 17));
+        Assert.Equal("Probabilities rounded to 4 dp by the endpoint; calibrators fitted on rounded values.", Precisions.CalibratorNote(Precisions.Rounded, 4));
+        Assert.Equal("Probabilities rounded to 2 dp by the endpoint; calibrators fitted on rounded values.", Precisions.CalibratorNote(Precisions.Rounded, 2));
+        Assert.Equal("Probabilities rounded by the endpoint; calibrators fitted on rounded values.", Precisions.CalibratorNote(Precisions.Rounded, null));
+        Assert.Contains("calibrators fitted on rounded values", Precisions.CalibratorNote(null, 4), StringComparison.Ordinal);
+        Assert.Contains("fitted partly on rounded values", Precisions.CalibratorNote(Precisions.Mixed, 4), StringComparison.Ordinal);
     }
 
     [Fact]

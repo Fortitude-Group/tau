@@ -30,8 +30,17 @@ public sealed record CalibrationSummary
     /// <summary>The labels the calibrators were fitted against (older summaries without the field were fitted on gold).</summary>
     public ReferenceKind Reference { get; init; } = ReferenceKind.Gold;
 
-    /// <summary>The ONNX sha256 every calibrator was bound to.</summary>
+    /// <summary>
+    /// The ONNX sha256 every calibrator was bound to. For an offline-only fit (a hosted endpoint, which has no model
+    /// hash) it is the sha256 of the raw calibration run the calibrators were fitted on.
+    /// </summary>
     public required string ModelHash { get; init; }
+
+    /// <summary>
+    /// True for a hosted endpoint: the calibrators are written as offline-only files (<see cref="OfflineCalibrators"/>)
+    /// that the Runtime never loads, and the offline view is the calibrated view.
+    /// </summary>
+    public bool OfflineOnly { get; init; }
 
     /// <summary>The dataset manifest's sha256 (the calibrators' dataset revision).</summary>
     public required string DatasetRevision { get; init; }
@@ -41,6 +50,9 @@ public sealed record CalibrationSummary
     /// <see cref="Precisions"/>); null for a fit on a run recorded before the Workbench asked for full precision.
     /// </summary>
     public string? RawPrecision { get; init; }
+
+    /// <summary>The most decimal places observed in the raw calibration probabilities, or null when unknown.</summary>
+    public int? RawDecimalPlaces { get; init; }
 
     /// <summary>The calibrators written.</summary>
     public required IReadOnlyList<WrittenCalibrator> Calibrators { get; init; }
@@ -87,10 +99,21 @@ public static class CalibrateStage
         reference ??= ReferenceLabels.Load(spec, manifest);
         var q = spec.Question;
         var rawSummary = WorkbenchJson.ReadJson<MeasureSummary>(spec.RunSummaryPath(model, "calibration", Phases.Raw));
-        if (rawSummary.ModelHash is not { Length: 64 } modelHash)
+        var hosted = spec.ExternalFor(model);
+        string modelHash;
+        if (hosted is not null)
+        {
+            // No model hash exists for a hosted endpoint: bind the offline-only files to the run they were fitted on.
+            modelHash = WorkbenchJson.Sha256File(spec.RunPath(model, "calibration", Phases.Raw));
+        }
+        else if (rawSummary.ModelHash is not { Length: 64 } h)
         {
             throw new WorkbenchException(
                 $"The raw calibration measurement for '{model}' has no model hash: the endpoint was {rawSummary.EndpointIdentity?.Description ?? "not identified"}. Calibrators are bound to a model's ONNX sha256, so they can only be fitted against a Tau Runtime that lists the model in GET /v1/models.");
+        }
+        else
+        {
+            modelHash = h;
         }
 
         var records = reference.Apply(q, "calibration", WorkbenchJson.ReadJsonl<MeasuredItem>(spec.RunPath(model, "calibration", Phases.Raw)));
@@ -105,26 +128,36 @@ public static class CalibrateStage
         string date = (clock ?? (() => DateTimeOffset.UtcNow))().UtcDateTime.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
         var dir = spec.CalibratorsDirectory(model);
         Directory.CreateDirectory(dir);
-        foreach (var stale in Directory.EnumerateFiles(dir, "*.calibrator.json"))
+        foreach (var stale in Directory.EnumerateFiles(dir, "*.calibrator.json").Concat(Directory.EnumerateFiles(dir, "*" + OfflineCalibrators.Suffix)))
         {
             File.Delete(stale);
         }
 
         var notes = new List<string>();
-        if (Precisions.CalibratorNote(rawSummary.Precision) is { } precisionNote)
+        if (hosted is not null)
+        {
+            notes.Add("Offline only: " + OfflineCalibrators.Why);
+        }
+
+        int? decimalPlaces = rawSummary.DecimalPlaces ?? Precisions.MaxDecimalPlaces(q, records);
+        if (Precisions.CalibratorNote(rawSummary.Precision, decimalPlaces) is { } precisionNote)
         {
             notes.Add(precisionNote);
         }
 
         var written = new List<WrittenCalibrator>();
+        var files = new List<CalibratorFile>();
         var typeWire = q.Type.ToWireString();
-        written.Add(Write(spec, dir, model, modelHash, manifest, date, probs, gold, null, $"{model}.{typeWire}.calibrator.json", "question type"));
+        string FileName(string? bucketName) => hosted is not null ? OfflineCalibrators.FileName(model, typeWire, bucketName)
+            : bucketName is null ? $"{model}.{typeWire}.calibrator.json" : $"{model}.{typeWire}.{bucketName}.calibrator.json";
+        var context = new FitContext(spec, dir, model, modelHash, manifest, date, probs, gold, hosted);
+        written.Add(Write(context, null, FileName(null), "question type", files));
 
         var bucket = OptionBucketExtensions.ForOptionCount(q.Classes.Count);
         if (probs.Length >= CalibrationFitter.MinIsotonicItems)
         {
             var bucketName = bucket.ToWireString().Replace("+", "plus", StringComparison.Ordinal);
-            written.Add(Write(spec, dir, model, modelHash, manifest, date, probs, gold, bucket, $"{model}.{typeWire}.{bucketName}.calibrator.json", $"{bucket.ToWireString()} options"));
+            written.Add(Write(context, bucket, FileName(bucketName), $"{bucket.ToWireString()} options", files));
             notes.Add($"A spec asks one question, so every item has {q.Classes.Count} options and the {bucket.ToWireString()} bucket calibrator is fitted on the same items as the question-type one. The Runtime prefers the bucket file for {q.Classes.Count}-option requests; the type-level file covers other option counts.");
         }
         else
@@ -138,9 +171,10 @@ public static class CalibrateStage
             notes.Add($"{missingClasses.Length} class(es) have no calibration example; the calibrators are fitted per question type, so those classes use the same calibrator as every other class.");
         }
 
-        var set = CalibratorSet.LoadDirectory(dir);
-        var applied = set.Find(model, q.Type, q.Classes.Count)
-                      ?? throw new WorkbenchException($"The calibrators just written to {dir} don't resolve for '{model}'. This is a Workbench bug.");
+        // A local model's calibrators are read back through the Runtime's own loader; a hosted endpoint's never are.
+        var applied = hosted is not null ? files[^1]
+            : CalibratorSet.LoadDirectory(dir).Find(model, q.Type, q.Classes.Count)
+              ?? throw new WorkbenchException($"The calibrators just written to {dir} don't resolve for '{model}'. This is a Workbench bug.");
         MetricSet? offlineHeld = null, rawHeld = null;
         foreach (var split in new[] { "calibration", "heldout" })
         {
@@ -164,7 +198,9 @@ public static class CalibrateStage
             Model = model,
             Reference = reference.Kind,
             ModelHash = modelHash,
+            OfflineOnly = hosted is not null,
             RawPrecision = rawSummary.Precision,
+            RawDecimalPlaces = decimalPlaces,
             DatasetRevision = manifest.Sha256,
             Calibrators = written,
             ExcludedFailures = records.Count - usable.Length,
@@ -199,12 +235,14 @@ public static class CalibrateStage
             : r with { LatencyMs = 0, ModelMs = null, Calibrators = null, ModelHash = null }).ToArray();
         var scored = MeasureStage.Summarise(spec, model, split, Phases.Offline, reference.Apply(q, split, offline));
         var rawSummaryPath = spec.RunSummaryPath(model, split, Phases.Raw);
+        var rawSummary = File.Exists(rawSummaryPath) ? WorkbenchJson.ReadJson<MeasureSummary>(rawSummaryPath) : null;
         var summary = scored with
         {
             StartedUtc = "",
             Reference = reference.Kind,
-            ModelHash = calibrator.ModelHash,
-            Precision = File.Exists(rawSummaryPath) ? WorkbenchJson.ReadJson<MeasureSummary>(rawSummaryPath).Precision : null,
+            ModelHash = spec.ExternalFor(model) is null ? calibrator.ModelHash : null,
+            Precision = rawSummary?.Precision,
+            DecimalPlaces = rawSummary?.DecimalPlaces,
             ExclusionNote = "Offline: the Workbench applied the fitted calibrator to the raw probabilities; no endpoint was called. " + scored.ExclusionNote,
         };
         WorkbenchJson.WriteJsonl(spec.RunPath(model, split, Phases.Offline), offline);
@@ -212,13 +250,25 @@ public static class CalibrateStage
         return summary;
     }
 
-    private static WrittenCalibrator Write(
-        DecisionSpec spec, string dir, string model, string modelHash, DatasetManifest manifest, string date,
-        double[][] probs, int[] gold, OptionBucket? bucket, string fileName, string scope)
+    private sealed record FitContext(
+        DecisionSpec Spec, string Dir, string Model, string ModelHash, DatasetManifest Manifest, string Date,
+        double[][] Probs, int[] Gold, ExternalModelSpec? Hosted);
+
+    private static WrittenCalibrator Write(FitContext c, OptionBucket? bucket, string fileName, string scope, List<CalibratorFile> files)
     {
-        var fit = CalibrationFitter.Fit(probs, gold, model, modelHash, spec.Question.Type, bucket, spec.Name, manifest.Sha256, date);
-        var path = Path.Combine(dir, fileName);
-        fit.File.Write(path);
+        var (spec, probs) = (c.Spec, c.Probs);
+        var fit = CalibrationFitter.Fit(probs, c.Gold, c.Model, c.ModelHash, spec.Question.Type, bucket, spec.Name, c.Manifest.Sha256, c.Date);
+        var path = Path.Combine(c.Dir, fileName);
+        if (c.Hosted is { } hosted)
+        {
+            OfflineCalibrators.Write(path, fit.File, hosted, $"sha256 of {Path.GetRelativePath(spec.SpecDirectory, spec.RunPath(c.Model, "calibration", Phases.Raw)).Replace('\\', '/')}, the run it was fitted on: a hosted endpoint has no model hash");
+        }
+        else
+        {
+            fit.File.Write(path);
+        }
+
+        files.Add(fit.File);
         return new WrittenCalibrator(
             Path.GetRelativePath(spec.SpecDirectory, path).Replace('\\', '/'), scope, probs.Length,
             fit.File.Method.ToWireString(), fit.Temperature, fit.Isotonic, fit.IsotonicSkipped, fit.EceBefore, fit.LogLossBefore);

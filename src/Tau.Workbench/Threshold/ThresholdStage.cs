@@ -202,7 +202,7 @@ public static class ThresholdStage
     {
         ArgumentNullException.ThrowIfNull(spec);
         var results = new List<ThresholdResult>();
-        foreach (var model in spec.Models)
+        foreach (var model in spec.AllModels)
         {
             if (BestSource(spec, model) is not { } source)
             {

@@ -38,7 +38,7 @@ internal static partial class DecisionSpecParser
         }
 
         var r = new Reader(problems);
-        r.OnlyKeys(root, "", "name", "title", "question", "data", "endpoint", "models", "baselines", "threshold", "frontier", "pricing");
+        r.OnlyKeys(root, "", "name", "title", "question", "data", "endpoint", "models", "external", "baselines", "threshold", "frontier", "pricing");
 
         string name = r.Str(root, "name", "") ?? "";
         string title = r.Str(root, "title", "", required: false) ?? name;
@@ -69,6 +69,7 @@ internal static partial class DecisionSpecParser
         CheckNames(models, "models", problems);
         var baselines = r.StrList(root, "baselines", "", required: false);
         CheckNames(baselines, "baselines", problems);
+        var external = ParseExternal(root, r, models, baselines, problems);
 
         var thresholdNode = r.Map(root, "threshold", "");
         double targetError = 0.05;
@@ -96,8 +97,8 @@ internal static partial class DecisionSpecParser
             throw new SpecValidationException(specPath, problems);
         }
 
-        return new DecisionSpec(name, title, question!,data!, endpoint, models, baselines,
-            new ThresholdSpec(targetError), frontier!, pricing!, specPath, repoRoot!);
+        return new DecisionSpec(name, title, question!, data!, endpoint, models, baselines,
+            new ThresholdSpec(targetError), frontier!, pricing!, specPath, repoRoot!, external);
     }
 
     private static QuestionSpec? ParseQuestion(Reader r, YamlMappingNode? node, List<string> problems)

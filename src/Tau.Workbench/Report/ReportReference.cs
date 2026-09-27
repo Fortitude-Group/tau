@@ -64,10 +64,10 @@ internal static class ReportReference
         }
 
         var rows = new List<DatasetLabelRow>();
-        foreach (var model in spec.Models)
+        foreach (var model in spec.AllModels)
         {
             var calibratedPhase = File.Exists(spec.RunPath(model, "heldout", Phases.Calibrated)) ? Phases.Calibrated : Phases.Offline;
-            rows.Add(new DatasetLabelRow(model, "tau", AgainstDataset(model, Phases.Raw), AgainstDataset(model, calibratedPhase)));
+            rows.Add(new DatasetLabelRow(model, spec.ExternalFor(model) is null ? "tau" : "hosted", AgainstDataset(model, Phases.Raw), AgainstDataset(model, calibratedPhase)));
         }
 
         rows.AddRange(baselines.Where(b => b.Missing is null).Select(b => new DatasetLabelRow(b.Name, "baseline", b.RawAgainstDatasetLabels, b.CalibratedAgainstDatasetLabels)));

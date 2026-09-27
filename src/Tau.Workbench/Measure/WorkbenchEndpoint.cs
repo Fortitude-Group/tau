@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Globalization;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Tau.Client;
@@ -69,8 +70,9 @@ public sealed record EndpointCall
 /// The Workbench's connection to one <c>/v1/systemone</c> endpoint. Requests go through
 /// <see cref="SystemOneClient"/> (Tau.Client); a <see cref="CaptureHandler"/> in the handler chain reads the
 /// <c>x-tau-*</c> response headers, which the client itself does not expose. Every request asks for
-/// <c>x-tau-precision: full</c>, so the stored probabilities are the values the Runtime computed, not the 4-dp
-/// rounding, wherever the endpoint supports it.
+/// <c>x-tau-precision: full</c>, so the stored probabilities are the values the Runtime computed, not its
+/// rounding, wherever the endpoint supports it. A hosted endpoint gets its API key as <c>Authorization: Bearer</c>;
+/// the key is held only in the HTTP client's headers and scrubbed from any failure text the endpoint returns.
 /// </summary>
 public sealed class WorkbenchEndpoint : IDisposable
 {
@@ -86,12 +88,23 @@ public sealed class WorkbenchEndpoint : IDisposable
     };
     private readonly HttpClient _http;
     private readonly SystemOneClient _client;
+    private readonly string? _apiKey;
+
+    /// <summary>
+    /// The retry policy for hosted endpoints: Tau.Client's backoff, retrying every 5xx as well as 429 and 529, over
+    /// five attempts, because a network hop and a shared server fail transiently far more often than a local Runtime.
+    /// </summary>
+    public static RetryPolicy HostedRetryPolicy { get; } = RetryPolicy.Default with { RetryServerErrors = true, MaxAttempts = 5 };
+
+    /// <summary>What replaces the API key in any text the Workbench keeps.</summary>
+    public const string Redacted = "[redacted]";
 
     /// <summary>Creates a connection.</summary>
     /// <param name="baseUrl">The endpoint's base URL.</param>
     /// <param name="handler">The innermost HTTP handler; null for a real network handler. Tests pass a stub.</param>
     /// <param name="retryPolicy">The client's retry policy for 429/529; null for the client default.</param>
-    public WorkbenchEndpoint(Uri baseUrl, HttpMessageHandler? handler = null, RetryPolicy? retryPolicy = null)
+    /// <param name="apiKey">An API key sent as <c>Authorization: Bearer</c>, or null for none (a local Runtime).</param>
+    public WorkbenchEndpoint(Uri baseUrl, HttpMessageHandler? handler = null, RetryPolicy? retryPolicy = null, string? apiKey = null)
     {
         ArgumentNullException.ThrowIfNull(baseUrl);
         BaseUrl = baseUrl.AbsoluteUri.EndsWith('/') ? baseUrl : new Uri(baseUrl.AbsoluteUri + "/");
@@ -100,11 +113,20 @@ public sealed class WorkbenchEndpoint : IDisposable
             BaseAddress = BaseUrl,
             Timeout = TimeSpan.FromMinutes(2),
         };
+        if (!string.IsNullOrWhiteSpace(apiKey))
+        {
+            _apiKey = apiKey;
+            _http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
+        }
+
         _client = new SystemOneClient(_http, retryPolicy);
     }
 
     /// <summary>The base URL (always ending in '/').</summary>
     public Uri BaseUrl { get; }
+
+    /// <summary>Whether requests carry an API key (never the key itself).</summary>
+    public bool HasApiKey => _apiKey is not null;
 
     /// <summary>
     /// Identifies the endpoint through <c>GET /v1/models</c>. Anything other than a 200 in Tau's shape
@@ -196,7 +218,16 @@ public sealed class WorkbenchEndpoint : IDisposable
         FullPrecision = string.Equals(c.Header(TauHeaders.Precision)?.Trim(), TauHeaders.FullPrecision, StringComparison.OrdinalIgnoreCase),
     };
 
-    private static string Trim(string s) => s.Length <= 2000 ? s : s[..2000] + "...";
+    private string Trim(string s)
+    {
+        // A hosted endpoint could echo the request's Authorization header in an error body: never keep the key.
+        if (_apiKey is not null)
+        {
+            s = s.Replace(_apiKey, Redacted, StringComparison.Ordinal);
+        }
+
+        return s.Length <= 2000 ? s : s[..2000] + "...";
+    }
 
     private static string? Str(JsonNode? n) => n is JsonValue v && v.TryGetValue<string>(out var s) ? s : null;
 }

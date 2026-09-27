@@ -26,6 +26,16 @@ public sealed record PipelineOptions
     /// <summary>Creates the endpoint connection (tests pass a stub-backed one).</summary>
     public Func<Uri, WorkbenchEndpoint> EndpointFactory { get; init; } = uri => new WorkbenchEndpoint(uri);
 
+    /// <summary>
+    /// Creates a hosted endpoint's connection from its spec and API key (tests pass a stub-backed one). The default
+    /// retries 429 and every 5xx with Tau.Client's backoff.
+    /// </summary>
+    public Func<ExternalModelSpec, string, WorkbenchEndpoint> HostedEndpointFactory { get; init; } =
+        (ext, key) => new WorkbenchEndpoint(ext.Endpoint, retryPolicy: WorkbenchEndpoint.HostedRetryPolicy, apiKey: key);
+
+    /// <summary>Reads an environment variable at a scope (tests pass a fake, so no real key is ever needed).</summary>
+    public Func<string, EnvironmentVariableTarget, string?> ReadEnvironment { get; init; } = ApiKeys.Environment;
+
     /// <summary>The report's command, clock and probes.</summary>
     public ReportContext Report { get; init; } = new() { Command = "tau" };
 
@@ -57,7 +67,7 @@ public static class ExitCodes
 /// The stage entry points behind the <c>tau</c> commands, and <c>tau run</c>, which runs them all in order,
 /// skipping the expensive ones (measure, calibrate) whose outputs are newer than their inputs.
 /// </summary>
-public static class Pipeline
+public static partial class Pipeline
 {
     /// <summary>The measured splits.</summary>
     public static readonly IReadOnlyList<string> MeasuredSplits = ["calibration", "heldout"];
@@ -122,7 +132,19 @@ public static class Pipeline
             await MeasureModelAsync(spec, options, model, phase, splits, endpoint, identity, ct).ConfigureAwait(false);
         }
 
-        return ExitCodes.Ok;
+        bool blocked = false;
+        foreach (var ext in spec.External)
+        {
+            if (phase != Phases.Raw)
+            {
+                options.Out.WriteLine(HostedCalibratedSkipped(ext));
+                continue;
+            }
+
+            blocked |= !await MeasureHostedAsync(spec, options, ext, splits, ct).ConfigureAwait(false);
+        }
+
+        return blocked ? ExitCodes.Blocked : ExitCodes.Ok;
     }
 
     /// <summary><c>tau calibrate</c>: fits and writes calibrators for every model with raw measurements.</summary>
@@ -134,10 +156,18 @@ public static class Pipeline
         ArgumentNullException.ThrowIfNull(options);
         var manifest = DatasetManifest.Load(spec.ManifestPath);
         var reference = ReferenceLabels.Load(spec, manifest);
-        foreach (var model in spec.Models)
+        foreach (var model in spec.AllModels)
         {
+            if (spec.ExternalFor(model) is not null && !File.Exists(spec.RunSummaryPath(model, "calibration", Phases.Raw)))
+            {
+                options.Out.WriteLine($"calibrate: {model}: skipped: the hosted endpoint has no raw calibration measurement yet.");
+                continue;
+            }
+
             var s = CalibrateStage.Run(spec, model, manifest, options.Clock, reference);
-            options.Out.WriteLine($"calibrate: {model}: {string.Join("; ", s.Calibrators.Select(c => $"{c.Scope} -> {c.Chosen}"))}; offline held-out ECE {Fmt.Num(s.RawHeldOut?.Ece)} -> {Fmt.Num(s.OfflineHeldOut?.Ece)}. Point the Runtime's Tau:CalibratorsDirectory at {spec.CalibratorsRoot} for the calibrated phase.");
+            options.Out.WriteLine(s.OfflineOnly
+                ? $"calibrate: {model}: {string.Join("; ", s.Calibrators.Select(c => $"{c.Scope} -> {c.Chosen}"))}; offline held-out ECE {Fmt.Num(s.RawHeldOut?.Ece)} -> {Fmt.Num(s.OfflineHeldOut?.Ece)}. Offline only: {OfflineCalibrators.Why}"
+                : $"calibrate: {model}: {string.Join("; ", s.Calibrators.Select(c => $"{c.Scope} -> {c.Chosen}"))}; offline held-out ECE {Fmt.Num(s.RawHeldOut?.Ece)} -> {Fmt.Num(s.OfflineHeldOut?.Ece)}. Point the Runtime's Tau:CalibratorsDirectory at {spec.CalibratorsRoot} for the calibrated phase.");
         }
 
         return ExitCodes.Ok;
@@ -252,16 +282,7 @@ public static class Pipeline
                     await MeasureModelAsync(spec, options, model, Phases.Raw, splits, endpoint, identity, ct).ConfigureAwait(false);
                 }
 
-                var calibrateOutputs = new[] { spec.CalibrationSummaryPath(model) }.Concat(Outputs(spec, model, Phases.Offline)).ToArray();
-                if (!options.Force && Staleness.IsCurrent(rawOutputs.Concat(labelFiles), calibrateOutputs))
-                {
-                    o.WriteLine($"calibrate: {model}: skipped (current).");
-                }
-                else
-                {
-                    CalibrateStage.Run(spec, model, manifest, options.Clock, reference);
-                    o.WriteLine($"calibrate: {model}: calibrators written to {spec.CalibratorsDirectory(model)}.");
-                }
+                CalibrateIfStale(spec, options, model, manifest, reference, rawOutputs.Concat(labelFiles));
 
                 var calibratorFiles = Directory.Exists(spec.CalibratorsDirectory(model))
                     ? Directory.EnumerateFiles(spec.CalibratorsDirectory(model), "*.calibrator.json").ToArray() : [];
@@ -287,10 +308,11 @@ public static class Pipeline
             endpoint?.Dispose();
         }
 
+        bool hostedBlocked = !await RunHostedAsync(spec, options, manifest, splits, reference, splitFiles, labelFiles, ct).ConfigureAwait(false);
         Threshold(spec, options);
         int cascadeExit = Cascade(spec, options);
         Report(spec, options);
-        return labelExit == ExitCodes.Blocked || cascadeExit == ExitCodes.Blocked ? ExitCodes.Blocked : ExitCodes.Ok;
+        return labelExit == ExitCodes.Blocked || cascadeExit == ExitCodes.Blocked || hostedBlocked ? ExitCodes.Blocked : ExitCodes.Ok;
     }
 
     /// <summary>The measurement files (records and summaries, both splits) for one model and phase.</summary>
@@ -299,6 +321,22 @@ public static class Pipeline
     /// <param name="phase">The phase.</param>
     public static string[] Outputs(DecisionSpec spec, string model, string phase) =>
         MeasuredSplits.SelectMany(s => new[] { spec.RunPath(model, s, phase), spec.RunSummaryPath(model, s, phase) }).ToArray();
+
+    private static void CalibrateIfStale(
+        DecisionSpec spec, PipelineOptions options, string model, DatasetManifest manifest, ReferenceLabels reference, IEnumerable<string> inputs)
+    {
+        var calibrateOutputs = new[] { spec.CalibrationSummaryPath(model) }.Concat(Outputs(spec, model, Phases.Offline)).ToArray();
+        if (!options.Force && Staleness.IsCurrent(inputs, calibrateOutputs))
+        {
+            options.Out.WriteLine($"calibrate: {model}: skipped (current).");
+            return;
+        }
+
+        var s = CalibrateStage.Run(spec, model, manifest, options.Clock, reference);
+        options.Out.WriteLine(s.OfflineOnly
+            ? $"calibrate: {model}: offline-only calibrators written to {spec.CalibratorsDirectory(model)}."
+            : $"calibrate: {model}: calibrators written to {spec.CalibratorsDirectory(model)}.");
+    }
 
     private static async Task MeasureModelAsync(
         DecisionSpec spec, PipelineOptions options, string model, string phase, IReadOnlyDictionary<string, IReadOnlyList<DatasetItem>> splits,

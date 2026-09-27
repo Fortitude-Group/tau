@@ -61,7 +61,7 @@ public static class ReportBuilder
         ArgumentNullException.ThrowIfNull(manifest);
         ArgumentNullException.ThrowIfNull(context);
         var reference = ReferenceLabels.Load(spec, manifest);
-        var models = spec.Models.Select(m => ModelReportFor(spec, reference, m)).ToArray();
+        var models = spec.AllModels.Select(m => ModelReportFor(spec, reference, m)).ToArray();
         var thresholds = File.Exists(spec.ThresholdPath) ? WorkbenchJson.ReadJson<List<ThresholdResult>>(spec.ThresholdPath) : [];
         var cascades = File.Exists(spec.CascadePath) ? WorkbenchJson.ReadJson<List<CascadeResult>>(spec.CascadePath) : [];
 
@@ -94,6 +94,7 @@ public static class ReportBuilder
             ConfidenceNote = MetricSet.ConfidenceNote,
             Reference = spec.Data.Reference,
             ReferenceNote = ReportReference.Describe(spec),
+            Hosted = models.Where(m => m.Hosted is not null).Select(m => m.Hosted!).ToArray(),
         };
 
         var datasetLabels = ReportReference.DatasetLabels(spec, reference, baselines, frontier, manifest.Synthetic);
@@ -157,6 +158,7 @@ public static class ReportBuilder
             BestCalibratedSource = bestSource,
             EceReduction = reduction,
             RuntimeVsOfflineMaxDiff = maxDiff,
+            Hosted = ReportHosted.For(spec, model, rawHeld, Summary("calibration", Phases.Raw)),
             Confusion = confusionPhase is null ? null
                 : BuildConfusion(spec.Question, reference.Apply(spec.Question, "heldout", WorkbenchJson.ReadJsonl<MeasuredItem>(spec.RunPath(model, "heldout", confusionPhase))), confusionPhase),
         };
@@ -240,7 +242,7 @@ public static class ReportBuilder
 
     private static int SpecOrder(DecisionSpec spec, string model)
     {
-        int i = spec.Models.ToList().IndexOf(model);
+        int i = spec.AllModels.ToList().IndexOf(model);
         return i < 0 ? int.MaxValue : i;
     }
 
@@ -337,6 +339,7 @@ public static class ReportBuilder
         IReadOnlyList<CascadeResult> cascades, IReadOnlyList<BaselineResult> baselines, LabelSummary? frontier)
     {
         var misses = ReportReference.StaleArtefacts(spec, models, thresholds, cascades).ToList();
+        misses.AddRange(ReportHosted.Misses(models));
         string rate = ReportReference.Rate(spec.Data.Reference);
         foreach (var m in models.Where(m => m.EceReduction is not null && m.EceReduction < TargetEceReduction))
         {

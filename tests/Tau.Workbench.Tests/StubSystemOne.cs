@@ -30,6 +30,18 @@ internal sealed class StubSystemOne : HttpMessageHandler
     /// <summary>Echo x-tau-precision: full when asked, as a Tau Runtime does (Jev and Kev don't).</summary>
     public bool HonoursPrecision { get; init; }
 
+    /// <summary>Round every returned probability to this many decimal places unless full precision is honoured (Jev rounds to 2).</summary>
+    public int? RoundTo { get; init; }
+
+    /// <summary>The model string responses return; null echoes the requested model (as Tau does).</summary>
+    public string? ReturnedModel { get; init; }
+
+    /// <summary>The usage each response reports.</summary>
+    public (int Input, int Output) Usage { get; init; } = (12, 0);
+
+    /// <summary>Every request's Authorization header, or null when it had none.</summary>
+    public ConcurrentBag<string?> Authorizations { get; } = [];
+
     /// <summary>Whether each request asked for x-tau-precision: full.</summary>
     public ConcurrentBag<bool> PrecisionRequested { get; } = [];
 
@@ -59,6 +71,7 @@ internal sealed class StubSystemOne : HttpMessageHandler
         string text = (string)body["state"]!;
         bool raw = request.Headers.TryGetValues("x-tau-raw", out var values) && values.Contains("true");
         Calls.Add((text, raw));
+        Authorizations.Add(request.Headers.Authorization?.ToString());
         bool full = request.Headers.TryGetValues("x-tau-precision", out var precision) && precision.Contains("full");
         PrecisionRequested.Add(full);
         if (MaxDelayMs > 0)
@@ -74,6 +87,11 @@ internal sealed class StubSystemOne : HttpMessageHandler
         var (key, question) = body["questions"]!.AsObject().First();
         string type = (string)question!["type"]!;
         var p = Probabilities(text, raw);
+        if (RoundTo is { } dp && !(full && HonoursPrecision))
+        {
+            p = p.Select(v => Math.Round(v, dp, MidpointRounding.ToEven)).ToArray();
+        }
+
         JsonObject answer;
         switch (type)
         {
@@ -106,9 +124,9 @@ internal sealed class StubSystemOne : HttpMessageHandler
 
         var response = Json(new JsonObject
         {
-            ["model"] = (string)body["model"]!,
+            ["model"] = ReturnedModel ?? (string)body["model"]!,
             ["answers"] = new JsonObject { [key] = answer },
-            ["usage"] = new JsonObject { ["input_tokens"] = 12, ["output_tokens"] = 0 },
+            ["usage"] = new JsonObject { ["input_tokens"] = Usage.Input, ["output_tokens"] = Usage.Output },
         });
         if (IsTau)
         {

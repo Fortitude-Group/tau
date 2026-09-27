@@ -27,6 +27,12 @@ public sealed record MeasureOptions
 
     /// <summary>The labels the summary scores against; null resolves them from the spec.</summary>
     public ReferenceLabels? Reference { get; init; }
+
+    /// <summary>
+    /// Set when measuring a hosted endpoint: the request's model comes from its spec, and every request passes its
+    /// spend guard first. Null for a local model.
+    /// </summary>
+    public HostedRun? Hosted { get; init; }
 }
 
 /// <summary>
@@ -143,8 +149,12 @@ public static class MeasureStage
         reference.Require(split, items);
         var started = options.Clock();
         var (sampler, gpuReason) = options.StartGpuSampler();
+        var hosted = options.Hosted;
+        string requestModel = hosted?.Spec.Model ?? model;
         var records = new MeasuredItem[items.Count];
         var fullPrecision = new bool[items.Count];
+        var tauHeaders = new bool[items.Count];
+        var usage = new Usage?[items.Count];
         var wall = Stopwatch.StartNew();
         using (var gate = new SemaphoreSlim(Math.Max(1, options.Concurrency)))
         {
@@ -153,9 +163,18 @@ public static class MeasureStage
                 await gate.WaitAsync(ct).ConfigureAwait(false);
                 try
                 {
-                    var call = await endpoint.DecideAsync(BuildRequest(spec.Question, model, item.Text), phase == Phases.Raw, ct).ConfigureAwait(false);
-                    records[index] = ToRecord(spec.Question, item, call);
+                    if (hosted is not null && !hosted.Guard.TryStart())
+                    {
+                        records[index] = new MeasuredItem { ItemId = item.Id, Gold = item.Label, Error = new MeasureError(MeasureError.NotSentStatus, NotSentBody) };
+                        return;
+                    }
+
+                    var call = await endpoint.DecideAsync(BuildRequest(spec.Question, requestModel, item.Text), phase == Phases.Raw, ct).ConfigureAwait(false);
+                    hosted?.Guard.Finish(call.Response?.Usage);
+                    records[index] = ToRecord(spec.Question, item, call) with { ModelReturned = hosted is null ? null : call.Response?.Model };
                     fullPrecision[index] = call.FullPrecision;
+                    tauHeaders[index] = call.Calibrators is not null || call.ModelHash is not null || call.ModelMs is not null || call.Truncated is not null;
+                    usage[index] = call.Response?.Usage;
                 }
                 finally
                 {
@@ -180,6 +199,10 @@ public static class MeasureStage
                 $"The calibrated phase for '{model}' got answers with no calibrator applied (x-tau-calibrators: none). Restart the Runtime with Tau:CalibratorsDirectory={spec.CalibratorsRoot}, then run 'tau measure <spec> --phase calibrated'.");
         }
 
+        var answered = records.Select((r, i) => (r, i)).Where(x => x.r.Error is null).ToArray();
+        var rounded = answered.Where(x => !fullPrecision[x.i]).Select(x => x.r).ToArray();
+        int? decimalPlaces = Precisions.MaxDecimalPlaces(spec.Question, rounded.Length > 0 ? rounded : answered.Select(x => x.r));
+
         // The records keep the dataset's label; the summary scores against the reference.
         var summary = Summarise(spec, model, split, phase, reference.Apply(spec.Question, split, records)) with
         {
@@ -192,6 +215,9 @@ public static class MeasureStage
             Precision = Precisions.Of(
                 records.Where((r, i) => r.Error is null && fullPrecision[i]).Count(),
                 records.Count(r => r.Error is null)),
+            DecimalPlaces = decimalPlaces,
+            Hosted = hosted is null ? null
+                : Hosted(hosted, endpoint, records, usage, answered.Count(x => fullPrecision[x.i]), answered.Any(x => tauHeaders[x.i]), decimalPlaces),
             DurationSeconds = duration,
             Concurrency = Math.Max(1, options.Concurrency),
             Gpu = gpu,
@@ -201,6 +227,44 @@ public static class MeasureStage
         WorkbenchJson.WriteJsonl(spec.RunPath(model, split, phase), records);
         WorkbenchJson.WriteJson(spec.RunSummaryPath(model, split, phase), summary);
         return summary;
+    }
+
+    /// <summary>The error body of an item the spend guard never sent.</summary>
+    public const string NotSentBody = "not sent: the spend guard stopped the measure before this item, to stay within budget_usd";
+
+    private static HostedMeasure Hosted(
+        HostedRun hosted, WorkbenchEndpoint endpoint, IReadOnlyList<MeasuredItem> records, IReadOnlyList<Usage?> usage,
+        int honoured, bool anyTauHeader, int? decimalPlaces)
+    {
+        var ext = hosted.Spec;
+        var priced = usage.OfType<Usage>().ToArray();
+        long inTok = priced.Sum(u => (long)u.InputTokens), outTok = priced.Sum(u => (long)u.OutputTokens);
+        double spend = ext.CostUsd(inTok, outTok);
+        int notSent = records.Count(r => r.Error?.Status == MeasureError.NotSentStatus);
+        int answered = records.Count(r => r.Error is null);
+        string rounding = decimalPlaces is { } dp ? $", rounded to {dp} dp" : "";
+        string headers = honoured > 0
+            ? $"x-tau-raw and x-tau-precision: full were sent on every request. The endpoint echoed x-tau-precision: full on {honoured} of {answered} answers."
+            : $"x-tau-raw and x-tau-precision: full were sent on every request, as for a local model. The endpoint echoed neither{(anyTauHeader ? "" : " and returned no x-tau-* header")}, so it did not honour them: its answers are its own output{rounding}.";
+        string spent = $"Estimated spend on this split: {Fmt.Usd(spend)} ({Fmt.Int(inTok)} input and {Fmt.Int(outTok)} output tokens at ${Fmt.Num(ext.InputUsdPerMTok, "0.####")} and ${Fmt.Num(ext.OutputUsdPerMTok, "0.####")} per million, the spec's prices; an estimate, not a bill). The run has spent an estimated {Fmt.Usd(hosted.Guard.SpentUsd)} of its {Fmt.Usd(ext.BudgetUsd)} budget.";
+        return new HostedMeasure
+        {
+            Endpoint = endpoint.BaseUrl.AbsoluteUri,
+            RequestedModel = ext.Model,
+            ModelsReturned = records.Where(r => r.ModelReturned is not null).Select(r => r.ModelReturned!).Distinct().Order(StringComparer.Ordinal).ToArray(),
+            InputTokens = inTok,
+            OutputTokens = outTok,
+            PricedResponses = priced.Length,
+            EstimatedSpendUsd = spend,
+            RunSpendUsd = hosted.Guard.SpentUsd,
+            BudgetUsd = ext.BudgetUsd,
+            InputUsdPerMTok = ext.InputUsdPerMTok,
+            OutputUsdPerMTok = ext.OutputUsdPerMTok,
+            StoppedAtBudget = notSent > 0,
+            NotSent = notSent,
+            HeadersNote = headers,
+            SpendNote = notSent == 0 ? spent : spent + $" The spend guard stopped the run: {Fmt.Int(notSent)} item(s) of this split were not sent.",
+        };
     }
 
     /// <summary>Builds the summary over a set of records (metrics over successful items only).</summary>
