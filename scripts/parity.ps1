@@ -20,6 +20,8 @@ $root = (Resolve-Path "$PSScriptRoot/..").Path
 $out = Join-Path $root 'reports/r1'
 New-Item -ItemType Directory -Force -Path $out | Out-Null
 $started = Get-Date
+# Taken before anything is written: the reports this script produces are outputs, not inputs, so they don't count.
+$dirty = if (git -C $root status --porcelain --untracked-files=no -- . ':(exclude)reports') { ' (working tree had uncommitted changes)' } else { '' }
 $command = "./scripts/parity.ps1" + $(if ($RegenerateFixtures) { " -RegenerateFixtures" } else { "" })
 
 # 1. Level 1 in the sidecar.
@@ -64,7 +66,6 @@ $cpu = (Get-CimInstance Win32_Processor | Select-Object -First 1).Name.Trim()
 $ram = [math]::Round((Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory / 1GB)
 $os = (Get-CimInstance Win32_OperatingSystem).Caption
 $commit = git -C $root rev-parse HEAD
-$dirty = if (git -C $root status --porcelain) { ' (working tree had uncommitted changes)' } else { '' }
 $models = foreach ($id in 'laya-en', 'laya-multilingual', 'laya-typed-decisions', 'von-1.2.0') {
     $m = Get-Content (Join-Path $root "models/$id/tau-model.json") -Raw | ConvertFrom-Json
     [ordered]@{ id = $id; repo = $m.source.repo; revision = $m.source.revision; onnx_sha256 = $m.onnx.sha256; reference = $m.reference.package }

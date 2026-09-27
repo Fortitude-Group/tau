@@ -67,7 +67,7 @@ internal static class HostInfo
     {
         var head = Run("git", $"-C \"{repoRoot}\" rev-parse HEAD");
         if (head is null) return ("unknown (git not available)", null);
-        var status = Run("git", $"-C \"{repoRoot}\" status --porcelain --untracked-files=no", allowEmpty: true);
+        var status = Run("git", $"-C \"{repoRoot}\" status --porcelain --untracked-files=no -- . \":(exclude)reports\"", allowEmpty: true);
         return (head.Trim(), status is null ? null : status.Trim().Length > 0);
     }
 
