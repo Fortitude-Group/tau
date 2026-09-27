@@ -251,6 +251,11 @@ try {
         } elseif ($code -ne 0) {
             throw "tau measure --phase calibrated failed with exit code $code"
         } else {
+            # Thresholds and cascades were chosen during 'tau run', before this phase existed; redo them on it.
+            foreach ($stage in 'threshold', 'cascade') {
+                $code = Invoke-Tau @($stage, $specRel)
+                if ($code -ne 0) { throw "tau $stage failed with exit code $code" }
+            }
             $code = Invoke-Tau @('report', $specRel)
             if ($code -ne 0) { throw "tau report failed with exit code $code" }
             $exitCode = 0
