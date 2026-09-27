@@ -179,7 +179,8 @@ svg { max-width: 100%; height: auto; display: block; }
 svg text { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
 .tick { font-size: 11px; fill: var(--muted); } .axis-title, .label { font-size: 12px; fill: var(--ink2); }
 .grid { stroke: var(--grid); stroke-width: 1; } .axis { stroke: var(--axis); stroke-width: 1; } .ref { stroke: var(--muted); stroke-width: 1; }
-.line { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.line { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; } .line.dashed { stroke-dasharray: 6 4; stroke-linecap: butt; }
+svg.keysvg { display: inline-block; vertical-align: middle; margin-right: 6px; }
 .dot { stroke: var(--surface); stroke-width: 2; } .hit { fill: transparent; }
 .s1.line { stroke: var(--s1); } .s1.dot, .k1 { fill: var(--s1); background: var(--s1); }
 .s2.line { stroke: var(--s2); } .s2.dot, .k2 { fill: var(--s2); background: var(--s2); }

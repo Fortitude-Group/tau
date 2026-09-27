@@ -64,7 +64,12 @@ public static class ReportBuilder
         var models = spec.Models.Select(m => ModelReportFor(spec, reference, m)).ToArray();
         var thresholds = File.Exists(spec.ThresholdPath) ? WorkbenchJson.ReadJson<List<ThresholdResult>>(spec.ThresholdPath) : [];
         var cascades = File.Exists(spec.CascadePath) ? WorkbenchJson.ReadJson<List<CascadeResult>>(spec.CascadePath) : [];
-        var baselines = BaselineStage.Run(spec, reference);
+
+        // Baselines go through the same threshold and, once the cascade stage has run, the same cascade.
+        var cascadeFrontier = spec.Baselines.Count > 0 && File.Exists(spec.CascadePath)
+            ? reference.Frontier ?? FrontierStage.LoadState(spec, manifest, PreparedDataset.LoadSplit(spec, manifest, "heldout"))
+            : null;
+        var baselines = BaselineStage.Run(spec, reference, cascadeFrontier);
         var frontier = File.Exists(spec.LabelSummaryPath) ? WorkbenchJson.ReadJson<LabelSummary>(spec.LabelSummaryPath) : null;
         var firstRaw = models.Select(m => m.RawHeldOut ?? m.RawCalibration).FirstOrDefault(s => s is not null);
 
@@ -101,7 +106,7 @@ public static class ReportBuilder
             Instructions = spec.Question.Instructions,
             Classes = spec.Question.Classes,
             TargetError = spec.Threshold.TargetError,
-            Summary = Summary(spec, dataset, models, cascades, frontier, datasetLabels),
+            Summary = Summary(spec, dataset, models, cascades, baselines, frontier, datasetLabels),
             Reference = spec.Data.Reference,
             DatasetLabels = datasetLabels,
             Dataset = dataset,
@@ -210,8 +215,38 @@ public static class ReportBuilder
         return sizes;
     }
 
+    /// <summary>
+    /// The Tau cascade the summary quotes: among the cascades that have a τ, the one that keeps the largest
+    /// share local; ties go to the higher blended rate, then to the model listed first in the spec.
+    /// </summary>
+    /// <param name="spec">The decision spec (for model order).</param>
+    /// <param name="cascades">The Tau models' cascades.</param>
+    /// <returns>The cascade, or null when no model has a τ.</returns>
+    internal static CascadeResult? BestCascade(DecisionSpec spec, IReadOnlyList<CascadeResult> cascades) =>
+        cascades.Where(c => c.Tau is not null)
+            .OrderByDescending(c => c.ShareLocal ?? 0)
+            .ThenByDescending(c => c.BlendedAccuracy?.Rate ?? 0)
+            .ThenBy(c => SpecOrder(spec, c.Model))
+            .FirstOrDefault();
+
+    /// <summary>
+    /// Baseline cascades that keep a larger share local than <paramref name="best"/> at a blended rate at least
+    /// as high. With no Tau cascade at all, any baseline cascade that keeps something local counts.
+    /// </summary>
+    internal static IEnumerable<(BaselineResult Baseline, CascadeResult Cascade)> BaselinesBeating(CascadeResult? best, IReadOnlyList<BaselineResult> baselines) =>
+        baselines.Where(b => b.Cascade is { Tau: not null, ShareLocal: > 0.0 } bc
+                && (best is null || (bc.ShareLocal > best.ShareLocal && bc.BlendedAccuracy?.Rate >= best.BlendedAccuracy?.Rate)))
+            .Select(b => (Baseline: b, Cascade: b.Cascade!));
+
+    private static int SpecOrder(DecisionSpec spec, string model)
+    {
+        int i = spec.Models.ToList().IndexOf(model);
+        return i < 0 ? int.MaxValue : i;
+    }
+
     private static string Summary(
-        DecisionSpec spec, DatasetBox dataset, IReadOnlyList<ModelReport> models, IReadOnlyList<CascadeResult> cascades, LabelSummary? frontier, DatasetLabelView? datasetLabels)
+        DecisionSpec spec, DatasetBox dataset, IReadOnlyList<ModelReport> models, IReadOnlyList<CascadeResult> cascades,
+        IReadOnlyList<BaselineResult> baselines, LabelSummary? frontier, DatasetLabelView? datasetLabels)
     {
         bool vsFrontier = spec.Data.Reference == ReferenceKind.Frontier;
         var fm = spec.Frontier.Model;
@@ -232,11 +267,15 @@ public static class ReportBuilder
                 : $"Out of the box, {lead.Model} {rawRate} with a calibration error (ECE) of {Fmt.Num(raw.Ece)}; it has not been calibrated yet.");
         }
 
-        var c = cascades.FirstOrDefault(x => x.Model == lead?.Model && x.Tau is not null) ?? cascades.FirstOrDefault(x => x.Tau is not null);
+        // The cascade quoted is the one that keeps the most local, with the least-local model beside it to show the spread.
+        var c = BestCascade(spec, cascades);
         if (c is not null)
         {
             var headline = c.Cost?.Rows.FirstOrDefault(r => r.Kind == "headline");
-            parts.Add($"At a {Fmt.Pct(spec.Threshold.TargetError)} {target}, {c.Model} keeps {Fmt.Pct(c.ShareLocal)} of decisions local; "
+            var least = cascades.Where(x => x.Tau is not null && !ReferenceEquals(x, c))
+                .OrderBy(x => x.ShareLocal ?? 0).ThenBy(x => SpecOrder(spec, x.Model)).FirstOrDefault();
+            parts.Add($"At a {Fmt.Pct(spec.Threshold.TargetError)} {target}, {c.Model} keeps {Fmt.Pct(c.ShareLocal)} of decisions local"
+                + (least is null ? "; " : $", the most of any model ({least.Model}, the least, keeps {Fmt.Pct(least.ShareLocal)}); ")
                 + (vsFrontier
                     ? $"the cascade's served answers agree with {fm} on {Fmt.Pct(c.BlendedAccuracy?.Rate)} (the frontier alone agrees with itself by construction)"
                     : $"the cascade is {Fmt.Pct(c.BlendedAccuracy?.Rate)} accurate against {Fmt.Pct(c.FrontierOnlyAccuracy.Rate)} for {fm} alone")
@@ -248,6 +287,14 @@ public static class ReportBuilder
         else if (cascades.Count > 0)
         {
             parts.Add($"No model reaches the {Fmt.Pct(spec.Threshold.TargetError)} {target}, so no cascade is simulated.");
+        }
+
+        string blended = vsFrontier ? $"blended agreement with {fm}" : "blended accuracy";
+        foreach (var (b, bc) in BaselinesBeating(c, baselines))
+        {
+            parts.Add(c is null
+                ? $"The classic baseline {b.Name} (not served through Tau) keeps {Fmt.Pct(bc.ShareLocal)} local at {Fmt.Pct(bc.BlendedAccuracy?.Rate)} {blended}, where no Tau model reaches the target."
+                : $"The classic baseline {b.Name} (not served through Tau) does better, keeping {Fmt.Pct(bc.ShareLocal)} local at {Fmt.Pct(bc.BlendedAccuracy?.Rate)} {blended}.");
         }
 
         if (datasetLabels is not null)
@@ -316,14 +363,30 @@ public static class ReportBuilder
             }
         }
 
+        // A baseline put through the same threshold and cascade that keeps more local, at least as well, beats Tau here.
+        var best = BestCascade(spec, cascades);
+        foreach (var (b, bc) in BaselinesBeating(best, baselines))
+        {
+            misses.Add(best is null
+                ? $"Baseline {b.Name} keeps {Fmt.Pct(bc.ShareLocal)} local at {Fmt.Pct(bc.BlendedAccuracy?.Rate)} blended {rate}, where no Tau model reaches the target."
+                : $"Baseline {b.Name} keeps {Fmt.Pct(bc.ShareLocal)} local against {best.Model}'s {Fmt.Pct(best.ShareLocal)}, at {Fmt.Pct(bc.BlendedAccuracy?.Rate)} against {Fmt.Pct(best.BlendedAccuracy?.Rate)} blended {rate}.");
+        }
+
         foreach (var t in thresholds.Where(t => !t.Reachable))
         {
             misses.Add($"{t.Model}: {t.Note}");
         }
 
-        foreach (var c in cascades.Where(c => c.MissingFrontier > 0))
+        foreach (var b in baselines.Where(b => b.Threshold is { Reachable: false }))
         {
-            misses.Add($"{c.Model}: {c.MissingFrontier} escalated item(s) have no cached frontier answer and are left out of the blended accuracy.");
+            misses.Add($"Baseline {b.Name}: {b.Threshold!.Note}");
+        }
+
+        var allCascades = cascades.Select(c => (Name: c.Model, Result: c))
+            .Concat(baselines.Where(b => b.Cascade is not null).Select(b => (Name: $"Baseline {b.Name}", Result: b.Cascade!)));
+        foreach (var (name, c) in allCascades.Where(x => x.Result.MissingFrontier > 0))
+        {
+            misses.Add($"{name}: {c.MissingFrontier} escalated item(s) have no cached frontier answer and are left out of the blended accuracy.");
         }
 
         foreach (var m in models)

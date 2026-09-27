@@ -14,6 +14,16 @@ public static partial class HtmlReport
         return (Math.Max(0, i) % SvgCharts.SeriesSlots) + 1;
     }
 
+    /// <summary>A baseline's slot: after every model's, by its position in the spec.</summary>
+    private static int BaselineSlot(ReportDocument doc, string baseline)
+    {
+        int i = doc.Baselines.Select(b => b.Name).ToList().IndexOf(baseline);
+        return ((doc.Models.Count + Math.Max(0, i)) % SvgCharts.SeriesSlots) + 1;
+    }
+
+    /// <summary>How a baseline is labelled wherever it sits beside the Tau models in the cascade and cost tables.</summary>
+    private const string BaselineLabel = "baseline, not served through Tau: local latency and energy not measured";
+
     private static void ModelsSection(StringBuilder sb, ReportDocument doc)
     {
         bool score = doc.QuestionType == "score";
@@ -156,25 +166,29 @@ public static partial class HtmlReport
     private static void ThresholdSection(StringBuilder sb, ReportDocument doc)
     {
         sb.Append("<section id=\"threshold\">\n<h2>How much can stay local</h2>\n");
-        if (doc.Thresholds.Count == 0)
+        var baselines = doc.Baselines.Where(b => b.Threshold is not null).ToArray();
+        if (doc.Thresholds.Count == 0 && baselines.Length == 0)
         {
             sb.Append("<p>The threshold stage has not run yet.</p>\n</section>\n");
             return;
         }
 
+        var series = doc.Thresholds.Select(t => (Name: t.Model, Result: t, Slot: Slot(doc, t.Model), Dashed: false))
+            .Concat(baselines.Select(b => (Name: $"{b.Name} (baseline)", Result: b.Threshold!, Slot: BaselineSlot(doc, b.Name), Dashed: true)))
+            .ToArray();
         sb.Append("<div class=\"legend\">");
-        foreach (var t in doc.Thresholds)
+        foreach (var s in series)
         {
-            sb.Append("<span><span class=\"key k").Append(Slot(doc, t.Model)).Append("\"></span>").Append(E(t.Model)).Append("</span>");
+            sb.Append("<span>").Append(SvgCharts.Key(s.Slot, s.Dashed)).Append(E(s.Name)).Append("</span>");
         }
 
         sb.Append("<span><span class=\"key ref\"></span>Target ").Append(RateHead(doc).ToLowerInvariant()).Append("</span></div>\n");
-        sb.Append(SvgCharts.Tradeoff(doc.Thresholds, m => Slot(doc, m), doc.TargetError, doc.Reference));
-        sb.Append("<p class=\"caption\">").Append(E($"Each line shows, on held-out items, what happens as the confidence threshold τ rises: fewer decisions are kept local (moving left) and those kept are more often right (moving up){(VsFrontier(doc) ? ", where right means agreeing with the frontier model" : "")}. The dot marks the τ chosen on the calibration split for a {Fmt.Pct(doc.TargetError)} target {(VsFrontier(doc) ? "disagreement" : "error")}. A line that never reaches the target line means no threshold makes that model safe enough on its own at that target. Thresholds that keep fewer than {SvgCharts.MinCurveItems} items are left off the chart because a handful of items says little; every point is in report.json.")).Append("</p>\n");
+        sb.Append(SvgCharts.Tradeoff(series.Select(s => (s.Result, s.Slot, s.Dashed)).ToArray(), doc.TargetError, doc.Reference));
+        sb.Append("<p class=\"caption\">").Append(E($"Each line shows, on held-out items, what happens as the confidence threshold τ rises: fewer decisions are kept local (moving left) and those kept are more often right (moving up){(VsFrontier(doc) ? ", where right means agreeing with the frontier model" : "")}. The dot marks the τ chosen on the calibration split for a {Fmt.Pct(doc.TargetError)} target {(VsFrontier(doc) ? "disagreement" : "error")}. A line that never reaches the target line means no threshold makes that model safe enough on its own at that target. Thresholds that keep fewer than {SvgCharts.MinCurveItems} items are left off the chart because a handful of items says little; every point is in report.json.{(baselines.Length > 0 ? " Dashed lines are baselines, not served through Tau, put through exactly the same threshold rule on their own calibration lines." : "")}")).Append("</p>\n");
         sb.Append("<div class=\"scroll\"><table><thead><tr><th>Model</th><th>Confidences from</th><th>τ</th><th>Kept local (calibration)</th><th>Kept local (held-out)</th><th>").Append(RateHead(doc)).Append(" on kept (held-out)</th><th class=\"text\">Result</th></tr></thead><tbody>\n");
-        foreach (var t in doc.Thresholds)
+        foreach (var (name, t, _, _) in series)
         {
-            sb.Append("<tr><td>").Append(E(t.Model)).Append("</td><td>").Append(E(t.Source)).Append("</td><td>").Append(Fmt.Num(t.Tau, "0.00"))
+            sb.Append("<tr><td>").Append(E(name)).Append("</td><td>").Append(E(t.Source)).Append("</td><td>").Append(Fmt.Num(t.Tau, "0.00"))
                 .Append("</td><td>").Append(Fmt.Pct(t.CalibrationAcceptRate)).Append("</td><td>").Append(Fmt.Pct(t.HeldOutAcceptRate))
                 .Append("</td><td>").Append(Fmt.Pct(t.HeldOutAcceptedAccuracy)).Append("</td><td class=\"note\">").Append(E(t.Note)).Append("</td></tr>\n");
         }
@@ -195,13 +209,15 @@ public static partial class HtmlReport
         string suffix = vsFrontier ? " (agreement)" : "";
         sb.Append("<div class=\"scroll\"><table><thead><tr><th>Model</th><th>τ</th><th>Kept local</th><th>Escalated</th><th>No frontier answer</th><th>Local only")
             .Append(suffix).Append("</th><th>Frontier only</th><th>Cascade").Append(suffix).Append("</th><th>Local p50 latency</th></tr></thead><tbody>\n");
-        foreach (var c in doc.Cascades)
+        var baselines = doc.Baselines.Where(b => b.Cascade is not null).Select(b => (Title: $"{b.Name} ({BaselineLabel})", Result: b.Cascade!, Baseline: true));
+        var rows = doc.Cascades.Select(c => (Title: c.Model, Result: c, Baseline: false)).Concat(baselines).ToArray();
+        foreach (var (title, c, baseline) in rows)
         {
-            sb.Append("<tr><td>").Append(E(c.Model)).Append("</td><td>").Append(Fmt.Num(c.Tau, "0.00")).Append("</td><td>").Append(Fmt.Pct(c.ShareLocal))
+            sb.Append("<tr><td").Append(baseline ? " class=\"text\"" : "").Append('>').Append(E(title)).Append("</td><td>").Append(Fmt.Num(c.Tau, "0.00")).Append("</td><td>").Append(Fmt.Pct(c.ShareLocal))
                 .Append("</td><td>").Append(Fmt.Pct(c.ShareEscalated)).Append("</td><td>").Append(c.Tau is null ? "n/a" : Fmt.Int(c.MissingFrontier))
                 .Append("</td><td>").Append(Rate(c.LocalOnlyAccuracy)).Append("</td><td>").Append(vsFrontier ? "100% by construction" : Rate(c.FrontierOnlyAccuracy))
                 .Append("</td><td>").Append(c.BlendedAccuracy is null ? E(c.NotSimulated ?? "n/a") : Rate(c.BlendedAccuracy))
-                .Append("</td><td>").Append(c.LocalLatencyP50Ms is { } l ? Fmt.Num(l, "0.0") + " ms" : "n/a").Append("</td></tr>\n");
+                .Append("</td><td>").Append(baseline ? "not measured" : c.LocalLatencyP50Ms is { } l ? Fmt.Num(l, "0.0") + " ms" : "n/a").Append("</td></tr>\n");
         }
 
         sb.Append("</tbody></table></div>\n<p class=\"caption\">")
@@ -210,12 +226,12 @@ public static partial class HtmlReport
                 : $"Accuracy is on held-out items, with the number of items each figure covers in brackets. The cascade keeps the local answer when its confidence is at least τ and uses the frontier model's cached answer otherwise; an escalated item with no cached answer is counted and left out, never guessed. If the cascade is close to frontier-only accuracy while keeping a large share local, most of the frontier cost can be avoided. {doc.Cascades[0].FrontierLatencyNote}"))
             .Append("</p>\n");
 
-        foreach (var c in doc.Cascades.Where(c => c.Cost is not null))
+        foreach (var (title, c, _) in rows.Where(r => r.Result.Cost is not null))
         {
-            CostTable(sb, c);
+            CostTable(sb, title, c.Cost!);
         }
 
-        foreach (var c in doc.Cascades.Where(c => c.Cost is null && c.CostUnavailable is not null).Take(1))
+        foreach (var (_, c, _) in rows.Where(r => r.Result.Cost is null && r.Result.CostUnavailable is not null).Take(1))
         {
             sb.Append("<p class=\"caption\">").Append(E(c.CostUnavailable)).Append("</p>\n");
         }
@@ -223,10 +239,9 @@ public static partial class HtmlReport
         sb.Append("</section>\n");
     }
 
-    private static void CostTable(StringBuilder sb, CascadeResult c)
+    private static void CostTable(StringBuilder sb, string title, CostEstimate cost)
     {
-        var cost = c.Cost!;
-        sb.Append("<h3>").Append(E($"Cost for {c.Model}")).Append(" <span class=\"estimate\">Estimates, not measured bills</span></h3>\n");
+        sb.Append("<h3>").Append(E($"Cost for {title}")).Append(" <span class=\"estimate\">Estimates, not measured bills</span></h3>\n");
         sb.Append("<div class=\"scroll\"><table><thead><tr><th class=\"text\">Price basis</th><th>Frontier only, per million (USD)</th><th>Frontier only, per 1,000</th><th>Frontier only, per million</th><th>Cascade, per 1,000</th><th>Cascade, per million</th><th>Saving, per million</th></tr></thead><tbody>\n");
         foreach (var r in cost.Rows)
         {

@@ -92,7 +92,8 @@ public sealed record CostEstimate
 /// <summary>
 /// The cost model (T027, research R-05/R-06). Frontier tokens are estimated as characters / 4 × the
 /// tokenizer factor, from the cached answers' character tallies, and priced at list price per row. Local
-/// cost is mean whole-GPU power × seconds per decision, in kWh, at the stated electricity price. Pounds
+/// cost is mean whole-GPU power × seconds per decision, in kWh, at the stated electricity price; when GPU power
+/// is unknown, local energy is left out of the cascade figures and the basis says so. Pounds
 /// need both the exchange rate and the electricity price; without either, no pound figure is given.
 /// </summary>
 public static class CostModel
@@ -101,7 +102,7 @@ public static class CostModel
     /// <param name="pricing">The spec's price basis.</param>
     /// <param name="chars">Character tallies of the primary-prompt answers.</param>
     /// <param name="shareEscalated">Share of decisions the cascade sends to the frontier, or null for no cascade.</param>
-    /// <param name="gpuMeanWatts">Mean GPU power during the local run, or null when not sampled.</param>
+    /// <param name="gpuMeanWatts">Mean GPU power during the local run, or null when not sampled (local energy is then omitted).</param>
     /// <param name="secondsPerDecision">Local seconds per decision, or null when unknown.</param>
     /// <exception cref="WorkbenchException">No frontier answer is cached, so there is nothing to estimate tokens from.</exception>
     public static CostEstimate Estimate(PricingSpec pricing, CharTally chars, double? shareEscalated, double? gpuMeanWatts, double? secondsPerDecision)
@@ -130,10 +131,9 @@ public static class CostModel
         string? gbpRefused = missing.Count == 0 ? null : $"No pound figures: the spec is missing {string.Join(" and ", missing)}.";
         double? kwh = gpuMeanWatts is { } w && secondsPerDecision is { } s ? w * s / 3_600_000.0 : null;
         double? localGbp = gbpRefused is null && kwh is { } k ? k * pricing.ElectricityGbpPerKwh!.Value : null;
+        // Without GPU power (not sampled, or a model not served through Tau) local energy is left out, not guessed.
         string? cascadeRefused = gbpRefused
-            ?? (shareEscalated is null ? "No cascade: no threshold met the target, so there is nothing to price."
-            : kwh is null ? "No cascade pound figure: GPU power was not sampled during the local run, so local energy is unknown."
-            : null);
+            ?? (shareEscalated is null ? "No cascade: no threshold met the target, so there is nothing to price." : null);
 
         var rows = pricing.Rows
             .OrderBy(r => r.Name == pricing.Headline ? 0 : 1)
@@ -141,7 +141,7 @@ public static class CostModel
             {
                 double usd = (inTok * r.InputUsdPerMTok / 1e6) + (outTok * r.OutputUsdPerMTok / 1e6);
                 double? gbp = gbpRefused is null ? usd * pricing.GbpPerUsd!.Value : null;
-                double? cascade = cascadeRefused is null ? localGbp!.Value + (shareEscalated!.Value * gbp!.Value) : null;
+                double? cascade = cascadeRefused is null ? (localGbp ?? 0) + (shareEscalated!.Value * gbp!.Value) : null;
                 var (kind, label) = r.Name == pricing.Headline
                     ? ("headline", $"{r.Name} at list price (the model that produced the frontier answers)")
                     : r.Name.StartsWith(pricing.Headline, StringComparison.Ordinal)
@@ -175,6 +175,10 @@ public static class CostModel
         if (kwh is not null)
         {
             basis.Add($"Local energy: {Fmt.Num(gpuMeanWatts, "0.#")} W mean whole-GPU power × {Fmt.Num(secondsPerDecision, "0.#####")} s per decision (phase duration / items) = {Fmt.Num(kwh, "0.000e0")} kWh per decision{(pricing.ElectricityGbpPerKwh is { } e ? $", at £{Fmt.Num(e, "0.####")} per kWh{(pricing.ElectricitySource is null ? "" : $" ({pricing.ElectricitySource})")}" : "")}. Hardware purchase and depreciation are excluded.");
+        }
+        else if (shareEscalated is not null)
+        {
+            basis.Add("Local energy is not included: no GPU power was measured for the local model, so the cascade figures price the frontier calls only.");
         }
 
         if (shareEscalated is not null)

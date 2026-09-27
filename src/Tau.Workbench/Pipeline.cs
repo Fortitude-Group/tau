@@ -1,3 +1,4 @@
+using Tau.Workbench.Baselines;
 using Tau.Workbench.Calibrate;
 using Tau.Workbench.Cascade;
 using Tau.Workbench.Data;
@@ -149,7 +150,10 @@ public static class Pipeline
         return ExitCodes.Ok;
     }
 
-    /// <summary><c>tau cascade</c>: returns 2 when escalated items have no cached frontier answer.</summary>
+    /// <summary>
+    /// <c>tau cascade</c>: the Tau models' cascades (written to <c>cascade.json</c>) and the baselines' (which the
+    /// report recomputes from their probability files). Returns 2 when escalated items have no cached frontier answer.
+    /// </summary>
     /// <param name="spec">The decision spec.</param>
     /// <param name="options">Options.</param>
     public static int Cascade(DecisionSpec spec, PipelineOptions options)
@@ -157,15 +161,21 @@ public static class Pipeline
         ArgumentNullException.ThrowIfNull(spec);
         ArgumentNullException.ThrowIfNull(options);
         var manifest = DatasetManifest.Load(spec.ManifestPath);
-        var results = CascadeStage.Run(spec, manifest, PreparedDataset.LoadSplit(spec, manifest, "heldout"));
-        foreach (var c in results)
+        var heldOut = PreparedDataset.LoadSplit(spec, manifest, "heldout");
+        var reference = ReferenceLabels.Load(spec, manifest);
+        var frontier = CascadeStage.LoadFrontier(spec, manifest, heldOut, reference);
+        var results = CascadeStage.Run(spec, manifest, heldOut, reference, frontier)
+            .Select(c => (Name: c.Model, Result: c))
+            .Concat(BaselineStage.Run(spec, reference, frontier).Where(b => b.Cascade is not null).Select(b => (Name: $"{b.Name} (baseline)", Result: b.Cascade!)))
+            .ToArray();
+        foreach (var (name, c) in results)
         {
             options.Out.WriteLine(c.Tau is null
-                ? $"cascade: {c.Model}: {c.NotSimulated}"
-                : $"cascade: {c.Model}: τ {Fmt.Num(c.Tau, "0.00")} keeps {Fmt.Pct(c.ShareLocal)} local; cascade {Fmt.Pct(c.BlendedAccuracy?.Rate)} vs frontier only {Fmt.Pct(c.FrontierOnlyAccuracy.Rate)}; {c.MissingFrontier} escalated item(s) without a frontier answer.");
+                ? $"cascade: {name}: {c.NotSimulated}"
+                : $"cascade: {name}: τ {Fmt.Num(c.Tau, "0.00")} keeps {Fmt.Pct(c.ShareLocal)} local; cascade {Fmt.Pct(c.BlendedAccuracy?.Rate)} vs frontier only {Fmt.Pct(c.FrontierOnlyAccuracy.Rate)}; {c.MissingFrontier} escalated item(s) without a frontier answer.");
         }
 
-        if (results.Any(c => c.MissingFrontier > 0))
+        if (results.Any(r => r.Result.MissingFrontier > 0))
         {
             options.Out.WriteLine("cascade: blocked on frontier answers: run 'tau label' and answer the pending batches.");
             return ExitCodes.Blocked;

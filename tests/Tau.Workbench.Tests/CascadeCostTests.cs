@@ -65,12 +65,16 @@ public sealed class CascadeCostTests
     }
 
     [Fact]
-    public void WithoutGpuPowerOnlyTheCascadePoundsAreRefused()
+    public void WithoutGpuPowerTheCascadeOmitsLocalEnergy()
     {
-        var cost = CostModel.Estimate(Pricing(), new CharTally(10, 4000, 40), 0.3, null, 0.05);
-        Assert.NotNull(cost.Rows[0].FrontierOnlyGbpPerMillion);
-        Assert.Null(cost.Rows[0].CascadeGbpPerMillion);
-        Assert.Contains("GPU power was not sampled", cost.CascadeGbpRefused, StringComparison.Ordinal);
+        var cost = CostModel.Estimate(Pricing(), new CharTally(10, 4000, 40), 0.3, null, null);
+        var headline = cost.Rows[0];
+        Assert.Null(cost.CascadeGbpRefused);
+        Assert.Null(cost.LocalKwhPerDecision);
+        Assert.Null(cost.LocalGbpPerDecision);
+        Assert.Equal(0.3 * headline.FrontierOnlyGbpPerMillion!.Value, headline.CascadeGbpPerMillion!.Value, 6); // frontier calls only
+        Assert.Contains(cost.Basis, b => b.StartsWith("Local energy is not included", StringComparison.Ordinal));
+        Assert.DoesNotContain(cost.Basis, b => b.StartsWith("Local energy: ", StringComparison.Ordinal));
     }
 
     [Fact]

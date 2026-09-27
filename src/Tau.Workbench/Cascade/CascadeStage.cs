@@ -226,13 +226,15 @@ public static class CascadeStage
     /// <param name="manifest">The dataset manifest.</param>
     /// <param name="heldOutItems">The held-out split.</param>
     /// <param name="reference">The labels the cascade is scored against; null resolves them from the spec.</param>
+    /// <param name="frontier">The ingested frontier state, when the caller already has it; null loads it.</param>
     /// <exception cref="StageBlockedException">A held-out item has no frontier reference label.</exception>
-    public static IReadOnlyList<CascadeResult> Run(DecisionSpec spec, DatasetManifest manifest, IReadOnlyList<DatasetItem> heldOutItems, ReferenceLabels? reference = null)
+    public static IReadOnlyList<CascadeResult> Run(
+        DecisionSpec spec, DatasetManifest manifest, IReadOnlyList<DatasetItem> heldOutItems, ReferenceLabels? reference = null, FrontierState? frontier = null)
     {
         ArgumentNullException.ThrowIfNull(spec);
         var thresholds = WorkbenchJson.ReadJson<List<ThresholdResult>>(spec.ThresholdPath);
         reference ??= ReferenceLabels.Load(spec, manifest);
-        var frontier = reference.Frontier ?? FrontierStage.LoadState(spec, manifest, heldOutItems);
+        frontier ??= LoadFrontier(spec, manifest, heldOutItems, reference);
 
         // Cost is per decision served, so only held-out answers are tallied (never the calibration labels).
         var chars = frontier.HeldOutChars(spec.Frontier.PromptVersion);
@@ -252,5 +254,19 @@ public static class CascadeStage
 
         WorkbenchJson.WriteJson(spec.CascadePath, results);
         return results;
+    }
+
+    /// <summary>
+    /// The frontier state a cascade escalates to: the one the reference already ingested under a frontier
+    /// reference, otherwise the cache ingested against the held-out split.
+    /// </summary>
+    /// <param name="spec">The decision spec.</param>
+    /// <param name="manifest">The dataset manifest.</param>
+    /// <param name="heldOutItems">The held-out split.</param>
+    /// <param name="reference">The resolved reference labels.</param>
+    public static FrontierState LoadFrontier(DecisionSpec spec, DatasetManifest manifest, IReadOnlyList<DatasetItem> heldOutItems, ReferenceLabels reference)
+    {
+        ArgumentNullException.ThrowIfNull(reference);
+        return reference.Frontier ?? FrontierStage.LoadState(spec, manifest, heldOutItems);
     }
 }

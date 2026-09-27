@@ -46,15 +46,21 @@ internal static class SvgCharts
         return sb.Append("</svg>").ToString();
     }
 
-    /// <summary>The trade-off curve: accuracy on locally kept items against the share kept, one line per model.</summary>
-    /// <param name="results">Threshold results, in spec order.</param>
-    /// <param name="slotOf">The categorical slot (1-based) for a model, fixed by its position in the spec.</param>
+    /// <summary>
+    /// The trade-off curve: accuracy on locally kept items against the share kept, one line per model. Baselines
+    /// (not served through Tau) are drawn dashed.
+    /// </summary>
+    /// <param name="series">
+    /// Threshold results in spec order, each with its categorical slot (1-based, fixed by position in the spec)
+    /// and whether to draw it dashed.
+    /// </param>
     /// <param name="targetError">The target error, drawn as a reference line at 1 − target.</param>
     /// <param name="reference">What a right answer is measured against (sets the wording: accuracy or agreement with the frontier model).</param>
-    public static string Tradeoff(IReadOnlyList<ThresholdResult> results, Func<string, int> slotOf, double targetError, ReferenceKind reference = ReferenceKind.Gold)
+    public static string Tradeoff(IReadOnlyList<(ThresholdResult Result, int Slot, bool Dashed)> series, double targetError, ReferenceKind reference = ReferenceKind.Gold)
     {
         var (word, rateCap) = Words(reference);
         const double W = 960, H = 360, L = 56, R = 110, T = 16, B = 46;
+        var results = series.Select(s => s.Result).ToArray();
         double minAcc = results.SelectMany(r => r.HeldOutCurve).Where(p => p.AcceptedAccuracy is not null && p.Accepted >= MinCurveItems).Select(p => p.AcceptedAccuracy!.Value)
             .DefaultIfEmpty(0).Min();
         double yMin = Math.Max(0, Math.Floor(Math.Min(minAcc, 1 - targetError) * 10 - 0.5) / 10);
@@ -65,9 +71,8 @@ internal static class SvgCharts
         double target = 1 - targetError;
         sb.Append(Inv, $"<line class=\"ref\" x1=\"{plot.X(0):0.#}\" y1=\"{plot.Y(target):0.#}\" x2=\"{plot.X(1):0.#}\" y2=\"{plot.Y(target):0.#}\"><title>Target: {Fmt.Pct(target)} {word} on kept items</title></line>");
         sb.Append(Inv, $"<text class=\"tick\" x=\"{plot.X(1) + 6:0.#}\" y=\"{plot.Y(target) + 4:0.#}\">target {Fmt.Pct(target, 0)}</text>");
-        foreach (var r in results)
+        foreach (var (r, slot, dashed) in series)
         {
-            int slot = slotOf(r.Model);
             var points = r.HeldOutCurve.Where(p => p.AcceptedAccuracy is not null && p.Accepted >= MinCurveItems).ToArray();
             if (points.Length == 0)
             {
@@ -75,7 +80,7 @@ internal static class SvgCharts
             }
 
             var path = string.Join(" ", points.Select((p, i) => string.Create(Inv, $"{(i == 0 ? 'M' : 'L')}{plot.X(p.AcceptRate):0.#},{plot.Y(p.AcceptedAccuracy!.Value):0.#}")));
-            sb.Append(Inv, $"<path class=\"line s{slot}\" d=\"{path}\"><title>{Esc(r.Model)}</title></path>");
+            sb.Append(Inv, $"<path class=\"line s{slot}{(dashed ? " dashed" : "")}\" d=\"{path}\"><title>{Esc(r.Model)}{(dashed ? " (baseline)" : "")}</title></path>");
             foreach (var p in points.Where((_, i) => i % 5 == 0))
             {
                 sb.Append(Inv, $"<circle class=\"hit\" cx=\"{plot.X(p.AcceptRate):0.#}\" cy=\"{plot.Y(p.AcceptedAccuracy!.Value):0.#}\" r=\"8\"><title>{Esc(r.Model)}: τ = {p.Tau:0.00}, keeps {Fmt.Pct(p.AcceptRate)} local, {Fmt.Pct(p.AcceptedAccuracy)} {word} on those</title></circle>");
@@ -165,6 +170,13 @@ internal static class SvgCharts
     internal static string Esc(string s) => WebUtility.HtmlEncode(s);
 
     internal static string Short(string s, int max) => s.Length <= max ? s : s[..(max - 1)] + "…";
+
+    /// <summary>A small legend key: a solid or dashed line in a series colour.</summary>
+    /// <param name="slot">The categorical slot (1-based).</param>
+    /// <param name="dashed">Whether the series is drawn dashed.</param>
+    internal static string Key(int slot, bool dashed) => dashed
+        ? string.Create(Inv, $"<svg class=\"keysvg\" viewBox=\"0 0 18 4\" width=\"18\" height=\"4\" aria-hidden=\"true\"><line class=\"line s{slot} dashed\" x1=\"1\" y1=\"2\" x2=\"17\" y2=\"2\"/></svg>")
+        : string.Create(Inv, $"<span class=\"key k{slot}\"></span>");
 
     /// <summary>Maps data coordinates into a plot rectangle and draws its grid and axes.</summary>
     private sealed record Plot(double Left, double Top, double Width, double Height, double XMin, double XMax, double YMin, double YMax)
