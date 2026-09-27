@@ -258,6 +258,12 @@ public static class RequestValidator
 
         var criteriaPath = $"{path}.criteria";
         question.TryGetPropertyValue("criteria", out var node);
+        if (node is null)
+        {
+            // An explicit null for an optional field means "absent" (clients serialising a null property send it).
+            return;
+        }
+
         if (node is not JsonObject criteria)
         {
             problems.Add(new ValidationProblem(criteriaPath, "criteria must be an object"));

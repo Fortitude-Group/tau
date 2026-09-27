@@ -97,7 +97,7 @@ public class RequestShapeTests
     }
 
     [Fact]
-    public async Task NoulAsync_sends_null_criteria_when_no_descriptions_are_given()
+    public async Task NoulAsync_omits_criteria_when_no_descriptions_are_given()
     {
         var handler = StubHttpMessageHandler.Always(Responses.Noul("decision", 0.5));
         using var http = new HttpClient(handler) { BaseAddress = new Uri("http://localhost/") };
@@ -109,10 +109,9 @@ public class RequestShapeTests
             .RootElement.GetProperty("questions").GetProperty("decision");
         Assert.Equal("noul", question.GetProperty("type").GetString());
 
-        // Tau.Contract's NoulQuestion always writes the "criteria" property; with no
-        // descriptions supplied its value is JSON null rather than the key being absent.
-        Assert.True(question.TryGetProperty("criteria", out var criteria));
-        Assert.Equal(JsonValueKind.Null, criteria.ValueKind);
+        // With no descriptions the optional "criteria" key is left out entirely: the published contract
+        // makes it optional, and a strict server would reject an explicit null.
+        Assert.False(question.TryGetProperty("criteria", out _));
     }
 
     [Fact]

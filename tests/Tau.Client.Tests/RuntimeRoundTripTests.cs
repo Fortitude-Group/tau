@@ -63,8 +63,16 @@ public sealed class RuntimeRoundTripTests : IClassFixture<RuntimeRoundTripTests.
     [Fact]
     public async Task Contract_violations_surface_as_a_typed_validation_error()
     {
-        var e = await Assert.ThrowsAsync<SystemOneValidationException>(() =>
+        // The typed helper refuses a one-level score before sending; a raw request reaches the server's 422.
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
             _client.ScoreAsync("x", "Rate it.", ["only one level"], model: "laya-en", ct: TestContext.Current.CancellationToken));
+        var raw = new Tau.Contract.DecisionRequest
+        {
+            Model = "laya-en",
+            State = System.Text.Json.Nodes.JsonValue.Create("x"),
+            Questions = new() { ["u"] = new Tau.Contract.ScoreQuestion { Instructions = System.Text.Json.Nodes.JsonValue.Create("Rate it.")!, Criteria = [System.Text.Json.Nodes.JsonValue.Create("one")!] } },
+        };
+        var e = await Assert.ThrowsAsync<SystemOneValidationException>(() => _client.SystemOneAsync(raw, TestContext.Current.CancellationToken));
         Assert.Contains(e.Problems, p => p.Path.EndsWith("criteria", StringComparison.Ordinal));
     }
 }

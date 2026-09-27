@@ -19,5 +19,6 @@ public sealed class NoulQuestion : Question
     /// </summary>
     [JsonPropertyName("criteria")]
     [JsonConverter(typeof(NoulCriteriaConverter))]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public IReadOnlyDictionary<string, JsonNode?>? Criteria { get; init; }
 }

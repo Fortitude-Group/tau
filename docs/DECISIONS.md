@@ -6,6 +6,15 @@ this file records the ones I made so the trail is auditable.
 
 ---
 
+## 2026-09-27 · An explicit `null` for an optional noul `criteria` means absent
+
+Found by the client round-trip test against the real Runtime. `Tau.Client` serialised a missing noul
+criteria as `"criteria": null`, and the Runtime's validator rejected it ("criteria must be an object").
+**Decision:** the Runtime accepts `null` for that optional field and treats it as absent. The contract
+types never write it (`WhenWritingNull`). The pinned request schema's noul `criteria` now allows
+`["object", "null"]` to match. Other clients (SDKs that serialise null properties) would hit the same
+thing, so this is being lenient on reading, not extending the contract.
+
 ## 2026-09-27 · INCIDENT: a build agent killed unrelated processes on port 8080
 
 While testing the conformance script, a worktree agent found port 8080 taken. It killed the owning

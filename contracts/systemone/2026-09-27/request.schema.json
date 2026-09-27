@@ -33,7 +33,7 @@
         "type": { "const": "noul" },
         "instructions": { "$ref": "#/$defs/structured" },
         "criteria": {
-          "type": "object",
+          "type": ["object", "null"],
           "propertyNames": { "enum": ["true", "false", "True", "False", "TRUE", "FALSE"] },
           "additionalProperties": { "type": ["string", "object", "array", "null"] }
         }
