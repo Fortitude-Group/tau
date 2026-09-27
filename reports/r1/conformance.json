@@ -1,0 +1,1584 @@
+{
+  "header": {
+    "ReportName": "Tau /v1/systemone conformance report",
+    "Command": "dotnet run --project tools/Tau.Conformance -- --tau http://localhost:8088 --out reports/r1 --requests tests/conformance/requests --peer http://127.0.0.1:8009 --peer-name kev-0.8b --peer-revision 5920c5fe4ca8e0970ed4209ac2c9b8e18bea5109",
+    "DateUtc": "2026-09-27T01:18:05Z",
+    "GitCommit": "29d2fe3eaaac569e160752302dd4be1fb2495fa9",
+    "Hardware": {
+      "Gpu": "NVIDIA GeForce RTX 3080 Ti, 12288 MiB, 610.47",
+      "Cpu": "Intel64 Family 6 Model 167 Stepping 1, GenuineIntel",
+      "Ram": "63.8 GB (reported by the .NET GC as total available memory)",
+      "Os": "Microsoft Windows 10.0.19045"
+    },
+    "ContractVersion": "systemone/2026-09-27",
+    "TauModelsEndpoint": "{\u0022models\u0022:[{\u0022id\u0022:\u0022laya-en\u0022,\u0022family\u0022:\u0022laya\u0022,\u0022revision\u0022:\u002255cf4c4ebb4ebe31b2550e8bdf3bd21b99753851\u0022,\u0022onnx_sha256\u0022:\u0022866a05b244e47e96820660d18ee050c518c2de0f60c39e2e9a89dfeb056e1eec\u0022,\u0022loaded\u0022:true},{\u0022id\u0022:\u0022laya-multilingual\u0022,\u0022family\u0022:\u0022laya\u0022,\u0022revision\u0022:\u002255cf4c4ebb4ebe31b2550e8bdf3bd21b99753851\u0022,\u0022onnx_sha256\u0022:\u002262be63b71dd97ed1d2b6582965702d06d9fb387a1c9be103fe365d6d9c82ed0d\u0022,\u0022loaded\u0022:true},{\u0022id\u0022:\u0022laya-typed-decisions\u0022,\u0022family\u0022:\u0022laya\u0022,\u0022revision\u0022:\u002255cf4c4ebb4ebe31b2550e8bdf3bd21b99753851\u0022,\u0022onnx_sha256\u0022:\u00222b7a961ac37157d1cfa8105e3283106baf1ba2a5cc30fb3a673253f06aa1e1c5\u0022,\u0022loaded\u0022:true},{\u0022id\u0022:\u0022von-1.2.0\u0022,\u0022family\u0022:\u0022von\u0022,\u0022revision\u0022:\u00225df8185a4f2327ad0a7cd117cc4f701ac557b9ae\u0022,\u0022onnx_sha256\u0022:\u00220777bb988636663b770775ae0b4eb961d6fbee176c9bea1d1da823723b1eb3f3\u0022,\u0022loaded\u0022:true}],\u0022aliases\u0022:[\u0022auto\u0022,\u0022tau-auto\u0022,\u0022jev-latest\u0022,\u0022jev-*\u0022]}",
+    "PeerName": "kev-0.8b",
+    "PeerRevision": "5920c5fe4ca8e0970ed4209ac2c9b8e18bea5109"
+  },
+  "summary": {
+    "TotalRequests": 45,
+    "TauPass": 45,
+    "TauFail": 0,
+    "PeerPass": 40,
+    "PeerFail": 5,
+    "StructuralFailures": 5,
+    "ModelDisagreements": 69,
+    "PeerExtensions": 33
+  },
+  "requests": [
+    {
+      "file": "01_noul_alone.json",
+      "name": "noul question alone",
+      "description": "A single noul question with no other question types in the request.",
+      "expectedStatus": 200,
+      "tau": {
+        "status": 200,
+        "latencyMs": 1165.9,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "peer": {
+        "status": 200,
+        "latencyMs": 910,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": [
+          "top-level field \u0027latency_ms\u0027"
+        ]
+      },
+      "disagreements": [
+        {
+          "Question": "is_urgent",
+          "Kind": "noul",
+          "TauValue": "0.2273",
+          "PeerValue": "0.5082"
+        }
+      ]
+    },
+    {
+      "file": "02_choice_alone.json",
+      "name": "choice question alone",
+      "description": "A single choice question with no other question types in the request.",
+      "expectedStatus": 200,
+      "tau": {
+        "status": 200,
+        "latencyMs": 991.5,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "peer": {
+        "status": 200,
+        "latencyMs": 1356.1,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": [
+          "top-level field \u0027latency_ms\u0027"
+        ]
+      },
+      "disagreements": []
+    },
+    {
+      "file": "03_score_alone.json",
+      "name": "score question alone",
+      "description": "A single score question with no other question types in the request.",
+      "expectedStatus": 200,
+      "tau": {
+        "status": 200,
+        "latencyMs": 1268.5,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "peer": {
+        "status": 200,
+        "latencyMs": 1287.6,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": [
+          "top-level field \u0027latency_ms\u0027"
+        ]
+      },
+      "disagreements": [
+        {
+          "Question": "satisfaction_risk",
+          "Kind": "score",
+          "TauValue": "1.3674",
+          "PeerValue": "2.0244"
+        }
+      ]
+    },
+    {
+      "file": "04_all_three_types.json",
+      "name": "all three question types together",
+      "description": "One noul, one choice and one score question in the same request.",
+      "expectedStatus": 200,
+      "tau": {
+        "status": 200,
+        "latencyMs": 1276.4,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "peer": {
+        "status": 200,
+        "latencyMs": 1265.7,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": [
+          "top-level field \u0027latency_ms\u0027"
+        ]
+      },
+      "disagreements": [
+        {
+          "Question": "needs_escalation",
+          "Kind": "noul",
+          "TauValue": "0.6642",
+          "PeerValue": "0.5041"
+        },
+        {
+          "Question": "department",
+          "Kind": "choice",
+          "TauValue": "fraud",
+          "PeerValue": "cards"
+        },
+        {
+          "Question": "urgency",
+          "Kind": "score",
+          "TauValue": "0.9318",
+          "PeerValue": "1.5587"
+        }
+      ]
+    },
+    {
+      "file": "05_questions_count_1.json",
+      "name": "exactly one question",
+      "description": "A request containing exactly one question.",
+      "expectedStatus": 200,
+      "tau": {
+        "status": 200,
+        "latencyMs": 1292.2,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "peer": {
+        "status": 200,
+        "latencyMs": 1340.2,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": [
+          "top-level field \u0027latency_ms\u0027"
+        ]
+      },
+      "disagreements": [
+        {
+          "Question": "is_resolved",
+          "Kind": "noul",
+          "TauValue": "0.1086",
+          "PeerValue": "0.2653"
+        }
+      ]
+    },
+    {
+      "file": "06_questions_count_2.json",
+      "name": "exactly two questions",
+      "description": "A request containing exactly two questions.",
+      "expectedStatus": 200,
+      "tau": {
+        "status": 200,
+        "latencyMs": 1232.6,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "peer": {
+        "status": 200,
+        "latencyMs": 1574.2,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": [
+          "top-level field \u0027latency_ms\u0027"
+        ]
+      },
+      "disagreements": [
+        {
+          "Question": "is_bug",
+          "Kind": "noul",
+          "TauValue": "0.8688",
+          "PeerValue": "0.8079"
+        }
+      ]
+    },
+    {
+      "file": "07_questions_count_10.json",
+      "name": "ten questions",
+      "description": "A request containing ten questions, cycling through all three question types.",
+      "expectedStatus": 200,
+      "tau": {
+        "status": 200,
+        "latencyMs": 1305.1,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "peer": {
+        "status": 200,
+        "latencyMs": 2147.2,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": [
+          "top-level field \u0027latency_ms\u0027"
+        ]
+      },
+      "disagreements": [
+        {
+          "Question": "noul_1",
+          "Kind": "noul",
+          "TauValue": "0.2452",
+          "PeerValue": "0.6618"
+        },
+        {
+          "Question": "score_3",
+          "Kind": "score",
+          "TauValue": "2.4143",
+          "PeerValue": "1.0726"
+        },
+        {
+          "Question": "noul_4",
+          "Kind": "noul",
+          "TauValue": "0.2284",
+          "PeerValue": "0.5914"
+        },
+        {
+          "Question": "score_6",
+          "Kind": "score",
+          "TauValue": "2.3642",
+          "PeerValue": "1.1508"
+        },
+        {
+          "Question": "noul_7",
+          "Kind": "noul",
+          "TauValue": "0.234",
+          "PeerValue": "0.5906"
+        },
+        {
+          "Question": "score_9",
+          "Kind": "score",
+          "TauValue": "2.318",
+          "PeerValue": "1.1635"
+        },
+        {
+          "Question": "noul_10",
+          "Kind": "noul",
+          "TauValue": "0.2262",
+          "PeerValue": "0.6126"
+        }
+      ]
+    },
+    {
+      "file": "08_questions_count_50.json",
+      "name": "fifty questions",
+      "description": "A request containing fifty questions, cycling through all three question types.",
+      "expectedStatus": 200,
+      "tau": {
+        "status": 200,
+        "latencyMs": 14654.6,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "peer": {
+        "status": 200,
+        "latencyMs": 8408.9,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": [
+          "top-level field \u0027latency_ms\u0027"
+        ]
+      },
+      "disagreements": [
+        {
+          "Question": "noul_1",
+          "Kind": "noul",
+          "TauValue": "0.2452",
+          "PeerValue": "0.6618"
+        },
+        {
+          "Question": "score_3",
+          "Kind": "score",
+          "TauValue": "2.4143",
+          "PeerValue": "1.073"
+        },
+        {
+          "Question": "noul_4",
+          "Kind": "noul",
+          "TauValue": "0.2284",
+          "PeerValue": "0.5914"
+        },
+        {
+          "Question": "score_6",
+          "Kind": "score",
+          "TauValue": "2.3642",
+          "PeerValue": "1.1452"
+        },
+        {
+          "Question": "noul_7",
+          "Kind": "noul",
+          "TauValue": "0.234",
+          "PeerValue": "0.5906"
+        },
+        {
+          "Question": "score_9",
+          "Kind": "score",
+          "TauValue": "2.318",
+          "PeerValue": "1.1603"
+        },
+        {
+          "Question": "noul_10",
+          "Kind": "noul",
+          "TauValue": "0.2262",
+          "PeerValue": "0.6126"
+        },
+        {
+          "Question": "score_12",
+          "Kind": "score",
+          "TauValue": "2.3166",
+          "PeerValue": "1.1381"
+        },
+        {
+          "Question": "noul_13",
+          "Kind": "noul",
+          "TauValue": "0.2325",
+          "PeerValue": "0.6117"
+        },
+        {
+          "Question": "score_15",
+          "Kind": "score",
+          "TauValue": "2.3054",
+          "PeerValue": "1.141"
+        },
+        {
+          "Question": "noul_16",
+          "Kind": "noul",
+          "TauValue": "0.2276",
+          "PeerValue": "0.621"
+        },
+        {
+          "Question": "score_18",
+          "Kind": "score",
+          "TauValue": "2.3085",
+          "PeerValue": "1.1363"
+        },
+        {
+          "Question": "noul_19",
+          "Kind": "noul",
+          "TauValue": "0.2085",
+          "PeerValue": "0.6314"
+        },
+        {
+          "Question": "score_21",
+          "Kind": "score",
+          "TauValue": "2.3289",
+          "PeerValue": "1.094"
+        },
+        {
+          "Question": "noul_22",
+          "Kind": "noul",
+          "TauValue": "0.221",
+          "PeerValue": "0.6256"
+        },
+        {
+          "Question": "score_24",
+          "Kind": "score",
+          "TauValue": "2.3",
+          "PeerValue": "1.0818"
+        },
+        {
+          "Question": "noul_25",
+          "Kind": "noul",
+          "TauValue": "0.231",
+          "PeerValue": "0.6242"
+        },
+        {
+          "Question": "score_27",
+          "Kind": "score",
+          "TauValue": "2.3332",
+          "PeerValue": "1.1138"
+        },
+        {
+          "Question": "noul_28",
+          "Kind": "noul",
+          "TauValue": "0.2242",
+          "PeerValue": "0.6279"
+        },
+        {
+          "Question": "score_30",
+          "Kind": "score",
+          "TauValue": "2.318",
+          "PeerValue": "1.065"
+        },
+        {
+          "Question": "noul_31",
+          "Kind": "noul",
+          "TauValue": "0.2287",
+          "PeerValue": "0.6072"
+        },
+        {
+          "Question": "score_33",
+          "Kind": "score",
+          "TauValue": "2.321",
+          "PeerValue": "1.0801"
+        },
+        {
+          "Question": "noul_34",
+          "Kind": "noul",
+          "TauValue": "0.2308",
+          "PeerValue": "0.6326"
+        },
+        {
+          "Question": "score_36",
+          "Kind": "score",
+          "TauValue": "2.3401",
+          "PeerValue": "1.0909"
+        },
+        {
+          "Question": "noul_37",
+          "Kind": "noul",
+          "TauValue": "0.2363",
+          "PeerValue": "0.6221"
+        },
+        {
+          "Question": "score_39",
+          "Kind": "score",
+          "TauValue": "2.3297",
+          "PeerValue": "1.0749"
+        },
+        {
+          "Question": "noul_40",
+          "Kind": "noul",
+          "TauValue": "0.2283",
+          "PeerValue": "0.6031"
+        },
+        {
+          "Question": "score_42",
+          "Kind": "score",
+          "TauValue": "2.3221",
+          "PeerValue": "1.0787"
+        },
+        {
+          "Question": "noul_43",
+          "Kind": "noul",
+          "TauValue": "0.2354",
+          "PeerValue": "0.6307"
+        },
+        {
+          "Question": "score_45",
+          "Kind": "score",
+          "TauValue": "2.3095",
+          "PeerValue": "1.0878"
+        },
+        {
+          "Question": "noul_46",
+          "Kind": "noul",
+          "TauValue": "0.2407",
+          "PeerValue": "0.6062"
+        },
+        {
+          "Question": "score_48",
+          "Kind": "score",
+          "TauValue": "2.2983",
+          "PeerValue": "1.0878"
+        },
+        {
+          "Question": "noul_49",
+          "Kind": "noul",
+          "TauValue": "0.2191",
+          "PeerValue": "0.6195"
+        }
+      ]
+    },
+    {
+      "file": "09_choice_options_1.json",
+      "name": "choice with 1 option",
+      "description": "A choice question with a single option.",
+      "expectedStatus": 200,
+      "tau": {
+        "status": 200,
+        "latencyMs": 5418.4,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "peer": {
+        "status": 200,
+        "latencyMs": 9641.2,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": [
+          "top-level field \u0027latency_ms\u0027"
+        ]
+      },
+      "disagreements": []
+    },
+    {
+      "file": "10_choice_options_2.json",
+      "name": "choice with 2 options",
+      "description": "A choice question with two options.",
+      "expectedStatus": 200,
+      "tau": {
+        "status": 200,
+        "latencyMs": 7578.3,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "peer": {
+        "status": 200,
+        "latencyMs": 18699.5,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": [
+          "top-level field \u0027latency_ms\u0027"
+        ]
+      },
+      "disagreements": [
+        {
+          "Question": "binary_choice",
+          "Kind": "choice",
+          "TauValue": "option_01",
+          "PeerValue": "option_02"
+        }
+      ]
+    },
+    {
+      "file": "11_choice_options_5.json",
+      "name": "choice with 5 options",
+      "description": "A choice question with five options.",
+      "expectedStatus": 200,
+      "tau": {
+        "status": 200,
+        "latencyMs": 9582.4,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "peer": {
+        "status": 200,
+        "latencyMs": 10672.7,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": [
+          "top-level field \u0027latency_ms\u0027"
+        ]
+      },
+      "disagreements": [
+        {
+          "Question": "category",
+          "Kind": "choice",
+          "TauValue": "option_01",
+          "PeerValue": "option_05"
+        }
+      ]
+    },
+    {
+      "file": "12_choice_options_30.json",
+      "name": "choice with 30 options",
+      "description": "A choice question with thirty options, well under the contract\u0027s maximum of 255.",
+      "expectedStatus": 200,
+      "tau": {
+        "status": 200,
+        "latencyMs": 8222.7,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "peer": {
+        "status": 200,
+        "latencyMs": 15200.4,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": [
+          "top-level field \u0027latency_ms\u0027"
+        ]
+      },
+      "disagreements": [
+        {
+          "Question": "reason_code",
+          "Kind": "choice",
+          "TauValue": "option_09",
+          "PeerValue": "option_30"
+        }
+      ]
+    },
+    {
+      "file": "13_choice_options_77.json",
+      "name": "choice with 77 options",
+      "description": "A choice question with seventy-seven options (the Banking77-style option count).",
+      "expectedStatus": 200,
+      "tau": {
+        "status": 200,
+        "latencyMs": 8127.7,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "peer": {
+        "status": 200,
+        "latencyMs": 14137.6,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": [
+          "top-level field \u0027latency_ms\u0027"
+        ]
+      },
+      "disagreements": [
+        {
+          "Question": "intent",
+          "Kind": "choice",
+          "TauValue": "option_05",
+          "PeerValue": "option_02"
+        }
+      ]
+    },
+    {
+      "file": "14_choice_null_descriptions.json",
+      "name": "choice with null descriptions",
+      "description": "A choice question whose option descriptions are all JSON null, which the contract permits.",
+      "expectedStatus": 200,
+      "tau": {
+        "status": 200,
+        "latencyMs": 7803.1,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "peer": {
+        "status": 200,
+        "latencyMs": 12956.1,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": [
+          "top-level field \u0027latency_ms\u0027"
+        ]
+      },
+      "disagreements": []
+    },
+    {
+      "file": "15_choice_empty_descriptions.json",
+      "name": "choice with empty string descriptions",
+      "description": "A choice question whose option descriptions are all empty strings.",
+      "expectedStatus": 200,
+      "tau": {
+        "status": 200,
+        "latencyMs": 8351.1,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "peer": {
+        "status": 200,
+        "latencyMs": 10933.9,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": [
+          "top-level field \u0027latency_ms\u0027"
+        ]
+      },
+      "disagreements": []
+    },
+    {
+      "file": "16_score_levels_2.json",
+      "name": "score with 2 levels",
+      "description": "A score question at the contract\u0027s minimum of two levels.",
+      "expectedStatus": 200,
+      "tau": {
+        "status": 200,
+        "latencyMs": 10164.7,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "peer": {
+        "status": 200,
+        "latencyMs": 7405.5,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": [
+          "top-level field \u0027latency_ms\u0027"
+        ]
+      },
+      "disagreements": [
+        {
+          "Question": "satisfied",
+          "Kind": "score",
+          "TauValue": "0.1691",
+          "PeerValue": "0.3759"
+        }
+      ]
+    },
+    {
+      "file": "17_score_levels_10.json",
+      "name": "score with 10 levels",
+      "description": "A score question at the contract\u0027s maximum of ten levels.",
+      "expectedStatus": 200,
+      "tau": {
+        "status": 200,
+        "latencyMs": 7538.1,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "peer": {
+        "status": 200,
+        "latencyMs": 8245.7,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": [
+          "top-level field \u0027latency_ms\u0027"
+        ]
+      },
+      "disagreements": [
+        {
+          "Question": "satisfaction",
+          "Kind": "score",
+          "TauValue": "2.5661",
+          "PeerValue": "4.6596"
+        }
+      ]
+    },
+    {
+      "file": "18_noul_with_criteria.json",
+      "name": "noul with criteria",
+      "description": "A noul question that supplies true/false criteria descriptions.",
+      "expectedStatus": 200,
+      "tau": {
+        "status": 200,
+        "latencyMs": 11060.4,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "peer": {
+        "status": 200,
+        "latencyMs": 8009.2,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": [
+          "top-level field \u0027latency_ms\u0027"
+        ]
+      },
+      "disagreements": [
+        {
+          "Question": "is_fraud",
+          "Kind": "noul",
+          "TauValue": "0.5725",
+          "PeerValue": "0.3239"
+        }
+      ]
+    },
+    {
+      "file": "19_noul_without_criteria.json",
+      "name": "noul without criteria",
+      "description": "A noul question with no criteria field, which the contract makes optional.",
+      "expectedStatus": 200,
+      "tau": {
+        "status": 200,
+        "latencyMs": 11758.4,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "peer": {
+        "status": 200,
+        "latencyMs": 9674.5,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": [
+          "top-level field \u0027latency_ms\u0027"
+        ]
+      },
+      "disagreements": [
+        {
+          "Question": "is_fraud",
+          "Kind": "noul",
+          "TauValue": "0.3557",
+          "PeerValue": "0.4534"
+        }
+      ]
+    },
+    {
+      "file": "20_state_text.json",
+      "name": "plain text state",
+      "description": "State given as a plain string.",
+      "expectedStatus": 200,
+      "tau": {
+        "status": 200,
+        "latencyMs": 7561.3,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "peer": {
+        "status": 200,
+        "latencyMs": 14441.2,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": [
+          "top-level field \u0027latency_ms\u0027"
+        ]
+      },
+      "disagreements": [
+        {
+          "Question": "is_urgent",
+          "Kind": "noul",
+          "TauValue": "0.1561",
+          "PeerValue": "0.4375"
+        }
+      ]
+    },
+    {
+      "file": "21_state_object.json",
+      "name": "structured object state",
+      "description": "State given as a JSON object rather than a string.",
+      "expectedStatus": 200,
+      "tau": {
+        "status": 200,
+        "latencyMs": 5678,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "peer": {
+        "status": 200,
+        "latencyMs": 8453.5,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": [
+          "top-level field \u0027latency_ms\u0027"
+        ]
+      },
+      "disagreements": [
+        {
+          "Question": "is_billing_error",
+          "Kind": "noul",
+          "TauValue": "0.8686",
+          "PeerValue": "0.8358"
+        }
+      ]
+    },
+    {
+      "file": "22_state_array.json",
+      "name": "array state",
+      "description": "State given as a JSON array of message turns.",
+      "expectedStatus": 200,
+      "tau": {
+        "status": 200,
+        "latencyMs": 5540,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "peer": {
+        "status": 200,
+        "latencyMs": 10372.9,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": [
+          "top-level field \u0027latency_ms\u0027"
+        ]
+      },
+      "disagreements": [
+        {
+          "Question": "needs_investigation",
+          "Kind": "noul",
+          "TauValue": "0.0942",
+          "PeerValue": "0.633"
+        }
+      ]
+    },
+    {
+      "file": "23_state_nested.json",
+      "name": "deeply nested state",
+      "description": "State given as a deeply nested object and array structure.",
+      "expectedStatus": 200,
+      "tau": {
+        "status": 200,
+        "latencyMs": 10860.1,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "peer": {
+        "status": 200,
+        "latencyMs": 10237.8,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": [
+          "top-level field \u0027latency_ms\u0027"
+        ]
+      },
+      "disagreements": [
+        {
+          "Question": "wants_cancellation",
+          "Kind": "noul",
+          "TauValue": "0.904",
+          "PeerValue": "0.9603"
+        }
+      ]
+    },
+    {
+      "file": "24_state_null.json",
+      "name": "null state",
+      "description": "State explicitly given as JSON null, which the contract permits.",
+      "expectedStatus": 200,
+      "tau": {
+        "status": 200,
+        "latencyMs": 7163.1,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "peer": {
+        "status": 200,
+        "latencyMs": 12492.7,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": [
+          "top-level field \u0027latency_ms\u0027"
+        ]
+      },
+      "disagreements": [
+        {
+          "Question": "is_urgent",
+          "Kind": "noul",
+          "TauValue": "0.1758",
+          "PeerValue": "0.4161"
+        }
+      ]
+    },
+    {
+      "file": "25_state_empty_string.json",
+      "name": "empty string state",
+      "description": "State given as an empty string.",
+      "expectedStatus": 200,
+      "tau": {
+        "status": 200,
+        "latencyMs": 7703.7,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "peer": {
+        "status": 200,
+        "latencyMs": 8624.3,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": [
+          "top-level field \u0027latency_ms\u0027"
+        ]
+      },
+      "disagreements": [
+        {
+          "Question": "is_urgent",
+          "Kind": "noul",
+          "TauValue": "0.1898",
+          "PeerValue": "0.4495"
+        }
+      ]
+    },
+    {
+      "file": "26_state_long.json",
+      "name": "long state around 6000 characters",
+      "description": "State is a long free-text narrative of 6100 characters.",
+      "expectedStatus": 200,
+      "tau": {
+        "status": 200,
+        "latencyMs": 9303.2,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "peer": {
+        "status": 200,
+        "latencyMs": 14022.2,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": [
+          "top-level field \u0027latency_ms\u0027"
+        ]
+      },
+      "disagreements": [
+        {
+          "Question": "root_cause_is_otp_delay",
+          "Kind": "noul",
+          "TauValue": "0.9514",
+          "PeerValue": "0.9547"
+        }
+      ]
+    },
+    {
+      "file": "27_state_unicode.json",
+      "name": "unicode-heavy state",
+      "description": "State containing emoji and accented Latin characters.",
+      "expectedStatus": 200,
+      "tau": {
+        "status": 200,
+        "latencyMs": 23326.2,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "peer": {
+        "status": 200,
+        "latencyMs": 10013.2,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": [
+          "top-level field \u0027latency_ms\u0027"
+        ]
+      },
+      "disagreements": [
+        {
+          "Question": "is_angry",
+          "Kind": "noul",
+          "TauValue": "0.6127",
+          "PeerValue": "0.8216"
+        }
+      ]
+    },
+    {
+      "file": "28_state_non_latin.json",
+      "name": "non-Latin script state",
+      "description": "State written in Japanese and Arabic script rather than Latin characters.",
+      "expectedStatus": 200,
+      "tau": {
+        "status": 200,
+        "latencyMs": 9557.2,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "peer": {
+        "status": 200,
+        "latencyMs": 10654.8,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": [
+          "top-level field \u0027latency_ms\u0027"
+        ]
+      },
+      "disagreements": [
+        {
+          "Question": "needs_translation_support",
+          "Kind": "noul",
+          "TauValue": "0.6639",
+          "PeerValue": "0.6077"
+        }
+      ]
+    },
+    {
+      "file": "29_instructions_object.json",
+      "name": "instructions given as an object",
+      "description": "The question\u0027s instructions field is a structured object rather than a string.",
+      "expectedStatus": 200,
+      "tau": {
+        "status": 200,
+        "latencyMs": 15177.4,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "peer": {
+        "status": 200,
+        "latencyMs": 6853.7,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": [
+          "top-level field \u0027latency_ms\u0027"
+        ]
+      },
+      "disagreements": [
+        {
+          "Question": "is_bug",
+          "Kind": "noul",
+          "TauValue": "0.8168",
+          "PeerValue": "0.906"
+        }
+      ]
+    },
+    {
+      "file": "30_instructions_array.json",
+      "name": "instructions given as an array",
+      "description": "The question\u0027s instructions field is an array of instruction fragments rather than a string.",
+      "expectedStatus": 200,
+      "tau": {
+        "status": 200,
+        "latencyMs": 8230,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "peer": {
+        "status": 200,
+        "latencyMs": 7240.5,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": [
+          "top-level field \u0027latency_ms\u0027"
+        ]
+      },
+      "disagreements": [
+        {
+          "Question": "urgency",
+          "Kind": "score",
+          "TauValue": "1.0639",
+          "PeerValue": "1.1999"
+        }
+      ]
+    },
+    {
+      "file": "31_model_jev_latest.json",
+      "name": "model value jev-latest",
+      "description": "The request pins the model alias jev-latest.",
+      "expectedStatus": 200,
+      "tau": {
+        "status": 200,
+        "latencyMs": 9513.8,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "peer": {
+        "status": 200,
+        "latencyMs": 8985.7,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": [
+          "top-level field \u0027latency_ms\u0027"
+        ]
+      },
+      "disagreements": [
+        {
+          "Question": "is_urgent",
+          "Kind": "noul",
+          "TauValue": "0.2623",
+          "PeerValue": "0.5352"
+        }
+      ]
+    },
+    {
+      "file": "32_model_auto.json",
+      "name": "model value auto",
+      "description": "The request uses the auto-routing model alias.",
+      "expectedStatus": 200,
+      "tau": {
+        "status": 200,
+        "latencyMs": 8597.4,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "peer": {
+        "status": 200,
+        "latencyMs": 10465.6,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": [
+          "top-level field \u0027latency_ms\u0027"
+        ]
+      },
+      "disagreements": [
+        {
+          "Question": "is_urgent",
+          "Kind": "noul",
+          "TauValue": "0.2623",
+          "PeerValue": "0.5352"
+        }
+      ]
+    },
+    {
+      "file": "33_model_pinned_laya_en.json",
+      "name": "model value pinned laya-en",
+      "description": "The request pins a specific model id, laya-en, rather than an alias.",
+      "expectedStatus": 200,
+      "tau": {
+        "status": 200,
+        "latencyMs": 10775.5,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "peer": {
+        "status": 200,
+        "latencyMs": 16870,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": [
+          "top-level field \u0027latency_ms\u0027"
+        ]
+      },
+      "disagreements": [
+        {
+          "Question": "is_urgent",
+          "Kind": "noul",
+          "TauValue": "0.2623",
+          "PeerValue": "0.5352"
+        }
+      ]
+    },
+    {
+      "file": "34_invalid_missing_model.json",
+      "name": "invalid: missing model field",
+      "description": "The request omits the required top-level model field.",
+      "expectedStatus": 422,
+      "tau": {
+        "status": 422,
+        "latencyMs": 1352.7,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "peer": {
+        "status": 200,
+        "latencyMs": 195.7,
+        "transportError": null,
+        "contractOk": false,
+        "errors": [
+          "status mismatch: expected 422, got 200"
+        ],
+        "extensions": []
+      },
+      "disagreements": []
+    },
+    {
+      "file": "35_invalid_missing_state.json",
+      "name": "invalid: missing state field",
+      "description": "The request omits the required top-level state field entirely (distinct from state: null).",
+      "expectedStatus": 422,
+      "tau": {
+        "status": 422,
+        "latencyMs": 0.4,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "peer": {
+        "status": 422,
+        "latencyMs": 1533.3,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "disagreements": []
+    },
+    {
+      "file": "36_invalid_missing_questions.json",
+      "name": "invalid: missing questions field",
+      "description": "The request omits the required top-level questions field.",
+      "expectedStatus": 422,
+      "tau": {
+        "status": 422,
+        "latencyMs": 0.4,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "peer": {
+        "status": 422,
+        "latencyMs": 14.1,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "disagreements": []
+    },
+    {
+      "file": "37_invalid_empty_questions.json",
+      "name": "invalid: empty questions map",
+      "description": "The request supplies questions as an empty object, violating the minimum of one question.",
+      "expectedStatus": 422,
+      "tau": {
+        "status": 422,
+        "latencyMs": 1,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "peer": {
+        "status": 422,
+        "latencyMs": 21.2,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "disagreements": []
+    },
+    {
+      "file": "38_invalid_unknown_type.json",
+      "name": "invalid: unknown question type",
+      "description": "The question\u0027s type field is a value outside noul, choice and score.",
+      "expectedStatus": 422,
+      "tau": {
+        "status": 422,
+        "latencyMs": 0.9,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "peer": {
+        "status": 422,
+        "latencyMs": 3.5,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "disagreements": []
+    },
+    {
+      "file": "39_invalid_choice_0_options.json",
+      "name": "invalid: choice with 0 options",
+      "description": "A choice question whose criteria map is empty, violating the minimum of one option.",
+      "expectedStatus": 422,
+      "tau": {
+        "status": 422,
+        "latencyMs": 0.6,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "peer": {
+        "status": 422,
+        "latencyMs": 401.9,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "disagreements": []
+    },
+    {
+      "file": "40_invalid_choice_256_options.json",
+      "name": "invalid: choice with 256 options",
+      "description": "A choice question with 256 options, one more than the contract\u0027s maximum of 255.",
+      "expectedStatus": 422,
+      "tau": {
+        "status": 422,
+        "latencyMs": 0.6,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "peer": {
+        "status": 422,
+        "latencyMs": 4.8,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "disagreements": []
+    },
+    {
+      "file": "41_invalid_score_1_level.json",
+      "name": "invalid: score with 1 level",
+      "description": "A score question with only one level, below the contract\u0027s minimum of two.",
+      "expectedStatus": 422,
+      "tau": {
+        "status": 422,
+        "latencyMs": 0.5,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "peer": {
+        "status": 200,
+        "latencyMs": 192.2,
+        "transportError": null,
+        "contractOk": false,
+        "errors": [
+          "status mismatch: expected 422, got 200"
+        ],
+        "extensions": []
+      },
+      "disagreements": []
+    },
+    {
+      "file": "42_invalid_score_11_levels.json",
+      "name": "invalid: score with 11 levels",
+      "description": "A score question with eleven levels, one more than the contract\u0027s maximum of ten.",
+      "expectedStatus": 422,
+      "tau": {
+        "status": 422,
+        "latencyMs": 0.4,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "peer": {
+        "status": 200,
+        "latencyMs": 142.5,
+        "transportError": null,
+        "contractOk": false,
+        "errors": [
+          "status mismatch: expected 422, got 200"
+        ],
+        "extensions": []
+      },
+      "disagreements": []
+    },
+    {
+      "file": "43_invalid_noul_maybe_key.json",
+      "name": "invalid: noul criteria with a maybe key",
+      "description": "A noul question\u0027s criteria object includes a maybe key, which the contract does not allow alongside true/false.",
+      "expectedStatus": 422,
+      "tau": {
+        "status": 422,
+        "latencyMs": 0.4,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "peer": {
+        "status": 200,
+        "latencyMs": 123.9,
+        "transportError": null,
+        "contractOk": false,
+        "errors": [
+          "status mismatch: expected 422, got 200"
+        ],
+        "extensions": []
+      },
+      "disagreements": []
+    },
+    {
+      "file": "44_invalid_unknown_top_level_field.json",
+      "name": "invalid: unknown top-level field",
+      "description": "The request body includes an extra top-level field not permitted by the contract and not x-tau- prefixed.",
+      "expectedStatus": 422,
+      "tau": {
+        "status": 422,
+        "latencyMs": 76.8,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "peer": {
+        "status": 200,
+        "latencyMs": 105.5,
+        "transportError": null,
+        "contractOk": false,
+        "errors": [
+          "status mismatch: expected 422, got 200"
+        ],
+        "extensions": []
+      },
+      "disagreements": []
+    },
+    {
+      "file": "45_invalid_malformed_json.json",
+      "name": "invalid: malformed JSON body",
+      "description": "The raw request body is not valid JSON at all (a trailing comma and an unterminated string).",
+      "expectedStatus": 422,
+      "tau": {
+        "status": 422,
+        "latencyMs": 239.5,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "peer": {
+        "status": 422,
+        "latencyMs": 1.7,
+        "transportError": null,
+        "contractOk": true,
+        "errors": [],
+        "extensions": []
+      },
+      "disagreements": []
+    }
+  ]
+}

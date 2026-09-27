@@ -82,11 +82,17 @@ function Stop-Peer {
         return
     }
 
-    $peerState = Get-Content $pidFile -Raw | ConvertFrom-Json
-    switch ($peerState.kind) {
+    # Only the state object: a function's stray pipeline output must never be mistaken for it.
+    $peerState = @(Get-Content $pidFile -Raw | ConvertFrom-Json) | Where-Object { $_.kind } | Select-Object -Last 1
+    switch ([string]$peerState.kind) {
         'native' {
-            Stop-Process -Id $peerState.processId -Force -ErrorAction SilentlyContinue
-            Write-Host "stopped native Kev process $($peerState.processId)"
+            # `uv run` spawns the Python server as a child, so stop the process that owns the port too.
+            # Both PIDs were recorded by this script when it started them, and the listener's command line was
+            # checked to be kev.serve at that point.
+            foreach ($id in @($peerState.listenerPid, $peerState.processId) | Where-Object { $_ }) {
+                Stop-Process -Id $id -Force -ErrorAction SilentlyContinue
+            }
+            Write-Host "stopped native Kev (listener $($peerState.listenerPid), launcher $($peerState.processId))"
         }
         'wsl' {
             wsl -d $peerState.distro -- bash -lc "pkill -f 'kev.serve --run $($peerState.modelId)' || true" | Out-Null
@@ -180,9 +186,15 @@ explicit = true
             -PassThru -NoNewWindow
 
         if (Wait-PortOpen -ComputerName '127.0.0.1' -Port $Port -TimeoutSeconds $TimeoutSeconds) {
-            Write-Host "Kev-0.8B is up natively on Windows (pid $($proc.Id)) on port $Port"
+            # Record the real server process (uv's child) only if it is the kev.serve we just launched.
+            $listenerPid = $null
+            foreach ($c in @(Get-NetTCPConnection -LocalPort $Port -State Listen -ErrorAction SilentlyContinue)) {
+                $cmd = (Get-CimInstance Win32_Process -Filter "ProcessId=$($c.OwningProcess)").CommandLine
+                if ($cmd -match 'kev\.serve') { $listenerPid = $c.OwningProcess }
+            }
+            Write-Host "Kev-0.8B is up natively on Windows (launcher $($proc.Id), server $listenerPid) on port $Port"
             return [ordered]@{
-                kind = 'native'; processId = $proc.Id; modelId = $KevModelId; commit = $KevCommit
+                kind = 'native'; processId = $proc.Id; listenerPid = $listenerPid; modelId = $KevModelId; commit = $KevCommit
                 url = "http://127.0.0.1:$Port"; platform = 'native-windows'
                 name = 'kev-0.8b'; revision = $KevCommit
             }
@@ -305,5 +317,7 @@ if (-not $peer) {
     exit 1
 }
 
+# Keep only the state object; anything else a function wrote to the pipeline is noise.
+$peer = @($peer) | Where-Object { $_ -is [System.Collections.IDictionary] } | Select-Object -Last 1
 $peer | ConvertTo-Json | Set-Content -Path $pidFile
 Write-Host "peer ready: $($peer.kind) at $($peer.url)"
