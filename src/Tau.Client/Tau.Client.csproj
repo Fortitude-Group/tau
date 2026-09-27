@@ -11,4 +11,7 @@
     <ProjectReference Include="..\Tau.Contract\Tau.Contract.csproj" />
     <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Tau.Client.Tests" />
+  </ItemGroup>
 </Project>

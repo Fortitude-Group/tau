@@ -134,8 +134,8 @@ export → fixtures → C# parity chain for one model (a real data dependency), 
 
 ## Phase 7: User Story 5: typed .NET client (P3)
 
-- [ ] T051 [P] [US5] Implement `src/Tau.Client/`: `SystemOneClient(HttpClient, baseUrl)` with `SystemOneAsync(DecisionRequest)`, typed `DecideAsync<TEnum>(state, instructions, descriptions?)` → `Decision<TEnum>` (value, probabilities per member, confidence), `ScoreAsync`, `NoulAsync`, `SystemOneValidationException` carrying the problem details; NuGet metadata (Apache-2.0, 0.1.0, README), packed locally with `dotnet pack` only
-- [ ] T052 [US5] Tests `tests/Tau.Client.Tests/`: against a stub handler (shape, errors) and, with `Category=Models`, against the in-process Runtime (enum answer round trip)
+- [x] T051 [P] [US5] Implement `src/Tau.Client/`: `SystemOneClient(HttpClient, baseUrl)` with `SystemOneAsync(DecisionRequest)`, typed `DecideAsync<TEnum>(state, instructions, descriptions?)` → `Decision<TEnum>` (value, probabilities per member, confidence), `ScoreAsync`, `NoulAsync`, `SystemOneValidationException` carrying the problem details; NuGet metadata (Apache-2.0, 0.1.0, README), packed locally with `dotnet pack` only
+- [ ] T052 [US5] Tests `tests/Tau.Client.Tests/`: against a stub handler (shape, errors) — **done, 41 tests green** — and, with `Category=Models`, against the in-process Runtime (enum answer round trip) — **blocked**: `Tau.Runtime` is still the empty web template, so this half is deferred until the Runtime host exists
 
 ---
 
