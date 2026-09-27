@@ -1,0 +1,17 @@
+{
+  "name": "plain text state",
+  "description": "State given as a plain string.",
+  "request": {
+    "model": "jev-latest",
+    "state": "Customer asks why their monthly statement has not arrived by email this month.",
+    "questions": {
+      "is_urgent": {
+        "type": "noul",
+        "instructions": "Is this urgent?"
+      }
+    }
+  },
+  "expect": {
+    "status": 200
+  }
+}

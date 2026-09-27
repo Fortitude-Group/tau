@@ -1,0 +1,26 @@
+{
+  "name": "exactly two questions",
+  "description": "A request containing exactly two questions.",
+  "request": {
+    "model": "jev-latest",
+    "state": "Support ticket #48213: Customer reports the mobile app crashes every time they try to open their statement PDF. Already tried reinstalling. Requests a callback before end of day.",
+    "questions": {
+      "is_bug": {
+        "type": "noul",
+        "instructions": "Is this a confirmed software bug rather than user error?"
+      },
+      "priority": {
+        "type": "choice",
+        "instructions": "What priority should this ticket be given?",
+        "criteria": {
+          "low": "Low priority",
+          "medium": "Medium priority",
+          "high": "High priority"
+        }
+      }
+    }
+  },
+  "expect": {
+    "status": 200
+  }
+}

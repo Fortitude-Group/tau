@@ -1,0 +1,52 @@
+{
+  "name": "deeply nested state",
+  "description": "State given as a deeply nested object and array structure.",
+  "request": {
+    "model": "jev-latest",
+    "state": {
+      "ticket": {
+        "meta": {
+          "tags": [
+            "billing",
+            "escalation",
+            {
+              "priority": {
+                "level": "high",
+                "history": [
+                  1,
+                  2,
+                  3
+                ]
+              }
+            }
+          ]
+        },
+        "thread": [
+          {
+            "from": "customer",
+            "body": {
+              "text": "Please cancel my subscription immediately.",
+              "attachments": []
+            }
+          },
+          {
+            "from": "agent",
+            "body": {
+              "text": "I can help with that, may I ask why?",
+              "attachments": null
+            }
+          }
+        ]
+      }
+    },
+    "questions": {
+      "wants_cancellation": {
+        "type": "noul",
+        "instructions": "Does the customer want to cancel their subscription?"
+      }
+    }
+  },
+  "expect": {
+    "status": 200
+  }
+}

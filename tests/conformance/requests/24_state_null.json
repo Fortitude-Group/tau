@@ -1,0 +1,17 @@
+{
+  "name": "null state",
+  "description": "State explicitly given as JSON null, which the contract permits.",
+  "request": {
+    "model": "jev-latest",
+    "state": null,
+    "questions": {
+      "is_urgent": {
+        "type": "noul",
+        "instructions": "Without any state, should this default to non-urgent?"
+      }
+    }
+  },
+  "expect": {
+    "status": 200
+  }
+}

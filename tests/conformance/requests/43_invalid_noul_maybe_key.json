@@ -1,0 +1,22 @@
+{
+  "name": "invalid: noul criteria with a maybe key",
+  "description": "A noul question's criteria object includes a maybe key, which the contract does not allow alongside true/false.",
+  "request": {
+    "model": "jev-latest",
+    "state": "Customer emailed support: \"My card was declined twice today at the supermarket even though my balance shows plenty of funds. Is there a block on my account? This is the second time this month.\"",
+    "questions": {
+      "is_fraud": {
+        "type": "noul",
+        "instructions": "Does this look like potential fraud?",
+        "criteria": {
+          "true": "Suspicious activity",
+          "false": "Routine issue",
+          "maybe": "Unclear either way"
+        }
+      }
+    }
+  },
+  "expect": {
+    "status": 422
+  }
+}

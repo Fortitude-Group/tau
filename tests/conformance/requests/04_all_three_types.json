@@ -1,0 +1,36 @@
+{
+  "name": "all three question types together",
+  "description": "One noul, one choice and one score question in the same request.",
+  "request": {
+    "model": "jev-latest",
+    "state": "Customer emailed support: \"My card was declined twice today at the supermarket even though my balance shows plenty of funds. Is there a block on my account? This is the second time this month.\"",
+    "questions": {
+      "needs_escalation": {
+        "type": "noul",
+        "instructions": "Should this be escalated to a fraud specialist?"
+      },
+      "department": {
+        "type": "choice",
+        "instructions": "Which department should handle this?",
+        "criteria": {
+          "fraud": "Fraud and disputes team",
+          "cards": "Card operations team",
+          "general": "General customer support"
+        }
+      },
+      "urgency": {
+        "type": "score",
+        "instructions": "How urgent is this customer's request?",
+        "criteria": [
+          "low",
+          "medium",
+          "high",
+          "critical"
+        ]
+      }
+    }
+  },
+  "expect": {
+    "status": 200
+  }
+}

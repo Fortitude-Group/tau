@@ -1,0 +1,394 @@
+{
+  "name": "fifty questions",
+  "description": "A request containing fifty questions, cycling through all three question types.",
+  "request": {
+    "model": "jev-latest",
+    "state": "Chat transcript: Customer asks for a refund on a duplicate transfer of £120 sent to the wrong recipient yesterday. They have not yet contacted the recipient's bank.",
+    "questions": {
+      "noul_1": {
+        "type": "noul",
+        "instructions": "Is point 1 of the customer's message a complaint?"
+      },
+      "choice_2": {
+        "type": "choice",
+        "instructions": "What is the tone of point 2 of the message?",
+        "criteria": {
+          "positive": "Positive tone",
+          "neutral": "Neutral tone",
+          "negative": "Negative tone"
+        }
+      },
+      "score_3": {
+        "type": "score",
+        "instructions": "How clear is point 3 of the customer's message?",
+        "criteria": [
+          "unclear",
+          "somewhat clear",
+          "clear",
+          "very clear"
+        ]
+      },
+      "noul_4": {
+        "type": "noul",
+        "instructions": "Is point 4 of the customer's message a complaint?"
+      },
+      "choice_5": {
+        "type": "choice",
+        "instructions": "What is the tone of point 5 of the message?",
+        "criteria": {
+          "positive": "Positive tone",
+          "neutral": "Neutral tone",
+          "negative": "Negative tone"
+        }
+      },
+      "score_6": {
+        "type": "score",
+        "instructions": "How clear is point 6 of the customer's message?",
+        "criteria": [
+          "unclear",
+          "somewhat clear",
+          "clear",
+          "very clear"
+        ]
+      },
+      "noul_7": {
+        "type": "noul",
+        "instructions": "Is point 7 of the customer's message a complaint?"
+      },
+      "choice_8": {
+        "type": "choice",
+        "instructions": "What is the tone of point 8 of the message?",
+        "criteria": {
+          "positive": "Positive tone",
+          "neutral": "Neutral tone",
+          "negative": "Negative tone"
+        }
+      },
+      "score_9": {
+        "type": "score",
+        "instructions": "How clear is point 9 of the customer's message?",
+        "criteria": [
+          "unclear",
+          "somewhat clear",
+          "clear",
+          "very clear"
+        ]
+      },
+      "noul_10": {
+        "type": "noul",
+        "instructions": "Is point 10 of the customer's message a complaint?"
+      },
+      "choice_11": {
+        "type": "choice",
+        "instructions": "What is the tone of point 11 of the message?",
+        "criteria": {
+          "positive": "Positive tone",
+          "neutral": "Neutral tone",
+          "negative": "Negative tone"
+        }
+      },
+      "score_12": {
+        "type": "score",
+        "instructions": "How clear is point 12 of the customer's message?",
+        "criteria": [
+          "unclear",
+          "somewhat clear",
+          "clear",
+          "very clear"
+        ]
+      },
+      "noul_13": {
+        "type": "noul",
+        "instructions": "Is point 13 of the customer's message a complaint?"
+      },
+      "choice_14": {
+        "type": "choice",
+        "instructions": "What is the tone of point 14 of the message?",
+        "criteria": {
+          "positive": "Positive tone",
+          "neutral": "Neutral tone",
+          "negative": "Negative tone"
+        }
+      },
+      "score_15": {
+        "type": "score",
+        "instructions": "How clear is point 15 of the customer's message?",
+        "criteria": [
+          "unclear",
+          "somewhat clear",
+          "clear",
+          "very clear"
+        ]
+      },
+      "noul_16": {
+        "type": "noul",
+        "instructions": "Is point 16 of the customer's message a complaint?"
+      },
+      "choice_17": {
+        "type": "choice",
+        "instructions": "What is the tone of point 17 of the message?",
+        "criteria": {
+          "positive": "Positive tone",
+          "neutral": "Neutral tone",
+          "negative": "Negative tone"
+        }
+      },
+      "score_18": {
+        "type": "score",
+        "instructions": "How clear is point 18 of the customer's message?",
+        "criteria": [
+          "unclear",
+          "somewhat clear",
+          "clear",
+          "very clear"
+        ]
+      },
+      "noul_19": {
+        "type": "noul",
+        "instructions": "Is point 19 of the customer's message a complaint?"
+      },
+      "choice_20": {
+        "type": "choice",
+        "instructions": "What is the tone of point 20 of the message?",
+        "criteria": {
+          "positive": "Positive tone",
+          "neutral": "Neutral tone",
+          "negative": "Negative tone"
+        }
+      },
+      "score_21": {
+        "type": "score",
+        "instructions": "How clear is point 21 of the customer's message?",
+        "criteria": [
+          "unclear",
+          "somewhat clear",
+          "clear",
+          "very clear"
+        ]
+      },
+      "noul_22": {
+        "type": "noul",
+        "instructions": "Is point 22 of the customer's message a complaint?"
+      },
+      "choice_23": {
+        "type": "choice",
+        "instructions": "What is the tone of point 23 of the message?",
+        "criteria": {
+          "positive": "Positive tone",
+          "neutral": "Neutral tone",
+          "negative": "Negative tone"
+        }
+      },
+      "score_24": {
+        "type": "score",
+        "instructions": "How clear is point 24 of the customer's message?",
+        "criteria": [
+          "unclear",
+          "somewhat clear",
+          "clear",
+          "very clear"
+        ]
+      },
+      "noul_25": {
+        "type": "noul",
+        "instructions": "Is point 25 of the customer's message a complaint?"
+      },
+      "choice_26": {
+        "type": "choice",
+        "instructions": "What is the tone of point 26 of the message?",
+        "criteria": {
+          "positive": "Positive tone",
+          "neutral": "Neutral tone",
+          "negative": "Negative tone"
+        }
+      },
+      "score_27": {
+        "type": "score",
+        "instructions": "How clear is point 27 of the customer's message?",
+        "criteria": [
+          "unclear",
+          "somewhat clear",
+          "clear",
+          "very clear"
+        ]
+      },
+      "noul_28": {
+        "type": "noul",
+        "instructions": "Is point 28 of the customer's message a complaint?"
+      },
+      "choice_29": {
+        "type": "choice",
+        "instructions": "What is the tone of point 29 of the message?",
+        "criteria": {
+          "positive": "Positive tone",
+          "neutral": "Neutral tone",
+          "negative": "Negative tone"
+        }
+      },
+      "score_30": {
+        "type": "score",
+        "instructions": "How clear is point 30 of the customer's message?",
+        "criteria": [
+          "unclear",
+          "somewhat clear",
+          "clear",
+          "very clear"
+        ]
+      },
+      "noul_31": {
+        "type": "noul",
+        "instructions": "Is point 31 of the customer's message a complaint?"
+      },
+      "choice_32": {
+        "type": "choice",
+        "instructions": "What is the tone of point 32 of the message?",
+        "criteria": {
+          "positive": "Positive tone",
+          "neutral": "Neutral tone",
+          "negative": "Negative tone"
+        }
+      },
+      "score_33": {
+        "type": "score",
+        "instructions": "How clear is point 33 of the customer's message?",
+        "criteria": [
+          "unclear",
+          "somewhat clear",
+          "clear",
+          "very clear"
+        ]
+      },
+      "noul_34": {
+        "type": "noul",
+        "instructions": "Is point 34 of the customer's message a complaint?"
+      },
+      "choice_35": {
+        "type": "choice",
+        "instructions": "What is the tone of point 35 of the message?",
+        "criteria": {
+          "positive": "Positive tone",
+          "neutral": "Neutral tone",
+          "negative": "Negative tone"
+        }
+      },
+      "score_36": {
+        "type": "score",
+        "instructions": "How clear is point 36 of the customer's message?",
+        "criteria": [
+          "unclear",
+          "somewhat clear",
+          "clear",
+          "very clear"
+        ]
+      },
+      "noul_37": {
+        "type": "noul",
+        "instructions": "Is point 37 of the customer's message a complaint?"
+      },
+      "choice_38": {
+        "type": "choice",
+        "instructions": "What is the tone of point 38 of the message?",
+        "criteria": {
+          "positive": "Positive tone",
+          "neutral": "Neutral tone",
+          "negative": "Negative tone"
+        }
+      },
+      "score_39": {
+        "type": "score",
+        "instructions": "How clear is point 39 of the customer's message?",
+        "criteria": [
+          "unclear",
+          "somewhat clear",
+          "clear",
+          "very clear"
+        ]
+      },
+      "noul_40": {
+        "type": "noul",
+        "instructions": "Is point 40 of the customer's message a complaint?"
+      },
+      "choice_41": {
+        "type": "choice",
+        "instructions": "What is the tone of point 41 of the message?",
+        "criteria": {
+          "positive": "Positive tone",
+          "neutral": "Neutral tone",
+          "negative": "Negative tone"
+        }
+      },
+      "score_42": {
+        "type": "score",
+        "instructions": "How clear is point 42 of the customer's message?",
+        "criteria": [
+          "unclear",
+          "somewhat clear",
+          "clear",
+          "very clear"
+        ]
+      },
+      "noul_43": {
+        "type": "noul",
+        "instructions": "Is point 43 of the customer's message a complaint?"
+      },
+      "choice_44": {
+        "type": "choice",
+        "instructions": "What is the tone of point 44 of the message?",
+        "criteria": {
+          "positive": "Positive tone",
+          "neutral": "Neutral tone",
+          "negative": "Negative tone"
+        }
+      },
+      "score_45": {
+        "type": "score",
+        "instructions": "How clear is point 45 of the customer's message?",
+        "criteria": [
+          "unclear",
+          "somewhat clear",
+          "clear",
+          "very clear"
+        ]
+      },
+      "noul_46": {
+        "type": "noul",
+        "instructions": "Is point 46 of the customer's message a complaint?"
+      },
+      "choice_47": {
+        "type": "choice",
+        "instructions": "What is the tone of point 47 of the message?",
+        "criteria": {
+          "positive": "Positive tone",
+          "neutral": "Neutral tone",
+          "negative": "Negative tone"
+        }
+      },
+      "score_48": {
+        "type": "score",
+        "instructions": "How clear is point 48 of the customer's message?",
+        "criteria": [
+          "unclear",
+          "somewhat clear",
+          "clear",
+          "very clear"
+        ]
+      },
+      "noul_49": {
+        "type": "noul",
+        "instructions": "Is point 49 of the customer's message a complaint?"
+      },
+      "choice_50": {
+        "type": "choice",
+        "instructions": "What is the tone of point 50 of the message?",
+        "criteria": {
+          "positive": "Positive tone",
+          "neutral": "Neutral tone",
+          "negative": "Negative tone"
+        }
+      }
+    }
+  },
+  "expect": {
+    "status": 200
+  }
+}

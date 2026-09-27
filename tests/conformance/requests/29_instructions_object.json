@@ -1,0 +1,21 @@
+{
+  "name": "instructions given as an object",
+  "description": "The question's instructions field is a structured object rather than a string.",
+  "request": {
+    "model": "jev-latest",
+    "state": "Support ticket #48213: Customer reports the mobile app crashes every time they try to open their statement PDF. Already tried reinstalling. Requests a callback before end of day.",
+    "questions": {
+      "is_bug": {
+        "type": "noul",
+        "instructions": {
+          "task": "classify",
+          "question": "Is this a confirmed bug?",
+          "guidance": "Answer true only if the customer describes reproducible broken behaviour."
+        }
+      }
+    }
+  },
+  "expect": {
+    "status": 200
+  }
+}

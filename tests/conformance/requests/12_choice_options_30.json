@@ -1,0 +1,49 @@
+{
+  "name": "choice with 30 options",
+  "description": "A choice question with thirty options, well under the contract's maximum of 255.",
+  "request": {
+    "model": "jev-latest",
+    "state": "Support ticket #48213: Customer reports the mobile app crashes every time they try to open their statement PDF. Already tried reinstalling. Requests a callback before end of day.",
+    "questions": {
+      "reason_code": {
+        "type": "choice",
+        "instructions": "Which of the thirty reason codes applies?",
+        "criteria": {
+          "option_01": "Reason number 1",
+          "option_02": "Reason number 2",
+          "option_03": "Reason number 3",
+          "option_04": "Reason number 4",
+          "option_05": "Reason number 5",
+          "option_06": "Reason number 6",
+          "option_07": "Reason number 7",
+          "option_08": "Reason number 8",
+          "option_09": "Reason number 9",
+          "option_10": "Reason number 10",
+          "option_11": "Reason number 11",
+          "option_12": "Reason number 12",
+          "option_13": "Reason number 13",
+          "option_14": "Reason number 14",
+          "option_15": "Reason number 15",
+          "option_16": "Reason number 16",
+          "option_17": "Reason number 17",
+          "option_18": "Reason number 18",
+          "option_19": "Reason number 19",
+          "option_20": "Reason number 20",
+          "option_21": "Reason number 21",
+          "option_22": "Reason number 22",
+          "option_23": "Reason number 23",
+          "option_24": "Reason number 24",
+          "option_25": "Reason number 25",
+          "option_26": "Reason number 26",
+          "option_27": "Reason number 27",
+          "option_28": "Reason number 28",
+          "option_29": "Reason number 29",
+          "option_30": "Reason number 30"
+        }
+      }
+    }
+  },
+  "expect": {
+    "status": 200
+  }
+}

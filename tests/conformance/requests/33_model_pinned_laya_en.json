@@ -1,0 +1,17 @@
+{
+  "name": "model value pinned laya-en",
+  "description": "The request pins a specific model id, laya-en, rather than an alias.",
+  "request": {
+    "model": "laya-en",
+    "state": "Customer emailed support: \"My card was declined twice today at the supermarket even though my balance shows plenty of funds. Is there a block on my account? This is the second time this month.\"",
+    "questions": {
+      "is_urgent": {
+        "type": "noul",
+        "instructions": "Is this urgent?"
+      }
+    }
+  },
+  "expect": {
+    "status": 200
+  }
+}

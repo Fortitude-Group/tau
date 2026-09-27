@@ -1,0 +1,11 @@
+{
+  "name": "invalid: missing questions field",
+  "description": "The request omits the required top-level questions field.",
+  "request": {
+    "model": "jev-latest",
+    "state": "Customer emailed support: \"My card was declined twice today at the supermarket even though my balance shows plenty of funds. Is there a block on my account? This is the second time this month.\""
+  },
+  "expect": {
+    "status": 422
+  }
+}

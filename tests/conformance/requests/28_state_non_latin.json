@@ -1,0 +1,17 @@
+{
+  "name": "non-Latin script state",
+  "description": "State written in Japanese and Arabic script rather than Latin characters.",
+  "request": {
+    "model": "jev-latest",
+    "state": "お客様からの問い合わせ: 先週から振込が届いていません。至急確認してください。 رسالة العميل: لم يصل التحويل المالي منذ خمسة أيام، أرجو المساعدة العاجلة.",
+    "questions": {
+      "needs_translation_support": {
+        "type": "noul",
+        "instructions": "Would a bilingual support agent help with this ticket?"
+      }
+    }
+  },
+  "expect": {
+    "status": 200
+  }
+}
