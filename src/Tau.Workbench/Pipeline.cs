@@ -3,6 +3,7 @@ using Tau.Workbench.Cascade;
 using Tau.Workbench.Data;
 using Tau.Workbench.Frontier;
 using Tau.Workbench.Measure;
+using Tau.Workbench.Reference;
 using Tau.Workbench.Report;
 using Tau.Workbench.Spec;
 using Tau.Workbench.Threshold;
@@ -56,14 +57,23 @@ public static class Pipeline
     /// <summary><c>tau label</c>: returns 2 while answers are pending, printing the batch files to answer.</summary>
     /// <param name="spec">The decision spec.</param>
     /// <param name="options">Options.</param>
-    public static int Label(DecisionSpec spec, PipelineOptions options)
+    public static int Label(DecisionSpec spec, PipelineOptions options) => LabelWithSummary(spec, options).Exit;
+
+    private static (int Exit, LabelSummary Summary) LabelWithSummary(DecisionSpec spec, PipelineOptions options)
     {
         ArgumentNullException.ThrowIfNull(spec);
         ArgumentNullException.ThrowIfNull(options);
         var manifest = DatasetManifest.Load(spec.ManifestPath);
-        var summary = FrontierStage.Run(spec, manifest, PreparedDataset.LoadSplit(spec, manifest, "heldout"));
+        var calibration = spec.Data.Reference == ReferenceKind.Frontier ? PreparedDataset.LoadSplit(spec, manifest, "calibration") : null;
+        var summary = FrontierStage.Run(spec, manifest, PreparedDataset.LoadSplit(spec, manifest, "heldout"), calibration);
         var o = options.Out;
-        o.WriteLine($"label: {string.Join(", ", summary.Cached.Select(kv => $"{kv.Key} {kv.Value} cached"))}; {summary.Rejected.Count} rejected; {summary.Overridden} overridden.");
+        o.WriteLine($"label: reference is {(spec.Data.Reference == ReferenceKind.Frontier ? $"the frontier model ({spec.Frontier.Model} {spec.Frontier.PromptVersion} answers), so the calibration split is labelled too" : "the dataset's gold labels")}.");
+        foreach (var (split, counts) in summary.Splits)
+        {
+            o.WriteLine($"label: {split}: {string.Join(", ", counts.Cached.Select(kv => $"{kv.Key} {kv.Value} cached, {counts.Pending.GetValueOrDefault(kv.Key)} pending"))}.");
+        }
+
+        o.WriteLine($"label: {summary.Rejected.Count} rejected; {summary.Overridden} overridden.");
         if (summary.LabelNoise.Rate is { } noise)
         {
             o.WriteLine($"label: frontier disagrees with gold on {Fmt.Pct(noise)} of {summary.LabelNoise.N}; wordings agree on {Fmt.Pct(summary.PromptAgreement.Rate)} of {summary.PromptAgreement.N}.");
@@ -72,7 +82,7 @@ public static class Pipeline
         if (summary.TotalPending == 0)
         {
             o.WriteLine("label: nothing pending.");
-            return ExitCodes.Ok;
+            return (ExitCodes.Ok, summary);
         }
 
         o.WriteLine($"label: {summary.TotalPending} answer(s) pending. Answer these batch files into {Path.GetRelativePath(spec.SpecDirectory, spec.CachePath)}, then run 'tau label' again:");
@@ -81,7 +91,7 @@ public static class Pipeline
             o.WriteLine("  " + Path.Combine(spec.SpecDirectory, b));
         }
 
-        return ExitCodes.Blocked;
+        return (ExitCodes.Blocked, summary);
     }
 
     /// <summary><c>tau measure</c>: measures every model on the calibration and held-out splits in one phase.</summary>
@@ -95,6 +105,7 @@ public static class Pipeline
         ArgumentNullException.ThrowIfNull(options);
         var manifest = DatasetManifest.Load(spec.ManifestPath);
         var splits = MeasuredSplits.ToDictionary(s => s, s => PreparedDataset.LoadSplit(spec, manifest, s));
+        options = WithReference(spec, options, manifest, splits);
         using var endpoint = options.EndpointFactory(ResolveEndpoint(spec, options));
         var identity = await endpoint.IdentifyAsync(ct).ConfigureAwait(false);
         options.Out.WriteLine($"measure: endpoint {endpoint.BaseUrl} is {identity.Description}.");
@@ -114,9 +125,10 @@ public static class Pipeline
         ArgumentNullException.ThrowIfNull(spec);
         ArgumentNullException.ThrowIfNull(options);
         var manifest = DatasetManifest.Load(spec.ManifestPath);
+        var reference = ReferenceLabels.Load(spec, manifest);
         foreach (var model in spec.Models)
         {
-            var s = CalibrateStage.Run(spec, model, manifest, options.Clock);
+            var s = CalibrateStage.Run(spec, model, manifest, options.Clock, reference);
             options.Out.WriteLine($"calibrate: {model}: {string.Join("; ", s.Calibrators.Select(c => $"{c.Scope} -> {c.Chosen}"))}; offline held-out ECE {Fmt.Num(s.RawHeldOut?.Ece)} -> {Fmt.Num(s.OfflineHeldOut?.Ece)}. Point the Runtime's Tau:CalibratorsDirectory at {spec.CalibratorsRoot} for the calibrated phase.");
         }
 
@@ -189,10 +201,21 @@ public static class Pipeline
         ArgumentNullException.ThrowIfNull(spec);
         ArgumentNullException.ThrowIfNull(options);
         var o = options.Out;
-        int labelExit = Label(spec, options);
+        var (labelExit, labels) = LabelWithSummary(spec, options);
+        if (spec.Data.Reference == ReferenceKind.Frontier && labels.Pending.GetValueOrDefault(spec.Frontier.PromptVersion) > 0)
+        {
+            o.WriteLine($"run: blocked: this spec scores against the frontier model's answers (data.reference: frontier), and {labels.Pending[spec.Frontier.PromptVersion]} {spec.Frontier.PromptVersion} answer(s) are still pending. Every later stage needs them; answer the batches above and run again.");
+            return ExitCodes.Blocked;
+        }
+
         var manifest = DatasetManifest.Load(spec.ManifestPath);
         var splits = MeasuredSplits.ToDictionary(s => s, s => PreparedDataset.LoadSplit(spec, manifest, s));
+        options = WithReference(spec, options, manifest, splits);
+        var reference = options.Measure.Reference!;
         var splitFiles = MeasuredSplits.Select(spec.SplitPath).Append(spec.SpecPath).ToArray();
+
+        // Under a frontier reference the labels are an input to calibration: a changed answer or override re-fits.
+        var labelFiles = spec.Data.Reference == ReferenceKind.Frontier ? new[] { spec.CachePath, spec.OverridesPath } : [];
 
         WorkbenchEndpoint? endpoint = null;
         EndpointIdentity? identity = null;
@@ -213,13 +236,13 @@ public static class Pipeline
                 }
 
                 var calibrateOutputs = new[] { spec.CalibrationSummaryPath(model) }.Concat(Outputs(spec, model, Phases.Offline)).ToArray();
-                if (Staleness.IsCurrent(rawOutputs, calibrateOutputs))
+                if (Staleness.IsCurrent(rawOutputs.Concat(labelFiles), calibrateOutputs))
                 {
                     o.WriteLine($"calibrate: {model}: skipped (current).");
                 }
                 else
                 {
-                    CalibrateStage.Run(spec, model, manifest, options.Clock);
+                    CalibrateStage.Run(spec, model, manifest, options.Clock, reference);
                     o.WriteLine($"calibrate: {model}: calibrators written to {spec.CalibratorsDirectory(model)}.");
                 }
 
@@ -281,6 +304,22 @@ public static class Pipeline
 
         var call = await endpoint.DecideAsync(MeasureStage.BuildRequest(spec.Question, model, items[0].Text), raw: false, ct).ConfigureAwait(false);
         return call.Response is not null && call.Calibrators is { } c && !string.Equals(c, "none", StringComparison.OrdinalIgnoreCase);
+    }
+
+    /// <summary>
+    /// Resolves the reference labels once and checks every item of the measured splits has one, before any
+    /// endpoint call, so a missing frontier label stops the run up front instead of after the measuring.
+    /// </summary>
+    private static PipelineOptions WithReference(
+        DecisionSpec spec, PipelineOptions options, DatasetManifest manifest, IReadOnlyDictionary<string, IReadOnlyList<DatasetItem>> splits)
+    {
+        var reference = ReferenceLabels.Load(spec, manifest);
+        foreach (var (split, items) in splits)
+        {
+            reference.Require(split, items);
+        }
+
+        return options with { Measure = options.Measure with { Reference = reference } };
     }
 
     private static Uri ResolveEndpoint(DecisionSpec spec, PipelineOptions options) =>

@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Net;
 using System.Text;
 using Tau.Workbench.Measure;
+using Tau.Workbench.Spec;
 using Tau.Workbench.Threshold;
 
 namespace Tau.Workbench.Report;
@@ -26,20 +27,22 @@ internal static class SvgCharts
     /// <param name="raw">Raw held-out bins.</param>
     /// <param name="calibrated">Calibrated held-out bins, or null.</param>
     /// <param name="label">The model id (for the accessible name).</param>
-    public static string Reliability(IReadOnlyList<ReliabilityBin> raw, IReadOnlyList<ReliabilityBin>? calibrated, string label)
+    /// <param name="reference">What a right answer is measured against (sets the wording: accuracy or agreement with the frontier model).</param>
+    public static string Reliability(IReadOnlyList<ReliabilityBin> raw, IReadOnlyList<ReliabilityBin>? calibrated, string label, ReferenceKind reference = ReferenceKind.Gold)
     {
+        var (rate, rateCap) = Words(reference);
         const double W = 300, H = 280, L = 46, R = 12, T = 12, B = 42;
         var plot = new Plot(L, T, W - L - R, H - T - B, 0, 1, 0, 1);
-        var sb = Open(W, H, $"Reliability diagram for {label}: accuracy against confidence, before and after calibration");
+        var sb = Open(W, H, $"Reliability diagram for {label}: {rate} against confidence, before and after calibration");
         plot.Grid(sb, [0, 0.25, 0.5, 0.75, 1], [0, 0.25, 0.5, 0.75, 1], "0.00", "0.00");
-        sb.Append(Inv, $"<line class=\"ref\" x1=\"{plot.X(0):0.#}\" y1=\"{plot.Y(0):0.#}\" x2=\"{plot.X(1):0.#}\" y2=\"{plot.Y(1):0.#}\"><title>Perfect calibration: accuracy equals confidence</title></line>");
-        Series(sb, plot, raw, 1, "Raw");
+        sb.Append(Inv, $"<line class=\"ref\" x1=\"{plot.X(0):0.#}\" y1=\"{plot.Y(0):0.#}\" x2=\"{plot.X(1):0.#}\" y2=\"{plot.Y(1):0.#}\"><title>Perfect calibration: {rate} equals confidence</title></line>");
+        Series(sb, plot, raw, 1, "Raw", rate);
         if (calibrated is not null)
         {
-            Series(sb, plot, calibrated, 2, "Calibrated");
+            Series(sb, plot, calibrated, 2, "Calibrated", rate);
         }
 
-        plot.AxisTitles(sb, "Confidence, max(p)", "Accuracy");
+        plot.AxisTitles(sb, "Confidence, max(p)", rateCap);
         return sb.Append("</svg>").ToString();
     }
 
@@ -47,18 +50,20 @@ internal static class SvgCharts
     /// <param name="results">Threshold results, in spec order.</param>
     /// <param name="slotOf">The categorical slot (1-based) for a model, fixed by its position in the spec.</param>
     /// <param name="targetError">The target error, drawn as a reference line at 1 − target.</param>
-    public static string Tradeoff(IReadOnlyList<ThresholdResult> results, Func<string, int> slotOf, double targetError)
+    /// <param name="reference">What a right answer is measured against (sets the wording: accuracy or agreement with the frontier model).</param>
+    public static string Tradeoff(IReadOnlyList<ThresholdResult> results, Func<string, int> slotOf, double targetError, ReferenceKind reference = ReferenceKind.Gold)
     {
+        var (word, rateCap) = Words(reference);
         const double W = 960, H = 360, L = 56, R = 110, T = 16, B = 46;
         double minAcc = results.SelectMany(r => r.HeldOutCurve).Where(p => p.AcceptedAccuracy is not null && p.Accepted >= MinCurveItems).Select(p => p.AcceptedAccuracy!.Value)
             .DefaultIfEmpty(0).Min();
         double yMin = Math.Max(0, Math.Floor(Math.Min(minAcc, 1 - targetError) * 10 - 0.5) / 10);
         var plot = new Plot(L, T, W - L - R, H - T - B, 0, 1, yMin, 1);
-        var sb = Open(W, H, "Trade-off curve: accuracy on items kept local against the share kept local, per model, on held-out items");
+        var sb = Open(W, H, $"Trade-off curve: {word} on items kept local against the share kept local, per model, on held-out items");
         var yTicks = Enumerable.Range(0, 11).Select(i => yMin + ((1 - yMin) * i / 10)).Where((_, i) => i % 2 == 0).ToArray();
         plot.Grid(sb, [0, 0.2, 0.4, 0.6, 0.8, 1], yTicks, "0%", "0%");
         double target = 1 - targetError;
-        sb.Append(Inv, $"<line class=\"ref\" x1=\"{plot.X(0):0.#}\" y1=\"{plot.Y(target):0.#}\" x2=\"{plot.X(1):0.#}\" y2=\"{plot.Y(target):0.#}\"><title>Target: {Fmt.Pct(target)} accuracy on kept items</title></line>");
+        sb.Append(Inv, $"<line class=\"ref\" x1=\"{plot.X(0):0.#}\" y1=\"{plot.Y(target):0.#}\" x2=\"{plot.X(1):0.#}\" y2=\"{plot.Y(target):0.#}\"><title>Target: {Fmt.Pct(target)} {word} on kept items</title></line>");
         sb.Append(Inv, $"<text class=\"tick\" x=\"{plot.X(1) + 6:0.#}\" y=\"{plot.Y(target) + 4:0.#}\">target {Fmt.Pct(target, 0)}</text>");
         foreach (var r in results)
         {
@@ -73,30 +78,33 @@ internal static class SvgCharts
             sb.Append(Inv, $"<path class=\"line s{slot}\" d=\"{path}\"><title>{Esc(r.Model)}</title></path>");
             foreach (var p in points.Where((_, i) => i % 5 == 0))
             {
-                sb.Append(Inv, $"<circle class=\"hit\" cx=\"{plot.X(p.AcceptRate):0.#}\" cy=\"{plot.Y(p.AcceptedAccuracy!.Value):0.#}\" r=\"8\"><title>{Esc(r.Model)}: τ = {p.Tau:0.00}, keeps {Fmt.Pct(p.AcceptRate)} local, {Fmt.Pct(p.AcceptedAccuracy)} accurate on those</title></circle>");
+                sb.Append(Inv, $"<circle class=\"hit\" cx=\"{plot.X(p.AcceptRate):0.#}\" cy=\"{plot.Y(p.AcceptedAccuracy!.Value):0.#}\" r=\"8\"><title>{Esc(r.Model)}: τ = {p.Tau:0.00}, keeps {Fmt.Pct(p.AcceptRate)} local, {Fmt.Pct(p.AcceptedAccuracy)} {word} on those</title></circle>");
             }
 
             // Lines converge, so series are named by the legend above the chart rather than end labels.
             if (r.Tau is { } tau && r.HeldOutAcceptedAccuracy is { } acc && r.HeldOutAcceptRate is { } rate)
             {
-                sb.Append(Inv, $"<circle class=\"dot s{slot}\" cx=\"{plot.X(rate):0.#}\" cy=\"{plot.Y(acc):0.#}\" r=\"5\"><title>{Esc(r.Model)}: chosen τ = {tau:0.00}; held-out keeps {Fmt.Pct(rate)} local at {Fmt.Pct(acc)} accuracy</title></circle>");
+                sb.Append(Inv, $"<circle class=\"dot s{slot}\" cx=\"{plot.X(rate):0.#}\" cy=\"{plot.Y(acc):0.#}\" r=\"5\"><title>{Esc(r.Model)}: chosen τ = {tau:0.00}; held-out keeps {Fmt.Pct(rate)} local at {Fmt.Pct(acc)} {word}</title></circle>");
                 sb.Append(Inv, $"<text class=\"label\" x=\"{plot.X(rate) + 8:0.#}\" y=\"{plot.Y(acc) - 8:0.#}\">τ {tau:0.00}</text>");
             }
         }
 
-        plot.AxisTitles(sb, "Share of decisions kept local (confidence ≥ τ)", "Accuracy on kept items");
+        plot.AxisTitles(sb, "Share of decisions kept local (confidence ≥ τ)", $"{rateCap} on kept items");
         return sb.Append("</svg>").ToString();
     }
 
-    /// <summary>A confusion matrix heat map (rows gold, columns predicted), shaded by row share.</summary>
+    /// <summary>A confusion matrix heat map (rows the reference label, columns predicted), shaded by row share.</summary>
     /// <param name="view">The matrix view.</param>
     /// <param name="label">The model id.</param>
-    public static string Matrix(ConfusionView view, string label)
+    /// <param name="reference">What a right answer is measured against (sets the wording: accuracy or agreement with the frontier model).</param>
+    public static string Matrix(ConfusionView view, string label, ReferenceKind reference = ReferenceKind.Gold)
     {
+        string row0 = reference == ReferenceKind.Frontier ? "frontier answer" : "gold label";
+        string rowShort = reference == ReferenceKind.Frontier ? "frontier" : "gold";
         int k = view.Labels.Count;
         double cell = k <= 5 ? 44 : 30, left = 110, top = 34;
         double w = left + (cell * k) + 8, h = top + (cell * k) + 30;
-        var sb = Open(w, h, $"Confusion matrix for {label}: rows are the gold label, columns the model's answer");
+        var sb = Open(w, h, $"Confusion matrix for {label}: rows are the {row0}, columns the model's answer");
         sb.Append(Inv, $"<text class=\"tick\" x=\"{left:0.#}\" y=\"12\">answered →</text>");
         for (int j = 0; j < k; j++)
         {
@@ -107,13 +115,13 @@ internal static class SvgCharts
         {
             var row = view.Matrix![i];
             int total = row.Sum();
-            sb.Append(Inv, $"<text class=\"tick\" text-anchor=\"end\" x=\"{left - 8:0.#}\" y=\"{top + (cell * i) + (cell / 2) + 4:0.#}\">{Esc(Short(view.Labels[i], 14))}<title>gold: {Esc(view.Labels[i])}</title></text>");
+            sb.Append(Inv, $"<text class=\"tick\" text-anchor=\"end\" x=\"{left - 8:0.#}\" y=\"{top + (cell * i) + (cell / 2) + 4:0.#}\">{Esc(Short(view.Labels[i], 14))}<title>{rowShort}: {Esc(view.Labels[i])}</title></text>");
             for (int j = 0; j < k; j++)
             {
                 double share = total == 0 ? 0 : (double)row[j] / total;
                 int step = share <= 0 ? 0 : Math.Min(6, 1 + (int)(share * 6));
                 double x = left + (cell * j), y = top + (cell * i);
-                sb.Append(Inv, $"<rect class=\"q{step}\" x=\"{x + 1:0.#}\" y=\"{y + 1:0.#}\" width=\"{cell - 2:0.#}\" height=\"{cell - 2:0.#}\" rx=\"2\"><title>gold {Esc(view.Labels[i])}, answered {Esc(view.Labels[j])}: {row[j]} of {total} ({Fmt.Pct(share)})</title></rect>");
+                sb.Append(Inv, $"<rect class=\"q{step}\" x=\"{x + 1:0.#}\" y=\"{y + 1:0.#}\" width=\"{cell - 2:0.#}\" height=\"{cell - 2:0.#}\" rx=\"2\"><title>{rowShort} {Esc(view.Labels[i])}, answered {Esc(view.Labels[j])}: {row[j]} of {total} ({Fmt.Pct(share)})</title></rect>");
                 if (row[j] > 0)
                 {
                     sb.Append(Inv, $"<text class=\"{(step >= 4 ? "cell-dark" : "cell")}\" text-anchor=\"middle\" x=\"{x + (cell / 2):0.#}\" y=\"{y + (cell / 2) + 4:0.#}\">{row[j]}</text>");
@@ -121,11 +129,11 @@ internal static class SvgCharts
             }
         }
 
-        sb.Append(Inv, $"<text class=\"tick\" x=\"4\" y=\"{h - 8:0.#}\">rows: gold label; shade: share of the row</text>");
+        sb.Append(Inv, $"<text class=\"tick\" x=\"4\" y=\"{h - 8:0.#}\">rows: {row0}; shade: share of the row</text>");
         return sb.Append("</svg>").ToString();
     }
 
-    private static void Series(StringBuilder sb, Plot plot, IReadOnlyList<ReliabilityBin> bins, int slot, string name)
+    private static void Series(StringBuilder sb, Plot plot, IReadOnlyList<ReliabilityBin> bins, int slot, string name, string rate)
     {
         var used = bins.Where(b => b.Count > 0 && b.MeanConfidence is not null && b.Accuracy is not null).ToArray();
         if (used.Length == 0)
@@ -137,9 +145,14 @@ internal static class SvgCharts
         sb.Append(Inv, $"<path class=\"line s{slot}\" d=\"{path}\"/>");
         foreach (var b in used)
         {
-            sb.Append(Inv, $"<circle class=\"dot s{slot}\" cx=\"{plot.X(b.MeanConfidence!.Value):0.#}\" cy=\"{plot.Y(b.Accuracy!.Value):0.#}\" r=\"4\"><title>{name}: confidence {b.Lower:0.00} to {b.Upper:0.00}, {b.Count} items, mean confidence {b.MeanConfidence:0.000}, accuracy {b.Accuracy:0.000}</title></circle>");
+            sb.Append(Inv, $"<circle class=\"dot s{slot}\" cx=\"{plot.X(b.MeanConfidence!.Value):0.#}\" cy=\"{plot.Y(b.Accuracy!.Value):0.#}\" r=\"4\"><title>{name}: confidence {b.Lower:0.00} to {b.Upper:0.00}, {b.Count} items, mean confidence {b.MeanConfidence:0.000}, {rate} {b.Accuracy:0.000}</title></circle>");
         }
     }
+
+    /// <summary>The words for a right answer: accuracy against gold, or agreement with the frontier model.</summary>
+    private static (string Rate, string RateCap) Words(ReferenceKind reference) => reference == ReferenceKind.Frontier
+        ? ("agreement with the frontier model", "Agreement with the frontier model")
+        : ("accuracy", "Accuracy");
 
     private static StringBuilder Open(double w, double h, string title)
     {

@@ -12,6 +12,7 @@ public sealed class FrontierState
 {
     internal FrontierState(
         IReadOnlyList<DatasetItem> eligible,
+        IReadOnlyList<DatasetItem> calibrationEligible,
         IReadOnlySet<string> altSubset,
         IReadOnlyDictionary<string, CachedAnswer> accepted,
         IReadOnlyDictionary<string, LabelOverride> overrides,
@@ -20,6 +21,7 @@ public sealed class FrontierState
         string revision)
     {
         Eligible = eligible;
+        CalibrationEligible = calibrationEligible;
         AltSubset = altSubset;
         Accepted = accepted;
         Overrides = overrides;
@@ -30,6 +32,12 @@ public sealed class FrontierState
 
     /// <summary>The held-out items eligible for frontier answers, in file order (at most 1,000).</summary>
     public IReadOnlyList<DatasetItem> Eligible { get; }
+
+    /// <summary>
+    /// The calibration items eligible for primary-prompt answers, in file order (at most 1,000). Empty unless
+    /// the spec scores against the frontier model, because only then do the calibrators need frontier labels.
+    /// </summary>
+    public IReadOnlyList<DatasetItem> CalibrationEligible { get; }
 
     /// <summary>Ids of the items that also get the alternative wording.</summary>
     public IReadOnlySet<string> AltSubset { get; }
@@ -60,6 +68,18 @@ public sealed class FrontierState
     /// <param name="promptVersion">The primary prompt version.</param>
     public string? EffectiveAnswer(string itemId, string promptVersion) =>
         Overrides.TryGetValue(itemId, out var o) ? o.Answer : Answer(itemId, promptVersion)?.Answer;
+
+    /// <summary>
+    /// Character tallies over the accepted held-out answers of one prompt version. Calibration answers are
+    /// left out: cost is per decision served, and labelling the calibration split is a one-off set-up cost.
+    /// </summary>
+    /// <param name="promptVersion">The prompt version.</param>
+    public CharTally HeldOutChars(string promptVersion)
+    {
+        var heldOut = Eligible.Select(i => i.Id).ToHashSet(StringComparer.Ordinal);
+        var answers = Accepted.Values.Where(a => a.PromptVersion == promptVersion && heldOut.Contains(a.ItemId)).ToArray();
+        return new CharTally(answers.Length, answers.Sum(a => (long)a.InputChars), answers.Sum(a => (long)a.OutputChars));
+    }
 }
 
 /// <summary>
@@ -98,15 +118,32 @@ public static class FrontierStage
     /// <param name="spec">The decision spec.</param>
     /// <param name="manifest">The dataset manifest (for the cache revision).</param>
     /// <param name="heldOut">The held-out split, in file order.</param>
-    public static FrontierState LoadState(DecisionSpec spec, DatasetManifest manifest, IReadOnlyList<DatasetItem> heldOut)
+    /// <param name="calibration">
+    /// The calibration split, in file order. Required when the spec scores against the frontier model
+    /// (<c>data.reference: frontier</c>), and ignored otherwise.
+    /// </param>
+    /// <exception cref="ArgumentException">The spec scores against the frontier model and no calibration split was given.</exception>
+    public static FrontierState LoadState(DecisionSpec spec, DatasetManifest manifest, IReadOnlyList<DatasetItem> heldOut, IReadOnlyList<DatasetItem>? calibration = null)
     {
         ArgumentNullException.ThrowIfNull(spec);
         ArgumentNullException.ThrowIfNull(manifest);
         ArgumentNullException.ThrowIfNull(heldOut);
+        bool frontierReference = spec.Data.Reference == ReferenceKind.Frontier;
+        if (frontierReference && calibration is null)
+        {
+            throw new ArgumentException("The spec scores against the frontier model, so the calibration split is needed too.", nameof(calibration));
+        }
+
         var revision = manifest.CacheRevision;
         var eligible = heldOut.Take(FrontierLimits.MaxHeldOutItems).ToArray();
+        DatasetItem[] calEligible = frontierReference ? calibration!.Take(FrontierLimits.MaxCalibrationItems).ToArray() : [];
         var alt = AltSubset(eligible.Select(i => i.Id).ToArray(), spec.Frontier.AltSubset).ToHashSet(StringComparer.Ordinal);
         var byId = eligible.ToDictionary(i => i.Id, StringComparer.Ordinal);
+        var calById = calEligible.ToDictionary(i => i.Id, StringComparer.Ordinal);
+        if (calById.Keys.FirstOrDefault(byId.ContainsKey) is { } id)
+        {
+            throw new WorkbenchException($"Item id '{id}' is in both the held-out and the calibration split, so a cache key can't say which split it belongs to. Re-prepare the data.");
+        }
         var allowed = spec.Question.AllowedAnswers.ToHashSet(StringComparer.Ordinal);
         var rejected = new List<RejectedLine>();
         var accepted = new Dictionary<string, CachedAnswer>(StringComparer.Ordinal);
@@ -151,7 +188,8 @@ public static class FrontierStage
                 continue;
             }
 
-            if (!byId.TryGetValue(itemId, out var item) || (pv == spec.Frontier.AltPromptVersion && !alt.Contains(itemId)))
+            if (!(byId.TryGetValue(itemId, out var item) || (pv == spec.Frontier.PromptVersion && calById.TryGetValue(itemId, out item)))
+                || (pv == spec.Frontier.AltPromptVersion && !alt.Contains(itemId)))
             {
                 Reject("item is not in the exported set for this prompt version");
                 continue;
@@ -190,7 +228,8 @@ public static class FrontierStage
             string? date = Str(obj, "date");
             string reason = Str(obj, "reason") ?? "";
             string? problem = parseError
-                ?? (itemId is null || !byId.ContainsKey(itemId) ? "item_id is missing or not an eligible held-out item"
+                ?? (itemId is null || !(byId.ContainsKey(itemId) || calById.ContainsKey(itemId))
+                    ? $"item_id is missing or not an eligible held-out{(frontierReference ? " or calibration" : "")} item"
                 : answer is null || !allowed.Contains(answer) ? "answer is not one of the allowed answers"
                 : string.IsNullOrWhiteSpace(by) || string.IsNullOrWhiteSpace(date) ? "provenance is incomplete: by and date are required"
                 : null);
@@ -203,68 +242,97 @@ public static class FrontierStage
             overrides[itemId!] = new LabelOverride(itemId!, answer!, by!, date!, reason);
         }
 
-        return new FrontierState(eligible, alt, accepted, overrides, rejected, duplicates, revision);
+        return new FrontierState(eligible, calEligible, alt, accepted, overrides, rejected, duplicates, revision);
     }
 
     /// <summary>
     /// Runs the label stage: ingest, export pending batches (replacing any earlier pending files for the
-    /// same prompt version), and write the summary.
+    /// same prompt version), and write the summary. Held-out batches are <c>batch-NNN.jsonl</c>; under a
+    /// frontier reference the calibration split's primary-prompt batches are <c>batch-calibration-NNN.jsonl</c>
+    /// in the same directory, so no batch mixes the two splits.
     /// </summary>
     /// <param name="spec">The decision spec.</param>
     /// <param name="manifest">The dataset manifest.</param>
     /// <param name="heldOut">The held-out split, in file order.</param>
+    /// <param name="calibration">The calibration split, in file order (required under a frontier reference, ignored otherwise).</param>
     /// <returns>The summary. <see cref="LabelSummary.TotalPending"/> above 0 means the CLI exits 2.</returns>
-    public static LabelSummary Run(DecisionSpec spec, DatasetManifest manifest, IReadOnlyList<DatasetItem> heldOut)
+    public static LabelSummary Run(DecisionSpec spec, DatasetManifest manifest, IReadOnlyList<DatasetItem> heldOut, IReadOnlyList<DatasetItem>? calibration = null)
     {
-        var state = LoadState(spec, manifest, heldOut);
-        var pending = new Dictionary<string, int>(StringComparer.Ordinal);
-        var cached = new Dictionary<string, int>(StringComparer.Ordinal);
-        var chars = new Dictionary<string, CharTally>(StringComparer.Ordinal);
+        var state = LoadState(spec, manifest, heldOut, calibration);
+        var pv1 = spec.Frontier.PromptVersion;
+        var alt = spec.Frontier.AltPromptVersion;
+        var pending = new Dictionary<string, int>(StringComparer.Ordinal) { [pv1] = 0, [alt] = 0 };
+        var cached = new Dictionary<string, int>(StringComparer.Ordinal) { [pv1] = 0, [alt] = 0 };
+        var splits = new Dictionary<string, SplitLabelCounts>(StringComparer.Ordinal);
         var batches = new List<string>();
-
-        foreach (var pv in new[] { spec.Frontier.PromptVersion, spec.Frontier.AltPromptVersion })
+        foreach (var dir in new[] { pv1, alt }.Select(spec.PendingDirectory).Where(Directory.Exists))
         {
-            var wanted = pv == spec.Frontier.PromptVersion ? state.Eligible : state.Eligible.Where(i => state.AltSubset.Contains(i.Id)).ToArray();
-            var missing = wanted.Where(i => state.Answer(i.Id, pv) is null).ToArray();
-            pending[pv] = missing.Length;
-            var answers = state.Accepted.Values.Where(a => a.PromptVersion == pv).ToArray();
-            cached[pv] = answers.Length;
-            chars[pv] = new CharTally(answers.Length, answers.Sum(a => (long)a.InputChars), answers.Sum(a => (long)a.OutputChars));
-
-            var dir = spec.PendingDirectory(pv);
-            if (Directory.Exists(dir))
+            foreach (var old in Directory.EnumerateFiles(dir, "batch-*.jsonl"))
             {
-                foreach (var old in Directory.EnumerateFiles(dir, "batch-*.jsonl"))
+                File.Delete(old);
+            }
+        }
+
+        var jobs = new List<(string Split, int Items, IReadOnlyList<DatasetItem> Eligible, (string Pv, IReadOnlyList<DatasetItem> Wanted)[] Versions)>
+        {
+            ("heldout", heldOut.Count, state.Eligible, [(pv1, state.Eligible), (alt, state.Eligible.Where(i => state.AltSubset.Contains(i.Id)).ToArray())]),
+        };
+        if (spec.Data.Reference == ReferenceKind.Frontier)
+        {
+            jobs.Add(("calibration", calibration!.Count, state.CalibrationEligible, [(pv1, state.CalibrationEligible)]));
+        }
+
+        // Primary-prompt batches first (held-out, then calibration), then the alternative wording.
+        foreach (var pv in new[] { pv1, alt })
+        {
+            foreach (var job in jobs)
+            {
+                if (job.Versions.FirstOrDefault(v => v.Pv == pv).Wanted is not { } wanted)
                 {
-                    File.Delete(old);
+                    continue;
+                }
+
+                var missing = wanted.Where(i => state.Answer(i.Id, pv) is null).ToArray();
+                pending[pv] += missing.Length;
+                cached[pv] += wanted.Count - missing.Length;
+                var prefix = job.Split == "heldout" ? "batch-" : $"batch-{job.Split}-";
+                for (int b = 0; b * FrontierLimits.BatchSize < missing.Length; b++)
+                {
+                    var path = Path.Combine(spec.PendingDirectory(pv), $"{prefix}{b + 1:000}.jsonl");
+                    WorkbenchJson.WriteJsonl(path, missing.Skip(b * FrontierLimits.BatchSize).Take(FrontierLimits.BatchSize).Select(i =>
+                        new BatchLine(Key(state.DatasetRevision, i.Id, pv), i.Id, pv, PromptTemplates.Render(pv, spec.Question, i.Text), spec.Question.AllowedAnswers, job.Split)));
+                    batches.Add(Path.GetRelativePath(spec.SpecDirectory, path).Replace('\\', '/'));
                 }
             }
+        }
 
-            for (int b = 0; b * FrontierLimits.BatchSize < missing.Length; b++)
-            {
-                var path = Path.Combine(dir, $"batch-{b + 1:000}.jsonl");
-                WorkbenchJson.WriteJsonl(path, missing.Skip(b * FrontierLimits.BatchSize).Take(FrontierLimits.BatchSize).Select(i =>
-                    new BatchLine(Key(state.DatasetRevision, i.Id, pv), i.Id, pv, PromptTemplates.Render(pv, spec.Question, i.Text), spec.Question.AllowedAnswers)));
-                batches.Add(Path.GetRelativePath(spec.SpecDirectory, path).Replace('\\', '/'));
-            }
+        foreach (var job in jobs)
+        {
+            splits[job.Split] = new SplitLabelCounts(
+                job.Items,
+                job.Eligible.Count,
+                job.Versions.ToDictionary(v => v.Pv, v => v.Wanted.Count(i => state.Answer(i.Id, v.Pv) is null), StringComparer.Ordinal),
+                job.Versions.ToDictionary(v => v.Pv, v => v.Wanted.Count(i => state.Answer(i.Id, v.Pv) is not null), StringComparer.Ordinal));
         }
 
         var summary = new LabelSummary
         {
             DatasetRevision = state.DatasetRevision,
             FrontierModel = spec.Frontier.Model,
+            Reference = spec.Data.Reference,
             HeldOutItems = heldOut.Count,
             EligibleItems = state.Eligible.Count,
             AltSubsetItems = state.AltSubset.Count,
             Pending = pending,
             Cached = cached,
+            Splits = splits,
             PendingBatches = batches,
             Rejected = state.Rejected,
             DuplicateCacheLines = state.DuplicateCacheLines,
             Overridden = state.Overrides.Count,
             LabelNoise = LabelNoise(spec, state),
             PromptAgreement = Agreement(spec, state),
-            Chars = chars,
+            Chars = new[] { pv1, alt }.ToDictionary(pv => pv, state.HeldOutChars, StringComparer.Ordinal),
             ProvenanceModels = state.Accepted.Values.Select(a => a.Model).Distinct(StringComparer.Ordinal).Order(StringComparer.Ordinal).ToArray(),
             ProvenanceProducedBy = state.Accepted.Values.Select(a => a.ProducedBy).Distinct(StringComparer.Ordinal).Order(StringComparer.Ordinal).ToArray(),
             ProvenanceDates = state.Accepted.Count == 0

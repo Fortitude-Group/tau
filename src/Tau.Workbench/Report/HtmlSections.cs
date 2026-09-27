@@ -1,5 +1,6 @@
 using System.Text;
 using Tau.Workbench.Cascade;
+using Tau.Workbench.Frontier;
 using Tau.Workbench.Measure;
 
 namespace Tau.Workbench.Report;
@@ -16,7 +17,7 @@ public static partial class HtmlReport
     private static void ModelsSection(StringBuilder sb, ReportDocument doc)
     {
         bool score = doc.QuestionType == "score";
-        sb.Append("<section id=\"models\">\n<h2>Accuracy and calibration, before and after</h2>\n<div class=\"scroll\"><table>\n<thead><tr><th>Model</th><th>Items</th><th>Accuracy raw</th><th>Accuracy calibrated</th><th>ECE raw</th><th>ECE calibrated</th><th>ECE change</th><th>Brier raw → cal.</th><th>Log loss raw → cal.</th>");
+        sb.Append("<section id=\"models\">\n<h2>").Append(VsFrontier(doc) ? "Agreement with the frontier model" : "Accuracy").Append(" and calibration, before and after</h2>\n<div class=\"scroll\"><table>\n<thead><tr><th>Model</th><th>Items</th><th>").Append(RateHead(doc)).Append(" raw</th><th>").Append(RateHead(doc)).Append(" calibrated</th><th>ECE raw</th><th>ECE calibrated</th><th>ECE change</th><th>Brier raw → cal.</th><th>Log loss raw → cal.</th>");
         if (score)
         {
             sb.Append("<th>MAE (levels) raw → cal.</th>");
@@ -53,6 +54,11 @@ public static partial class HtmlReport
 
         sb.Append("</tbody></table></div>\n<p class=\"caption\">Held-out items only. ECE (expected calibration error) is the average gap between how confident a model is and how often it is right, over 15 confidence bins; lower is better and 0 is perfect. ")
             .Append(E(doc.Metadata.ConfidenceNote)).Append(' ');
+        if (VsFrontier(doc))
+        {
+            sb.Append(E($"Here a model is right when its answer matches {doc.Metadata.FrontierModel}'s, so the {RateHead(doc).ToLowerInvariant()} columns are agreement with the frontier model, not accuracy, and ECE measures whether a model's confidence says when it agrees. ")); 
+        }
+
         var calibrated = doc.Models.Where(m => m.EceReduction is not null).ToArray();
         if (calibrated.Length > 0)
         {
@@ -82,11 +88,11 @@ public static partial class HtmlReport
         foreach (var m in withBins)
         {
             sb.Append("<figure><figcaption>").Append(E(m.Model)).Append("</figcaption>")
-                .Append(SvgCharts.Reliability(m.RawHeldOut!.Metrics!.Reliability, m.BestCalibrated?.Reliability, m.Model)).Append("</figure>\n");
+                .Append(SvgCharts.Reliability(m.RawHeldOut!.Metrics!.Reliability, m.BestCalibrated?.Reliability, m.Model, doc.Reference)).Append("</figure>\n");
         }
 
-        sb.Append("</div>\n<p class=\"caption\">Each point is one confidence bin on the held-out split: how confident the model was (across) against how often it was right (up). Points below the diagonal are overconfident, points above it underconfident. After calibration the points should sit close to the diagonal; where they don't, a threshold on that model's confidence will not deliver the accuracy it promises.</p>\n");
-        sb.Append("<details><summary>Table view: every bin</summary><div class=\"scroll\"><table><thead><tr><th>Model</th><th>Bin</th><th>Raw items</th><th>Raw confidence</th><th>Raw accuracy</th><th>Cal. items</th><th>Cal. confidence</th><th>Cal. accuracy</th></tr></thead><tbody>\n");
+        sb.Append("</div>\n<p class=\"caption\">").Append(E($"Each point is one confidence bin on the held-out split: how confident the model was (across) against how often it was right (up){(VsFrontier(doc) ? ", where right means agreeing with the frontier model" : "")}.")).Append(" Points below the diagonal are overconfident, points above it underconfident. After calibration the points should sit close to the diagonal; where they don't, a threshold on that model's confidence will not deliver the ").Append(VsFrontier(doc) ? "agreement" : "accuracy").Append(" it promises.</p>\n");
+        sb.Append("<details><summary>Table view: every bin</summary><div class=\"scroll\"><table><thead><tr><th>Model</th><th>Bin</th><th>Raw items</th><th>Raw confidence</th><th>Raw ").Append(RateHead(doc).ToLowerInvariant()).Append("</th><th>Cal. items</th><th>Cal. confidence</th><th>Cal. ").Append(RateHead(doc).ToLowerInvariant()).Append("</th></tr></thead><tbody>\n");
         foreach (var m in withBins)
         {
             var raw = m.RawHeldOut!.Metrics!.Reliability;
@@ -162,10 +168,10 @@ public static partial class HtmlReport
             sb.Append("<span><span class=\"key k").Append(Slot(doc, t.Model)).Append("\"></span>").Append(E(t.Model)).Append("</span>");
         }
 
-        sb.Append("<span><span class=\"key ref\"></span>Target accuracy</span></div>\n");
-        sb.Append(SvgCharts.Tradeoff(doc.Thresholds, m => Slot(doc, m), doc.TargetError));
-        sb.Append("<p class=\"caption\">").Append(E($"Each line shows, on held-out items, what happens as the confidence threshold τ rises: fewer decisions are kept local (moving left) and those kept are more often right (moving up). The dot marks the τ chosen on the calibration split for a {Fmt.Pct(doc.TargetError)} target error. A line that never reaches the target line means no threshold makes that model safe enough on its own at that target. Thresholds that keep fewer than {SvgCharts.MinCurveItems} items are left off the chart because a handful of items says little; every point is in report.json.")).Append("</p>\n");
-        sb.Append("<div class=\"scroll\"><table><thead><tr><th>Model</th><th>Confidences from</th><th>τ</th><th>Kept local (calibration)</th><th>Kept local (held-out)</th><th>Accuracy on kept (held-out)</th><th class=\"text\">Result</th></tr></thead><tbody>\n");
+        sb.Append("<span><span class=\"key ref\"></span>Target ").Append(RateHead(doc).ToLowerInvariant()).Append("</span></div>\n");
+        sb.Append(SvgCharts.Tradeoff(doc.Thresholds, m => Slot(doc, m), doc.TargetError, doc.Reference));
+        sb.Append("<p class=\"caption\">").Append(E($"Each line shows, on held-out items, what happens as the confidence threshold τ rises: fewer decisions are kept local (moving left) and those kept are more often right (moving up){(VsFrontier(doc) ? ", where right means agreeing with the frontier model" : "")}. The dot marks the τ chosen on the calibration split for a {Fmt.Pct(doc.TargetError)} target {(VsFrontier(doc) ? "disagreement" : "error")}. A line that never reaches the target line means no threshold makes that model safe enough on its own at that target. Thresholds that keep fewer than {SvgCharts.MinCurveItems} items are left off the chart because a handful of items says little; every point is in report.json.")).Append("</p>\n");
+        sb.Append("<div class=\"scroll\"><table><thead><tr><th>Model</th><th>Confidences from</th><th>τ</th><th>Kept local (calibration)</th><th>Kept local (held-out)</th><th>").Append(RateHead(doc)).Append(" on kept (held-out)</th><th class=\"text\">Result</th></tr></thead><tbody>\n");
         foreach (var t in doc.Thresholds)
         {
             sb.Append("<tr><td>").Append(E(t.Model)).Append("</td><td>").Append(E(t.Source)).Append("</td><td>").Append(Fmt.Num(t.Tau, "0.00"))
@@ -185,18 +191,23 @@ public static partial class HtmlReport
             return;
         }
 
-        sb.Append("<div class=\"scroll\"><table><thead><tr><th>Model</th><th>τ</th><th>Kept local</th><th>Escalated</th><th>No frontier answer</th><th>Local only</th><th>Frontier only</th><th>Cascade</th><th>Local p50 latency</th></tr></thead><tbody>\n");
+        bool vsFrontier = VsFrontier(doc);
+        string suffix = vsFrontier ? " (agreement)" : "";
+        sb.Append("<div class=\"scroll\"><table><thead><tr><th>Model</th><th>τ</th><th>Kept local</th><th>Escalated</th><th>No frontier answer</th><th>Local only")
+            .Append(suffix).Append("</th><th>Frontier only</th><th>Cascade").Append(suffix).Append("</th><th>Local p50 latency</th></tr></thead><tbody>\n");
         foreach (var c in doc.Cascades)
         {
             sb.Append("<tr><td>").Append(E(c.Model)).Append("</td><td>").Append(Fmt.Num(c.Tau, "0.00")).Append("</td><td>").Append(Fmt.Pct(c.ShareLocal))
                 .Append("</td><td>").Append(Fmt.Pct(c.ShareEscalated)).Append("</td><td>").Append(c.Tau is null ? "n/a" : Fmt.Int(c.MissingFrontier))
-                .Append("</td><td>").Append(Rate(c.LocalOnlyAccuracy)).Append("</td><td>").Append(Rate(c.FrontierOnlyAccuracy))
+                .Append("</td><td>").Append(Rate(c.LocalOnlyAccuracy)).Append("</td><td>").Append(vsFrontier ? "100% by construction" : Rate(c.FrontierOnlyAccuracy))
                 .Append("</td><td>").Append(c.BlendedAccuracy is null ? E(c.NotSimulated ?? "n/a") : Rate(c.BlendedAccuracy))
                 .Append("</td><td>").Append(c.LocalLatencyP50Ms is { } l ? Fmt.Num(l, "0.0") + " ms" : "n/a").Append("</td></tr>\n");
         }
 
         sb.Append("</tbody></table></div>\n<p class=\"caption\">")
-            .Append(E($"Accuracy is on held-out items, with the number of items each figure covers in brackets. The cascade keeps the local answer when its confidence is at least τ and uses the frontier model's cached answer otherwise; an escalated item with no cached answer is counted and left out, never guessed. If the cascade is close to frontier-only accuracy while keeping a large share local, most of the frontier cost can be avoided. {doc.Cascades[0].FrontierLatencyNote}"))
+            .Append(E(vsFrontier
+                ? $"Every rate here is agreement with the frontier model on held-out items, not accuracy, with the number of items it covers in brackets. The cascade serves the local answer when its confidence is at least τ and the frontier model's cached answer otherwise; the cascade figure is the share of items where the served answer equals the frontier model's. {CascadeStage.FrontierOnlyByConstruction} The closer the cascade gets to 100% while keeping a large share local, the better the local model stands in for the frontier call. {doc.Cascades[0].FrontierLatencyNote}"
+                : $"Accuracy is on held-out items, with the number of items each figure covers in brackets. The cascade keeps the local answer when its confidence is at least τ and uses the frontier model's cached answer otherwise; an escalated item with no cached answer is counted and left out, never guessed. If the cascade is close to frontier-only accuracy while keeping a large share local, most of the frontier cost can be avoided. {doc.Cascades[0].FrontierLatencyNote}"))
             .Append("</p>\n");
 
         foreach (var c in doc.Cascades.Where(c => c.Cost is not null))

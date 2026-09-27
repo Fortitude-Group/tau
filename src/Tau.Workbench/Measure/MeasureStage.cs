@@ -4,6 +4,7 @@ using System.Text.Json.Nodes;
 using Tau.Calibration;
 using Tau.Contract;
 using Tau.Workbench.Data;
+using Tau.Workbench.Reference;
 using Tau.Workbench.Spec;
 
 namespace Tau.Workbench.Measure;
@@ -23,6 +24,9 @@ public sealed record MeasureOptions
 
     /// <summary>The clock for the recorded start time.</summary>
     public Func<DateTimeOffset> Clock { get; init; } = () => DateTimeOffset.UtcNow;
+
+    /// <summary>The labels the summary scores against; null resolves them from the spec.</summary>
+    public ReferenceLabels? Reference { get; init; }
 }
 
 /// <summary>
@@ -135,6 +139,8 @@ public static class MeasureStage
         }
 
         options ??= new MeasureOptions();
+        var reference = options.Reference ?? ReferenceLabels.Load(spec);
+        reference.Require(split, items);
         var started = options.Clock();
         var (sampler, gpuReason) = options.StartGpuSampler();
         var records = new MeasuredItem[items.Count];
@@ -172,8 +178,10 @@ public static class MeasureStage
                 $"The calibrated phase for '{model}' got answers with no calibrator applied (x-tau-calibrators: none). Restart the Runtime with Tau:CalibratorsDirectory={spec.CalibratorsRoot}, then run 'tau measure <spec> --phase calibrated'.");
         }
 
-        var summary = Summarise(spec, model, split, phase, records) with
+        // The records keep the dataset's label; the summary scores against the reference.
+        var summary = Summarise(spec, model, split, phase, reference.Apply(spec.Question, split, records)) with
         {
+            Reference = reference.Kind,
             Endpoint = endpoint.BaseUrl.AbsoluteUri,
             EndpointIdentity = identity,
             ModelHash = identity.HashOf(model),

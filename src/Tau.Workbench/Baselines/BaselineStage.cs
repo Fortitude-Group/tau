@@ -2,7 +2,9 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using Tau.Calibration;
 using Tau.Workbench.Calibrate;
+using Tau.Workbench.Frontier;
 using Tau.Workbench.Measure;
+using Tau.Workbench.Reference;
 using Tau.Workbench.Spec;
 
 namespace Tau.Workbench.Baselines;
@@ -39,6 +41,12 @@ public sealed record BaselineResult
 
     /// <summary>A note on the calibrated view (for example why it is missing).</summary>
     public string? CalibrationNote { get; init; }
+
+    /// <summary>Under a frontier reference: raw held-out agreement with the dataset's own labels (the secondary view).</summary>
+    public CountedRate? RawAgainstDatasetLabels { get; init; }
+
+    /// <summary>Under a frontier reference: calibrated held-out agreement with the dataset's own labels.</summary>
+    public CountedRate? CalibratedAgainstDatasetLabels { get; init; }
 }
 
 /// <summary>
@@ -50,18 +58,24 @@ public static class BaselineStage
 {
     /// <summary>Scores every baseline named in the spec. A missing file is reported, not fatal.</summary>
     /// <param name="spec">The decision spec.</param>
+    /// <param name="reference">The labels to score against; null resolves them from the spec.</param>
     /// <exception cref="WorkbenchException">A baseline file exists but is malformed.</exception>
-    public static IReadOnlyList<BaselineResult> Run(DecisionSpec spec)
+    public static IReadOnlyList<BaselineResult> Run(DecisionSpec spec, ReferenceLabels? reference = null)
     {
         ArgumentNullException.ThrowIfNull(spec);
-        return spec.Baselines.Select(name => Score(spec, name)).ToArray();
+        return spec.Baselines.Select(name => Score(spec, name, reference)).ToArray();
     }
 
-    /// <summary>Scores one baseline.</summary>
+    /// <summary>
+    /// Scores one baseline against the reference labels, raw and after a calibrator fitted on the file's
+    /// calibration lines (against the same reference).
+    /// </summary>
     /// <param name="spec">The decision spec.</param>
     /// <param name="name">The baseline name.</param>
+    /// <param name="reference">The labels to score against; null resolves them from the spec.</param>
     /// <exception cref="WorkbenchException">The file is malformed (the line is named).</exception>
-    public static BaselineResult Score(DecisionSpec spec, string name)
+    /// <exception cref="StageBlockedException">A line's item has no frontier reference label.</exception>
+    public static BaselineResult Score(DecisionSpec spec, string name, ReferenceLabels? reference = null)
     {
         ArgumentNullException.ThrowIfNull(spec);
         var path = spec.BaselinePath(name);
@@ -72,11 +86,15 @@ public static class BaselineStage
         }
 
         var q = spec.Question;
+        reference ??= ReferenceLabels.Load(spec);
         var lines = Read(path, q);
         var held = lines.Where(l => l.Split == "heldout").ToArray();
         var cal = lines.Where(l => l.Split == "calibration").ToArray();
+        var heldRef = reference.ClassIndices(q, "heldout", held.Select(l => (l.Id, l.Label)).ToArray());
+        var calRef = reference.ClassIndices(q, "calibration", cal.Select(l => (l.Id, l.Label)).ToArray());
         var sha = WorkbenchJson.Sha256File(path);
-        var raw = MetricSet.Compute(held.Select(l => l.P).ToArray(), held.Select(l => l.Gold).ToArray(), q.Type == QuestionType.Score);
+        var raw = MetricSet.Compute(held.Select(l => l.P).ToArray(), heldRef, q.Type == QuestionType.Score);
+        double[][]? calibratedP = null;
         MetricSet? calibrated = null;
         string? method = null, note = null;
         if (cal.Length == 0)
@@ -89,13 +107,18 @@ public static class BaselineStage
         }
         else
         {
-            var fit = CalibrationFitter.Fit(cal.Select(l => l.P).ToArray(), cal.Select(l => l.Gold).ToArray(), name, sha, q.Type, null,
+            var fit = CalibrationFitter.Fit(cal.Select(l => l.P).ToArray(), calRef, name, sha, q.Type, null,
                 spec.Name, null, "n/a");
             method = fit.File.Method.ToWireString();
-            calibrated = MetricSet.Compute(CalibrationFitter.Apply(fit.File, held.Select(l => l.P).ToArray()), held.Select(l => l.Gold).ToArray(), q.Type == QuestionType.Score);
+            calibratedP = CalibrationFitter.Apply(fit.File, held.Select(l => l.P).ToArray());
+            calibrated = MetricSet.Compute(calibratedP, heldRef, q.Type == QuestionType.Score);
             note = $"Calibrated with {method} fitted on the file's {cal.Length} calibration lines{(fit.IsotonicSkipped is null ? "" : "; " + fit.IsotonicSkipped)}";
         }
 
+        // Under a frontier reference, the secondary view: agreement with the dataset's own labels.
+        CountedRate? AgainstDataset(IReadOnlyList<double[]> p) => reference.Kind == ReferenceKind.Frontier
+            ? CountedRate.Of(p.Count, p.Where((v, i) => MetricSet.ArgMax(v) == held[i].Gold).Count())
+            : null;
         return new BaselineResult
         {
             Name = name,
@@ -107,12 +130,14 @@ public static class BaselineStage
             Calibrated = calibrated,
             CalibrationMethod = method,
             CalibrationNote = note,
+            RawAgainstDatasetLabels = AgainstDataset(held.Select(l => l.P).ToArray()),
+            CalibratedAgainstDatasetLabels = calibratedP is null ? null : AgainstDataset(calibratedP),
         };
     }
 
-    private static List<(string Split, double[] P, int Gold)> Read(string path, QuestionSpec q)
+    private static List<(string Id, string Split, double[] P, string Label, int Gold)> Read(string path, QuestionSpec q)
     {
-        var result = new List<(string, double[], int)>();
+        var result = new List<(string, string, double[], string, int)>();
         int lineNumber = 0;
         foreach (var line in System.IO.File.ReadLines(path))
         {
@@ -149,7 +174,8 @@ public static class BaselineStage
                 }
             }
 
-            result.Add((split, p, gold));
+            string id = (obj["id"] as JsonValue)?.ToString() ?? "";
+            result.Add((id, split, p, label, gold));
         }
 
         return result;

@@ -221,17 +221,30 @@ internal static partial class DecisionSpecParser
             return null;
         }
 
-        r.OnlyKeys(node, "data.", "dataset", "text_field", "label_field");
+        r.OnlyKeys(node, "data.", "dataset", "text_field", "label_field", "reference");
         string dataset = r.Str(node, "dataset", "data.") ?? "";
         if (!SafeName().IsMatch(dataset) || dataset.Contains("..", StringComparison.Ordinal))
         {
             problems.Add($"data.dataset '{dataset}' must be a simple directory name under data/.");
         }
 
+        string referenceText = r.Str(node, "reference", "data.", required: false) ?? "gold";
+        ReferenceKind? reference = referenceText switch
+        {
+            "gold" => ReferenceKind.Gold,
+            "frontier" => ReferenceKind.Frontier,
+            _ => null,
+        };
+        if (reference is null)
+        {
+            problems.Add($"data.reference '{referenceText}' must be gold (score against the dataset's labels) or frontier (score against the frontier model's answers).");
+        }
+
         return new DataSpec(
             dataset,
             r.Str(node, "text_field", "data.", required: false) ?? "text",
-            r.Str(node, "label_field", "data.", required: false) ?? "label");
+            r.Str(node, "label_field", "data.", required: false) ?? "label",
+            reference ?? ReferenceKind.Gold);
     }
 
     private static FrontierSpec? ParseFrontier(Reader r, YamlMappingNode? node, List<string> problems)

@@ -7,6 +7,7 @@ using Tau.Workbench.Cascade;
 using Tau.Workbench.Data;
 using Tau.Workbench.Frontier;
 using Tau.Workbench.Measure;
+using Tau.Workbench.Reference;
 using Tau.Workbench.Spec;
 using Tau.Workbench.Threshold;
 
@@ -59,10 +60,11 @@ public static class ReportBuilder
         ArgumentNullException.ThrowIfNull(spec);
         ArgumentNullException.ThrowIfNull(manifest);
         ArgumentNullException.ThrowIfNull(context);
-        var models = spec.Models.Select(m => ModelReportFor(spec, m)).ToArray();
+        var reference = ReferenceLabels.Load(spec, manifest);
+        var models = spec.Models.Select(m => ModelReportFor(spec, reference, m)).ToArray();
         var thresholds = File.Exists(spec.ThresholdPath) ? WorkbenchJson.ReadJson<List<ThresholdResult>>(spec.ThresholdPath) : [];
         var cascades = File.Exists(spec.CascadePath) ? WorkbenchJson.ReadJson<List<CascadeResult>>(spec.CascadePath) : [];
-        var baselines = BaselineStage.Run(spec);
+        var baselines = BaselineStage.Run(spec, reference);
         var frontier = File.Exists(spec.LabelSummaryPath) ? WorkbenchJson.ReadJson<LabelSummary>(spec.LabelSummaryPath) : null;
         var firstRaw = models.Select(m => m.RawHeldOut ?? m.RawCalibration).FirstOrDefault(s => s is not null);
 
@@ -85,8 +87,11 @@ public static class ReportBuilder
             FrontierModel = spec.Frontier.Model,
             FrontierCacheCounts = frontier?.Cached ?? new Dictionary<string, int>(),
             ConfidenceNote = MetricSet.ConfidenceNote,
+            Reference = spec.Data.Reference,
+            ReferenceNote = ReportReference.Describe(spec),
         };
 
+        var datasetLabels = ReportReference.DatasetLabels(spec, reference, baselines, frontier, manifest.Synthetic);
         return new ReportDocument
         {
             Title = spec.Title,
@@ -96,7 +101,9 @@ public static class ReportBuilder
             Instructions = spec.Question.Instructions,
             Classes = spec.Question.Classes,
             TargetError = spec.Threshold.TargetError,
-            Summary = Summary(spec, dataset, models, cascades, frontier),
+            Summary = Summary(spec, dataset, models, cascades, frontier, datasetLabels),
+            Reference = spec.Data.Reference,
+            DatasetLabels = datasetLabels,
             Dataset = dataset,
             Models = models,
             Thresholds = thresholds,
@@ -108,10 +115,9 @@ public static class ReportBuilder
         };
     }
 
-    private static ModelReport ModelReportFor(DecisionSpec spec, string model)
+    private static ModelReport ModelReportFor(DecisionSpec spec, ReferenceLabels reference, string model)
     {
-        MeasureSummary? Summary(string split, string phase) =>
-            File.Exists(spec.RunSummaryPath(model, split, phase)) ? WorkbenchJson.ReadJson<MeasureSummary>(spec.RunSummaryPath(model, split, phase)) : null;
+        MeasureSummary? Summary(string split, string phase) => ReportReference.Rescore(spec, reference, model, split, phase);
         var rawHeld = Summary("heldout", Phases.Raw);
         var calHeld = Summary("heldout", Phases.Calibrated);
         var offHeld = Summary("heldout", Phases.Offline);
@@ -147,13 +153,13 @@ public static class ReportBuilder
             EceReduction = reduction,
             RuntimeVsOfflineMaxDiff = maxDiff,
             Confusion = confusionPhase is null ? null
-                : BuildConfusion(spec.Question, WorkbenchJson.ReadJsonl<MeasuredItem>(spec.RunPath(model, "heldout", confusionPhase)), confusionPhase),
+                : BuildConfusion(spec.Question, reference.Apply(spec.Question, "heldout", WorkbenchJson.ReadJsonl<MeasuredItem>(spec.RunPath(model, "heldout", confusionPhase))), confusionPhase),
         };
     }
 
     /// <summary>A matrix for up to 10 classes, otherwise the 15 most frequent confusions.</summary>
     /// <param name="question">The question.</param>
-    /// <param name="records">Held-out records.</param>
+    /// <param name="records">Held-out records, scored against the reference (their gold is the reference label).</param>
     /// <param name="source">Which phase the records came from.</param>
     public static ConfusionView BuildConfusion(QuestionSpec question, IReadOnlyList<MeasuredItem> records, string source)
     {
@@ -204,25 +210,36 @@ public static class ReportBuilder
         return sizes;
     }
 
-    private static string Summary(DecisionSpec spec, DatasetBox dataset, IReadOnlyList<ModelReport> models, IReadOnlyList<CascadeResult> cascades, LabelSummary? frontier)
+    private static string Summary(
+        DecisionSpec spec, DatasetBox dataset, IReadOnlyList<ModelReport> models, IReadOnlyList<CascadeResult> cascades, LabelSummary? frontier, DatasetLabelView? datasetLabels)
     {
+        bool vsFrontier = spec.Data.Reference == ReferenceKind.Frontier;
+        var fm = spec.Frontier.Model;
+        string target = vsFrontier ? "target disagreement" : "target error";
         var parts = new List<string>
         {
             $"This report measures how far {models.Count} model(s) can be trusted on \"{spec.Question.Instructions.Trim()}\", using {(dataset.Synthetic ? "synthetic " : "")}{dataset.Name} data ({(dataset.SplitSizes.TryGetValue("heldout", out var h) ? Fmt.Int(h) + " held-out items" : "held-out size unknown")}).",
+            vsFrontier
+                ? $"Reference: {fm}'s answers, not the dataset's labels. The question here is whether a local model can stand in for the frontier call, and whether its confidence says when, so every rate below is agreement with the frontier model."
+                : "Reference: the dataset's gold labels; every rate below is accuracy against them.",
         };
         var lead = models.FirstOrDefault(m => m.RawHeldOut?.Metrics is not null);
         if (lead?.RawHeldOut?.Metrics is { } raw)
         {
+            var rawRate = vsFrontier ? $"agrees with {fm} on {Fmt.Pct(raw.Accuracy)} of held-out items" : $"is {Fmt.Pct(raw.Accuracy)} accurate";
             parts.Add(lead.BestCalibrated is { } cal
-                ? $"Out of the box, {lead.Model} is {Fmt.Pct(raw.Accuracy)} accurate with a calibration error (ECE) of {Fmt.Num(raw.Ece)}; after calibration its ECE is {Fmt.Num(cal.Ece)}, {Fmt.Pct(lead.EceReduction)} lower{(lead.EceReduction >= TargetEceReduction ? ", which meets the 50% goal" : ", short of the 50% goal")}."
-                : $"Out of the box, {lead.Model} is {Fmt.Pct(raw.Accuracy)} accurate with a calibration error (ECE) of {Fmt.Num(raw.Ece)}; it has not been calibrated yet.");
+                ? $"Out of the box, {lead.Model} {rawRate} with a calibration error (ECE) of {Fmt.Num(raw.Ece)}; after calibration its ECE is {Fmt.Num(cal.Ece)}, {Fmt.Pct(lead.EceReduction)} lower{(lead.EceReduction >= TargetEceReduction ? ", which meets the 50% goal" : ", short of the 50% goal")}."
+                : $"Out of the box, {lead.Model} {rawRate} with a calibration error (ECE) of {Fmt.Num(raw.Ece)}; it has not been calibrated yet.");
         }
 
         var c = cascades.FirstOrDefault(x => x.Model == lead?.Model && x.Tau is not null) ?? cascades.FirstOrDefault(x => x.Tau is not null);
         if (c is not null)
         {
             var headline = c.Cost?.Rows.FirstOrDefault(r => r.Kind == "headline");
-            parts.Add($"At a {Fmt.Pct(spec.Threshold.TargetError)} target error, {c.Model} keeps {Fmt.Pct(c.ShareLocal)} of decisions local; the cascade is {Fmt.Pct(c.BlendedAccuracy?.Rate)} accurate against {Fmt.Pct(c.FrontierOnlyAccuracy.Rate)} for {spec.Frontier.Model} alone"
+            parts.Add($"At a {Fmt.Pct(spec.Threshold.TargetError)} {target}, {c.Model} keeps {Fmt.Pct(c.ShareLocal)} of decisions local; "
+                + (vsFrontier
+                    ? $"the cascade's served answers agree with {fm} on {Fmt.Pct(c.BlendedAccuracy?.Rate)} (the frontier alone agrees with itself by construction)"
+                    : $"the cascade is {Fmt.Pct(c.BlendedAccuracy?.Rate)} accurate against {Fmt.Pct(c.FrontierOnlyAccuracy.Rate)} for {fm} alone")
                 + (headline?.CascadeGbpPerMillion is { } cg && headline.FrontierOnlyGbpPerMillion is { } fg
                     ? $", at an estimated {Fmt.Gbp(cg)} per million decisions against {Fmt.Gbp(fg)} (list prices, {spec.Pricing.BasisDate})."
                     : ".")
@@ -230,10 +247,14 @@ public static class ReportBuilder
         }
         else if (cascades.Count > 0)
         {
-            parts.Add($"No model reaches the {Fmt.Pct(spec.Threshold.TargetError)} target error, so no cascade is simulated.");
+            parts.Add($"No model reaches the {Fmt.Pct(spec.Threshold.TargetError)} {target}, so no cascade is simulated.");
         }
 
-        if (frontier?.LabelNoise.Rate is { } noise)
+        if (datasetLabels is not null)
+        {
+            parts.Add($"The dataset's own labels are reported as a finding, not used: {fm} agrees with them on only {Fmt.Pct(datasetLabels.FrontierAgreement.Rate)} of {Fmt.Int(datasetLabels.FrontierAgreement.N)} items, and a secondary table shows every model against them.");
+        }
+        else if (frontier?.LabelNoise.Rate is { } noise)
         {
             parts.Add($"The frontier model disagrees with the gold labels on {Fmt.Pct(noise)} of {Fmt.Int(frontier.LabelNoise.N)} items, which bounds how much any accuracy figure here can be trusted.");
         }
@@ -245,7 +266,8 @@ public static class ReportBuilder
         DecisionSpec spec, IReadOnlyList<ModelReport> models, IReadOnlyList<ThresholdResult> thresholds,
         IReadOnlyList<CascadeResult> cascades, IReadOnlyList<BaselineResult> baselines, LabelSummary? frontier)
     {
-        var misses = new List<string>();
+        var misses = ReportReference.StaleArtefacts(spec, models, thresholds, cascades).ToList();
+        string rate = ReportReference.Rate(spec.Data.Reference);
         foreach (var m in models.Where(m => m.EceReduction is not null && m.EceReduction < TargetEceReduction))
         {
             misses.Add($"Calibration cut {m.Model}'s held-out ECE by only {Fmt.Pct(m.EceReduction)} (from {Fmt.Num(m.RawHeldOut!.Metrics!.Ece)} to {Fmt.Num(m.BestCalibrated!.Ece)}), short of the 50% goal.");
@@ -265,7 +287,7 @@ public static class ReportBuilder
                 var tauAcc = m.RawHeldOut!.Metrics!.Accuracy;
                 if (b.Raw!.Accuracy > tauAcc)
                 {
-                    misses.Add($"Baseline {b.Name} beats {m.Model} on held-out accuracy: {Fmt.Pct(b.Raw.Accuracy)} against {Fmt.Pct(tauAcc)}.");
+                    misses.Add($"Baseline {b.Name} beats {m.Model} on held-out {rate}: {Fmt.Pct(b.Raw.Accuracy)} against {Fmt.Pct(tauAcc)}.");
                 }
 
                 if (b.Calibrated is { } bc && m.BestCalibrated is { } mc && bc.Ece < mc.Ece)
@@ -308,7 +330,10 @@ public static class ReportBuilder
 
         if (frontier?.LabelNoise.Rate is { } noise)
         {
-            misses.Add($"Label noise: the frontier model disagrees with gold on {Fmt.Pct(noise)} ({Fmt.Int(frontier.LabelNoise.Count)} of {Fmt.Int(frontier.LabelNoise.N)}).");
+            misses.Add($"Label noise: the frontier model disagrees with gold on {Fmt.Pct(noise)} ({Fmt.Int(frontier.LabelNoise.Count)} of {Fmt.Int(frontier.LabelNoise.N)})."
+                + (spec.Data.Reference == ReferenceKind.Frontier
+                    ? " This example is scored against the frontier model's answers instead of the dataset's labels; the figures against those labels are kept in a secondary table."
+                    : ""));
         }
 
         if (frontier is { TotalPending: > 0 })

@@ -1,12 +1,22 @@
+using Tau.Workbench.Spec;
+
 namespace Tau.Workbench.Frontier;
 
 /// <summary>One line of a pending batch file: everything the answerer needs for one item.</summary>
 /// <param name="Key">The cache key, <c>&lt;dataset-rev&gt;:&lt;item-id&gt;:&lt;prompt-version&gt;</c>.</param>
-/// <param name="ItemId">The held-out item id.</param>
+/// <param name="ItemId">The item id (held-out, or calibration under a frontier reference).</param>
 /// <param name="PromptVersion">The prompt version the prompt was rendered with.</param>
 /// <param name="Prompt">The full per-item prompt.</param>
 /// <param name="Allowed">The only acceptable answers.</param>
-public sealed record BatchLine(string Key, string ItemId, string PromptVersion, string Prompt, IReadOnlyList<string> Allowed);
+/// <param name="Split">The split the item belongs to: heldout or calibration.</param>
+public sealed record BatchLine(string Key, string ItemId, string PromptVersion, string Prompt, IReadOnlyList<string> Allowed, string Split = "heldout");
+
+/// <summary>Frontier answer counts for one split, per prompt version.</summary>
+/// <param name="Items">Items in the prepared split.</param>
+/// <param name="Eligible">Items eligible for frontier answers (the first 1,000 at most, in file order).</param>
+/// <param name="Pending">Items still waiting for an answer, per prompt version.</param>
+/// <param name="Cached">Accepted answers, per prompt version.</param>
+public sealed record SplitLabelCounts(int Items, int Eligible, IReadOnlyDictionary<string, int> Pending, IReadOnlyDictionary<string, int> Cached);
 
 /// <summary>One accepted frontier answer, with its provenance.</summary>
 /// <param name="Key">The cache key.</param>
@@ -73,11 +83,17 @@ public sealed record LabelSummary
     /// <summary>Items that get the alternative wording.</summary>
     public required int AltSubsetItems { get; init; }
 
-    /// <summary>Items still waiting for an answer, per prompt version.</summary>
+    /// <summary>What the spec scores against; under frontier the calibration split is labelled too.</summary>
+    public ReferenceKind Reference { get; init; } = ReferenceKind.Gold;
+
+    /// <summary>Items still waiting for an answer, per prompt version, summed over the labelled splits.</summary>
     public required IReadOnlyDictionary<string, int> Pending { get; init; }
 
-    /// <summary>Accepted answers, per prompt version.</summary>
+    /// <summary>Accepted answers, per prompt version, summed over the labelled splits.</summary>
     public required IReadOnlyDictionary<string, int> Cached { get; init; }
+
+    /// <summary>Pending and cached counts for each labelled split (heldout, and calibration under a frontier reference).</summary>
+    public IReadOnlyDictionary<string, SplitLabelCounts> Splits { get; init; } = new Dictionary<string, SplitLabelCounts>();
 
     /// <summary>Pending batch files written by this run, relative to the spec directory.</summary>
     public required IReadOnlyList<string> PendingBatches { get; init; }
@@ -97,7 +113,10 @@ public sealed record LabelSummary
     /// <summary>Items where the primary and alternative wordings gave the same answer.</summary>
     public required CountedRate PromptAgreement { get; init; }
 
-    /// <summary>Character tallies per prompt version, for the cost estimate.</summary>
+    /// <summary>
+    /// Character tallies per prompt version over held-out answers only, for the cost estimate: cost is per
+    /// decision served, and calibration labels are a one-off cost of setting the cascade up.
+    /// </summary>
     public required IReadOnlyDictionary<string, CharTally> Chars { get; init; }
 
     /// <summary>Distinct producing models in the cache.</summary>

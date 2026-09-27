@@ -75,11 +75,25 @@ public sealed record QuestionSpec(string Key, QuestionType Type, string Instruct
             : label;
 }
 
-/// <summary>Where the prepared data lives and which fields hold the text and gold label.</summary>
+/// <summary>What every score is measured against (<c>data.reference</c> in the spec).</summary>
+public enum ReferenceKind
+{
+    /// <summary>The dataset's own gold labels (the default).</summary>
+    Gold,
+
+    /// <summary>
+    /// The frontier model's cached primary-prompt answers, after human overrides. The question becomes
+    /// "can a local model stand in for the frontier call", and every rate is agreement with the frontier model.
+    /// </summary>
+    Frontier,
+}
+
+/// <summary>Where the prepared data lives, which fields hold the text and gold label, and what scores are measured against.</summary>
 /// <param name="Dataset">The prepared dataset name: files live at <c>&lt;repo&gt;/data/&lt;dataset&gt;/</c>.</param>
 /// <param name="TextField">The JSONL field holding the state text.</param>
 /// <param name="LabelField">The JSONL field holding the gold label.</param>
-public sealed record DataSpec(string Dataset, string TextField, string LabelField);
+/// <param name="Reference">The reference labels: the dataset's gold labels, or the frontier model's answers.</param>
+public sealed record DataSpec(string Dataset, string TextField, string LabelField, ReferenceKind Reference = ReferenceKind.Gold);
 
 /// <summary>The threshold stage's target.</summary>
 /// <param name="TargetError">The largest acceptable error rate on locally accepted items, in (0, 1).</param>

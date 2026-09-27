@@ -1,4 +1,5 @@
 using System.Text;
+using Tau.Workbench.Frontier;
 
 namespace Tau.Workbench.Report;
 
@@ -20,10 +21,17 @@ public static partial class HtmlReport
         sb.Append("<div class=\"stats\">\n");
         Stat(sb, f.LabelNoise.Rate is null ? "n/a" : Fmt.Pct(f.LabelNoise.Rate), $"disagree with gold ({Fmt.Int(f.LabelNoise.Count)} of {Fmt.Int(f.LabelNoise.N)} items)");
         Stat(sb, f.PromptAgreement.Rate is null ? "n/a" : Fmt.Pct(f.PromptAgreement.Rate), $"agreement between {primary} and {alt} wordings ({Fmt.Int(f.PromptAgreement.Count)} of {Fmt.Int(f.PromptAgreement.N)})");
-        Stat(sb, Fmt.Int(f.Cached.GetValueOrDefault(primary)), $"{primary} answers cached of {Fmt.Int(f.EligibleItems)} eligible; {Fmt.Int(f.Pending.GetValueOrDefault(primary))} pending");
+        foreach (var (split, counts) in f.Splits.Count > 0
+                     ? f.Splits.Select(kv => (kv.Key, kv.Value))
+                     : [("heldout", new SplitLabelCounts(f.HeldOutItems, f.EligibleItems, f.Pending, f.Cached))])
+        {
+            Stat(sb, Fmt.Int(counts.Cached.GetValueOrDefault(primary)),
+                $"{primary} answers cached of {Fmt.Int(counts.Eligible)} eligible {(split == "heldout" ? "held-out" : split)} items; {Fmt.Int(counts.Pending.GetValueOrDefault(primary))} pending");
+        }
+
         Stat(sb, Fmt.Int(f.Overridden), $"labels overridden by a person; {Fmt.Int(f.Rejected.Count)} answer line(s) rejected");
         sb.Append("</div>\n<p class=\"caption\">")
-            .Append(E($"Label noise is how often {f.FrontierModel} disagrees with the dataset's gold label on the same item; it is measured before any human override. Some of that disagreement is the frontier model's error and some is the gold label's, so it bounds how precisely any accuracy here can be read. Agreement between two wordings of the prompt shows how much the frontier answers depend on phrasing. Answers came from {string.Join("; ", f.ProvenanceProducedBy.DefaultIfEmpty("no answers yet"))}, dated {string.Join(" to ", f.ProvenanceDates.DefaultIfEmpty("n/a"))}; no paid API call was made."))
+            .Append(E($"Label noise is how often {f.FrontierModel} disagrees with the dataset's gold label on the same item; it is measured before any human override. Some of that disagreement is the frontier model's error and some is the gold label's, {(VsFrontier(doc) ? "so it says how far the dataset's labels can be trusted; this report scores against the frontier model instead, so it does not bound the figures above" : "so it bounds how precisely any accuracy here can be read")}. Agreement between two wordings of the prompt shows how much the frontier answers depend on phrasing. Answers came from {string.Join("; ", f.ProvenanceProducedBy.DefaultIfEmpty("no answers yet"))}, dated {string.Join(" to ", f.ProvenanceDates.DefaultIfEmpty("n/a"))}; no paid API call was made."))
             .Append("</p>\n");
         if (f.Rejected.Count > 0)
         {
@@ -40,6 +48,25 @@ public static partial class HtmlReport
         sb.Append("</section>\n");
     }
 
+    private static void DatasetLabelsSection(StringBuilder sb, ReportDocument doc)
+    {
+        if (doc.DatasetLabels is not { } view)
+        {
+            return;
+        }
+
+        sb.Append("<section id=\"dataset-labels\">\n<h2>Secondary view: against the dataset's own labels</h2>\n");
+        sb.Append("<div class=\"scroll\"><table><thead><tr><th>Model</th><th>Agreement with the dataset's labels, raw</th><th>Agreement with the dataset's labels, calibrated</th></tr></thead><tbody>\n");
+        foreach (var r in view.Rows)
+        {
+            sb.Append("<tr><td>").Append(E(r.Kind switch { "frontier" => $"{r.Model} (frontier)", "baseline" => $"{r.Model} (baseline)", _ => $"{r.Model} (Tau)" }))
+                .Append("</td><td>").Append(r.Raw is null ? "n/a" : Rate(r.Raw)).Append("</td><td>")
+                .Append(r.Kind == "frontier" ? "not calibrated" : r.Calibrated is null ? "n/a" : Rate(r.Calibrated)).Append("</td></tr>\n");
+        }
+
+        sb.Append("</tbody></table></div>\n<p class=\"caption\">").Append(E(view.Caption)).Append("</p>\n</section>\n");
+    }
+
     private static void Stat(StringBuilder sb, string value, string label) =>
         sb.Append("<div><div class=\"v\">").Append(E(value)).Append("</div><div class=\"l\">").Append(E(label)).Append("</div></div>\n");
 
@@ -52,7 +79,7 @@ public static partial class HtmlReport
             return;
         }
 
-        sb.Append("<div class=\"scroll\"><table><thead><tr><th>Model</th><th>Held-out items</th><th>Accuracy</th><th>ECE raw</th><th>Log loss raw</th><th>ECE calibrated</th><th>Log loss calibrated</th><th class=\"text\">Note</th></tr></thead><tbody>\n");
+        sb.Append("<div class=\"scroll\"><table><thead><tr><th>Model</th><th>Held-out items</th><th>").Append(RateHead(doc)).Append("</th><th>ECE raw</th><th>Log loss raw</th><th>ECE calibrated</th><th>Log loss calibrated</th><th class=\"text\">Note</th></tr></thead><tbody>\n");
         foreach (var b in doc.Baselines)
         {
             sb.Append("<tr><td>").Append(E(b.Name)).Append(" (baseline)</td>");
@@ -94,15 +121,16 @@ public static partial class HtmlReport
             foreach (var m in views)
             {
                 sb.Append("<figure><figcaption>").Append(E($"{m.Model} ({m.Confusion!.Source}, {Fmt.Int(m.Confusion.N)} items)")).Append("</figcaption>")
-                    .Append(SvgCharts.Matrix(m.Confusion, m.Model)).Append("</figure>\n");
+                    .Append(SvgCharts.Matrix(m.Confusion, m.Model, doc.Reference)).Append("</figure>\n");
             }
 
-            sb.Append("</div>\n<p class=\"caption\">Rows are the gold answer and columns the model's answer, so the diagonal is correct and everything else is a mistake; darker cells hold a larger share of their row. ")
+            sb.Append("</div>\n<p class=\"caption\">Rows are ").Append(VsFrontier(doc) ? "the frontier model's answer" : "the gold answer").Append(" and columns the model's answer, so the diagonal is correct and everything else is a mistake; darker cells hold a larger share of their row. ")
                 .Append(doc.QuestionType == "score"
                     ? "For an ordered scale, mistakes next to the diagonal are near misses and those far from it are serious; a model whose errors sit far off the diagonal should not be trusted on the extreme levels."
                     : "Mistakes that cluster in one cell point to two answers the model cannot tell apart, which is where better instructions or more training data would help most.")
                 .Append("</p>\n");
-            sb.Append("<details><summary>Table view: every cell</summary><div class=\"scroll\"><table><thead><tr><th>Model</th><th class=\"text\">Gold</th>");
+            sb.Append("<details><summary>Table view: every cell</summary><div class=\"scroll\"><table><thead><tr><th>Model</th><th class=\"text\">")
+                .Append(VsFrontier(doc) ? "Frontier" : "Gold").Append("</th>");
             foreach (var l in views[0].Confusion!.Labels)
             {
                 sb.Append("<th>").Append(E(l)).Append("</th>");
@@ -130,7 +158,8 @@ public static partial class HtmlReport
         foreach (var m in views)
         {
             sb.Append("<h3>").Append(E($"{m.Model}: most frequent confusions ({m.Confusion!.Source}, {Fmt.Int(m.Confusion.N)} items)")).Append("</h3>\n");
-            sb.Append("<div class=\"scroll\"><table><thead><tr><th class=\"text\">Gold answer</th><th class=\"text\">Model's answer</th><th>Items</th></tr></thead><tbody>\n");
+            sb.Append("<div class=\"scroll\"><table><thead><tr><th class=\"text\">").Append(VsFrontier(doc) ? "Frontier's answer" : "Gold answer")
+                .Append("</th><th class=\"text\">Model's answer</th><th>Items</th></tr></thead><tbody>\n");
             foreach (var c in m.Confusion.Top!)
             {
                 sb.Append("<tr><td class=\"text\">").Append(E(c.Gold)).Append("</td><td class=\"text\">").Append(E(c.Predicted)).Append("</td><td>").Append(c.Count).Append("</td></tr>\n");

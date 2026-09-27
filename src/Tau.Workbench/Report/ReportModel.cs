@@ -4,6 +4,7 @@ using Tau.Workbench.Calibrate;
 using Tau.Workbench.Cascade;
 using Tau.Workbench.Frontier;
 using Tau.Workbench.Measure;
+using Tau.Workbench.Spec;
 using Tau.Workbench.Threshold;
 
 namespace Tau.Workbench.Report;
@@ -52,6 +53,38 @@ public sealed record ReportMetadata
 
     /// <summary>How confidence is defined.</summary>
     public required string ConfidenceNote { get; init; }
+
+    /// <summary>What every score is measured against: the dataset's gold labels or the frontier model's answers.</summary>
+    public ReferenceKind Reference { get; init; } = ReferenceKind.Gold;
+
+    /// <summary>The reference in words.</summary>
+    public string ReferenceNote { get; init; } = "";
+}
+
+/// <summary>One row of the secondary view against the dataset's own labels.</summary>
+/// <param name="Model">The model or baseline name.</param>
+/// <param name="Kind">tau, baseline or frontier.</param>
+/// <param name="Raw">Held-out agreement with the dataset's labels before calibration (for the frontier, its own answers).</param>
+/// <param name="Calibrated">Held-out agreement after calibration, or null when there is no calibrated view.</param>
+public sealed record DatasetLabelRow(string Model, string Kind, CountedRate? Raw, CountedRate? Calibrated);
+
+/// <summary>
+/// Under a frontier reference, the secondary view: how often each model's answer (and the frontier's)
+/// matches the dataset's own labels. The label failure is reported here as a finding, not hidden.
+/// </summary>
+public sealed record DatasetLabelView
+{
+    /// <summary>The caption, stating plainly how far the dataset's labels can be trusted.</summary>
+    public required string Caption { get; init; }
+
+    /// <summary>The frontier model's agreement with the dataset's labels (1 minus the label noise).</summary>
+    public required CountedRate FrontierAgreement { get; init; }
+
+    /// <summary>The share of held-out items carrying the most common dataset label: what always guessing it would score.</summary>
+    public double? MajorityClassShare { get; init; }
+
+    /// <summary>One row per model, per baseline, and one for the frontier model.</summary>
+    public required IReadOnlyList<DatasetLabelRow> Rows { get; init; }
 }
 
 /// <summary>The dataset box.</summary>
@@ -66,7 +99,7 @@ public sealed record DatasetBox(string Name, string? Source, string? Revision, s
 
 /// <summary>A confusion view: a matrix for up to 10 classes, otherwise the most frequent confusions.</summary>
 /// <param name="Kind">matrix or top.</param>
-/// <param name="Labels">Class labels (matrix rows are gold, columns predicted).</param>
+/// <param name="Labels">Class labels (matrix rows are the reference label, gold or frontier; columns predicted).</param>
 /// <param name="Matrix">Counts (matrix kind only).</param>
 /// <param name="Top">The most frequent (gold, predicted) confusions (top kind only).</param>
 /// <param name="Source">Which measurement it was built from.</param>
@@ -145,6 +178,15 @@ public sealed record ReportDocument
 
     /// <summary>The one-paragraph summary.</summary>
     public required string Summary { get; init; }
+
+    /// <summary>
+    /// What every score is measured against. Under <see cref="ReferenceKind.Frontier"/> each "accuracy" field
+    /// holds agreement with the frontier model, and the report says so wherever it shows one.
+    /// </summary>
+    public ReferenceKind Reference { get; init; } = ReferenceKind.Gold;
+
+    /// <summary>Under a frontier reference, the secondary view against the dataset's own labels; null under gold.</summary>
+    public DatasetLabelView? DatasetLabels { get; init; }
 
     /// <summary>The dataset box.</summary>
     public required DatasetBox Dataset { get; init; }

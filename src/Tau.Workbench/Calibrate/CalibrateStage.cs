@@ -2,6 +2,7 @@ using System.Globalization;
 using Tau.Calibration;
 using Tau.Workbench.Data;
 using Tau.Workbench.Measure;
+using Tau.Workbench.Reference;
 using Tau.Workbench.Spec;
 
 namespace Tau.Workbench.Calibrate;
@@ -25,6 +26,9 @@ public sealed record CalibrationSummary
 {
     /// <summary>The model id.</summary>
     public required string Model { get; init; }
+
+    /// <summary>The labels the calibrators were fitted against (older summaries without the field were fitted on gold).</summary>
+    public ReferenceKind Reference { get; init; } = ReferenceKind.Gold;
 
     /// <summary>The ONNX sha256 every calibrator was bound to.</summary>
     public required string ModelHash { get; init; }
@@ -64,14 +68,17 @@ public static class CalibrateStage
     /// <param name="model">The model id.</param>
     /// <param name="manifest">The dataset manifest.</param>
     /// <param name="clock">Clock for the provenance date (defaults to UTC now).</param>
+    /// <param name="reference">The labels to fit against; null resolves them from the spec.</param>
     /// <exception cref="WorkbenchException">
     /// The raw calibration measurement is missing, or has no model hash because the endpoint wasn't Tau
     /// (calibrators are bound to a model hash), or no calibration item succeeded.
     /// </exception>
-    public static CalibrationSummary Run(DecisionSpec spec, string model, DatasetManifest manifest, Func<DateTimeOffset>? clock = null)
+    /// <exception cref="StageBlockedException">A calibration or held-out item has no frontier reference label.</exception>
+    public static CalibrationSummary Run(DecisionSpec spec, string model, DatasetManifest manifest, Func<DateTimeOffset>? clock = null, ReferenceLabels? reference = null)
     {
         ArgumentNullException.ThrowIfNull(spec);
         ArgumentNullException.ThrowIfNull(manifest);
+        reference ??= ReferenceLabels.Load(spec, manifest);
         var q = spec.Question;
         var rawSummary = WorkbenchJson.ReadJson<MeasureSummary>(spec.RunSummaryPath(model, "calibration", Phases.Raw));
         if (rawSummary.ModelHash is not { Length: 64 } modelHash)
@@ -80,7 +87,7 @@ public static class CalibrateStage
                 $"The raw calibration measurement for '{model}' has no model hash: the endpoint was {rawSummary.EndpointIdentity?.Description ?? "not identified"}. Calibrators are bound to a model's ONNX sha256, so they can only be fitted against a Tau Runtime that lists the model in GET /v1/models.");
         }
 
-        var records = WorkbenchJson.ReadJsonl<MeasuredItem>(spec.RunPath(model, "calibration", Phases.Raw));
+        var records = reference.Apply(q, "calibration", WorkbenchJson.ReadJsonl<MeasuredItem>(spec.RunPath(model, "calibration", Phases.Raw)));
         var usable = records.Where(r => r.Error is null && r.Vector(q) is not null).ToArray();
         if (usable.Length == 0)
         {
@@ -133,17 +140,18 @@ public static class CalibrateStage
                 continue;
             }
 
-            var summary = ApplyOffline(spec, model, split, applied);
+            var summary = ApplyOffline(spec, model, split, applied, reference);
             if (split == "heldout")
             {
                 offlineHeld = summary.Metrics;
-                rawHeld = WorkbenchJson.ReadJson<MeasureSummary>(spec.RunSummaryPath(model, split, Phases.Raw)).Metrics;
+                rawHeld = MeasureStage.Summarise(spec, model, split, Phases.Raw, reference.Apply(q, split, WorkbenchJson.ReadJsonl<MeasuredItem>(rawPath))).Metrics;
             }
         }
 
         var result = new CalibrationSummary
         {
             Model = model,
+            Reference = reference.Kind,
             ModelHash = modelHash,
             DatasetRevision = manifest.Sha256,
             Calibrators = written,
@@ -165,22 +173,25 @@ public static class CalibrateStage
     /// <param name="model">The model id.</param>
     /// <param name="split">calibration or heldout.</param>
     /// <param name="calibrator">The calibrator to apply.</param>
-    public static MeasureSummary ApplyOffline(DecisionSpec spec, string model, string split, CalibratorFile calibrator)
+    /// <param name="reference">The labels the summary scores against; null resolves them from the spec.</param>
+    public static MeasureSummary ApplyOffline(DecisionSpec spec, string model, string split, CalibratorFile calibrator, ReferenceLabels? reference = null)
     {
         ArgumentNullException.ThrowIfNull(spec);
         ArgumentNullException.ThrowIfNull(calibrator);
+        reference ??= ReferenceLabels.Load(spec);
         var q = spec.Question;
         var cal = new Calibrator(calibrator);
         var raw = WorkbenchJson.ReadJsonl<MeasuredItem>(spec.RunPath(model, split, Phases.Raw));
         var offline = raw.Select(r => r.Vector(q) is { } v
             ? r.WithVector(q, cal.ApplyToProbabilities(v)) with { LatencyMs = 0, ModelMs = null, Calibrators = null, ModelHash = null }
             : r with { LatencyMs = 0, ModelMs = null, Calibrators = null, ModelHash = null }).ToArray();
-        var summary = MeasureStage.Summarise(spec, model, split, Phases.Offline, offline) with
+        var scored = MeasureStage.Summarise(spec, model, split, Phases.Offline, reference.Apply(q, split, offline));
+        var summary = scored with
         {
             StartedUtc = "",
+            Reference = reference.Kind,
             ModelHash = calibrator.ModelHash,
-            ExclusionNote = "Offline: the Workbench applied the fitted calibrator to the raw probabilities; no endpoint was called. "
-                            + MeasureStage.Summarise(spec, model, split, Phases.Offline, offline).ExclusionNote,
+            ExclusionNote = "Offline: the Workbench applied the fitted calibrator to the raw probabilities; no endpoint was called. " + scored.ExclusionNote,
         };
         WorkbenchJson.WriteJsonl(spec.RunPath(model, split, Phases.Offline), offline);
         WorkbenchJson.WriteJson(spec.RunSummaryPath(model, split, Phases.Offline), summary);

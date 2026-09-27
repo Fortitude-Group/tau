@@ -170,6 +170,9 @@ public sealed record MeasureSummary
     /// <summary>The metrics over measured items, or null when none succeeded.</summary>
     public MetricSet? Metrics { get; init; }
 
+    /// <summary>What the metrics score against: the dataset's gold labels or the frontier model's answers.</summary>
+    public ReferenceKind Reference { get; init; } = ReferenceKind.Gold;
+
     /// <summary>How confidence is defined (FR-009).</summary>
     public string ConfidenceNote { get; init; } = MetricSet.ConfidenceNote;
 

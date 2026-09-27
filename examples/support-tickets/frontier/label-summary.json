@@ -4,15 +4,46 @@
   "held_out_items": 1000,
   "eligible_items": 1000,
   "alt_subset_items": 200,
+  "reference": "frontier",
   "pending": {
-    "v1": 0,
+    "v1": 1000,
     "v1-alt": 0
   },
   "cached": {
     "v1": 1000,
     "v1-alt": 200
   },
-  "pending_batches": [],
+  "splits": {
+    "heldout": {
+      "items": 1000,
+      "eligible": 1000,
+      "pending": {
+        "v1": 0,
+        "v1-alt": 0
+      },
+      "cached": {
+        "v1": 1000,
+        "v1-alt": 200
+      }
+    },
+    "calibration": {
+      "items": 1000,
+      "eligible": 1000,
+      "pending": {
+        "v1": 1000
+      },
+      "cached": {
+        "v1": 0
+      }
+    }
+  },
+  "pending_batches": [
+    "frontier/pending/v1/batch-calibration-001.jsonl",
+    "frontier/pending/v1/batch-calibration-002.jsonl",
+    "frontier/pending/v1/batch-calibration-003.jsonl",
+    "frontier/pending/v1/batch-calibration-004.jsonl",
+    "frontier/pending/v1/batch-calibration-005.jsonl"
+  ],
   "rejected": [],
   "duplicate_cache_lines": 0,
   "overridden": 0,
@@ -48,5 +79,5 @@
     "2026-09-27",
     "2026-09-27"
   ],
-  "total_pending": 0
+  "total_pending": 1000
 }

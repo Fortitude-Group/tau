@@ -1,4 +1,5 @@
 using Tau.Workbench.Measure;
+using Tau.Workbench.Reference;
 using Tau.Workbench.Spec;
 
 namespace Tau.Workbench.Threshold;
@@ -21,6 +22,9 @@ public sealed record ThresholdResult
 
     /// <summary>Which measurement the confidences came from (calibrated, offline or raw).</summary>
     public required string Source { get; init; }
+
+    /// <summary>What "correct" means here: the gold label, or the frontier model's answer.</summary>
+    public ReferenceKind Reference { get; init; } = ReferenceKind.Gold;
 
     /// <summary>Whether some τ on the calibration split meets the target.</summary>
     public required bool Reachable { get; init; }
@@ -111,11 +115,15 @@ public static class ThresholdStage
     /// <param name="calCorrect">Calibration-split correctness.</param>
     /// <param name="heldConfidence">Held-out max(p).</param>
     /// <param name="heldCorrect">Held-out correctness.</param>
+    /// <param name="reference">What correctness means: matching the gold label, or matching the frontier model's answer.</param>
     public static ThresholdResult Choose(
         string model, double targetError, string source,
         IReadOnlyList<double> calConfidence, IReadOnlyList<bool> calCorrect,
-        IReadOnlyList<double> heldConfidence, IReadOnlyList<bool> heldCorrect)
+        IReadOnlyList<double> heldConfidence, IReadOnlyList<bool> heldCorrect,
+        ReferenceKind reference = ReferenceKind.Gold)
     {
+        string rate = reference == ReferenceKind.Frontier ? "agreement with the frontier model" : "accuracy";
+        string error = reference == ReferenceKind.Frontier ? "disagreement" : "error";
         var calCurve = Curve(calConfidence, calCorrect);
         var heldCurve = Curve(heldConfidence, heldCorrect);
         // Compare with a small tolerance so an error of exactly the target (e.g. 1 - 0.95) is not lost to rounding.
@@ -128,6 +136,7 @@ public static class ThresholdStage
                 Model = model,
                 TargetError = targetError,
                 Source = source,
+                Reference = reference,
                 Reachable = false,
                 HeldOutItems = heldConfidence.Count,
                 BestAchievableError = best is null ? null : 1 - best.AcceptedAccuracy!.Value,
@@ -136,7 +145,7 @@ public static class ThresholdStage
                 HeldOutCurve = heldCurve,
                 Note = best is null
                     ? "No threshold can be chosen: the calibration split has no measured items."
-                    : $"No threshold meets the {Fmt.Pct(targetError)} target error on the calibration split. The lowest error any threshold reaches is {Fmt.Pct(1 - best.AcceptedAccuracy!.Value)}, at τ = {Fmt.Num(best.Tau, "0.00")}, accepting {Fmt.Pct(best.AcceptRate)} of items. No threshold is invented.",
+                    : $"No threshold meets the {Fmt.Pct(targetError)} target {error} on the calibration split. The lowest {error} any threshold reaches is {Fmt.Pct(1 - best.AcceptedAccuracy!.Value)}, at τ = {Fmt.Num(best.Tau, "0.00")}, accepting {Fmt.Pct(best.AcceptRate)} of items. No threshold is invented.",
             };
         }
 
@@ -146,6 +155,7 @@ public static class ThresholdStage
             Model = model,
             TargetError = targetError,
             Source = source,
+            Reference = reference,
             Reachable = true,
             Tau = chosen.Tau,
             CalibrationAcceptRate = chosen.AcceptRate,
@@ -158,7 +168,7 @@ public static class ThresholdStage
             HeldOutCurve = heldCurve,
             Note = held.Accepted == 0
                 ? $"τ = {Fmt.Num(chosen.Tau, "0.00")} meets the target on the calibration split but accepts no held-out item."
-                : $"τ = {Fmt.Num(chosen.Tau, "0.00")} is the smallest threshold whose calibration-split error is at most {Fmt.Pct(targetError)}. On held-out it accepts {Fmt.Pct(held.AcceptRate)} of items with {Fmt.Pct(held.AcceptedAccuracy)} accuracy.",
+                : $"τ = {Fmt.Num(chosen.Tau, "0.00")} is the smallest threshold whose calibration-split {error} is at most {Fmt.Pct(targetError)}. On held-out it accepts {Fmt.Pct(held.AcceptRate)} of items with {Fmt.Pct(held.AcceptedAccuracy)} {rate}.",
         };
     }
 
@@ -185,8 +195,10 @@ public static class ThresholdStage
 
     /// <summary>Runs the stage for every model with measurements and writes <c>threshold.json</c>.</summary>
     /// <param name="spec">The decision spec.</param>
+    /// <param name="reference">The labels correctness is judged against; null resolves them from the spec.</param>
     /// <exception cref="WorkbenchException">No model has been measured.</exception>
-    public static IReadOnlyList<ThresholdResult> Run(DecisionSpec spec)
+    /// <exception cref="StageBlockedException">A measured item has no frontier reference label.</exception>
+    public static IReadOnlyList<ThresholdResult> Run(DecisionSpec spec, ReferenceLabels? reference = null)
     {
         ArgumentNullException.ThrowIfNull(spec);
         var results = new List<ThresholdResult>();
@@ -197,9 +209,10 @@ public static class ThresholdStage
                 continue;
             }
 
-            var (calConf, calCorrect) = Load(spec, model, "calibration", source);
-            var (heldConf, heldCorrect) = Load(spec, model, "heldout", source);
-            results.Add(Choose(model, spec.Threshold.TargetError, source, calConf, calCorrect, heldConf, heldCorrect));
+            reference ??= ReferenceLabels.Load(spec);
+            var (calConf, calCorrect) = Load(spec, reference, model, "calibration", source);
+            var (heldConf, heldCorrect) = Load(spec, reference, model, "heldout", source);
+            results.Add(Choose(model, spec.Threshold.TargetError, source, calConf, calCorrect, heldConf, heldCorrect, reference.Kind));
         }
 
         if (results.Count == 0)
@@ -211,9 +224,9 @@ public static class ThresholdStage
         return results;
     }
 
-    private static (double[] Confidence, bool[] Correct) Load(DecisionSpec spec, string model, string split, string phase)
+    private static (double[] Confidence, bool[] Correct) Load(DecisionSpec spec, ReferenceLabels reference, string model, string split, string phase)
     {
-        var ok = WorkbenchJson.ReadJsonl<MeasuredItem>(spec.RunPath(model, split, phase))
+        var ok = reference.Apply(spec.Question, split, WorkbenchJson.ReadJsonl<MeasuredItem>(spec.RunPath(model, split, phase)))
             .Where(r => r.Error is null && r.ConfidenceMaxp is not null && r.Correct is not null).ToArray();
         return (ok.Select(r => r.ConfidenceMaxp!.Value).ToArray(), ok.Select(r => r.Correct!.Value).ToArray());
     }

@@ -6,6 +6,34 @@ this file records the ones I made so the trail is auditable.
 
 ---
 
+## 2026-09-27 · The tickets example is scored against the frontier's answers
+
+Rob's call: the ticket gold labels are too close to arbitrary to score against, so the tickets example
+asks whether a local model can stand in for the frontier call, and whether its confidence says when.
+
+- `decision.yaml` takes `data.reference: gold | frontier` (gold is the default). Tickets use
+  `frontier` and Banking77 stays on gold.
+- Under `frontier`, `tau label` also exports the calibration split (v1 only, capped at 1,000, batches of
+  200) as `frontier/pending/v1/batch-calibration-NNN.jsonl`. The key scheme is unchanged, and
+  `label-summary.json` now has pending and cached counts per split. The cost tally still counts
+  held-out answers only, because cost is per decision served.
+- `ReferenceLabels` is the one place that says what an item's label is. Measure, calibrate, threshold,
+  cascade, baselines and the report all score through it. A missing frontier label stops the stage
+  with "run 'tau label'" and drops nothing. Run files on disk keep the dataset's label.
+- The report re-scores every summary from the run records, so a summary written before the reference
+  changed can't appear under the wrong name. Calibrators, thresholds or cascades fitted under the other
+  reference are listed as misses to re-run.
+- Under `frontier` the report says "agreement with the frontier model" throughout. Frontier-only is
+  shown as 100% by construction, not as a result. A secondary table shows each model, the baseline
+  and the frontier against the dataset's labels.
+- Choices I made: the caption says "synthetic" only when the manifest says so, and "close to
+  arbitrary" only when the frontier's agreement with the labels is no better than always giving the
+  most common label (23.8% against 41% for the tickets). `tau run` stops early while v1 answers are
+  pending, since every later stage needs them. Measure also checks the labels before calling the
+  endpoint, so a missing label doesn't waste a GPU run.
+- Changing `decision.yaml` makes the tickets' raw measurements stale (the spec is a measure input),
+  so the next `tau run` re-measures every model.
+
 ## 2026-09-27 · Frontier labels cached (T051–T053), and the ticket gold labels look close to arbitrary
 
 - **Cached:** 1,200 answers per dataset (1,000 `v1` and 200 `v1-alt`), from 12 Opus 5.5

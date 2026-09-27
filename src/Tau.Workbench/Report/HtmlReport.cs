@@ -31,6 +31,7 @@ public static partial class HtmlReport
         ThresholdSection(sb, doc);
         CascadeSection(sb, doc);
         FrontierSection(sb, doc);
+        DatasetLabelsSection(sb, doc);
         BaselinesSection(sb, doc);
         ConfusionSection(sb, doc);
         MissesSection(sb, doc);
@@ -42,6 +43,12 @@ public static partial class HtmlReport
     /// <summary>HTML-encodes text and strips URL schemes, so no link or request can appear in the page.</summary>
     /// <param name="s">The text.</param>
     internal static string E(string? s) => SvgCharts.Esc(Scheme().Replace(s ?? "", ""));
+
+    /// <summary>True when every rate in the document is agreement with the frontier model rather than accuracy.</summary>
+    private static bool VsFrontier(ReportDocument doc) => doc.Reference == Spec.ReferenceKind.Frontier;
+
+    /// <summary>The short column heading for a right-answer rate: "Accuracy", or "Agreement" (with the frontier model).</summary>
+    private static string RateHead(ReportDocument doc) => VsFrontier(doc) ? "Agreement" : "Accuracy";
 
     private static void Header(StringBuilder sb, ReportDocument doc)
     {
@@ -120,6 +127,7 @@ public static partial class HtmlReport
 
         Fact(sb, "Dataset manifest sha256", m.DatasetManifestSha256);
         Fact(sb, "Dataset revision (cache keys)", m.DatasetRevision);
+        Fact(sb, "Reference labels", $"{m.Reference.ToString().ToLowerInvariant()}: {m.ReferenceNote}");
         Fact(sb, "Frontier model", m.FrontierModel);
         Fact(sb, "Prompt versions", string.Join(", ", m.PromptVersions));
         Fact(sb, "Frontier cache", m.FrontierCacheCounts.Count == 0 ? "empty" : string.Join(", ", m.FrontierCacheCounts.Select(kv => $"{kv.Key}: {Fmt.Int(kv.Value)} answers")));

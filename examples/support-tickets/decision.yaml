@@ -15,6 +15,7 @@ data:
   dataset: tickets
   text_field: text
   label_field: label
+  reference: frontier                # the synthetic gold labels are close to arbitrary (docs/DECISIONS.md): score against the frontier's answers
 endpoint: http://localhost:18093
 models: [laya-en, laya-typed-decisions, von-1.2.0, laya-en-ft-tickets]
 baselines: [minilm-l6-tickets]

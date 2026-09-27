@@ -1,6 +1,7 @@
 using Tau.Workbench.Data;
 using Tau.Workbench.Frontier;
 using Tau.Workbench.Measure;
+using Tau.Workbench.Reference;
 using Tau.Workbench.Spec;
 using Tau.Workbench.Threshold;
 
@@ -42,13 +43,28 @@ public sealed record CascadeResult
     /// <summary>Share of items escalated.</summary>
     public double? ShareEscalated { get; init; }
 
+    /// <summary>
+    /// What the rates are measured against. Under <see cref="ReferenceKind.Frontier"/> every rate is agreement
+    /// with the frontier model's answer, not accuracy.
+    /// </summary>
+    public ReferenceKind Reference { get; init; } = ReferenceKind.Gold;
+
     /// <summary>The local model alone on every item.</summary>
     public required CountedRate LocalOnlyAccuracy { get; init; }
 
-    /// <summary>The frontier model alone, on items that have a frontier answer.</summary>
+    /// <summary>
+    /// The frontier model alone, on items that have a frontier answer. Under a frontier reference this is
+    /// 100% by construction (the frontier is compared with itself), which <see cref="FrontierOnlyNote"/> says.
+    /// </summary>
     public required CountedRate FrontierOnlyAccuracy { get; init; }
 
-    /// <summary>The cascade, on items with a final answer.</summary>
+    /// <summary>Under a frontier reference, why the frontier-only figure is not a result.</summary>
+    public string? FrontierOnlyNote { get; init; }
+
+    /// <summary>
+    /// The cascade, on items with a final answer: the share where the served answer (local at or above τ,
+    /// frontier below) is right, or under a frontier reference, equals the frontier model's answer.
+    /// </summary>
     public CountedRate? BlendedAccuracy { get; init; }
 
     /// <summary>Items where a human override replaced the frontier answer.</summary>
@@ -76,10 +92,17 @@ public sealed record CascadeResult
 /// </summary>
 public static class CascadeStage
 {
+    /// <summary>The statement the report makes instead of a frontier-only agreement figure under a frontier reference.</summary>
+    public const string FrontierOnlyByConstruction =
+        "Frontier only agrees with the frontier model on 100% of items by construction: its answers are the reference, so this is not a result.";
+
     /// <summary>Simulates one model's cascade from its held-out records.</summary>
     /// <param name="spec">The decision spec.</param>
     /// <param name="threshold">The model's threshold result.</param>
-    /// <param name="heldOut">Held-out records from the threshold's source phase.</param>
+    /// <param name="heldOut">
+    /// Held-out records from the threshold's source phase, already scored against the reference
+    /// (<see cref="ReferenceLabels.Apply"/>): each record's gold is the reference label.
+    /// </param>
     /// <param name="frontier">The ingested frontier state.</param>
     /// <param name="latency">Held-out records carrying real call latency (raw or calibrated phase), or null.</param>
     /// <param name="latencySource">Which phase <paramref name="latency"/> came from.</param>
@@ -111,6 +134,8 @@ public static class CascadeStage
         }
 
         var frontierOnly = CountedRate.Of(frontierN, frontierRight);
+        var reference = spec.Data.Reference;
+        string? frontierOnlyNote = reference == ReferenceKind.Frontier ? FrontierOnlyByConstruction : null;
         var okLatency = latency?.Where(r => r.Error is null && r.LatencyMs > 0).Select(r => r.LatencyMs).ToArray() ?? [];
         double? p50 = MetricSet.Percentile(okLatency, 50);
         CostEstimate? Cost(double? share, out string? why)
@@ -132,11 +157,13 @@ public static class CascadeStage
             {
                 Model = threshold.Model,
                 Source = threshold.Source,
-                NotSimulated = $"No cascade: no threshold met the {Fmt.Pct(threshold.TargetError)} target error on the calibration split.",
+                NotSimulated = $"No cascade: no threshold met the {Fmt.Pct(threshold.TargetError)} target {(reference == ReferenceKind.Frontier ? "disagreement" : "error")} on the calibration split.",
                 Items = ok.Length,
                 ExcludedFailures = failures,
+                Reference = reference,
                 LocalOnlyAccuracy = localOnly,
                 FrontierOnlyAccuracy = frontierOnly,
+                FrontierOnlyNote = frontierOnlyNote,
                 LocalLatencyP50Ms = p50,
                 LatencySource = latencySource,
                 Cost = costOnly,
@@ -181,8 +208,10 @@ public static class CascadeStage
             MissingFrontier = missing,
             ShareLocal = ok.Length == 0 ? null : (double)kept / ok.Length,
             ShareEscalated = shareEscalated,
+            Reference = reference,
             LocalOnlyAccuracy = localOnly,
             FrontierOnlyAccuracy = frontierOnly,
+            FrontierOnlyNote = frontierOnlyNote,
             BlendedAccuracy = CountedRate.Of(finalN, finalRight),
             OverridesUsed = overrides,
             LocalLatencyP50Ms = p50,
@@ -196,17 +225,21 @@ public static class CascadeStage
     /// <param name="spec">The decision spec.</param>
     /// <param name="manifest">The dataset manifest.</param>
     /// <param name="heldOutItems">The held-out split.</param>
-    public static IReadOnlyList<CascadeResult> Run(DecisionSpec spec, DatasetManifest manifest, IReadOnlyList<DatasetItem> heldOutItems)
+    /// <param name="reference">The labels the cascade is scored against; null resolves them from the spec.</param>
+    /// <exception cref="StageBlockedException">A held-out item has no frontier reference label.</exception>
+    public static IReadOnlyList<CascadeResult> Run(DecisionSpec spec, DatasetManifest manifest, IReadOnlyList<DatasetItem> heldOutItems, ReferenceLabels? reference = null)
     {
         ArgumentNullException.ThrowIfNull(spec);
         var thresholds = WorkbenchJson.ReadJson<List<ThresholdResult>>(spec.ThresholdPath);
-        var frontier = FrontierStage.LoadState(spec, manifest, heldOutItems);
-        var answers = frontier.Accepted.Values.Where(a => a.PromptVersion == spec.Frontier.PromptVersion).ToArray();
-        var chars = new CharTally(answers.Length, answers.Sum(a => (long)a.InputChars), answers.Sum(a => (long)a.OutputChars));
+        reference ??= ReferenceLabels.Load(spec, manifest);
+        var frontier = reference.Frontier ?? FrontierStage.LoadState(spec, manifest, heldOutItems);
+
+        // Cost is per decision served, so only held-out answers are tallied (never the calibration labels).
+        var chars = frontier.HeldOutChars(spec.Frontier.PromptVersion);
         var results = new List<CascadeResult>();
         foreach (var t in thresholds)
         {
-            var records = WorkbenchJson.ReadJsonl<MeasuredItem>(spec.RunPath(t.Model, "heldout", t.Source));
+            var records = reference.Apply(spec.Question, "heldout", WorkbenchJson.ReadJsonl<MeasuredItem>(spec.RunPath(t.Model, "heldout", t.Source)));
             var latencyPhase = File.Exists(spec.RunPath(t.Model, "heldout", Phases.Calibrated)) ? Phases.Calibrated : Phases.Raw;
             var latencyRecords = File.Exists(spec.RunPath(t.Model, "heldout", latencyPhase))
                 ? WorkbenchJson.ReadJsonl<MeasuredItem>(spec.RunPath(t.Model, "heldout", latencyPhase)) : null;

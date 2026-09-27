@@ -18,6 +18,7 @@ Updated after every completed task. On session restart, resume from here without
 - Lane D (T014–T017) done. Both Laya fine-tunes are trained, exported and pass parity: Banking77 max |Δlogit| 2.1e-5, tickets 1.1e-3, tolerance 2e-3. The MiniLM baselines, with early stopping on the calibration split, score 91.5% on Banking77 and 55.6% on the tickets (held-out, sidecar quick check). The recipe change after a strawman first run is in DECISIONS. The sidecar tests pass (24).
 - T050: frontier batches exported (1,200 pending per dataset) and turned into 12 compact answer sheets. Rob said yes to labelling.
 - T051–T053 done: 1,200 frontier answers per dataset are cached and committed (no API). They used about 0.9M session tokens, over the 0.45–0.6M estimate. Banking77: the frontier disagrees with gold on 5.8%, and the two wordings agree on 97.5%. **Tickets: it disagrees with gold on 76.2%, and the wordings agree on 76.5%. The synthetic priority labels look close to arbitrary (DECISIONS). Asked Rob how the tickets example should treat them.**
+- Reference mode done: `data.reference: frontier` for the tickets (Banking77 stays gold). Every stage scores through `ReferenceLabels`, and the report says "agreement with the frontier model" and keeps a secondary table against the dataset's labels. `tau label` on the tickets exits 2 with 1,000 calibration items pending in 5 batches. Workbench tests 162 pass, and the solution builds with 0 warnings and 0 errors.
 
 ---
 

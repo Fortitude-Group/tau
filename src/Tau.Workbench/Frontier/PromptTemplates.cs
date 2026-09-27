@@ -10,6 +10,12 @@ public static class FrontierLimits
     /// <summary>The most held-out items per dataset that may ever be exported for a frontier answer.</summary>
     public const int MaxHeldOutItems = 1000;
 
+    /// <summary>
+    /// The most calibration items per dataset that may be exported, when the spec scores against the
+    /// frontier model (<c>data.reference: frontier</c>) and the calibrators need frontier labels to fit on.
+    /// </summary>
+    public const int MaxCalibrationItems = 1000;
+
     /// <summary>Items per pending batch file (research R-05).</summary>
     public const int BatchSize = 200;
 
