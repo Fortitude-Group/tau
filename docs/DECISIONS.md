@@ -6,6 +6,15 @@ this file records the ones I made so the trail is auditable.
 
 ---
 
+## 2026-09-27 · History rewritten before the repository went public
+
+Before making the repository public, a handful of personal planning notes were reworded throughout the
+git history with `git filter-repo`. The change touched 10 lines in 5 files and nothing else. The full
+pre-rewrite history is kept privately. Every commit hash changed, so any hash recorded in a report or
+in this log before 2026-09-27 refers to the pre-rewrite history. `docs/commit-map.txt` maps each old
+hash to its new one.
+**Reason:** personal notes don't belong in a public repository, and a hash-level record keeps every
+report traceable.
 ## 2026-09-27 · R3 launch decisions
 
 - **Rob's clarify answers:**
