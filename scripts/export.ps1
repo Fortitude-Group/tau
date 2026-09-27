@@ -15,7 +15,8 @@ $env:PYTHONPATH = '.'
 
 Push-Location (Join-Path $root 'sidecar/finetune')
 try {
-    $laya = @('laya-en', 'laya-multilingual', 'laya-typed-decisions') | Where-Object { -not $Only -or $_ -in $Only }
+    # @(...) keeps a single match an array: splatting a bare string passes its characters ('l', 'a', ...).
+    $laya = @(@('laya-en', 'laya-multilingual', 'laya-typed-decisions') | Where-Object { -not $Only -or $_ -in $Only })
     if ($laya) {
         uv run --frozen python -m tau_sidecar.export_laya --only @laya
         if ($LASTEXITCODE -ne 0) { throw "Laya export failed" }
