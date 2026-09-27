@@ -38,7 +38,8 @@ ARG FLAVOUR
 WORKDIR /app
 COPY --from=build /out ./
 COPY --from=natives /src/native/ ./native/
-ENV ASPNETCORE_URLS=http://+:8080 \
+# Non-prefixed Urls: it outranks appsettings.json's local-development Urls (ASPNETCORE_URLS would not).
+ENV Urls=http://+:8080 \
     Tau__Provider=${FLAVOUR} \
     Tau__ModelsDirectory=/models \
     Tau__NativeDirectory=/app/native

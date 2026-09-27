@@ -1,0 +1,951 @@
+{
+  "report": "latency",
+  "kind": "http",
+  "provider": "cuda",
+  "actualProvider": "cuda",
+  "tag": null,
+  "header": {
+    "command": "Tau.Bench --provider cuda --iterations 500 --http-url http://127.0.0.1:18088 --http-server-log C:\\projects\\personal\\Tau\\.cache\\bench-run\\runtime-18088.log --warmup 50 --out reports/r1 --repeat 2 --questions 1,4,10 --invoked-by \"./scripts/bench.ps1 -Http\"",
+    "invokedBy": "./scripts/bench.ps1 -Http",
+    "dateUtc": "2026-09-27T03:06:00Z",
+    "gitCommit": "77a47a7e0eb6da7c0049e4506c3fe1461fd20805",
+    "gitDirty": true,
+    "contractVersion": "systemone/2026-09-27",
+    "hardware": {
+      "gpu": "NVIDIA GeForce RTX 3080 Ti",
+      "gpuVram": "12288 MiB",
+      "gpuDriver": "610.47",
+      "cpu": "11th Gen Intel(R) Core(TM) i9-11900K @ 3.50GHz",
+      "physicalCores": 8,
+      "logicalCores": 16,
+      "ram": "63.8 GiB",
+      "os": "Microsoft Windows 10 Pro 10.0.19045"
+    },
+    "software": {
+      "dotNet": ".NET 10.0.11",
+      "ortManaged": "1.24.4",
+      "ortNative": null,
+      "tauVersion": "0.1.0",
+      "processArchitecture": "x64"
+    },
+    "loadBefore": {
+      "cpuPercent": 44.6101,
+      "gpuPercent": 0,
+      "gpuMemoryUsedMiB": 9585,
+      "samples": 3,
+      "method": "CPU: GetSystemTimes busy share over the sampling window; GPU: mean of 3 nvidia-smi utilization.gpu/memory.used readings 0.5 s apart"
+    },
+    "loadAfter": {
+      "cpuPercent": 43.6353,
+      "gpuPercent": 21.3333,
+      "gpuMemoryUsedMiB": 11711,
+      "samples": 3,
+      "method": "CPU: GetSystemTimes busy share over the sampling window; GPU: mean of 3 nvidia-smi utilization.gpu/memory.used readings 0.5 s apart"
+    },
+    "providerCheck": {
+      "requested": "cuda",
+      "actual": "cuda",
+      "passed": true,
+      "evidence": [
+        "the Runtime's start-up log (runtime-18088.log) says 'Tau engine ready: provider Cuda', logged from engine.ActualProvider",
+        "scripts/bench.ps1 starts the Runtime with --Tau:AllowCpuFallback=false, so a GPU that can't start stops the server instead of falling back"
+      ]
+    },
+    "notes": [
+      "The working tree had uncommitted changes when this ran, so the commit above doesn't fully describe the code measured.",
+      "Server: http://127.0.0.1:18088/. Batch rows aren't visible over HTTP, so they're recorded as -1; input tokens come from the response's usage block."
+    ]
+  },
+  "workload": {
+    "name": "bank-support-duplicate-payment",
+    "description": "One retail-banking support ticket (a duplicated debit card payment that caused an overdraft fee) and ten questions in a fixed order that cycles choice (4 options), score (4 levels), noul. A run with q questions sends the first q.",
+    "sha256": "33ba095cb095767fd139c6173ea1c0410256d2db35e9e7b7d3b9b2b84827910b",
+    "stateWords": 83,
+    "questionTypes": {
+      "1": [
+        "choice"
+      ],
+      "4": [
+        "choice",
+        "score",
+        "noul",
+        "choice"
+      ],
+      "10": [
+        "choice",
+        "score",
+        "noul",
+        "choice",
+        "score",
+        "noul",
+        "choice",
+        "score",
+        "noul",
+        "choice"
+      ]
+    }
+  },
+  "settings": {
+    "warmup": 50,
+    "iterations": 500,
+    "repeats": 2,
+    "questions": [
+      1,
+      4,
+      10
+    ],
+    "timer": "System.Diagnostics.Stopwatch (high resolution)",
+    "percentileMethod": "linear interpolation between closest ranks (Hyndman-Fan type 7, the NumPy and Excel PERCENTILE.INC default)",
+    "session": [
+      "graph optimisation ORT_ENABLE_BASIC",
+      "sequential execution",
+      "intra-op threads 8",
+      "inter-op threads 1",
+      "deterministic compute on",
+      "CUDA: use_tf32=0, cudnn_conv_algo_search=DEFAULT",
+      "no Tau calibrators loaded (reference post-processing)"
+    ]
+  },
+  "models": [
+    {
+      "id": "laya-en",
+      "family": "laya",
+      "revision": "55cf4c4ebb4ebe31b2550e8bdf3bd21b99753851",
+      "onnxSha256": "866a05b244e47e96820660d18ee050c518c2de0f60c39e2e9a89dfeb056e1eec",
+      "precision": "fp32",
+      "referencePackage": "laya==0.3.20"
+    },
+    {
+      "id": "laya-multilingual",
+      "family": "laya",
+      "revision": "55cf4c4ebb4ebe31b2550e8bdf3bd21b99753851",
+      "onnxSha256": "62be63b71dd97ed1d2b6582965702d06d9fb387a1c9be103fe365d6d9c82ed0d",
+      "precision": "fp32",
+      "referencePackage": "laya==0.3.20"
+    },
+    {
+      "id": "laya-typed-decisions",
+      "family": "laya",
+      "revision": "55cf4c4ebb4ebe31b2550e8bdf3bd21b99753851",
+      "onnxSha256": "2b7a961ac37157d1cfa8105e3283106baf1ba2a5cc30fb3a673253f06aa1e1c5",
+      "precision": "fp32",
+      "referencePackage": "laya==0.3.20"
+    },
+    {
+      "id": "von-1.2.0",
+      "family": "von",
+      "revision": "5df8185a4f2327ad0a7cd117cc4f701ac557b9ae",
+      "onnxSha256": "0777bb988636663b770775ae0b4eb961d6fbee176c9bea1d1da823723b1eb3f3",
+      "precision": "fp32",
+      "referencePackage": "von-sdk==1.2.3"
+    }
+  ],
+  "measurements": [
+    {
+      "id": "http_end_to_end",
+      "title": "HTTP end to end",
+      "what": "Client-side wall time for one POST /v1/systemone over a kept-alive localhost connection: sending the JSON body, the Runtime's parsing, validation and inference, and reading and deserialising the response into the contract types.",
+      "cells": [
+        {
+          "model": "laya-en",
+          "questions": 1,
+          "batchRows": -1,
+          "inputTokens": 188,
+          "repeats": [
+            {
+              "n": 500,
+              "mean": 20.7751,
+              "sd": 2.2404,
+              "min": 18.4307,
+              "p50": 19.9202,
+              "p95": 25.1047,
+              "p99": 30.2463,
+              "max": 31.6444,
+              "p50PerQuestion": 19.9202,
+              "meanPerQuestion": 20.7751
+            },
+            {
+              "n": 500,
+              "mean": 22.8994,
+              "sd": 3.5136,
+              "min": 19.2868,
+              "p50": 21.2221,
+              "p95": 30.6351,
+              "p99": 34.2767,
+              "max": 36.6189,
+              "p50PerQuestion": 21.2221,
+              "meanPerQuestion": 22.8994
+            }
+          ],
+          "p50RepeatDiffPercent": 6.5356
+        },
+        {
+          "model": "laya-en",
+          "questions": 4,
+          "batchRows": -1,
+          "inputTokens": 693,
+          "repeats": [
+            {
+              "n": 500,
+              "mean": 51.971,
+              "sd": 0.9652,
+              "min": 50.521,
+              "p50": 51.9332,
+              "p95": 53.1367,
+              "p99": 53.7494,
+              "max": 66.0049,
+              "p50PerQuestion": 12.9833,
+              "meanPerQuestion": 12.9928
+            },
+            {
+              "n": 500,
+              "mean": 53.2864,
+              "sd": 0.9332,
+              "min": 51.7153,
+              "p50": 53.1042,
+              "p95": 54.722,
+              "p99": 55.6688,
+              "max": 63.2712,
+              "p50PerQuestion": 13.276,
+              "meanPerQuestion": 13.3216
+            }
+          ],
+          "p50RepeatDiffPercent": 2.2548
+        },
+        {
+          "model": "laya-en",
+          "questions": 10,
+          "batchRows": -1,
+          "inputTokens": 1731,
+          "repeats": [
+            {
+              "n": 500,
+              "mean": 112.5406,
+              "sd": 1.2659,
+              "min": 111.265,
+              "p50": 112.3672,
+              "p95": 113.7343,
+              "p99": 114.4971,
+              "max": 136.8671,
+              "p50PerQuestion": 11.2367,
+              "meanPerQuestion": 11.2541
+            },
+            {
+              "n": 500,
+              "mean": 113.7625,
+              "sd": 0.9987,
+              "min": 112.3494,
+              "p50": 113.5806,
+              "p95": 114.9946,
+              "p99": 115.7234,
+              "max": 126.8458,
+              "p50PerQuestion": 11.3581,
+              "meanPerQuestion": 11.3762
+            }
+          ],
+          "p50RepeatDiffPercent": 1.0799
+        },
+        {
+          "model": "laya-multilingual",
+          "questions": 1,
+          "batchRows": -1,
+          "inputTokens": 196,
+          "repeats": [
+            {
+              "n": 500,
+              "mean": 16.9467,
+              "sd": 3.5982,
+              "min": 12.2177,
+              "p50": 16.4076,
+              "p95": 23.1022,
+              "p99": 27.2842,
+              "max": 30.0653,
+              "p50PerQuestion": 16.4076,
+              "meanPerQuestion": 16.9467
+            },
+            {
+              "n": 500,
+              "mean": 18.1636,
+              "sd": 4.1444,
+              "min": 12.6646,
+              "p50": 17.1186,
+              "p95": 26.7364,
+              "p99": 29.1852,
+              "max": 31.2892,
+              "p50PerQuestion": 17.1186,
+              "meanPerQuestion": 18.1636
+            }
+          ],
+          "p50RepeatDiffPercent": 4.3334
+        },
+        {
+          "model": "laya-multilingual",
+          "questions": 4,
+          "batchRows": -1,
+          "inputTokens": 728,
+          "repeats": [
+            {
+              "n": 500,
+              "mean": 25.0527,
+              "sd": 0.8748,
+              "min": 23.6728,
+              "p50": 24.8646,
+              "p95": 26.6399,
+              "p99": 28.3933,
+              "max": 30.333,
+              "p50PerQuestion": 6.2162,
+              "meanPerQuestion": 6.2632
+            },
+            {
+              "n": 500,
+              "mean": 25.5052,
+              "sd": 1.1187,
+              "min": 24.1419,
+              "p50": 25.2702,
+              "p95": 27.071,
+              "p99": 29.6887,
+              "max": 39.8126,
+              "p50PerQuestion": 6.3176,
+              "meanPerQuestion": 6.3763
+            }
+          ],
+          "p50RepeatDiffPercent": 1.6312
+        },
+        {
+          "model": "laya-multilingual",
+          "questions": 10,
+          "batchRows": -1,
+          "inputTokens": 1820,
+          "repeats": [
+            {
+              "n": 500,
+              "mean": 53.2944,
+              "sd": 0.6758,
+              "min": 52.0252,
+              "p50": 53.1911,
+              "p95": 54.5018,
+              "p99": 55.2322,
+              "max": 55.8163,
+              "p50PerQuestion": 5.3191,
+              "meanPerQuestion": 5.3294
+            },
+            {
+              "n": 500,
+              "mean": 54.215,
+              "sd": 5.0857,
+              "min": 52.3612,
+              "p50": 53.5234,
+              "p95": 55.3321,
+              "p99": 73.4501,
+              "max": 142.1207,
+              "p50PerQuestion": 5.3523,
+              "meanPerQuestion": 5.4215
+            }
+          ],
+          "p50RepeatDiffPercent": 0.6247
+        },
+        {
+          "model": "laya-typed-decisions",
+          "questions": 1,
+          "batchRows": -1,
+          "inputTokens": 188,
+          "repeats": [
+            {
+              "n": 500,
+              "mean": 24.476,
+              "sd": 4.5244,
+              "min": 19.0284,
+              "p50": 23.3518,
+              "p95": 34.4435,
+              "p99": 37.4871,
+              "max": 42.0755,
+              "p50PerQuestion": 23.3518,
+              "meanPerQuestion": 24.476
+            },
+            {
+              "n": 500,
+              "mean": 23.6136,
+              "sd": 3.7489,
+              "min": 19.683,
+              "p50": 21.8898,
+              "p95": 31.1129,
+              "p99": 34.5574,
+              "max": 38.3828,
+              "p50PerQuestion": 21.8898,
+              "meanPerQuestion": 23.6136
+            }
+          ],
+          "p50RepeatDiffPercent": -6.2608
+        },
+        {
+          "model": "laya-typed-decisions",
+          "questions": 4,
+          "batchRows": -1,
+          "inputTokens": 693,
+          "repeats": [
+            {
+              "n": 500,
+              "mean": 53.0506,
+              "sd": 0.7747,
+              "min": 51.4573,
+              "p50": 52.9145,
+              "p95": 54.4306,
+              "p99": 55.0959,
+              "max": 56.38,
+              "p50PerQuestion": 13.2286,
+              "meanPerQuestion": 13.2626
+            },
+            {
+              "n": 500,
+              "mean": 53.3219,
+              "sd": 0.8024,
+              "min": 51.4587,
+              "p50": 53.1852,
+              "p95": 54.8709,
+              "p99": 55.4493,
+              "max": 56.5643,
+              "p50PerQuestion": 13.2963,
+              "meanPerQuestion": 13.3305
+            }
+          ],
+          "p50RepeatDiffPercent": 0.5116
+        },
+        {
+          "model": "laya-typed-decisions",
+          "questions": 10,
+          "batchRows": -1,
+          "inputTokens": 1731,
+          "repeats": [
+            {
+              "n": 500,
+              "mean": 113.2625,
+              "sd": 1.0585,
+              "min": 112.07,
+              "p50": 113.0431,
+              "p95": 114.7281,
+              "p99": 115.7054,
+              "max": 129.7374,
+              "p50PerQuestion": 11.3043,
+              "meanPerQuestion": 11.3262
+            },
+            {
+              "n": 500,
+              "mean": 114.6577,
+              "sd": 1.2724,
+              "min": 112.3186,
+              "p50": 114.4679,
+              "p95": 116.3376,
+              "p99": 117.2796,
+              "max": 135.4195,
+              "p50PerQuestion": 11.4468,
+              "meanPerQuestion": 11.4658
+            }
+          ],
+          "p50RepeatDiffPercent": 1.2604
+        },
+        {
+          "model": "von-1.2.0",
+          "questions": 1,
+          "batchRows": -1,
+          "inputTokens": 163,
+          "repeats": [
+            {
+              "n": 500,
+              "mean": 19.8588,
+              "sd": 2.4468,
+              "min": 17.1882,
+              "p50": 18.8532,
+              "p95": 25.004,
+              "p99": 28.8739,
+              "max": 31.8303,
+              "p50PerQuestion": 18.8532,
+              "meanPerQuestion": 19.8588
+            },
+            {
+              "n": 500,
+              "mean": 21.6623,
+              "sd": 3.8832,
+              "min": 17.7415,
+              "p50": 20.0117,
+              "p95": 30.0675,
+              "p99": 33.1014,
+              "max": 36.0395,
+              "p50PerQuestion": 20.0117,
+              "meanPerQuestion": 21.6623
+            }
+          ],
+          "p50RepeatDiffPercent": 6.1448
+        },
+        {
+          "model": "von-1.2.0",
+          "questions": 4,
+          "batchRows": -1,
+          "inputTokens": 618,
+          "repeats": [
+            {
+              "n": 500,
+              "mean": 52.6443,
+              "sd": 1.1135,
+              "min": 50.7552,
+              "p50": 52.4125,
+              "p95": 54.3401,
+              "p99": 55.9367,
+              "max": 62.6416,
+              "p50PerQuestion": 13.1031,
+              "meanPerQuestion": 13.1611
+            },
+            {
+              "n": 500,
+              "mean": 53.1947,
+              "sd": 0.9375,
+              "min": 51.4457,
+              "p50": 53.0545,
+              "p95": 55.0594,
+              "p99": 55.7725,
+              "max": 56.3055,
+              "p50PerQuestion": 13.2636,
+              "meanPerQuestion": 13.2987
+            }
+          ],
+          "p50RepeatDiffPercent": 1.2249
+        },
+        {
+          "model": "von-1.2.0",
+          "questions": 10,
+          "batchRows": -1,
+          "inputTokens": 1561,
+          "repeats": [
+            {
+              "n": 500,
+              "mean": 121.6821,
+              "sd": 1.6719,
+              "min": 119.0579,
+              "p50": 121.4608,
+              "p95": 124.0329,
+              "p99": 125.8067,
+              "max": 145.1931,
+              "p50PerQuestion": 12.1461,
+              "meanPerQuestion": 12.1682
+            },
+            {
+              "n": 500,
+              "mean": 123.7287,
+              "sd": 1.8338,
+              "min": 120.1138,
+              "p50": 123.3482,
+              "p95": 127.0443,
+              "p99": 129.06,
+              "max": 139.6832,
+              "p50PerQuestion": 12.3348,
+              "meanPerQuestion": 12.3729
+            }
+          ],
+          "p50RepeatDiffPercent": 1.5539
+        }
+      ]
+    },
+    {
+      "id": "http_model_header",
+      "title": "Model forward pass as reported by the Runtime",
+      "what": "The x-tau-model-ms response header of the same requests: the forward-pass time measured inside the server. The gap between this and the HTTP figure is what HTTP, JSON and the host add.",
+      "cells": [
+        {
+          "model": "laya-en",
+          "questions": 1,
+          "batchRows": -1,
+          "inputTokens": 188,
+          "repeats": [
+            {
+              "n": 500,
+              "mean": 19.8728,
+              "sd": 2.1186,
+              "min": 17.786,
+              "p50": 18.9725,
+              "p95": 24.0555,
+              "p99": 28.628,
+              "max": 30.648,
+              "p50PerQuestion": 18.9725,
+              "meanPerQuestion": 19.8728
+            },
+            {
+              "n": 500,
+              "mean": 21.958,
+              "sd": 3.3509,
+              "min": 18.662,
+              "p50": 20.2555,
+              "p95": 29.3606,
+              "p99": 32.8771,
+              "max": 35.454,
+              "p50PerQuestion": 20.2555,
+              "meanPerQuestion": 21.958
+            }
+          ],
+          "p50RepeatDiffPercent": 6.7624
+        },
+        {
+          "model": "laya-en",
+          "questions": 4,
+          "batchRows": -1,
+          "inputTokens": 693,
+          "repeats": [
+            {
+              "n": 500,
+              "mean": 50.8577,
+              "sd": 0.8366,
+              "min": 49.637,
+              "p50": 50.85,
+              "p95": 51.654,
+              "p99": 52.225,
+              "max": 64.823,
+              "p50PerQuestion": 12.7125,
+              "meanPerQuestion": 12.7144
+            },
+            {
+              "n": 500,
+              "mean": 52.0528,
+              "sd": 0.7638,
+              "min": 50.831,
+              "p50": 51.95,
+              "p95": 53.1299,
+              "p99": 53.7189,
+              "max": 62.145,
+              "p50PerQuestion": 12.9875,
+              "meanPerQuestion": 13.0132
+            }
+          ],
+          "p50RepeatDiffPercent": 2.1632
+        },
+        {
+          "model": "laya-en",
+          "questions": 10,
+          "batchRows": -1,
+          "inputTokens": 1731,
+          "repeats": [
+            {
+              "n": 500,
+              "mean": 110.8711,
+              "sd": 1.0545,
+              "min": 110.016,
+              "p50": 110.784,
+              "p95": 111.5842,
+              "p99": 112.0142,
+              "max": 132.832,
+              "p50PerQuestion": 11.0784,
+              "meanPerQuestion": 11.0871
+            },
+            {
+              "n": 500,
+              "mean": 112.0079,
+              "sd": 0.8469,
+              "min": 111.094,
+              "p50": 111.881,
+              "p95": 112.7411,
+              "p99": 113.3111,
+              "max": 125.404,
+              "p50PerQuestion": 11.1881,
+              "meanPerQuestion": 11.2008
+            }
+          ],
+          "p50RepeatDiffPercent": 0.9902
+        },
+        {
+          "model": "laya-multilingual",
+          "questions": 1,
+          "batchRows": -1,
+          "inputTokens": 196,
+          "repeats": [
+            {
+              "n": 500,
+              "mean": 16.1723,
+              "sd": 3.4874,
+              "min": 11.661,
+              "p50": 15.6215,
+              "p95": 22.1519,
+              "p99": 26.525,
+              "max": 28.82,
+              "p50PerQuestion": 15.6215,
+              "meanPerQuestion": 16.1723
+            },
+            {
+              "n": 500,
+              "mean": 17.3288,
+              "sd": 3.9952,
+              "min": 12.134,
+              "p50": 16.29,
+              "p95": 25.5432,
+              "p99": 27.9956,
+              "max": 30.189,
+              "p50PerQuestion": 16.29,
+              "meanPerQuestion": 17.3288
+            }
+          ],
+          "p50RepeatDiffPercent": 4.2794
+        },
+        {
+          "model": "laya-multilingual",
+          "questions": 4,
+          "batchRows": -1,
+          "inputTokens": 728,
+          "repeats": [
+            {
+              "n": 500,
+              "mean": 23.9648,
+              "sd": 0.7511,
+              "min": 22.877,
+              "p50": 23.795,
+              "p95": 25.1303,
+              "p99": 27.1612,
+              "max": 28.967,
+              "p50PerQuestion": 5.9488,
+              "meanPerQuestion": 5.9912
+            },
+            {
+              "n": 500,
+              "mean": 24.3831,
+              "sd": 0.9917,
+              "min": 23.398,
+              "p50": 24.189,
+              "p95": 25.8203,
+              "p99": 28.1633,
+              "max": 38.434,
+              "p50PerQuestion": 6.0473,
+              "meanPerQuestion": 6.0958
+            }
+          ],
+          "p50RepeatDiffPercent": 1.6558
+        },
+        {
+          "model": "laya-multilingual",
+          "questions": 10,
+          "batchRows": -1,
+          "inputTokens": 1820,
+          "repeats": [
+            {
+              "n": 500,
+              "mean": 51.7679,
+              "sd": 0.4279,
+              "min": 50.953,
+              "p50": 51.6875,
+              "p95": 52.5445,
+              "p99": 52.8787,
+              "max": 53.806,
+              "p50PerQuestion": 5.1688,
+              "meanPerQuestion": 5.1768
+            },
+            {
+              "n": 500,
+              "mean": 52.4091,
+              "sd": 2.8144,
+              "min": 51.23,
+              "p50": 52.0055,
+              "p95": 53.0792,
+              "p99": 65.8652,
+              "max": 85.423,
+              "p50PerQuestion": 5.2006,
+              "meanPerQuestion": 5.2409
+            }
+          ],
+          "p50RepeatDiffPercent": 0.6152
+        },
+        {
+          "model": "laya-typed-decisions",
+          "questions": 1,
+          "batchRows": -1,
+          "inputTokens": 188,
+          "repeats": [
+            {
+              "n": 500,
+              "mean": 23.4564,
+              "sd": 4.3666,
+              "min": 18.359,
+              "p50": 22.3125,
+              "p95": 32.391,
+              "p99": 36.36,
+              "max": 40.341,
+              "p50PerQuestion": 22.3125,
+              "meanPerQuestion": 23.4564
+            },
+            {
+              "n": 500,
+              "mean": 22.6527,
+              "sd": 3.5873,
+              "min": 19.015,
+              "p50": 20.889,
+              "p95": 30.0548,
+              "p99": 33.35,
+              "max": 37.133,
+              "p50PerQuestion": 20.889,
+              "meanPerQuestion": 22.6527
+            }
+          ],
+          "p50RepeatDiffPercent": -6.3798
+        },
+        {
+          "model": "laya-typed-decisions",
+          "questions": 4,
+          "batchRows": -1,
+          "inputTokens": 693,
+          "repeats": [
+            {
+              "n": 500,
+              "mean": 51.7832,
+              "sd": 0.5418,
+              "min": 50.594,
+              "p50": 51.696,
+              "p95": 52.6952,
+              "p99": 53.1468,
+              "max": 54.334,
+              "p50PerQuestion": 12.924,
+              "meanPerQuestion": 12.9458
+            },
+            {
+              "n": 500,
+              "mean": 52.0154,
+              "sd": 0.5417,
+              "min": 50.605,
+              "p50": 51.938,
+              "p95": 53.0877,
+              "p99": 53.6636,
+              "max": 53.877,
+              "p50PerQuestion": 12.9845,
+              "meanPerQuestion": 13.0038
+            }
+          ],
+          "p50RepeatDiffPercent": 0.4681
+        },
+        {
+          "model": "laya-typed-decisions",
+          "questions": 10,
+          "batchRows": -1,
+          "inputTokens": 1731,
+          "repeats": [
+            {
+              "n": 500,
+              "mean": 111.5083,
+              "sd": 0.8784,
+              "min": 110.704,
+              "p50": 111.3845,
+              "p95": 112.2374,
+              "p99": 112.8438,
+              "max": 127.97,
+              "p50PerQuestion": 11.1385,
+              "meanPerQuestion": 11.1508
+            },
+            {
+              "n": 500,
+              "mean": 112.7851,
+              "sd": 1.0825,
+              "min": 110.944,
+              "p50": 112.642,
+              "p95": 113.7701,
+              "p99": 114.4652,
+              "max": 133.363,
+              "p50PerQuestion": 11.2642,
+              "meanPerQuestion": 11.2785
+            }
+          ],
+          "p50RepeatDiffPercent": 1.129
+        },
+        {
+          "model": "von-1.2.0",
+          "questions": 1,
+          "batchRows": -1,
+          "inputTokens": 163,
+          "repeats": [
+            {
+              "n": 500,
+              "mean": 18.7229,
+              "sd": 2.291,
+              "min": 16.449,
+              "p50": 17.7495,
+              "p95": 23.8198,
+              "p99": 27.6231,
+              "max": 30.29,
+              "p50PerQuestion": 17.7495,
+              "meanPerQuestion": 18.7229
+            },
+            {
+              "n": 500,
+              "mean": 20.3828,
+              "sd": 3.6595,
+              "min": 16.956,
+              "p50": 18.8115,
+              "p95": 28.4342,
+              "p99": 31.2591,
+              "max": 34.144,
+              "p50PerQuestion": 18.8115,
+              "meanPerQuestion": 20.3828
+            }
+          ],
+          "p50RepeatDiffPercent": 5.9833
+        },
+        {
+          "model": "von-1.2.0",
+          "questions": 4,
+          "batchRows": -1,
+          "inputTokens": 618,
+          "repeats": [
+            {
+              "n": 500,
+              "mean": 50.2784,
+              "sd": 0.6996,
+              "min": 49.3,
+              "p50": 50.183,
+              "p95": 50.9701,
+              "p99": 51.61,
+              "max": 59.069,
+              "p50PerQuestion": 12.5458,
+              "meanPerQuestion": 12.5696
+            },
+            {
+              "n": 500,
+              "mean": 50.6326,
+              "sd": 0.4002,
+              "min": 49.764,
+              "p50": 50.588,
+              "p95": 51.3335,
+              "p99": 51.6043,
+              "max": 51.886,
+              "p50PerQuestion": 12.647,
+              "meanPerQuestion": 12.6582
+            }
+          ],
+          "p50RepeatDiffPercent": 0.807
+        },
+        {
+          "model": "von-1.2.0",
+          "questions": 10,
+          "batchRows": -1,
+          "inputTokens": 1561,
+          "repeats": [
+            {
+              "n": 500,
+              "mean": 116.913,
+              "sd": 1.0774,
+              "min": 116.25,
+              "p50": 116.8425,
+              "p95": 117.3375,
+              "p99": 117.6344,
+              "max": 140.182,
+              "p50PerQuestion": 11.6843,
+              "meanPerQuestion": 11.6913
+            },
+            {
+              "n": 500,
+              "mean": 118.3816,
+              "sd": 0.9739,
+              "min": 116.971,
+              "p50": 118.322,
+              "p95": 119.411,
+              "p99": 120.1856,
+              "max": 135.148,
+              "p50PerQuestion": 11.8322,
+              "meanPerQuestion": 11.8382
+            }
+          ],
+          "p50RepeatDiffPercent": 1.2662
+        }
+      ]
+    }
+  ]
+}

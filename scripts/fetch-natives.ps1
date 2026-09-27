@@ -72,8 +72,13 @@ function Get-Nupkg([string] $id, [string] $version) {
     if (-not (Test-Path $path)) {
         $url = "https://api.nuget.org/v3-flatcontainer/$lower/$version/$file"
         Write-Host "fetch  $file"
-        & curl.exe -sSL --fail --retry 5 --retry-delay 5 -o "$path.part" $url
-        if ($LASTEXITCODE -ne 0) { throw "download failed: $url" }
+        if (Get-Command curl.exe -ErrorAction SilentlyContinue) {
+            & curl.exe -sSL --fail --retry 5 --retry-delay 5 -o "$path.part" $url
+            if ($LASTEXITCODE -ne 0) { throw "download failed: $url" }
+        } else {
+            # Linux build containers have no curl.exe; PowerShell's own client works everywhere.
+            Invoke-WebRequest -Uri $url -OutFile "$path.part" -MaximumRetryCount 5 -RetryIntervalSec 5
+        }
         Move-Item -Force "$path.part" $path
     }
 
