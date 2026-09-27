@@ -234,6 +234,13 @@ public sealed record CalibratorFile
     /// <summary>Serialises this calibrator to stable, indented JSON and writes it to <paramref name="path"/>.</summary>
     public void Write(string path)
     {
+        var options = new JsonSerializerOptions { WriteIndented = true };
+        File.WriteAllText(path, ToJson().ToJsonString(options) + Environment.NewLine);
+    }
+
+    /// <summary>This calibrator as the JSON object <see cref="Write"/> writes.</summary>
+    public JsonObject ToJson()
+    {
         var obj = new JsonObject
         {
             ["format"] = Format,
@@ -289,10 +296,7 @@ public sealed record CalibratorFile
         fittedObj["tool"] = Fitted.Tool;
         fittedObj["toolVersion"] = Fitted.ToolVersion;
         obj["fitted"] = fittedObj;
-
-        var options = new JsonSerializerOptions { WriteIndented = true };
-        string json = obj.ToJsonString(options);
-        File.WriteAllText(path, json + Environment.NewLine);
+        return obj;
     }
 
     /// <summary>Creates a temperature-method calibrator.</summary>

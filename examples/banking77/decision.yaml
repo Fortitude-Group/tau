@@ -89,6 +89,14 @@ data:
   label_field: label
 endpoint: http://localhost:18093
 models: [laya-en, von-1.2.0, laya-en-ft-banking77]
+external:                            # hosted endpoints measured alongside the local models, over the network
+  - id: jev-1.13                     # the name used in reports and run folders
+    endpoint: https://api.typesafe.ai
+    model: jev-latest                # the request's model field
+    api_key_env: TYPESAFE_API_KEY    # read at run time (process, then Windows User scope); never written anywhere
+    price_usd_per_mtok: { input: 0.042, output: 0 }   # for the spend guard and the cost table: an estimate
+    budget_usd: 1.00                 # hard stop: the measure blocks (exit 2) before spend would pass this
+    concurrency: 4
 baselines: [minilm-l6-banking77]
 threshold:
   target_error: 0.05

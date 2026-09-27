@@ -21,6 +21,13 @@ public sealed class SpecTests
         Assert.Equal(1.3, spec.Pricing.TokenizerFactor);
         Assert.Equal(4, spec.Pricing.Rows.Count);
         Assert.Equal(200, spec.Frontier.AltSubset);
+        var jev = Assert.Single(spec.External);
+        Assert.Equal("jev-1.13", jev.Id);
+        Assert.Equal(new Uri("https://api.typesafe.ai"), jev.Endpoint);
+        Assert.Equal("jev-latest", jev.Model);
+        Assert.Equal("TYPESAFE_API_KEY", jev.ApiKeyEnv);
+        Assert.Equal(1.00, jev.BudgetUsd);
+        Assert.Equal(spec.Models.Append("jev-1.13"), spec.AllModels);
     }
 
     [Fact]

@@ -17,7 +17,8 @@ public static class Phases
 
 /// <summary>
 /// The precision of a phase's stored probabilities. The Workbench asks for <c>x-tau-precision: full</c> on every
-/// request; a Tau Runtime honours it, other endpoints (Jev, Kev) round to 4 dp regardless.
+/// request; a Tau Runtime honours it, other endpoints (Jev, Kev) round regardless. How far they round is read from
+/// the data (<see cref="MaxDecimalPlaces"/>), never assumed.
 /// </summary>
 public static class Precisions
 {
@@ -37,23 +38,78 @@ public static class Precisions
         answered > 0 && honoured == answered ? Full : honoured == 0 ? Rounded : Mixed;
 
     /// <summary>
+    /// The decimal places a number is written with: the digits after the point in its shortest round-trip form, so
+    /// 0.37 has 2, 0.1234 has 4, 1E-05 has 5 and 0 has 0.
+    /// </summary>
+    /// <param name="value">A probability as returned.</param>
+    public static int DecimalPlaces(double value)
+    {
+        var text = Math.Abs(value).ToString("R", System.Globalization.CultureInfo.InvariantCulture);
+        int exponent = 0;
+        int e = text.IndexOfAny(['E', 'e']);
+        if (e >= 0)
+        {
+            exponent = int.Parse(text[(e + 1)..], System.Globalization.CultureInfo.InvariantCulture);
+            text = text[..e];
+        }
+
+        int point = text.IndexOf('.', StringComparison.Ordinal);
+        int fraction = point < 0 ? 0 : text.Length - point - 1;
+        return Math.Max(0, fraction - exponent);
+    }
+
+    /// <summary>
+    /// The most decimal places observed in the probabilities the endpoint returned, over every answered record, or
+    /// null when none was answered. A noul record stores [1 - p, p]; only p was returned, so only p is read.
+    /// </summary>
+    /// <param name="question">The question (noul records are read by their "true" value).</param>
+    /// <param name="records">Measured records.</param>
+    public static int? MaxDecimalPlaces(QuestionSpec question, IEnumerable<MeasuredItem> records)
+    {
+        ArgumentNullException.ThrowIfNull(question);
+        ArgumentNullException.ThrowIfNull(records);
+        int? max = null;
+        foreach (var r in records.Where(r => r.Error is null && r.Probabilities is not null))
+        {
+            IEnumerable<double> values = question.Type == Calibration.QuestionType.Noul
+                ? r.Probabilities!.TryGetValue("true", out var p) ? [p] : []
+                : r.Probabilities!.Values;
+            foreach (var v in values)
+            {
+                max = Math.Max(max ?? 0, DecimalPlaces(v));
+            }
+        }
+
+        return max;
+    }
+
+    /// <summary>
     /// What a phase's precision means for calibrators fitted on it, or null when they were fitted on unrounded values.
     /// A null precision is a run recorded before the Workbench asked for full precision, so it was rounded.
     /// </summary>
     /// <param name="precision">The raw phase's precision.</param>
-    public static string? CalibratorNote(string? precision) => precision switch
+    /// <param name="decimalPlaces">The most decimal places observed in its rounded probabilities, or null when unknown.</param>
+    public static string? CalibratorNote(string? precision, int? decimalPlaces)
     {
-        Full => null,
-        Mixed => "Some probabilities were rounded to 4 dp by the endpoint, so the calibrators were fitted partly on rounded values.",
-        Rounded => "Probabilities rounded to 4 dp by the endpoint; calibrators fitted on rounded values.",
-        _ => "Probabilities rounded to 4 dp by the endpoint (measured before the Workbench asked for x-tau-precision: full); calibrators fitted on rounded values. Re-measure with 'tau run --force' to fit on unrounded values.",
-    };
+        string to = decimalPlaces is { } dp ? $" to {dp} dp" : "";
+        return precision switch
+        {
+            Full => null,
+            Mixed => $"Some probabilities were rounded{to} by the endpoint, so the calibrators were fitted partly on rounded values.",
+            Rounded => $"Probabilities rounded{to} by the endpoint; calibrators fitted on rounded values.",
+            _ => $"Probabilities rounded{to} by the endpoint (measured before the Workbench asked for x-tau-precision: full); calibrators fitted on rounded values. Re-measure with 'tau run --force' to fit on unrounded values.",
+        };
+    }
 }
 
 /// <summary>A failed call, excluded from metrics.</summary>
-/// <param name="Status">HTTP status, or 0 for a connection failure or timeout.</param>
+/// <param name="Status">HTTP status, 0 for a connection failure or timeout, or <see cref="NotSentStatus"/> for an item the spend guard never sent.</param>
 /// <param name="Body">The response body or error message (truncated to 2,000 characters).</param>
-public sealed record MeasureError(int Status, string Body);
+public sealed record MeasureError(int Status, string Body)
+{
+    /// <summary>The status of an item never sent because the spend guard stopped the measure.</summary>
+    public const int NotSentStatus = -1;
+}
 
 /// <summary>One line of <c>runs/&lt;model&gt;/&lt;split&gt;.&lt;phase&gt;.jsonl</c>.</summary>
 public sealed record MeasuredItem
@@ -93,6 +149,9 @@ public sealed record MeasuredItem
 
     /// <summary>The failure, when the call failed.</summary>
     public MeasureError? Error { get; init; }
+
+    /// <summary>The <c>model</c> string the response returned, for a hosted endpoint (its only identity).</summary>
+    public string? ModelReturned { get; init; }
 
     /// <summary>
     /// Returns a copy holding <paramref name="vector"/> as its distribution, with the answer (argmax),
@@ -193,6 +252,15 @@ public sealed record MeasureSummary
     /// the Workbench asked for full precision, which were rounded.
     /// </summary>
     public string? Precision { get; init; }
+
+    /// <summary>
+    /// The most decimal places observed in the probabilities the endpoint returned: over the rounded answers when
+    /// any were rounded, else over all. Null when nothing was answered, or in runs recorded before it was kept.
+    /// </summary>
+    public int? DecimalPlaces { get; init; }
+
+    /// <summary>What was measured through a hosted endpoint: identity, usage and spend. Null for a local model.</summary>
+    public HostedMeasure? Hosted { get; init; }
 
     /// <summary>Items sent.</summary>
     public required int Items { get; init; }

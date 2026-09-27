@@ -6,6 +6,48 @@ this file records the ones I made so the trail is auditable.
 
 ---
 
+## 2026-09-27 · Hosted endpoints join a decision spec (Jev beside the local models)
+
+- **What:** a spec can now list hosted `/v1/systemone` endpoints under `external:`. Each one is measured
+  over the network and goes through calibrate, threshold, cascade and report like a local model. It's
+  labelled "hosted endpoint, measured over the network" wherever it sits beside them. `models:` is
+  unchanged. Both example specs name Jev with a budget of $1.00.
+- **The key:** read at run time from the variable in `api_key_env`, the process first, then the
+  Windows User scope. It lives only in the HTTP client's headers. Failure text is scrubbed of it
+  before it's stored, and a test runs the whole pipeline with a fake key and checks no file under the
+  repo holds it.
+- **Spend guard:** each response's `usage` × the spec's price is added to a running total. Before
+  each request the guard projects the total plus the average cost for every request in flight, plus
+  the average × 2 as a margin. If that passes `budget_usd` it refuses that request and every later
+  one. The brief's formula left requests in flight out. I counted them, or four concurrent requests
+  could land past the budget. The first requests go out before any price is known, so the worst
+  overshoot is one request per concurrency slot. The budget covers one measure run (both splits).
+  A stopped run saves what it measured, exits 2, and is never treated as current on the next run.
+- **Retries:** Tau.Client's `RetryPolicy` gained `RetryServerErrors`, off by default. Hosted
+  endpoints use it with five attempts, so 429 and every 5xx back off and retry. A local Runtime's 500
+  is still reported straight away, because there it's a bug.
+- **Identity:** no model hash exists for a hosted endpoint, so the summary records the endpoint URL
+  and the `model` strings the responses return (`jev-1.13.0`). No `GET /v1/models` call is made.
+- **Headers:** `x-tau-raw` and `x-tau-precision: full` are still sent. The summary says whether the
+  endpoint echoed them. Jev doesn't.
+- **Precision from the data:** the "rounded to 4 dp" wording is gone. The summary records the most
+  decimal places seen in the returned probabilities, and every note quotes that figure. Jev will read
+  2 dp. A noul record is read by P(true) only, since 1 − p was never returned.
+- **Offline-only calibrators:** a hosted endpoint's calibrators are fitted on the calibration split
+  as usual but written as `<id>.<type>[.<bucket>].offline-calibrator.json`. The Runtime's loader
+  matches `*.calibrator.json` and never sees them. The file is also a wrapper marked
+  `"offlineOnly": true`, so a renamed copy fails validation rather than loading. The calibrator's
+  `modelHash` field holds the sha256 of the raw calibration run it was fitted on, and the wrapper
+  says so. The report's calibrated view for a hosted endpoint is the offline one, and it says why.
+- **Cascade cost:** a hosted row prices its "local" share at its own price × its measured usage per
+  call, converted to pounds at the spec's rate, with no GPU energy. Its latency is wall clock with the
+  network included, and the table says so.
+- **Headline:** no special case. Jev enters the summary sentence only if the existing rules pick it.
+
+**Reason:** one spec measuring Tau's local models and Jev on the same items, with the same code, is
+the fairest comparison available. The guard and the key handling exist because this is the first
+stage of the Workbench that spends real money and holds a real secret.
+
 ## 2026-09-27 · Calibrators were fitted on rounded probabilities
 
 - **The bug:** the Runtime rounds every probability to 4 dp, as the reference runtimes do. The

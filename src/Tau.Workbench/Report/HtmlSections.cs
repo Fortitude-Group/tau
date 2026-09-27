@@ -38,7 +38,7 @@ public static partial class HtmlReport
         {
             var raw = m.RawHeldOut?.Metrics;
             var cal = m.BestCalibrated;
-            sb.Append("<tr><td>").Append(E(m.Model)).Append("</td><td>").Append(raw is null ? "n/a" : Fmt.Int(raw.N))
+            sb.Append("<tr><td>").Append(E(ReportHosted.Title(doc, m.Model))).Append("</td><td>").Append(raw is null ? "n/a" : Fmt.Int(raw.N))
                 .Append("</td><td>").Append(Fmt.Pct(raw?.Accuracy)).Append("</td><td>").Append(Fmt.Pct(cal?.Accuracy))
                 .Append("</td><td>").Append(Fmt.Num(raw?.Ece)).Append("</td><td>").Append(Fmt.Num(cal?.Ece))
                 .Append("</td><td>").Append(m.EceReduction is { } r ? (r >= 0 ? "−" : "+") + Fmt.Pct(Math.Abs(r)) : "n/a")
@@ -57,10 +57,11 @@ public static partial class HtmlReport
                     { } d => $"; matches the Workbench's offline calibration to within {Fmt.Num(d, "0.0e0")} in any probability",
                     _ => "",
                 }),
+                Phases.Offline when m.Hosted is not null => E(m.Hosted.CalibrationNote),
                 Phases.Offline => "Workbench applied the calibrator offline; the Runtime's calibrated phase has not run",
                 _ => "not calibrated yet",
             });
-            if (m.Calibration is { } fit && Precisions.CalibratorNote(fit.RawPrecision) is { } precisionNote)
+            if (m.Calibration is { } fit && Precisions.CalibratorNote(fit.RawPrecision, fit.RawDecimalPlaces) is { } precisionNote)
             {
                 sb.Append(". ").Append(E(precisionNote));
             }
@@ -179,7 +180,7 @@ public static partial class HtmlReport
             return;
         }
 
-        var series = doc.Thresholds.Select(t => (Name: t.Model, Result: t, Slot: Slot(doc, t.Model), Dashed: false))
+        var series = doc.Thresholds.Select(t => (Name: ReportHosted.Title(doc, t.Model), Result: t, Slot: Slot(doc, t.Model), Dashed: false))
             .Concat(baselines.Select(b => (Name: $"{b.Name} (baseline)", Result: b.Threshold!, Slot: BaselineSlot(doc, b.Name), Dashed: true)))
             .ToArray();
         sb.Append("<div class=\"legend\">");
@@ -216,14 +217,14 @@ public static partial class HtmlReport
         sb.Append("<div class=\"scroll\"><table><thead><tr><th>Model</th><th>τ</th><th>Kept local</th><th>Escalated</th><th>No frontier answer</th><th>Local only")
             .Append(suffix).Append("</th><th>Frontier only</th><th>Cascade").Append(suffix).Append("</th><th>Local p50 latency</th></tr></thead><tbody>\n");
         var baselines = doc.Baselines.Where(b => b.Cascade is not null).Select(b => (Title: $"{b.Name} ({BaselineLabel})", Result: b.Cascade!, Baseline: true));
-        var rows = doc.Cascades.Select(c => (Title: c.Model, Result: c, Baseline: false)).Concat(baselines).ToArray();
+        var rows = doc.Cascades.Select(c => (Title: c.Hosted is null ? c.Model : $"{c.Model} ({c.Hosted})", Result: c, Baseline: false)).Concat(baselines).ToArray();
         foreach (var (title, c, baseline) in rows)
         {
-            sb.Append("<tr><td").Append(baseline ? " class=\"text\"" : "").Append('>').Append(E(title)).Append("</td><td>").Append(Fmt.Num(c.Tau, "0.00")).Append("</td><td>").Append(Fmt.Pct(c.ShareLocal))
+            sb.Append("<tr><td").Append(baseline || c.Hosted is not null ? " class=\"text\"" : "").Append('>').Append(E(title)).Append("</td><td>").Append(Fmt.Num(c.Tau, "0.00")).Append("</td><td>").Append(Fmt.Pct(c.ShareLocal))
                 .Append("</td><td>").Append(Fmt.Pct(c.ShareEscalated)).Append("</td><td>").Append(c.Tau is null ? "n/a" : Fmt.Int(c.MissingFrontier))
                 .Append("</td><td>").Append(Rate(c.LocalOnlyAccuracy)).Append("</td><td>").Append(vsFrontier ? "100% by construction" : Rate(c.FrontierOnlyAccuracy))
                 .Append("</td><td>").Append(c.BlendedAccuracy is null ? E(c.NotSimulated ?? "n/a") : Rate(c.BlendedAccuracy))
-                .Append("</td><td>").Append(baseline ? "not measured" : c.LocalLatencyP50Ms is { } l ? Fmt.Num(l, "0.0") + " ms" : "n/a").Append("</td></tr>\n");
+                .Append("</td><td>").Append(baseline ? "not measured" : c.LocalLatencyP50Ms is { } l ? Fmt.Num(l, "0.0") + " ms" + (c.Hosted is null ? "" : " (wall clock, network included)") : "n/a").Append("</td></tr>\n");
         }
 
         sb.Append("</tbody></table></div>\n<p class=\"caption\">")
@@ -231,6 +232,10 @@ public static partial class HtmlReport
                 ? $"Every rate here is agreement with the frontier model on held-out items, not accuracy, with the number of items it covers in brackets. The cascade serves the local answer when its confidence is at least τ and the frontier model's cached answer otherwise; the cascade figure is the share of items where the served answer equals the frontier model's. {CascadeStage.FrontierOnlyByConstruction} The closer the cascade gets to 100% while keeping a large share local, the better the local model stands in for the frontier call. {doc.Cascades[0].FrontierLatencyNote}"
                 : $"Accuracy is on held-out items, with the number of items each figure covers in brackets. The cascade keeps the local answer when its confidence is at least τ and uses the frontier model's cached answer otherwise; an escalated item with no cached answer is counted and left out, never guessed. If the cascade is close to frontier-only accuracy while keeping a large share local, most of the frontier cost can be avoided. {doc.Cascades[0].FrontierLatencyNote}"))
             .Append("</p>\n");
+        if (doc.Cascades.Any(c => c.Hosted is not null))
+        {
+            sb.Append("<p class=\"caption\">").Append(E($"A row marked {Spec.ExternalModelSpec.Label} puts a hosted endpoint where the local model would be: its \"local\" decision is a call to that endpoint, its latency is wall clock with the network included, and its cost rows price that call at the spec's price rather than GPU energy.")).Append("</p>\n");
+        }
 
         foreach (var (title, c, _) in rows.Where(r => r.Result.Cost is not null))
         {

@@ -2,8 +2,9 @@ namespace Tau.Client;
 
 /// <summary>
 /// Controls how <see cref="SystemOneClient"/> retries a request that receives a transient
-/// server response. Only HTTP 429 (rate limited) and 529 (overloaded) are ever retried; every
+/// server response. By default only HTTP 429 (rate limited) and 529 (overloaded) are retried; every
 /// other 4xx and 5xx status is reported immediately via <see cref="SystemOneHttpException"/>.
+/// <see cref="RetryServerErrors"/> widens that to every 5xx, for hosted endpoints reached over the network.
 /// </summary>
 public sealed record RetryPolicy
 {
@@ -21,6 +22,12 @@ public sealed record RetryPolicy
     /// (exponential backoff: <c>BaseDelay * 2^(attempt - 1)</c>). Default 0.5 seconds.
     /// </summary>
     public TimeSpan BaseDelay { get; init; } = TimeSpan.FromSeconds(0.5);
+
+    /// <summary>
+    /// Also retry every 5xx status (500 to 599), not just 529. Off by default: a local Tau Runtime's 500 is a
+    /// bug to report, while a hosted endpoint's 502 or 503 is usually the network or a busy server. Default false.
+    /// </summary>
+    public bool RetryServerErrors { get; init; }
 
     /// <summary>
     /// The function used to wait between attempts. Defaults to

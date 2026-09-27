@@ -66,6 +66,34 @@ public class RetryTests
     }
 
     [Fact]
+    public async Task Never_retries_a_503_by_default()
+    {
+        var handler = StubHttpMessageHandler.Always(() => Responses.Text(HttpStatusCode.ServiceUnavailable, "busy"));
+        using var http = new HttpClient(handler) { BaseAddress = new Uri("http://localhost/") };
+        using var client = new SystemOneClient(http, FastRetryPolicy);
+
+        await Assert.ThrowsAsync<SystemOneHttpException>(
+            () => client.SystemOneAsync(SampleRequest(), TestContext.Current.CancellationToken));
+
+        Assert.Single(handler.Requests);
+    }
+
+    [Fact]
+    public async Task Retries_a_503_then_succeeds_when_server_errors_are_retried()
+    {
+        var handler = StubHttpMessageHandler.Sequence(
+            Responses.Text(HttpStatusCode.ServiceUnavailable, "busy"),
+            Responses.Text(HttpStatusCode.BadGateway, "bad gateway"),
+            Responses.Noul("decision", 0.5));
+        using var http = new HttpClient(handler) { BaseAddress = new Uri("http://localhost/") };
+        using var client = new SystemOneClient(http, FastRetryPolicy with { RetryServerErrors = true });
+
+        await client.SystemOneAsync(SampleRequest(), TestContext.Current.CancellationToken);
+
+        Assert.Equal(3, handler.Requests.Count);
+    }
+
+    [Fact]
     public async Task Gives_up_after_MaxAttempts_and_reports_the_last_status()
     {
         // A factory, not a fixed instance: each attempt reads and disposes its own response, so a

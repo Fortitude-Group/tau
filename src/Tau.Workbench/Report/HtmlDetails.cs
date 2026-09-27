@@ -59,7 +59,7 @@ public static partial class HtmlReport
         sb.Append("<div class=\"scroll\"><table><thead><tr><th>Model</th><th>Agreement with the dataset's labels, raw</th><th>Agreement with the dataset's labels, calibrated</th></tr></thead><tbody>\n");
         foreach (var r in view.Rows)
         {
-            sb.Append("<tr><td>").Append(E(r.Kind switch { "frontier" => $"{r.Model} (frontier)", "baseline" => $"{r.Model} (baseline)", _ => $"{r.Model} (Tau)" }))
+            sb.Append("<tr><td>").Append(E(r.Kind switch { "frontier" => $"{r.Model} (frontier)", "baseline" => $"{r.Model} (baseline)", "hosted" => $"{r.Model} ({Spec.ExternalModelSpec.Label})", _ => $"{r.Model} (Tau)" }))
                 .Append("</td><td>").Append(r.Raw is null ? "n/a" : Rate(r.Raw)).Append("</td><td>")
                 .Append(r.Kind == "frontier" ? "not calibrated" : r.Calibrated is null ? "n/a" : Rate(r.Calibrated)).Append("</td></tr>\n");
         }
@@ -97,7 +97,7 @@ public static partial class HtmlReport
         foreach (var m in doc.Models.Where(m => m.RawHeldOut?.Metrics is not null))
         {
             var raw = m.RawHeldOut!.Metrics!;
-            sb.Append("<tr><td>").Append(E(m.Model)).Append(" (Tau)</td><td>").Append(Fmt.Int(raw.N)).Append("</td><td>").Append(Fmt.Pct(raw.Accuracy))
+            sb.Append("<tr><td>").Append(E(m.Hosted is null ? $"{m.Model} (Tau)" : $"{m.Model} ({m.Hosted.Label})")).Append("</td><td>").Append(Fmt.Int(raw.N)).Append("</td><td>").Append(Fmt.Pct(raw.Accuracy))
                 .Append("</td><td>").Append(Fmt.Num(raw.Ece)).Append("</td><td>").Append(Fmt.Num(raw.LogLoss)).Append("</td><td>").Append(Fmt.Num(m.BestCalibrated?.Ece))
                 .Append("</td><td>").Append(Fmt.Num(m.BestCalibrated?.LogLoss)).Append("</td><td class=\"note\">for comparison</td></tr>\n");
         }

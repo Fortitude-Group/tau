@@ -28,7 +28,7 @@ public sealed class SystemOneClient : ISystemOneClient, IDisposable
     /// </summary>
     /// <param name="http">The <see cref="HttpClient"/> to send requests through.</param>
     /// <param name="retryPolicy">
-    /// The retry policy for transient (429/529) responses. Defaults to <see cref="RetryPolicy.Default"/>.
+    /// The retry policy for transient (429/529, and every 5xx when it says so) responses. Defaults to <see cref="RetryPolicy.Default"/>.
     /// </param>
     public SystemOneClient(HttpClient http, RetryPolicy? retryPolicy = null)
     {
@@ -52,7 +52,7 @@ public sealed class SystemOneClient : ISystemOneClient, IDisposable
     /// <c>null</c> or empty.
     /// </param>
     /// <param name="retryPolicy">
-    /// The retry policy for transient (429/529) responses. Defaults to <see cref="RetryPolicy.Default"/>.
+    /// The retry policy for transient (429/529, and every 5xx when it says so) responses. Defaults to <see cref="RetryPolicy.Default"/>.
     /// </param>
     public SystemOneClient(Uri baseUrl, string? apiKey = null, RetryPolicy? retryPolicy = null)
         : this(baseUrl, new HttpClientHandler(), apiKey, retryPolicy)
@@ -124,7 +124,7 @@ public sealed class SystemOneClient : ISystemOneClient, IDisposable
             }
 
             var statusCode = (int)response.StatusCode;
-            var isTransient = statusCode is 429 or 529;
+            var isTransient = statusCode is 429 or 529 || (_retryPolicy.RetryServerErrors && statusCode is >= 500 and <= 599);
 
             if (isTransient && attempt < maxAttempts)
             {
