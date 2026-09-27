@@ -51,7 +51,7 @@ Serial by necessity: the end-to-end runs (T060+), because they need all lanes an
 - [X] T028 `Report`: `report.json` plus a self-contained `report.html` (inline SVG reliability diagrams before/after per model, trade-off curve, cost table, confusion matrix or top-confusions table, label noise, baseline table, metadata block, and a what/why/what-follows sentence per figure). Load the `dataviz` skill before writing chart code. No scripts, no external assets. Snapshot test on a fixed input.
 - [X] T029 `Baselines`: read sidecar probability files and compute the same metrics via `Tau.Calibration`.
 - [X] T030 `tau` CLI: `label`, `measure`, `calibrate`, `threshold`, `cascade`, `report`, `run` (skips stages whose artefacts are newer than their inputs). Exit codes per contracts. `dotnet pack` works locally, not pushed.
-- [ ] T031 SC-007 test: the same calibrator file gives identical probabilities through the Workbench path and through the Runtime (in-process, `Category=Models`).
+- [X] T031 SC-007 test: the same calibrator file gives identical probabilities through the Workbench path and through the Runtime (in-process, `Category=Models`).
 
 ## Phase 5: Lane D (fine-tune + baseline, GPU)
 
@@ -69,7 +69,7 @@ Serial by necessity: the end-to-end runs (T060+), because they need all lanes an
 
 ## Phase 7: End to end + gate
 
-- [ ] T060 `scripts/examples.ps1 -Example <name>`: prepare (if needed) → fine-tune/export/parity (if packages are missing) → start the Runtime (CUDA, needed models, free port) → `tau run` → restart with calibrators → calibrated phase → report. It stops only the processes it started.
+- [X] T060 `scripts/examples.ps1 -Example <name>`: prepare (if needed) → fine-tune/export/parity (if packages are missing) → start the Runtime (CUDA, needed models, free port) → `tau run` → restart with calibrators → calibrated phase → report. It stops only the processes it started.
 - [ ] T061 Run banking77 end to end. Commit `examples/banking77/**` (no raw data).
 - [ ] T062 Run support-tickets end to end. Commit (no ticket rows).
 - [ ] T063 Re-run the R1 benchmark on the quiet machine (`scripts/bench.ps1 -Http`). Commit `reports/r1/latency*`.

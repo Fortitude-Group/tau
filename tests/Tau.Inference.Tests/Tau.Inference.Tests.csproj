@@ -9,6 +9,8 @@
     <PackageReference Include="xunit.runner.visualstudio" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <ProjectReference Include="..\..\src\Tau.Inference\Tau.Inference.csproj" />
+    <!-- SC-007 (T031): the Workbench's offline calibration is checked against the engine's own. -->
+    <ProjectReference Include="..\..\src\Tau.Workbench\Tau.Workbench.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Using Include="Xunit" />

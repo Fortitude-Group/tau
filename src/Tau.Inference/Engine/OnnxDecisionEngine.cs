@@ -241,13 +241,22 @@ public sealed class OnnxDecisionEngine : IDecisionEngine, IDisposable
     /// Applies a calibrator to the question's reference probabilities, the unrounded vector a raw answer reports
     /// (format v1 semantics, research R-01), and records it as applied.
     /// </summary>
-    private static float[] Calibrate(CalibratorFile file, float[] referenceProbabilities, List<string> applied)
+    private float[] Calibrate(CalibratorFile file, float[] referenceProbabilities, List<string> applied)
     {
-        var p = new Calibrator(file).ApplyToProbabilities(referenceProbabilities.Select(x => (double)x).ToArray());
+        var reference = referenceProbabilities.Select(x => (double)x).ToArray();
+        var p = new Calibrator(file).ApplyToProbabilities(reference);
+        CalibrationObserver?.Invoke(new CalibrationTrace(file, reference, p));
         var id = file.Bucket is { } b ? $"{file.Model}:{file.QuestionType.ToWireString()}:{b.ToWireString()}" : $"{file.Model}:{file.QuestionType.ToWireString()}";
         if (!applied.Contains(id)) applied.Add(id);
         return p.Select(x => (float)x).ToArray();
     }
+
+    /// <summary>
+    /// Test hook (SC-007): called with every calibrator application, holding the unrounded reference vector the
+    /// calibrator was given and its unrounded output, before the float cast and the answer's rounding. Null in
+    /// production.
+    /// </summary>
+    internal Action<CalibrationTrace>? CalibrationObserver { get; set; }
 
     private static DecisionResult Result(OnnxModel model, RouteDecision route, OrderedDictionary<string, Answer> answers,
         List<string> applied, bool truncated, int rows, int tokens, TimeSpan elapsed) =>
@@ -263,3 +272,9 @@ public sealed class OnnxDecisionEngine : IDecisionEngine, IDisposable
         foreach (var m in _models.Values.Where(m => m.IsValueCreated)) m.Value.Dispose();
     }
 }
+
+/// <summary>One calibrator application inside the engine (see <c>OnnxDecisionEngine.CalibrationObserver</c>).</summary>
+/// <param name="File">The calibrator applied.</param>
+/// <param name="Reference">The unrounded reference probabilities it was given, in the model's option order.</param>
+/// <param name="Calibrated">Its unrounded output, before the float cast and the answer's rounding.</param>
+internal sealed record CalibrationTrace(CalibratorFile File, double[] Reference, double[] Calibrated);
