@@ -4,10 +4,10 @@ These are measurements from the reference machine described below, at the precis
 
 ## Run
 
-- **Measured (UTC)**: 2026-09-27T04:22:38Z
-- **Reproduce with**: `./scripts/bench.ps1 -Http`
-- **Bench command**: `Tau.Bench --provider cuda --iterations 500 --warmup 50 --out reports/r1 --repeat 2 --questions 1,4,10 --invoked-by "./scripts/bench.ps1 -Http"`
-- **Git commit**: `c26162e40284fbbff86bc937e482885cbb961b64` (working tree had uncommitted changes)
+- **Measured (UTC)**: 2026-09-27T16:21:42Z
+- **Reproduce with**: `./scripts/bench.ps1 -Http -Models laya-en,laya-multilingual,laya-typed-decisions,von-1.2.0`
+- **Bench command**: `Tau.Bench --provider cuda --iterations 500 --warmup 50 --out reports/r1 --repeat 2 --questions 1,4,10 --invoked-by "./scripts/bench.ps1 -Http -Models laya-en,laya-multilingual,laya-typed-decisions,von-1.2.0" --models laya-en,laya-multilingual,laya-typed-decisions,von-1.2.0`
+- **Git commit**: `c58502cca4793eef16676242aba2696956d8348b` (working tree had uncommitted changes)
 - **Contract**: `systemone/2026-09-27`
 - **GPU**: NVIDIA GeForce RTX 3080 Ti, 12288 MiB, driver 610.47
 - **CPU**: 11th Gen Intel(R) Core(TM) i9-11900K @ 3.50GHz, 8 physical cores, 16 logical processors
@@ -18,12 +18,12 @@ These are measurements from the reference machine described below, at the precis
   - engine built with AllowCpuFallback=false, so a provider that can't start throws instead of falling back
   - every session reports provider CUDAExecutionProvider with no fallback reason (laya-en, laya-multilingual, laya-typed-decisions, von-1.2.0)
   - engine.ActualProvider = Cuda
-  - nvidia-smi lists this process (pid 35380) as a compute client
+  - nvidia-smi lists this process (pid 37936) as a compute client
 - **Precision**: fp32 for every model
 - **Session**: graph optimisation ORT_ENABLE_BASIC, sequential execution, intra-op threads 8, inter-op threads 1, deterministic compute on, CUDA: use_tf32=0, cudnn_conv_algo_search=DEFAULT, no Tau calibrators loaded (reference post-processing)
 - **Sampling**: 50 warm-up iterations per cell, not timed. Then 500 timed iterations per cell, and the whole timed pass run 2 time(s) back to back. Timer: System.Diagnostics.Stopwatch (high resolution). Percentiles: linear interpolation between closest ranks (Hyndman-Fan type 7, the NumPy and Excel PERCENTILE.INC default).
-- **Machine load just before timing (models already loaded)**: CPU 49.94 %, GPU 0.00 %, GPU memory in use 8339 MiB
-- **Machine load just after timing**: CPU 50.60 %, GPU 33.33 %, GPU memory in use 11967 MiB
+- **Machine load just before timing (models already loaded)**: CPU 8.70 %, GPU 18.67 %, GPU memory in use 9147 MiB
+- **Machine load just after timing**: CPU 1.85 %, GPU 33.33 %, GPU memory in use 11828 MiB
   - CPU: GetSystemTimes busy share over the sampling window; GPU: mean of 3 nvidia-smi utilization.gpu/memory.used readings 0.5 s apart. A snapshot, so it shows whether the machine was busy, not what happened during every iteration.
 - **Note**: The working tree had uncommitted changes when this ran, so the commit above doesn't fully describe the code measured.
 
@@ -63,10 +63,10 @@ Time inside ONNX Runtime's Run call for the request's single batched forward pas
 
 | Model | q=1 p50 / p95 / p99 | q=4 p50 / p95 / p99 | q=4 per question (p50) | q=10 p50 / p95 / p99 | q=10 per question (p50) |
 |---|---:|---:|---:|---:|---:|
-| laya-en | 21.09 / 27.16 / 29.59 | 51.23 / 52.10 / 54.26 | 12.81 | 111.12 / 112.18 / 112.76 | 11.11 |
-| laya-multilingual | 18.33 / 25.31 / 27.73 | 23.96 / 26.99 / 28.72 | 5.99 | 52.24 / 53.05 / 53.63 | 5.22 |
-| laya-typed-decisions | 25.37 / 36.08 / 39.46 | 52.24 / 53.11 / 53.47 | 13.06 | 111.83 / 112.79 / 113.21 | 11.18 |
-| von-1.2.0 | 18.84 / 28.82 / 32.92 | 50.38 / 51.02 / 51.53 | 12.59 | 116.94 / 118.42 / 118.92 | 11.69 |
+| laya-en | 18.26 / 19.30 / 21.00 | 50.98 / 52.44 / 53.28 | 12.75 | 113.32 / 115.75 / 120.50 | 11.33 |
+| laya-multilingual | 12.09 / 13.55 / 15.52 | 23.96 / 25.02 / 25.84 | 5.99 | 52.45 / 54.29 / 55.29 | 5.24 |
+| laya-typed-decisions | 19.11 / 20.28 / 21.09 | 51.78 / 53.64 / 56.90 | 12.94 | 127.16 / 155.18 / 181.85 | 12.72 |
+| von-1.2.0 | 17.06 / 19.60 / 22.11 | 52.19 / 72.20 / 102.58 | 13.05 | 126.35 / 176.77 / 243.76 | 12.63 |
 
 This is the cost of the model itself, the figure closest to what a model card quotes. It's the floor: nothing in Tau's own code can make a request faster than this. If the engine figure below is well above it, the extra time is Tau's tokenising, row building and post-processing, and that's the place to optimise.
 
@@ -76,10 +76,10 @@ Stopwatch around OnnxDecisionEngine.DecideAsync on an already-parsed request: ro
 
 | Model | q=1 p50 / p95 / p99 | q=4 p50 / p95 / p99 | q=4 per question (p50) | q=10 p50 / p95 / p99 | q=10 per question (p50) |
 |---|---:|---:|---:|---:|---:|
-| laya-en | 21.57 / 27.91 / 30.53 | 51.99 / 53.22 / 55.01 | 13.00 | 112.44 / 114.09 / 115.16 | 11.24 |
-| laya-multilingual | 18.73 / 25.92 / 28.31 | 24.62 / 27.88 / 29.55 | 6.16 | 53.28 / 54.51 / 55.36 | 5.33 |
-| laya-typed-decisions | 25.95 / 36.72 / 40.10 | 53.08 / 54.25 / 54.69 | 13.27 | 113.15 / 114.51 / 115.17 | 11.31 |
-| von-1.2.0 | 19.75 / 29.90 / 34.20 | 52.87 / 54.74 / 55.71 | 13.22 | 122.97 / 127.01 / 128.27 | 12.30 |
+| laya-en | 18.59 / 19.77 / 21.78 | 51.47 / 53.06 / 53.80 | 12.87 | 114.11 / 116.58 / 121.54 | 11.41 |
+| laya-multilingual | 12.34 / 13.86 / 15.86 | 24.39 / 25.48 / 26.52 | 6.10 | 53.09 / 55.04 / 55.92 | 5.31 |
+| laya-typed-decisions | 19.45 / 20.66 / 21.47 | 52.27 / 54.31 / 57.62 | 13.07 | 127.97 / 155.99 / 182.60 | 12.80 |
+| von-1.2.0 | 17.67 / 20.21 / 22.63 | 53.68 / 74.11 / 104.89 | 13.42 | 129.36 / 179.54 / 246.65 | 12.94 |
 
 This is what a .NET program that embeds Tau.Inference pays per request, with no network hop. The per-question columns divide the batched p50 by the number of questions, which is the figure to set against batched per-question numbers published elsewhere, and only on comparable hardware.
 
@@ -89,10 +89,10 @@ As 'Model forward pass', but each of 150 requests per cell uses the workload's t
 
 | Model | q=1 p50 / p95 / p99 | q=4 p50 / p95 / p99 | q=4 per question (p50) | q=10 p50 / p95 / p99 | q=10 per question (p50) |
 |---|---:|---:|---:|---:|---:|
-| laya-en | 25.04 / 35.88 / 41.24 | 56.58 / 81.95 / 82.93 | 14.15 | 124.49 / 195.02 / 197.25 | 12.45 |
-| laya-multilingual | 17.54 / 25.85 / 28.04 | 28.08 / 41.80 / 42.31 | 7.02 | 59.23 / 96.55 / 97.94 | 5.92 |
-| laya-typed-decisions | 25.15 / 33.21 / 38.19 | 55.88 / 81.34 / 83.27 | 13.97 | 125.56 / 195.59 / 200.31 | 12.56 |
-| von-1.2.0 | 21.82 / 28.34 / 33.59 | 58.12 / 90.23 / 91.37 | 14.53 | 123.57 / 3722.01 / 4774.57 | 12.36 |
+| laya-en | 23.42 / 30.48 / 34.11 | 77.20 / 116.51 / 124.36 | 19.30 | 153.23 / 264.55 / 285.89 | 15.32 |
+| laya-multilingual | 12.87 / 18.04 / 21.50 | 30.49 / 57.78 / 66.57 | 7.62 | 76.10 / 143.60 / 162.17 | 7.61 |
+| laya-typed-decisions | 22.53 / 28.57 / 30.04 | 67.02 / 112.18 / 128.84 | 16.75 | 132.22 / 200.06 / 228.19 | 13.22 |
+| von-1.2.0 | 19.38 / 22.50 / 24.04 | 59.73 / 93.01 / 97.67 | 14.93 | 131.36 / 5455.11 / 5861.54 | 13.14 |
 
 
 
@@ -102,10 +102,10 @@ As 'Engine end to end', with the varied inputs above. The input-tokens column is
 
 | Model | q=1 p50 / p95 / p99 | q=4 p50 / p95 / p99 | q=4 per question (p50) | q=10 p50 / p95 / p99 | q=10 per question (p50) |
 |---|---:|---:|---:|---:|---:|
-| laya-en | 25.57 / 36.52 / 42.22 | 57.37 / 82.79 / 84.32 | 14.34 | 126.16 / 196.18 / 199.01 | 12.62 |
-| laya-multilingual | 17.83 / 26.31 / 28.53 | 28.55 / 42.34 / 43.03 | 7.14 | 60.34 / 97.61 / 99.16 | 6.03 |
-| laya-typed-decisions | 25.79 / 34.18 / 39.33 | 56.51 / 82.16 / 84.58 | 14.13 | 126.85 / 196.93 / 201.70 | 12.69 |
-| von-1.2.0 | 23.25 / 29.97 / 35.24 | 60.67 / 95.27 / 98.94 | 15.17 | 130.23 / 3732.96 / 4791.71 | 13.02 |
+| laya-en | 23.78 / 30.88 / 34.50 | 77.88 / 117.08 / 124.94 | 19.47 | 154.13 / 265.35 / 286.78 | 15.41 |
+| laya-multilingual | 13.11 / 18.35 / 21.79 | 30.88 / 58.22 / 67.05 | 7.72 | 76.70 / 144.33 / 162.91 | 7.67 |
+| laya-typed-decisions | 22.88 / 28.99 / 30.45 | 67.56 / 112.74 / 129.51 | 16.89 | 133.11 / 200.89 / 229.00 | 13.31 |
+| von-1.2.0 | 19.85 / 23.75 / 25.27 | 60.98 / 96.70 / 100.40 | 15.24 | 134.32 / 5461.78 / 5869.32 | 13.43 |
 
 
 
@@ -113,32 +113,32 @@ As 'Engine end to end', with the varied inputs above. The input-tokens column is
 
 | Measurement | Model | q | p50 repeat 1 | p50 repeat 2 | Change |
 |---|---|---:|---:|---:|---:|
-| Model forward pass | laya-en | 1 | 21.09 | 21.79 | +3.33 % |
-| Model forward pass | laya-en | 4 | 51.23 | 52.23 | +1.95 % |
-| Model forward pass | laya-en | 10 | 111.12 | 111.89 | +0.69 % |
-| Model forward pass | laya-multilingual | 1 | 18.33 | 14.88 | -18.82 % |
-| Model forward pass | laya-multilingual | 4 | 23.96 | 24.14 | +0.75 % |
-| Model forward pass | laya-multilingual | 10 | 52.24 | 52.09 | -0.28 % |
-| Model forward pass | laya-typed-decisions | 1 | 25.37 | 20.35 | -19.79 % |
-| Model forward pass | laya-typed-decisions | 4 | 52.24 | 52.21 | -0.06 % |
-| Model forward pass | laya-typed-decisions | 10 | 111.83 | 112.90 | +0.95 % |
-| Model forward pass | von-1.2.0 | 1 | 18.84 | 18.01 | -4.42 % |
-| Model forward pass | von-1.2.0 | 4 | 50.38 | 50.62 | +0.49 % |
-| Model forward pass | von-1.2.0 | 10 | 116.94 | 118.37 | +1.23 % |
-| Engine end to end | laya-en | 1 | 21.57 | 22.28 | +3.26 % |
-| Engine end to end | laya-en | 4 | 51.99 | 53.06 | +2.06 % |
-| Engine end to end | laya-en | 10 | 112.44 | 113.06 | +0.55 % |
-| Engine end to end | laya-multilingual | 1 | 18.73 | 15.22 | -18.78 % |
-| Engine end to end | laya-multilingual | 4 | 24.62 | 24.71 | +0.37 % |
-| Engine end to end | laya-multilingual | 10 | 53.28 | 52.97 | -0.58 % |
-| Engine end to end | laya-typed-decisions | 1 | 25.95 | 20.77 | -19.94 % |
-| Engine end to end | laya-typed-decisions | 4 | 53.08 | 52.91 | -0.32 % |
-| Engine end to end | laya-typed-decisions | 10 | 113.15 | 114.11 | +0.85 % |
-| Engine end to end | von-1.2.0 | 1 | 19.75 | 18.86 | -4.52 % |
-| Engine end to end | von-1.2.0 | 4 | 52.87 | 52.93 | +0.11 % |
-| Engine end to end | von-1.2.0 | 10 | 122.97 | 123.21 | +0.19 % |
+| Model forward pass | laya-en | 1 | 18.26 | 19.38 | +6.16 % |
+| Model forward pass | laya-en | 4 | 50.98 | 56.95 | +11.70 % |
+| Model forward pass | laya-en | 10 | 113.32 | 120.89 | +6.68 % |
+| Model forward pass | laya-multilingual | 1 | 12.09 | 12.07 | -0.12 % |
+| Model forward pass | laya-multilingual | 4 | 23.96 | 23.31 | -2.72 % |
+| Model forward pass | laya-multilingual | 10 | 52.45 | 52.82 | +0.71 % |
+| Model forward pass | laya-typed-decisions | 1 | 19.11 | 19.66 | +2.85 % |
+| Model forward pass | laya-typed-decisions | 4 | 51.78 | 52.19 | +0.79 % |
+| Model forward pass | laya-typed-decisions | 10 | 127.16 | 122.21 | -3.89 % |
+| Model forward pass | von-1.2.0 | 1 | 17.06 | 17.58 | +3.07 % |
+| Model forward pass | von-1.2.0 | 4 | 52.19 | 62.73 | +20.19 % |
+| Model forward pass | von-1.2.0 | 10 | 126.35 | 153.95 | +21.85 % |
+| Engine end to end | laya-en | 1 | 18.59 | 19.72 | +6.12 % |
+| Engine end to end | laya-en | 4 | 51.47 | 57.46 | +11.64 % |
+| Engine end to end | laya-en | 10 | 114.11 | 121.66 | +6.62 % |
+| Engine end to end | laya-multilingual | 1 | 12.34 | 12.34 | +0.04 % |
+| Engine end to end | laya-multilingual | 4 | 24.39 | 23.69 | -2.85 % |
+| Engine end to end | laya-multilingual | 10 | 53.09 | 53.41 | +0.60 % |
+| Engine end to end | laya-typed-decisions | 1 | 19.45 | 19.98 | +2.72 % |
+| Engine end to end | laya-typed-decisions | 4 | 52.27 | 52.66 | +0.74 % |
+| Engine end to end | laya-typed-decisions | 10 | 127.97 | 122.99 | -3.89 % |
+| Engine end to end | von-1.2.0 | 1 | 17.67 | 18.17 | +2.83 % |
+| Engine end to end | von-1.2.0 | 4 | 53.68 | 64.22 | +19.65 % |
+| Engine end to end | von-1.2.0 | 10 | 129.36 | 156.92 | +21.31 % |
 
-The two timed passes ran back to back on the same process and models. The largest p50 change between them is 19.94 %. SC-007 asks that a rerun of the command reproduces the headline figures within the variation a report records, and this is that variation. A change of more than a few percent means the machine wasn't quiet, and the figures should be re-measured before they're quoted.
+The two timed passes ran back to back on the same process and models. The largest p50 change between them is 21.85 %. SC-007 asks that a rerun of the command reproduces the headline figures within the variation a report records, and this is that variation. A change of more than a few percent means the machine wasn't quiet, and the figures should be re-measured before they're quoted.
 
 ## Full distributions (repeat 1)
 
@@ -148,35 +148,35 @@ Standard deviation is the sample standard deviation. Later repeats are in the JS
 
 | Model | q | n | mean | sd | min | p50 | p95 | p99 | max |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| laya-en | 1 | 500 | 21.80 | 2.82 | 18.26 | 21.09 | 27.16 | 29.59 | 32.91 |
-| laya-en | 4 | 500 | 51.32 | 0.79 | 50.06 | 51.23 | 52.10 | 54.26 | 60.26 |
-| laya-en | 10 | 500 | 111.25 | 0.91 | 110.12 | 111.12 | 112.18 | 112.76 | 126.39 |
-| laya-multilingual | 1 | 500 | 18.76 | 3.73 | 12.09 | 18.33 | 25.31 | 27.73 | 31.62 |
-| laya-multilingual | 4 | 500 | 24.31 | 1.11 | 23.04 | 23.96 | 26.99 | 28.72 | 29.36 |
-| laya-multilingual | 10 | 500 | 52.31 | 0.68 | 51.29 | 52.24 | 53.05 | 53.63 | 58.91 |
-| laya-typed-decisions | 1 | 500 | 26.13 | 5.14 | 19.04 | 25.37 | 36.08 | 39.46 | 47.56 |
-| laya-typed-decisions | 4 | 500 | 52.29 | 0.47 | 51.28 | 52.24 | 53.11 | 53.47 | 53.77 |
-| laya-typed-decisions | 10 | 500 | 111.93 | 0.45 | 111.01 | 111.83 | 112.79 | 113.21 | 115.29 |
-| von-1.2.0 | 1 | 500 | 20.44 | 3.81 | 16.66 | 18.84 | 28.82 | 32.92 | 37.70 |
-| von-1.2.0 | 4 | 500 | 50.40 | 0.35 | 49.54 | 50.38 | 51.02 | 51.53 | 52.19 |
-| von-1.2.0 | 10 | 500 | 117.16 | 1.01 | 116.04 | 116.94 | 118.42 | 118.92 | 134.80 |
+| laya-en | 1 | 500 | 18.37 | 0.61 | 17.60 | 18.26 | 19.30 | 21.00 | 22.58 |
+| laya-en | 4 | 500 | 51.12 | 0.77 | 50.03 | 50.98 | 52.44 | 53.28 | 59.22 |
+| laya-en | 10 | 500 | 113.65 | 1.98 | 111.08 | 113.32 | 115.75 | 120.50 | 136.49 |
+| laya-multilingual | 1 | 500 | 12.27 | 0.79 | 11.60 | 12.09 | 13.55 | 15.52 | 20.00 |
+| laya-multilingual | 4 | 500 | 24.04 | 0.58 | 23.08 | 23.96 | 25.02 | 25.84 | 27.63 |
+| laya-multilingual | 10 | 500 | 52.59 | 0.86 | 51.44 | 52.45 | 54.29 | 55.29 | 56.03 |
+| laya-typed-decisions | 1 | 500 | 19.22 | 0.75 | 18.05 | 19.11 | 20.28 | 21.09 | 29.12 |
+| laya-typed-decisions | 4 | 500 | 51.96 | 1.14 | 50.42 | 51.78 | 53.64 | 56.90 | 60.21 |
+| laya-typed-decisions | 10 | 500 | 129.39 | 17.56 | 110.31 | 127.16 | 155.18 | 181.85 | 325.66 |
+| von-1.2.0 | 1 | 500 | 17.33 | 1.26 | 15.91 | 17.06 | 19.60 | 22.11 | 28.90 |
+| von-1.2.0 | 4 | 500 | 56.29 | 13.42 | 48.20 | 52.19 | 72.20 | 102.58 | 236.88 |
+| von-1.2.0 | 10 | 500 | 134.98 | 29.95 | 116.20 | 126.35 | 176.77 | 243.76 | 478.93 |
 
 ### Engine end to end
 
 | Model | q | n | mean | sd | min | p50 | p95 | p99 | max |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| laya-en | 1 | 500 | 22.33 | 2.93 | 18.64 | 21.57 | 27.91 | 30.53 | 33.60 |
-| laya-en | 4 | 500 | 52.12 | 0.90 | 50.62 | 51.99 | 53.22 | 55.01 | 61.31 |
-| laya-en | 10 | 500 | 112.65 | 1.11 | 111.03 | 112.44 | 114.09 | 115.16 | 128.21 |
-| laya-multilingual | 1 | 500 | 19.17 | 3.80 | 12.36 | 18.73 | 25.92 | 28.31 | 32.04 |
-| laya-multilingual | 4 | 500 | 24.98 | 1.21 | 23.49 | 24.62 | 27.88 | 29.55 | 30.44 |
-| laya-multilingual | 10 | 500 | 53.42 | 0.84 | 52.09 | 53.28 | 54.51 | 55.36 | 61.09 |
-| laya-typed-decisions | 1 | 500 | 26.70 | 5.23 | 19.50 | 25.95 | 36.72 | 40.10 | 48.18 |
-| laya-typed-decisions | 4 | 500 | 53.13 | 0.62 | 51.84 | 53.08 | 54.25 | 54.69 | 54.97 |
-| laya-typed-decisions | 10 | 500 | 113.27 | 0.67 | 112.00 | 113.15 | 114.51 | 115.17 | 116.65 |
-| von-1.2.0 | 1 | 500 | 21.36 | 4.00 | 17.33 | 19.75 | 29.90 | 34.20 | 38.93 |
-| von-1.2.0 | 4 | 500 | 53.05 | 0.94 | 51.22 | 52.87 | 54.74 | 55.71 | 56.85 |
-| von-1.2.0 | 10 | 500 | 123.30 | 2.27 | 119.57 | 122.97 | 127.01 | 128.27 | 139.51 |
+| laya-en | 1 | 500 | 18.70 | 0.67 | 17.87 | 18.59 | 19.77 | 21.78 | 23.08 |
+| laya-en | 4 | 500 | 51.61 | 0.82 | 50.49 | 51.47 | 53.06 | 53.80 | 60.90 |
+| laya-en | 10 | 500 | 114.44 | 2.00 | 111.80 | 114.11 | 116.58 | 121.54 | 137.26 |
+| laya-multilingual | 1 | 500 | 12.53 | 0.82 | 11.84 | 12.34 | 13.86 | 15.86 | 20.46 |
+| laya-multilingual | 4 | 500 | 24.46 | 0.63 | 23.44 | 24.39 | 25.48 | 26.52 | 28.43 |
+| laya-multilingual | 10 | 500 | 53.23 | 0.89 | 52.03 | 53.09 | 55.04 | 55.92 | 56.67 |
+| laya-typed-decisions | 1 | 500 | 19.56 | 0.78 | 18.35 | 19.45 | 20.66 | 21.47 | 29.57 |
+| laya-typed-decisions | 4 | 500 | 52.48 | 1.21 | 50.88 | 52.27 | 54.31 | 57.62 | 61.56 |
+| laya-typed-decisions | 10 | 500 | 130.21 | 17.59 | 111.03 | 127.97 | 155.99 | 182.60 | 326.67 |
+| von-1.2.0 | 1 | 500 | 17.91 | 1.34 | 16.32 | 17.67 | 20.21 | 22.63 | 29.73 |
+| von-1.2.0 | 4 | 500 | 57.84 | 13.45 | 49.86 | 53.68 | 74.11 | 104.89 | 238.23 |
+| von-1.2.0 | 10 | 500 | 138.16 | 30.01 | 118.75 | 129.36 | 179.54 | 246.65 | 482.63 |
 
 ### Model forward pass, varied inputs
 
