@@ -21,6 +21,42 @@ Updated after every completed task. On session restart, resume from here without
 - Reference mode done: `data.reference: frontier` for the tickets (Banking77 stays gold). Every stage scores through `ReferenceLabels`, and the report says "agreement with the frontier model" and keeps a secondary table against the dataset's labels. `tau label` on the tickets exits 2 with 1,000 calibration items pending in 5 batches. Workbench tests 162 pass, and the solution builds with 0 warnings and 0 errors.
 - T031 done: `CalibratorEquivalenceTests` (Inference tests, `Category=Models`) runs laya-en choice and noul and von-1.2.0 choice through the engine with a temperature and an isotonic calibrator loaded from a directory. The Workbench's offline path gives the engine's unrounded output exactly (max |Δ| 0) from the same unrounded vector, and agrees with the calibrated answer within 2.4e-4 from the 4-dp raw answer (limit 1e-3). The engine gained an internal test hook that exposes each calibrator's input and output.
 - T060 done: `scripts/examples.ps1 -Example <name>` checks data and model packages (printing the prepare, export or fine-tune command when something is missing), starts the Runtime on CUDA on the spec's port, runs `tau run`, restarts with the calibrators for the calibrated phase and the report, and stops only the process it started. `-CheckOnly` passes for both examples. The full run is T061/T062.
+- Tickets calibration split labelled (Rob approved): 1,000 answers from 5 subagents, about 0.43M session tokens, no API. `tau label` reports nothing pending and 0 rejected.
+- T061 done: Banking77 end to end (`examples/banking77/report.html`).
+- T062 done: support tickets end to end against the frontier reference (`examples/support-tickets/report.html`). The report now explains a missed ECE goal when the selection rule picked the method with the clearly worse calibration-split ECE (tested).
+
+## R2 gate: evidence against every requirement (T064)
+
+Reference machine: RTX 3080 Ti 12 GB, i9-11900K, CUDA FP32. Every number below is in a committed report produced by one command (`scripts/examples.ps1 -Example <name>`).
+
+| Requirement | Evidence | Status |
+| --- | --- | --- |
+| SC-001 both examples end to end, one command | `examples/banking77/report.html`, `examples/support-tickets/report.html` via `scripts/examples.ps1` | Met |
+| SC-002 ≥50% ECE cut for the out-of-the-box model, or explained | Banking77 laya-en 0.502 → 0.065 (**87%**), von 79%. Tickets laya-typed-decisions 0.269 → 0.067 (75%), laya-en 0.273 → 0.148 (**46%, miss**, explained in the report: the log-loss rule picked isotonic over a temperature fit with calibration-split ECE 0.016) | Met with one explained miss |
+| SC-003 cascade share, blended vs frontier-only, £ per million | Both reports' cascade and cost tables (Opus 5.5 headline, Batch, Sonnet 5 and Haiku 4.5 what-ifs, basis stated, labelled estimates) | Met |
+| SC-004 no item asked twice, ≤1,000 held-out, zero paid API calls | Cache duplicate lines 0; held-out 1,000 per dataset (plus the tickets calibration split Rob approved); all answers from session subagents, `produced_by` on every line | Met |
+| SC-005 every figure traceable | Report metadata: hardware, endpoint `/v1/models` hashes, manifest hash, prompt versions, UTC date, command, git commit | Met |
+| SC-006 misses published | Label noise (5.8% and 76.2%), least-helped calibration (laya-en-ft-banking77 14%, von on tickets 12%), MiniLM beating Tau on both datasets, unreachable thresholds | Met |
+| SC-007 tests green, incl. Workbench = Runtime | `CalibratorEquivalenceTests` exact (max |Δ| 0) and endpoint 2.4e-4; full suite at the clean-clone step (T065) | Pending T065 |
+| FR-014 fine-tune + parity | `examples/*/finetune-parity.json`: max |Δlogit| 2.1e-5 and 1.1e-3 (tolerance 2e-3) | Met |
+| FR-015 classic baseline | MiniLM-L6: Banking77 91.5%, tickets 55.6% (against gold), in both reports | Met |
+| FR-020 R1 CPU latency re-run on a quiet machine | Running (T063) | Pending |
+
+### Headline numbers (held-out, 1,000 items each)
+
+| Dataset | Model | Raw acc. | ECE raw → calibrated |
+| --- | --- | --- | --- |
+| Banking77 (gold) | laya-en | 37.2% | 0.502 → 0.065 |
+| Banking77 (gold) | von-1.2.0 | 77.1% | 0.185 → 0.039 |
+| Banking77 (gold) | laya-en-ft-banking77 | 87.3% | 0.071 → 0.061 |
+| Banking77 (gold) | MiniLM-L6 baseline | 91.5% | calibrated 0.024 |
+| Tickets (vs frontier) | laya-en | 23.2% | 0.273 → 0.148 |
+| Tickets (vs frontier) | laya-typed-decisions | 18.5% | 0.269 → 0.067 |
+| Tickets (vs frontier) | von-1.2.0 | 43.9% | 0.045 → 0.040 |
+| Tickets (vs frontier) | laya-en-ft-tickets | 27.7% | 0.255 → 0.074 |
+| Tickets (vs frontier) | MiniLM-L6 baseline | 27.4% | calibrated 0.015 |
+
+Cascade: at a 5% target error on Banking77, only Von keeps any decisions local (4.5%). The blended result is 94.2% accurate, the same as Claude alone, at an estimated £3,723 against £3,898 per million decisions. On the tickets, at a 20% target disagreement, the local share is about 0.1%. Neither dataset gives a local model a meaningful share at these targets. That is the honest headline.
 
 ---
 

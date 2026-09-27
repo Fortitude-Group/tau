@@ -70,8 +70,8 @@ Serial by necessity: the end-to-end runs (T060+), because they need all lanes an
 ## Phase 7: End to end + gate
 
 - [X] T060 `scripts/examples.ps1 -Example <name>`: prepare (if needed) → fine-tune/export/parity (if packages are missing) → start the Runtime (CUDA, needed models, free port) → `tau run` → restart with calibrators → calibrated phase → report. It stops only the processes it started.
-- [ ] T061 Run banking77 end to end. Commit `examples/banking77/**` (no raw data).
-- [ ] T062 Run support-tickets end to end. Commit (no ticket rows).
+- [X] T061 Run banking77 end to end. Commit `examples/banking77/**` (no raw data).
+- [X] T062 Run support-tickets end to end. Commit (no ticket rows).
 - [ ] T063 Re-run the R1 benchmark on the quiet machine (`scripts/bench.ps1 -Http`). Commit `reports/r1/latency*`.
 - [ ] T064 Check SC-002 (≥50% relative ECE drop for the out-of-the-box model on each dataset, or the reason recorded). Cross-check every FR/SC against evidence in PROGRESS.
 - [ ] T065 Clean-clone `build-test`. Merge to `master`, push to the private repo.
