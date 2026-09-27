@@ -1,0 +1,22 @@
+{
+  "name": "choice with empty string descriptions",
+  "description": "A choice question whose option descriptions are all empty strings.",
+  "request": {
+    "model": "jev-latest",
+    "state": "Support ticket #48213: Customer reports the mobile app crashes every time they try to open their statement PDF. Already tried reinstalling. Requests a callback before end of day.",
+    "questions": {
+      "category": {
+        "type": "choice",
+        "instructions": "Pick the best matching category from its name alone.",
+        "criteria": {
+          "billing": "",
+          "technical": "",
+          "account": ""
+        }
+      }
+    }
+  },
+  "expect": {
+    "status": 200
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "name": "ten questions",
+  "description": "A request containing ten questions, cycling through all three question types.",
+  "request": {
+    "model": "jev-latest",
+    "state": "Chat transcript: Customer asks for a refund on a duplicate transfer of £120 sent to the wrong recipient yesterday. They have not yet contacted the recipient's bank.",
+    "questions": {
+      "noul_1": {
+        "type": "noul",
+        "instructions": "Is point 1 of the customer's message a complaint?"
+      },
+      "choice_2": {
+        "type": "choice",
+        "instructions": "What is the tone of point 2 of the message?",
+        "criteria": {
+          "positive": "Positive tone",
+          "neutral": "Neutral tone",
+          "negative": "Negative tone"
+        }
+      },
+      "score_3": {
+        "type": "score",
+        "instructions": "How clear is point 3 of the customer's message?",
+        "criteria": [
+          "unclear",
+          "somewhat clear",
+          "clear",
+          "very clear"
+        ]
+      },
+      "noul_4": {
+        "type": "noul",
+        "instructions": "Is point 4 of the customer's message a complaint?"
+      },
+      "choice_5": {
+        "type": "choice",
+        "instructions": "What is the tone of point 5 of the message?",
+        "criteria": {
+          "positive": "Positive tone",
+          "neutral": "Neutral tone",
+          "negative": "Negative tone"
+        }
+      },
+      "score_6": {
+        "type": "score",
+        "instructions": "How clear is point 6 of the customer's message?",
+        "criteria": [
+          "unclear",
+          "somewhat clear",
+          "clear",
+          "very clear"
+        ]
+      },
+      "noul_7": {
+        "type": "noul",
+        "instructions": "Is point 7 of the customer's message a complaint?"
+      },
+      "choice_8": {
+        "type": "choice",
+        "instructions": "What is the tone of point 8 of the message?",
+        "criteria": {
+          "positive": "Positive tone",
+          "neutral": "Neutral tone",
+          "negative": "Negative tone"
+        }
+      },
+      "score_9": {
+        "type": "score",
+        "instructions": "How clear is point 9 of the customer's message?",
+        "criteria": [
+          "unclear",
+          "somewhat clear",
+          "clear",
+          "very clear"
+        ]
+      },
+      "noul_10": {
+        "type": "noul",
+        "instructions": "Is point 10 of the customer's message a complaint?"
+      }
+    }
+  },
+  "expect": {
+    "status": 200
+  }
+}

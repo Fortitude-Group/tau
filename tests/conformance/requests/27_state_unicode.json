@@ -1,0 +1,17 @@
+{
+  "name": "unicode-heavy state",
+  "description": "State containing emoji and accented Latin characters.",
+  "request": {
+    "model": "jev-latest",
+    "state": "Client a laissé un message 😡: \"Mon virement de 250€ n'est toujours pas arrivé après 5 jours ⏳!!! C'est inadmissible 🙄.\"",
+    "questions": {
+      "is_angry": {
+        "type": "noul",
+        "instructions": "Does the customer sound angry?"
+      }
+    }
+  },
+  "expect": {
+    "status": 200
+  }
+}

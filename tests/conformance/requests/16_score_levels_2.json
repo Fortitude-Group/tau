@@ -1,0 +1,21 @@
+{
+  "name": "score with 2 levels",
+  "description": "A score question at the contract's minimum of two levels.",
+  "request": {
+    "model": "jev-latest",
+    "state": "Chat transcript: Customer asks for a refund on a duplicate transfer of £120 sent to the wrong recipient yesterday. They have not yet contacted the recipient's bank.",
+    "questions": {
+      "satisfied": {
+        "type": "score",
+        "instructions": "How satisfied does the customer sound?",
+        "criteria": [
+          "dissatisfied",
+          "satisfied"
+        ]
+      }
+    }
+  },
+  "expect": {
+    "status": 200
+  }
+}

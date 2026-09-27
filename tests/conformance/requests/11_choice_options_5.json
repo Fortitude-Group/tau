@@ -1,0 +1,24 @@
+{
+  "name": "choice with 5 options",
+  "description": "A choice question with five options.",
+  "request": {
+    "model": "jev-latest",
+    "state": "Support ticket #48213: Customer reports the mobile app crashes every time they try to open their statement PDF. Already tried reinstalling. Requests a callback before end of day.",
+    "questions": {
+      "category": {
+        "type": "choice",
+        "instructions": "Which of the five categories fits best?",
+        "criteria": {
+          "option_01": "Reason number 1",
+          "option_02": "Reason number 2",
+          "option_03": "Reason number 3",
+          "option_04": "Reason number 4",
+          "option_05": "Reason number 5"
+        }
+      }
+    }
+  },
+  "expect": {
+    "status": 200
+  }
+}

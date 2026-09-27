@@ -1,0 +1,8 @@
+{
+  "name": "invalid: malformed JSON body",
+  "description": "The raw request body is not valid JSON at all (a trailing comma and an unterminated string).",
+  "raw_body": "{\"model\": \"jev-latest\", \"state\": \"Customer asks about a refund, \"questions\": {\"is_urgent\": {\"type\": \"noul\", \"instructions\": \"Is this urgent?\",}}}",
+  "expect": {
+    "status": 422
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "name": "invalid: score with 11 levels",
+  "description": "A score question with eleven levels, one more than the contract's maximum of ten.",
+  "request": {
+    "model": "jev-latest",
+    "state": "Chat transcript: Customer asks for a refund on a duplicate transfer of £120 sent to the wrong recipient yesterday. They have not yet contacted the recipient's bank.",
+    "questions": {
+      "satisfaction": {
+        "type": "score",
+        "instructions": "Rate satisfaction.",
+        "criteria": [
+          "level 1",
+          "level 2",
+          "level 3",
+          "level 4",
+          "level 5",
+          "level 6",
+          "level 7",
+          "level 8",
+          "level 9",
+          "level 10",
+          "level 11"
+        ]
+      }
+    }
+  },
+  "expect": {
+    "status": 422
+  }
+}

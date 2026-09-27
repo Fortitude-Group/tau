@@ -1,0 +1,29 @@
+{
+  "name": "score with 10 levels",
+  "description": "A score question at the contract's maximum of ten levels.",
+  "request": {
+    "model": "jev-latest",
+    "state": "Chat transcript: Customer asks for a refund on a duplicate transfer of £120 sent to the wrong recipient yesterday. They have not yet contacted the recipient's bank.",
+    "questions": {
+      "satisfaction": {
+        "type": "score",
+        "instructions": "Rate the customer's satisfaction on a ten point scale.",
+        "criteria": [
+          "level 1",
+          "level 2",
+          "level 3",
+          "level 4",
+          "level 5",
+          "level 6",
+          "level 7",
+          "level 8",
+          "level 9",
+          "level 10"
+        ]
+      }
+    }
+  },
+  "expect": {
+    "status": 200
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "name": "choice question alone",
+  "description": "A single choice question with no other question types in the request.",
+  "request": {
+    "model": "jev-latest",
+    "state": "Support ticket #48213: Customer reports the mobile app crashes every time they try to open their statement PDF. Already tried reinstalling. Requests a callback before end of day.",
+    "questions": {
+      "category": {
+        "type": "choice",
+        "instructions": "Which support category best fits this ticket?",
+        "criteria": {
+          "billing": "Billing or payments issue",
+          "technical": "App or website technical issue",
+          "account": "Account access or security issue"
+        }
+      }
+    }
+  },
+  "expect": {
+    "status": 200
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "name": "array state",
+  "description": "State given as a JSON array of message turns.",
+  "request": {
+    "model": "jev-latest",
+    "state": [
+      {
+        "role": "customer",
+        "text": "My transfer has not arrived after three days."
+      },
+      {
+        "role": "agent",
+        "text": "Can you confirm the recipient's account details?"
+      },
+      {
+        "role": "customer",
+        "text": "Yes, they are correct, I double checked."
+      }
+    ],
+    "questions": {
+      "needs_investigation": {
+        "type": "noul",
+        "instructions": "Does this need a payments investigation opened?"
+      }
+    }
+  },
+  "expect": {
+    "status": 200
+  }
+}

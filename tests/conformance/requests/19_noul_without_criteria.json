@@ -1,0 +1,17 @@
+{
+  "name": "noul without criteria",
+  "description": "A noul question with no criteria field, which the contract makes optional.",
+  "request": {
+    "model": "jev-latest",
+    "state": "Customer emailed support: \"My card was declined twice today at the supermarket even though my balance shows plenty of funds. Is there a block on my account? This is the second time this month.\"",
+    "questions": {
+      "is_fraud": {
+        "type": "noul",
+        "instructions": "Does this look like potential fraud?"
+      }
+    }
+  },
+  "expect": {
+    "status": 200
+  }
+}
