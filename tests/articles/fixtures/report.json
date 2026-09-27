@@ -1,0 +1,12 @@
+{
+  "name": "fixture",
+  "target_error": 0.05,
+  "kept_local": 0.736,
+  "ece_raw": 0.50213,
+  "ece_calibrated": 0.0654,
+  "cost_gbp_per_million": 1030.6,
+  "items": 1000,
+  "latency_ms_p50": 12.3,
+  "tokens": 22714000,
+  "agreement_pct": 94.17
+}

@@ -30,8 +30,8 @@
 
 ## Lane C: checker and figures
 
-- [ ] T030 [P] `scripts/check-articles.ps1`: link existence, number-in-file matching with rounding, banned terms, and em dashes and semicolons in prose. Self-test against a fixture with one deliberate error of each kind (FR-008).
-- [ ] T031 [P] Screenshots of the committed reports into `docs/articles/img/`: the Banking77 reliability diagrams, cascade table, trade-off curve and misses list, and the tickets summary and gold-view table.
+- [x] T030 [P] `scripts/check-articles.ps1`: link existence, number-in-file matching with rounding, banned terms, and em dashes and semicolons in prose. Self-test against a fixture with one deliberate error of each kind (FR-008).
+- [x] T031 [P] Screenshots of the committed reports into `docs/articles/img/`: the Banking77 reliability diagrams, cascade table, trade-off curve and misses list, and the tickets summary and gold-view table.
 
 ## Lane D and E: derived drafts (after T011)
 
