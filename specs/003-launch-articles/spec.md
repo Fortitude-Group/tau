@@ -14,6 +14,14 @@ R1 (the Runtime and ONNX parity) and R2 (the Workbench and two worked datasets) 
 
 The agreed angle, from the R2 gate: most LLM classification calls can run on a gaming GPU, and the surprise is which model does it best. The failure shape from the brainstorm carries through every piece: **a confidence score that looks certain and means nothing**.
 
+## Clarifications
+
+### Session 2026-09-27
+
+- Q: How should the MiniLM result sit in the headline? → A: As a twist teased in the title. The title leads with the cost cut on a gaming GPU and says "the surprise is which model". MiniLM is revealed in paragraph two.
+- Q: How prominent should the negative tickets result be? → A: It gets its own section in the canonical piece and on HN, and one or two lines in DEV.to, Reddit and LinkedIn.
+- Q: Which working title? → A: "Three-quarters of my Claude classification calls could run on a gaming GPU. The surprise is which model." The first paragraph must make clear the calls are the Banking77 benchmark's (FR-004).
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Rob reviews one canonical write-up he can trust (Priority: P1)
@@ -128,7 +136,7 @@ Rob, or a later session following the web playbook, takes the APEX page draft an
 
 **Articles**
 
-- **FR-001**: A canonical long-form article MUST exist in `docs/articles/`, telling the story in the agreed order: cascade result, classic-encoder twist, calibration, misses, how to reproduce.
+- **FR-001**: A canonical long-form article MUST exist in `docs/articles/` under the agreed working title. It tells the story in the agreed order: cascade result, classic-encoder twist (revealed in paragraph two), calibration, the tickets section ("the benchmark that lied"), the other misses, how to reproduce.
 - **FR-002**: Channel drafts MUST exist as one file per channel: HN (a Show HN post plus a first comment), DEV.to (a tutorial with a canonical URL pointing at the R&D page), Reddit (r/LocalLLaMA and r/dotnet variants, and an r/MachineLearning [P] variant that leads with method) and LinkedIn (a short post naming one chart).
 - **FR-003**: Every number in every draft MUST link to the committed report file that contains it, and MUST match that report at the stated precision.
 - **FR-004**: The first mention of any headline number in each draft MUST carry its caveats in the same paragraph:
