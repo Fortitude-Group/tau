@@ -63,6 +63,7 @@ public sealed class ModelParityTests
                 }
             }
         }
+        ParityFixture.Record(new JsonObject { ["gate"] = "sequences", ["model"] = model, ["cases"] = answers.Count, ["failures"] = failures.Count });
         Assert.True(failures.Count == 0, $"{model}: {failures.Count} sequence mismatches\n" + string.Join("\n", failures.Take(15)));
     }
 
@@ -75,6 +76,7 @@ public sealed class ModelParityTests
         ParityFixture.AssertSameExport(header, model);
         var m = ParityFixture.Engine.Model(model);
         double maxDl = 0, maxDp = 0;
+        var rowsCompared = 0;
         var failures = new List<string>();
 
         foreach (var (id, record) in answers)
@@ -92,6 +94,7 @@ public sealed class ModelParityTests
                 var pe = Numerics.SoftmaxF32(e);
                 var pa = Numerics.SoftmaxF32(a);
                 var dp = pe.Zip(pa, (x, y) => Math.Abs((double)x - y)).Max();
+                rowsCompared++;
                 maxDl = Math.Max(maxDl, dl);
                 maxDp = Math.Max(maxDp, dp);
                 if (dl > ParityFixture.TolLogit || dp > ParityFixture.TolProb) failures.Add($"{id}/row{r}: dlogit {dl:E2} dprob {dp:E2}");
@@ -99,6 +102,10 @@ public sealed class ModelParityTests
             }
         }
         TestContext.Current.SendDiagnosticMessage($"{model}: max |dlogit| {maxDl:E2}, max |dprob| {maxDp:E2}");
+        ParityFixture.Record(new JsonObject
+        {
+            ["gate"] = "logits", ["model"] = model, ["rows"] = rowsCompared, ["max_dlogit"] = maxDl, ["max_dprob"] = maxDp, ["failures"] = failures.Count,
+        });
         Assert.True(failures.Count == 0, $"{model}: {failures.Count} logit mismatches (max dlogit {maxDl:E2}, dprob {maxDp:E2})\n" + string.Join("\n", failures.Take(15)));
     }
 
@@ -109,6 +116,7 @@ public sealed class ModelParityTests
         var (header, answers) = ParityFixture.Read(model, "answers.jsonl");
         ParityFixture.AssertSameExport(header, model);
         var failures = new List<string>();
+        var answersCompared = 0;
 
         foreach (var (id, record) in answers)
         {
@@ -122,8 +130,15 @@ public sealed class ModelParityTests
             var result = await ParityFixture.Engine.DecideAsync(request, new DecisionOptions(Raw: true), TestContext.Current.CancellationToken);
             Assert.Equal(model, result.Response.Model);
             foreach (var (qid, expectedNode) in record["expected"]!.AsObject())
+            {
                 Compare($"{id}/{qid}", expectedNode!.AsObject(), result.Response.Answers[qid], failures);
+                answersCompared++;
+            }
         }
+        ParityFixture.Record(new JsonObject
+        {
+            ["gate"] = "answers", ["model"] = model, ["cases"] = answers.Count, ["answers"] = answersCompared, ["failures"] = failures.Count,
+        });
         Assert.True(failures.Count == 0, $"{model}: {failures.Count} answer mismatches\n" + string.Join("\n", failures.Take(20)));
     }
 

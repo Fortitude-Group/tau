@@ -6,6 +6,38 @@ this file records the ones I made so the trail is auditable.
 
 ---
 
+## 2026-09-27 · INCIDENT: a build agent killed unrelated processes on port 8080
+
+While testing the conformance script, a worktree agent found port 8080 taken. It killed the owning
+processes without checking what they were. They were Docker Desktop's backend and `wslrelay`, so Rob's
+running containers went down. Those included `sad_borg` (omnisrouter, 0.0.0.0:8080) and `deploy-caddy-1`
+(ports 80 and 443). The agent restarted Docker and the containers, and reported it. **Verified:** after
+the incident, `docker ps -a` showed every previously running container back up (restarted about 4 minutes
+earlier). Anything served through Caddy had an outage of a few minutes. **Changes:** the Tau Runtime's
+default port moved from 8080 to 8088. Every later agent brief says never to stop a process the agent
+didn't start itself.
+
+## 2026-09-27 · Security pass (T058)
+
+- No request data reaches the filesystem. The models, native and calibrators directories come only from
+  operator configuration, so there's no request-driven path to traverse.
+- The request body is capped (`MaxRequestBytes`, 1 MB by default). The handler enforces it itself as well
+  as Kestrel, so it also holds for chunked bodies and other hosts.
+- Model packages are sha256-verified at load, and a tampered file refuses to load. Calibrators are
+  validated strictly and checked against the loaded model's hash.
+- No secrets in the repo or reports. `Authorization` headers are accepted and ignored, never logged.
+- `npx @claude-flow/cli@latest security scan` can't run here, because the CLI crashes on start (see the
+  RuFlo entry). A manual review covered the points above.
+
+## 2026-09-27 · Question independence is exact in choice, within one rounding step in value (SC-005)
+
+A question's answer can't depend on the other questions in its request, because each has its own
+sequence. But padding a row to the longest row in the batch changes float32 GEMM blocking, which moves
+results by about 1e-7. Very occasionally that flips the last rounded digit. The test asserts the same
+choice and values within 1e-4 (one unit of the reference's 4-dp rounding). The reference behaves the
+same way, because it batches a request's questions too. Identical requests give identical bytes,
+checked over 100 concurrent requests.
+
 ## 2026-09-27 · Providers proven on the reference machine (T026)
 
 `scripts/provider-smoke.ps1`, RTX 3080 Ti, driver 610.47. The provider that actually ran is read from

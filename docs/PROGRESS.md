@@ -4,71 +4,63 @@ Updated after every completed task. On session restart, resume from here without
 
 **Current release:** R1 (Runtime core + ONNX parity), branch `001-runtime-onnx-parity`.
 **Gate status:** R1 in progress. The R1 gate stops for Rob's "go".
-**Task list:** `specs/001-runtime-onnx-parity/tasks.md` (ticked as tasks complete).
+**Task list:** `specs/001-runtime-onnx-parity/tasks.md` (44+/63 ticked).
 
 ---
 
 ## Done
 
 ### Setup and planning
-- **2026-09-26 · Grounding.** .NET 10.0.400, Python 3.12, uv 0.11.32, gh as `fortitude-omnis`,
-  GPU RTX 3080 Ti 12 GB (driver 610.47), 68 GB RAM. Codenames resolved to real artefacts.
-  *Evidence:* `docs/DECISIONS.md`.
-- **2026-09-26 · Constitution v1.6.0** (Tau fork of the base). *Evidence:* `.specify/memory/constitution.md`.
-- **2026-09-27 · R1 spec, clarify (2 questions answered by Rob), plan, tasks, analyze.** *Evidence:*
-  `specs/001-runtime-onnx-parity/`. Analyze: 0 critical, all fixes applied.
+- **Grounding, constitution v1.6.0, R1 spec/clarify/plan/tasks/analyze.** *Evidence:* `docs/DECISIONS.md`,
+  `.specify/memory/constitution.md`, `specs/001-runtime-onnx-parity/`.
 
-### Implementation
-- **T001–T003, T007 · Scaffolding.** Apache-2.0 LICENSE and NOTICE (encoder licences verified:
-  ModernBERT Apache-2.0, mmBERT MIT), central pinned packages, `Tau.slnx` with 12 projects,
-  `scripts/build-test.ps1`. *Evidence:* `dotnet build Tau.slnx` shows 0 warnings, 0 errors.
-- **T004 · Models fetched.** `scripts/fetch-models.ps1` checks `models.lock.json` (sha256 from Hugging
-  Face's own LFS metadata at the pinned revisions). 22/22 files verified, 5.5 GB. *Evidence:* command output.
-- **T005 · Sidecar env.** `uv.lock`: torch 2.11.0+cu128 (CUDA available), transformers 5.17.0,
-  laya 0.3.20, von-sdk 1.2.3, onnx 1.23.0, onnxruntime 1.30.0, Python 3.12.9.
-- **T010–T012, T017 · ONNX export spike.** Approach A (TorchScript) exports, but it bakes the traced
-  sequence length into a reshape, so it's wrong for any other length. Rejected. Approach B (dynamo)
-  works for all four models. *Evidence:* DECISIONS "ONNX export spike".
-- **T013–T015 · Parity corpus, level-1 parity, fixtures.** 51 hand-written cases (all question types,
-  1–255 options, text/object/array/null/empty/number states, truncation, special tokens, 13 scripts).
-  **All four models PASS: 293 rows, max |Δlogit| 5.5e-5, max |Δprob| 4.0e-6, 0 argmax mismatches**
-  (tolerance 2e-3 / 1e-3). *Evidence:* `reports/r1/parity-model.json`, reproduced by
-  `uv run python -m tau_sidecar.parity` (from `sidecar/finetune`). Fixtures are in `tests/fixtures/parity/`.
-- **T016 · Sidecar tests.** 8/8 pass (manifest hashes, determinism, ONNX smoke parity).
-  *Evidence:* `uv run pytest` in `sidecar/finetune`.
-- **T018–T020 · Tau.Contract** (worktree agent, merged). 113 tests pass.
-- **T021–T022 · Tau.Calibration** (worktree agent, merged). 95 tests pass.
-- **T059 (research part) · Dataset licences.** Banking77 is CC-BY-4.0 (publishable). The best urgency set
-  (`Tobi-Bueck/customer-support-tickets`) is CC-BY-NC-4.0. **Put to Rob at the R1 gate.**
-- **T051, T052 (stub-handler part) · Tau.Client** (worktree agent). Typed .NET client for any
-  `/v1/systemone` server: `SystemOneClient` (`HttpClient` ctor and a `(Uri, apiKey?)` convenience
-  ctor, bearer header only when a key is given), raw `SystemOneAsync`, and typed helpers
-  `DecideAsync<TEnum>`/`ScoreAsync`/`NoulAsync` (+ `NoulDetailedAsync`) as `ISystemOneClient`
-  extension methods. Enum wire names resolve `JsonStringEnumMemberNameAttribute` →
-  `EnumMemberAttribute` → member name. Errors: `SystemOneValidationException` (422, parses Tau's
-  shape, keeps the raw body under a `"$"` problem for a non-Tau shape), `SystemOneHttpException`
-  (401/429/529-after-retries/5xx), `SystemOneProtocolException` (unparseable or missing-answer
-  200). `RetryPolicy` gives 429/529 exponential backoff (default 3 attempts, 0.5 s base), never for
-  other 4xx. 41 tests pass against a stub `HttpMessageHandler` (request shape, all three typed
-  helpers, every error path, retry/backoff, cancellation). `dotnet pack src/Tau.Client -c Release -o
-  artifacts/packages` produces `Tau.Client.0.1.0.nupkg`. **Deferred** (blocked, not in scope for this
-  change): T052's `Category=Models` round trip against the in-process Runtime — `Tau.Runtime` is
-  still the empty web template, so there is nothing to round-trip against yet. *Evidence:*
-  `dotnet test tests/Tau.Client.Tests` (41/41), `dotnet build Tau.slnx` (0 warnings, 0 errors).
+### Models and parity
+- **T004 · Models fetched and verified.** 22/22 files match the sha256 in `models.lock.json`, taken from
+  Hugging Face's LFS metadata at the pinned revisions.
+- **T010–T017 · ONNX export spike.** TorchScript export generalises wrongly (a baked-in sequence length).
+  The dynamo export works for all four models. Level-1 parity: 293 rows, max |Δlogit| 5.5e-5, 0 argmax
+  mismatches. *Evidence:* `reports/r1/parity-model.json`.
+- **T027–T034 · C# parity.** The Laya and Von sequence builders reproduce the reference token rows exactly
+  (tokens, markers, Von position ids) for all four models. Tau's own batched logits and its complete
+  `/v1/systemone` answers match laya 0.3.20 and von-sdk 1.2.3 within tolerance. *Evidence:*
+  `tests/Tau.Inference.Tests/Parity/ModelParityTests.cs` (12/12).
+- **T023–T026, T006 · Serialisers, tokeniser, providers.** 3,157-case byte-exact `json.dumps`/`str`
+  parity; tokeniser parity on about 740 texts over 3 tokenisers; providers **cpu, cuda and directml all pass**
+  on the 3080 Ti.
+- **T037 · Routing.** The C# port of Laya's script router matches the reference on 684/684 states, reason
+  strings included, using Unicode tables generated from Python 3.12.
+
+### Runtime
+- **T018–T022 · Contract (113 tests) and calibration library (95 tests).**
+- **T038–T043 · Engine and HTTP host.** Real-model HTTP tests, 41/41: contract-strict answers from all four
+  models, routing, 422s, truncation, identical bytes over 100 concurrent requests.
+- **T053–T054 · Calibrator hook.** Temperature and isotonic calibrators apply, and `x-tau-raw` bypasses them.
+  A bad or stale calibrator stops start-up.
+- **T051 · Tau.Client** (41 tests, packs to `artifacts/packages/Tau.Client.0.1.0.nupkg`, not pushed).
+- **T045–T047 · Conformance tool and Kev.** Kev-0.8B (`jaredpalmer/kev` @ `5920c5fe`) runs natively on
+  Windows once its setup is pointed at the CUDA wheel index. The tool's self-test passes 12/12.
+- **Smoke run, CUDA, end to end:** an English ticket goes to `laya-en`, German goes to `laya-multilingual`, a
+  pinned Von request answers, and an invalid score gets 422.
 
 ## In flight
 
-- T006/T023–T026 (serialisers, tokeniser, ORT natives and providers): worktree agent.
-- T037 (script router port with Python-generated Unicode tables): worktree agent.
+- T035/T036: `scripts/parity.ps1` running (writes `reports/r1/parity.md`).
+- T049/T050: latency benchmark tool (agent). The measured run needs a quiet machine.
 
 ## Next
 
-- T027 ModelPackage loader, then US1 builders (T028/T029) once the tokeniser/serialiser API lands.
-- Then US1 C# parity (T030–T036), then US2.
+- T048 conformance run against Kev. T050 latency run. T052 client in-process test. T055 publish and Docker.
+  T060–T062 clean reproduction. T063 merge. **T064 R1 gate.**
 
 ## Gate items for Rob (collected so far)
 
-1. The brainstorm's "encode the state once" is wrong about the mechanism. Batching per request
-   was agreed in clarify, and the latency claim still holds.
-2. Dataset licence: the best urgency set is CC-BY-NC-4.0. Decision needed (see DECISIONS "Datasets").
-3. GPU is an RTX 3080 **Ti** (brief said 3080). Reports state the Ti.
+1. **Incident.** A build agent killed Docker Desktop's backend while clearing port 8080. Your containers
+   restarted within minutes (verified), but anything behind `deploy-caddy-1` (80/443) had a short outage.
+   Tau now defaults to port 8088.
+2. **Dataset licence decision:** the best urgency set (`Tobi-Bueck/customer-support-tickets`, 61,765 real
+   tickets) is CC-BY-NC-4.0. Banking77 is CC-BY-4.0.
+3. The brainstorm's "encode the state once" is wrong about the mechanism. Batching per request was agreed
+   in clarify.
+4. The GPU is an RTX 3080 **Ti** (the brief said 3080). Reports state the Ti.
+5. Laya's own numbers are worse than the brainstorm implies in places (Banking77 0.425 vs Jev 0.870, per
+   its model card). These go in the articles as misses.

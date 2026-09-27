@@ -60,6 +60,18 @@ internal static class ParityFixture
         return request!;
     }
 
+    private static readonly object MetricsLock = new();
+
+    /// <summary>
+    /// Appends one metrics record to the file named by <c>TAU_PARITY_OUT</c> (set by <c>scripts/parity.ps1</c>),
+    /// so the parity report states the measured deviations rather than only pass/fail. A no-op otherwise.
+    /// </summary>
+    public static void Record(JsonObject metrics)
+    {
+        if (Environment.GetEnvironmentVariable("TAU_PARITY_OUT") is not { Length: > 0 } path) return;
+        lock (MetricsLock) File.AppendAllText(path, metrics.ToJsonString() + Environment.NewLine);
+    }
+
     /// <summary>Whether the header's model hash matches the package the engine loaded (fixtures belong to one export).</summary>
     public static void AssertSameExport(JsonObject header, string model)
     {
