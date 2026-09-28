@@ -29,6 +29,7 @@ written to `reports/jev/` so the R1 report against Kev stays as it was:
 **Decision:** Tau keeps the published reference's behaviour. Matching Jev's actual codes instead is a small
 change per case, recorded in FINISH as a known gap for Rob to decide.
 **Reason:** the reference is the contract, and Jev's departures from it are a finding, not a spec.
+
 ## 2026-09-28 · Final run: full-precision calibrators, Jev measured, and a VRAM slowdown
 
 - **What ran:** `scripts/examples.ps1 -Force` for both examples against a Runtime with the
