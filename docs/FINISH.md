@@ -103,6 +103,6 @@ Still to do, in order:
 4. **Push the Docker image** if you want it public. Tag `tau-runtime:local` for your registry, then push. It's a CPU image. Mention NVIDIA's terms if you ever ship a CUDA image.
 5. **Post, in this order:**
    - HN (Show HN), and stay around to answer comments. The canonical piece is already live on the R&D page.
-   - DEV.to, with the canonical URL set to https://fortitude-omnis.group/rd/tau/.
+   - DEV.to: an unpublished draft is already in your dashboard (created 28 September from `docs/articles/devto.md`, canonical URL set to https://fortitude-omnis.group/rd/tau/). Review the preview and press Publish.
    - r/LocalLLaMA, then r/dotnet a day or two later, then r/MachineLearning only if its rules allow a [P] post that day. Check each subreddit's self-promotion rules on the day.
    - LinkedIn, from the Fortitude Omnis page.
