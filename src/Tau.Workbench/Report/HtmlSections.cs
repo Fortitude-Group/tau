@@ -237,9 +237,10 @@ public static partial class HtmlReport
             sb.Append("<p class=\"caption\">").Append(E($"A row marked {Spec.ExternalModelSpec.Label} puts a hosted endpoint where the local model would be: its \"local\" decision is a call to that endpoint, its latency is wall clock with the network included, and its cost rows price that call at the spec's price rather than GPU energy.")).Append("</p>\n");
         }
 
-        foreach (var (title, c, _) in rows.Where(r => r.Result.Cost is not null))
+        var costed = rows.Where(r => r.Result.Cost is not null && r.Result.Tau is not null).Select(r => (r.Title, Cost: r.Result.Cost!)).ToArray();
+        if (costed.Length > 0)
         {
-            CostTable(sb, title, c.Cost!);
+            CostTable(sb, costed);
         }
 
         foreach (var (_, c, _) in rows.Where(r => r.Result.Cost is null && r.Result.CostUnavailable is not null).Take(1))
@@ -250,32 +251,75 @@ public static partial class HtmlReport
         sb.Append("</section>\n");
     }
 
-    private static void CostTable(StringBuilder sb, string title, CostEstimate cost)
+    /// <summary>
+    /// One cost table for every cascade: a row per setup (frontier only first, then each local, hosted or baseline
+    /// model) and a column per frontier price basis the escalations could go to. Each cell is the estimated cost per
+    /// million decisions, so nothing about the frontier rows repeats under a local model's name.
+    /// </summary>
+    private static void CostTable(StringBuilder sb, IReadOnlyList<(string Title, CostEstimate Cost)> costed)
     {
-        sb.Append("<h3>").Append(E($"Cost for {title}")).Append(" <span class=\"estimate\">Estimates, not measured bills</span></h3>\n");
-        sb.Append("<div class=\"scroll\"><table><thead><tr><th class=\"text\">Price basis</th><th>Frontier only, per million (USD)</th><th>Frontier only, per 1,000</th><th>Frontier only, per million</th><th>Cascade, per 1,000</th><th>Cascade, per million</th><th>Saving, per million</th></tr></thead><tbody>\n");
-        foreach (var r in cost.Rows)
+        var bases = costed[0].Cost.Rows;
+        sb.Append("<h3>Estimated cost per million decisions, by where escalations go <span class=\"estimate\">Estimates, not measured bills</span></h3>\n");
+        sb.Append("<div class=\"scroll\"><table><thead><tr><th class=\"text\">Setup</th>");
+        foreach (var b in bases)
         {
-            sb.Append("<tr><td class=\"text\">").Append(E(r.Label)).Append("</td><td>").Append(E(Fmt.Usd(r.FrontierOnlyUsdPerMillion)))
-                .Append("</td><td>").Append(E(Fmt.Gbp(r.FrontierOnlyGbpPer1k))).Append("</td><td>").Append(E(Fmt.Gbp(r.FrontierOnlyGbpPerMillion)))
-                .Append("</td><td>").Append(E(Fmt.Gbp(r.CascadeGbpPer1k))).Append("</td><td>").Append(E(Fmt.Gbp(r.CascadeGbpPerMillion)))
-                .Append("</td><td>").Append(E(Fmt.Gbp(r.SavingGbpPerMillion))).Append("</td></tr>\n");
+            sb.Append("<th>").Append(E(b.Name)).Append("<br><span class=\"estimate\">").Append(E(BasisNote(b.Kind))).Append("</span></th>");
+        }
+
+        sb.Append("</tr></thead><tbody>\n<tr><td class=\"text\">Frontier only: every decision goes to the frontier model</td>");
+        foreach (var b in bases)
+        {
+            sb.Append("<td>").Append(E(Fmt.Gbp(b.FrontierOnlyGbpPerMillion))).Append("<br><span class=\"estimate\">")
+                .Append(E(Fmt.Usd(b.FrontierOnlyUsdPerMillion))).Append("</span></td>");
+        }
+
+        sb.Append("</tr>\n");
+        foreach (var (title, cost) in costed)
+        {
+            sb.Append("<tr><td class=\"text\">").Append(E($"{title} first, the rest escalated")).Append("</td>");
+            foreach (var b in bases)
+            {
+                var r = cost.Rows.FirstOrDefault(x => x.Name == b.Name);
+                string saving = r?.SavingGbpPerMillion is { } s && r.FrontierOnlyGbpPerMillion is { } f and > 0
+                    ? $"saves {Fmt.Pct(s / f)}" : "";
+                sb.Append("<td>").Append(E(Fmt.Gbp(r?.CascadeGbpPerMillion))).Append("<br><span class=\"estimate\">").Append(E(saving)).Append("</span></td>");
+            }
+
+            sb.Append("</tr>\n");
         }
 
         sb.Append("</tbody></table></div>\n");
-        foreach (var refusal in new[] { cost.GbpRefused, cost.CascadeGbpRefused }.OfType<string>().Distinct())
+        foreach (var refusal in costed.SelectMany(c => new[] { c.Cost.GbpRefused, c.Cost.CascadeGbpRefused }).OfType<string>().Distinct())
         {
             sb.Append("<p class=\"caption\"><strong>").Append(E(refusal)).Append("</strong></p>\n");
         }
 
-        sb.Append("<p class=\"caption\">Every figure in this table is an estimate from list prices and estimated token counts, not a measured bill. It shows what the same decisions would cost through the API, and what share of that the cascade avoids. Basis:</p>\n<ul class=\"basis\">");
-        foreach (var b in cost.Basis)
+        // The basis lines every setup shares are listed once; each setup's own lines (its energy, its escalated share) under its name.
+        var shared = costed.Select(c => c.Cost.Basis).Aggregate((a, b) => a.Intersect(b, StringComparer.Ordinal).ToArray());
+        sb.Append("<p class=\"caption\">Every figure in this table is an estimate from list prices and estimated token counts, not a measured bill. Each column is a frontier model the escalated decisions could go to: the first row is that model answering everything, and every other row is a local, hosted or baseline model answering what it's confident about and escalating the rest. Only the first column's model produced the frontier answers; the other columns change the price, not the accuracy. Basis:</p>\n<ul class=\"basis\">");
+        foreach (var b in shared)
         {
             sb.Append("<li>").Append(E(b)).Append("</li>");
         }
 
+        foreach (var (title, cost) in costed)
+        {
+            foreach (var b in cost.Basis.Except(shared, StringComparer.Ordinal))
+            {
+                sb.Append("<li>").Append(E($"{title}: {b}")).Append("</li>");
+            }
+        }
+
         sb.Append("</ul>\n");
     }
+
+    private static string BasisNote(string kind) => kind switch
+    {
+        "headline" => "list price, produced the answers",
+        "same-model-rate" => "same model, different rate",
+        "what-if" => "price only, accuracy not measured",
+        _ => kind,
+    };
 
     private static string Rate(Frontier.CountedRate r) => r.Rate is null ? "n/a" : $"{Fmt.Pct(r.Rate)} ({Fmt.Int(r.N)})";
 }

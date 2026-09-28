@@ -13501,11 +13501,11 @@
     "Label noise: the frontier model disagrees with gold on 76.2% (762 of 1,000). This example is scored against the frontier model\u0027s answers instead of the dataset\u0027s labels; the figures against those labels are kept in a secondary table."
   ],
   "metadata": {
-    "generated_utc": "2026-09-28T02:03:31Z",
+    "generated_utc": "2026-09-28T06:53:22Z",
     "command": "tau report examples/support-tickets/decision.yaml",
     "tool_version": "0.1.0",
     "git": {
-      "commit": "88e84ece3a564f2cc20289df77622b38acd062e4",
+      "commit": "3f09e89ad55185fab4c7ea33fa868ab6c5e5cebd",
       "dirty": true
     },
     "hardware": {

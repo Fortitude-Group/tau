@@ -158,7 +158,10 @@ public sealed class CascadeReportTests
         Assert.Null(doc.Baselines.Single(x => x.Name == "not-trained-yet").Cascade);
         var html = File.ReadAllText(spec.ReportHtmlPath);
         Assert.Contains("classic (baseline, not served through Tau: local latency and energy not measured)", html, StringComparison.Ordinal);
-        Assert.Contains("Cost for classic (baseline, not served through Tau", html, StringComparison.Ordinal);
+        Assert.Contains("classic (baseline, not served through Tau: local latency and energy not measured) first, the rest escalated", html, StringComparison.Ordinal);
+        // One combined cost table: the frontier-only row appears once, never repeated under each local model's name.
+        Assert.Single(System.Text.RegularExpressions.Regex.Matches(html, "Frontier only: every decision goes to the frontier model"));
+        Assert.DoesNotContain("Cost for ", html, StringComparison.Ordinal);
         Assert.Contains("<td>classic (baseline)</td><td>baseline-calibrated</td>", html, StringComparison.Ordinal);
         Assert.Contains("line s3 dashed", html, StringComparison.Ordinal);
     }

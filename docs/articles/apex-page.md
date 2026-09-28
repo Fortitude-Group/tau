@@ -118,7 +118,7 @@ I fine-tuned laya-en on the [9,003-item training split](../../examples/banking77
 
 The money is arithmetic on published prices. Each Banking77 prompt is about [1,259 input tokens](../../examples/banking77/report.json) once you list every intent, so Claude Opus 5.5 at list price comes to [£3,898 per million decisions, or £1,949 through the Batch API](../../examples/banking77/report.json). Sending only the uncertain quarter [drops that to £1,054](../../examples/banking77/report.json). Tokens are estimated from characters, not counted. And Claude [disagreed with the Banking77 labels on 5.8% of items](../../examples/banking77/report.json), so its accuracy is agreement with a dataset that has mistakes of its own.
 
-![Table from the Banking77 report showing, for each model including the hosted Jev, the threshold, the share kept local and escalated, local-only, frontier-only and cascade accuracy and local latency, then the estimated cost per thousand and per million decisions at four price bases for the fine-tuned Laya, Jev and the MiniLM baseline.](img/banking77-cascade.png "The cascade table from the Banking77 report. Costs are estimates from list prices, not measured bills.")
+![Table from the Banking77 report showing, for each model including the hosted Jev, the threshold, the share kept local and escalated, local-only, frontier-only and cascade accuracy and local latency, then one cost table: estimated cost per million decisions for Claude alone and for each model answering first with the rest escalated, at four Claude price bases.](img/banking77-cascade.png "The cascade table from the Banking77 report. Costs are estimates from list prices, not measured bills.")
 
 ## The twist: the classic encoder won
 
