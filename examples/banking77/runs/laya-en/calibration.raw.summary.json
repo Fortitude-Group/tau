@@ -43,6 +43,8 @@
   "calibrators_seen": [
     "none"
   ],
+  "precision": "full",
+  "decimal_places": 36,
   "items": 1000,
   "measured": 1000,
   "failures": 0,
@@ -51,9 +53,9 @@
   "metrics": {
     "n": 1000,
     "accuracy": 0.374,
-    "ece": 0.5000526000000006,
-    "brier": 1.1118588032599996,
-    "log_loss": 9.807953312757085,
+    "ece": 0.5000514454692602,
+    "brier": 1.1118569936278795,
+    "log_loss": 6.760720104008351,
     "reliability": [
       {
         "lower": 0,
@@ -64,98 +66,98 @@
         "lower": 0.06666666666666667,
         "upper": 0.13333333333333333,
         "count": 8,
-        "mean_confidence": 0.09682500000000001,
+        "mean_confidence": 0.09682773239910603,
         "accuracy": 0.125
       },
       {
         "lower": 0.13333333333333333,
         "upper": 0.2,
         "count": 5,
-        "mean_confidence": 0.16978,
+        "mean_confidence": 0.169780170917511,
         "accuracy": 0.2
       },
       {
         "lower": 0.2,
         "upper": 0.26666666666666666,
         "count": 5,
-        "mean_confidence": 0.23898000000000003,
+        "mean_confidence": 0.23898967504501342,
         "accuracy": 0
       },
       {
         "lower": 0.26666666666666666,
         "upper": 0.3333333333333333,
         "count": 13,
-        "mean_confidence": 0.3101076923076923,
+        "mean_confidence": 0.31009469353235686,
         "accuracy": 0.07692307692307693
       },
       {
         "lower": 0.3333333333333333,
         "upper": 0.4,
         "count": 12,
-        "mean_confidence": 0.3619166666666667,
+        "mean_confidence": 0.3619246830542882,
         "accuracy": 0.3333333333333333
       },
       {
         "lower": 0.4,
         "upper": 0.4666666666666667,
         "count": 26,
-        "mean_confidence": 0.43911153846153844,
+        "mean_confidence": 0.4391064769946612,
         "accuracy": 0.15384615384615385
       },
       {
         "lower": 0.4666666666666667,
         "upper": 0.5333333333333333,
         "count": 31,
-        "mean_confidence": 0.5035645161290322,
+        "mean_confidence": 0.5035663766245688,
         "accuracy": 0.22580645161290322
       },
       {
         "lower": 0.5333333333333333,
         "upper": 0.6,
         "count": 46,
-        "mean_confidence": 0.5639673913043479,
+        "mean_confidence": 0.5639643176742222,
         "accuracy": 0.30434782608695654
       },
       {
         "lower": 0.6,
         "upper": 0.6666666666666666,
         "count": 28,
-        "mean_confidence": 0.6324357142857142,
+        "mean_confidence": 0.6324432236807687,
         "accuracy": 0.32142857142857145
       },
       {
         "lower": 0.6666666666666666,
         "upper": 0.7333333333333333,
         "count": 34,
-        "mean_confidence": 0.699514705882353,
+        "mean_confidence": 0.6995128761319553,
         "accuracy": 0.2647058823529412
       },
       {
         "lower": 0.7333333333333333,
         "upper": 0.8,
         "count": 31,
-        "mean_confidence": 0.7665419354838711,
+        "mean_confidence": 0.7665335189911627,
         "accuracy": 0.1935483870967742
       },
       {
         "lower": 0.8,
         "upper": 0.8666666666666667,
         "count": 43,
-        "mean_confidence": 0.8426767441860462,
+        "mean_confidence": 0.8426689574884814,
         "accuracy": 0.18604651162790697
       },
       {
         "lower": 0.8666666666666667,
         "upper": 0.9333333333333333,
         "count": 58,
-        "mean_confidence": 0.9039758620689657,
+        "mean_confidence": 0.9039754888107037,
         "accuracy": 0.29310344827586204
       },
       {
         "lower": 0.9333333333333333,
         "upper": 1,
         "count": 660,
-        "mean_confidence": 0.9927525757575767,
+        "mean_confidence": 0.9927519352147074,
         "accuracy": 0.44393939393939397
       }
     ]
@@ -164,23 +166,23 @@
   "confidence_note": "Confidence for ECE and thresholds is max(p), the probability of the chosen answer, not the contract\u0027s confidence field, which for choice and score questions is not a calibrated probability.",
   "exclusion_note": "No item failed; the metrics cover every item.",
   "latency_ms": {
-    "p50": 95.22550000000001,
-    "p95": 109.1805,
-    "mean": 97.54385999999998
+    "p50": 94.7775,
+    "p95": 108.97864999999999,
+    "mean": 97.06641300000004
   },
   "model_ms": {
-    "p50": 93.219,
-    "p95": 106.9615,
-    "mean": 95.10273399999998
+    "p50": 92.9425,
+    "p95": 106.43945,
+    "mean": 94.60150399999995
   },
-  "duration_seconds": 24.4781175,
+  "duration_seconds": 24.3100963,
   "concurrency": 4,
   "gpu": {
-    "mean_watts": 328.0027083333334,
+    "mean_watts": 328.29562500000003,
     "samples": 48,
     "interval_ms": 500,
     "gpu": "NVIDIA GeForce RTX 3080 Ti",
     "note": "Mean of nvidia-smi power.draw for the first GPU, sampled while the phase ran. It is whole-GPU power: idle draw and any other work on the GPU are included, so it overstates what the model alone used."
   },
-  "started_utc": "2026-09-27T13:07:33Z"
+  "started_utc": "2026-09-27T23:37:40Z"
 }

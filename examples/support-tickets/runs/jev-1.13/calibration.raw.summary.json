@@ -1,0 +1,162 @@
+{
+  "model": "jev-1.13",
+  "split": "calibration",
+  "phase": "raw",
+  "endpoint": "https://api.typesafe.ai/",
+  "endpoint_identity": {
+    "is_tau": false,
+    "description": "hosted endpoint, measured over the network: https://api.typesafe.ai/",
+    "models": [],
+    "aliases": []
+  },
+  "model_hashes_seen": [],
+  "calibrators_seen": [],
+  "precision": "rounded",
+  "decimal_places": 16,
+  "hosted": {
+    "label": "hosted endpoint, measured over the network",
+    "endpoint": "https://api.typesafe.ai/",
+    "requested_model": "jev-latest",
+    "models_returned": [
+      "jev-1.13.0"
+    ],
+    "input_tokens": 427295,
+    "output_tokens": 18000,
+    "priced_responses": 1000,
+    "estimated_spend_usd": 0.01794639,
+    "run_spend_usd": 0.01794639000000001,
+    "budget_usd": 1,
+    "input_usd_per_m_tok": 0.042,
+    "output_usd_per_m_tok": 0,
+    "stopped_at_budget": false,
+    "not_sent": 0,
+    "headers_note": "x-tau-raw and x-tau-precision: full were sent on every request, as for a local model. The endpoint echoed neither and returned no x-tau-* header, so it did not honour them: its answers are its own output, rounded to 16 dp.",
+    "latency_note": "Wall-clock latency per call, network included: the time from sending the request to reading the whole response.",
+    "spend_note": "Estimated spend on this split: $0.0179 (427,295 input and 18,000 output tokens at $0.042 and $0 per million, the spec\u0027s prices; an estimate, not a bill). The run has spent an estimated $0.0179 of its $1.00 budget.",
+    "usd_per_decision": 1.794639E-05
+  },
+  "items": 1000,
+  "measured": 1000,
+  "failures": 0,
+  "failures_by_status": {},
+  "truncated": 0,
+  "metrics": {
+    "n": 1000,
+    "accuracy": 0.591,
+    "ece": 0.22447000000000017,
+    "brier": 0.6024978000000005,
+    "log_loss": 1.984653089399636,
+    "mae": 0.477,
+    "reliability": [
+      {
+        "lower": 0,
+        "upper": 0.06666666666666667,
+        "count": 0
+      },
+      {
+        "lower": 0.06666666666666667,
+        "upper": 0.13333333333333333,
+        "count": 0
+      },
+      {
+        "lower": 0.13333333333333333,
+        "upper": 0.2,
+        "count": 0
+      },
+      {
+        "lower": 0.2,
+        "upper": 0.26666666666666666,
+        "count": 0
+      },
+      {
+        "lower": 0.26666666666666666,
+        "upper": 0.3333333333333333,
+        "count": 11,
+        "mean_confidence": 0.30909090909090914,
+        "accuracy": 0.2727272727272727
+      },
+      {
+        "lower": 0.3333333333333333,
+        "upper": 0.4,
+        "count": 9,
+        "mean_confidence": 0.3655555555555555,
+        "accuracy": 0.3333333333333333
+      },
+      {
+        "lower": 0.4,
+        "upper": 0.4666666666666667,
+        "count": 14,
+        "mean_confidence": 0.4385714285714286,
+        "accuracy": 0.5714285714285714
+      },
+      {
+        "lower": 0.4666666666666667,
+        "upper": 0.5333333333333333,
+        "count": 57,
+        "mean_confidence": 0.5080701754385967,
+        "accuracy": 0.5087719298245614
+      },
+      {
+        "lower": 0.5333333333333333,
+        "upper": 0.6,
+        "count": 96,
+        "mean_confidence": 0.5688541666666667,
+        "accuracy": 0.5104166666666666
+      },
+      {
+        "lower": 0.6,
+        "upper": 0.6666666666666666,
+        "count": 66,
+        "mean_confidence": 0.633484848484848,
+        "accuracy": 0.4696969696969697
+      },
+      {
+        "lower": 0.6666666666666666,
+        "upper": 0.7333333333333333,
+        "count": 89,
+        "mean_confidence": 0.6987640449438204,
+        "accuracy": 0.42696629213483145
+      },
+      {
+        "lower": 0.7333333333333333,
+        "upper": 0.8,
+        "count": 86,
+        "mean_confidence": 0.7679069767441863,
+        "accuracy": 0.43023255813953487
+      },
+      {
+        "lower": 0.8,
+        "upper": 0.8666666666666667,
+        "count": 77,
+        "mean_confidence": 0.8327272727272733,
+        "accuracy": 0.4675324675324675
+      },
+      {
+        "lower": 0.8666666666666667,
+        "upper": 0.9333333333333333,
+        "count": 96,
+        "mean_confidence": 0.901875,
+        "accuracy": 0.375
+      },
+      {
+        "lower": 0.9333333333333333,
+        "upper": 1,
+        "count": 399,
+        "mean_confidence": 0.9887969924812033,
+        "accuracy": 0.8045112781954887
+      }
+    ]
+  },
+  "reference": "frontier",
+  "confidence_note": "Confidence for ECE and thresholds is max(p), the probability of the chosen answer, not the contract\u0027s confidence field, which for choice and score questions is not a calibrated probability.",
+  "exclusion_note": "No item failed; the metrics cover every item.",
+  "latency_ms": {
+    "p50": 225.683,
+    "p95": 277.85504999999995,
+    "mean": 231.29302600000017
+  },
+  "duration_seconds": 57.9245102,
+  "concurrency": 4,
+  "gpu_note": "Hosted endpoint: no local GPU runs the model, so no GPU power was sampled.",
+  "started_utc": "2026-09-27T23:31:49Z"
+}

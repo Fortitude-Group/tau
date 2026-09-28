@@ -2,7 +2,7 @@
   {
     "model": "laya-en",
     "target_error": 0.2,
-    "source": "offline",
+    "source": "calibrated",
     "reference": "frontier",
     "reachable": true,
     "tau": 0.56,
@@ -17,241 +17,241 @@
         "tau": 0,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.444
+        "accepted_accuracy": 0.45
       },
       {
         "tau": 0.01,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.444
+        "accepted_accuracy": 0.45
       },
       {
         "tau": 0.02,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.444
+        "accepted_accuracy": 0.45
       },
       {
         "tau": 0.03,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.444
+        "accepted_accuracy": 0.45
       },
       {
         "tau": 0.04,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.444
+        "accepted_accuracy": 0.45
       },
       {
         "tau": 0.05,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.444
+        "accepted_accuracy": 0.45
       },
       {
         "tau": 0.06,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.444
+        "accepted_accuracy": 0.45
       },
       {
         "tau": 0.07,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.444
+        "accepted_accuracy": 0.45
       },
       {
         "tau": 0.08,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.444
+        "accepted_accuracy": 0.45
       },
       {
         "tau": 0.09,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.444
+        "accepted_accuracy": 0.45
       },
       {
         "tau": 0.1,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.444
+        "accepted_accuracy": 0.45
       },
       {
         "tau": 0.11,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.444
+        "accepted_accuracy": 0.45
       },
       {
         "tau": 0.12,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.444
+        "accepted_accuracy": 0.45
       },
       {
         "tau": 0.13,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.444
+        "accepted_accuracy": 0.45
       },
       {
         "tau": 0.14,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.444
+        "accepted_accuracy": 0.45
       },
       {
         "tau": 0.15,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.444
+        "accepted_accuracy": 0.45
       },
       {
         "tau": 0.16,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.444
+        "accepted_accuracy": 0.45
       },
       {
         "tau": 0.17,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.444
+        "accepted_accuracy": 0.45
       },
       {
         "tau": 0.18,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.444
+        "accepted_accuracy": 0.45
       },
       {
         "tau": 0.19,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.444
+        "accepted_accuracy": 0.45
       },
       {
         "tau": 0.2,
-        "accepted": 909,
-        "accept_rate": 0.909,
-        "accepted_accuracy": 0.41474147414741475
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.45
       },
       {
         "tau": 0.21,
-        "accepted": 879,
-        "accept_rate": 0.879,
-        "accepted_accuracy": 0.4072810011376564
+        "accepted": 876,
+        "accept_rate": 0.876,
+        "accepted_accuracy": 0.4063926940639269
       },
       {
         "tau": 0.22,
-        "accepted": 874,
-        "accept_rate": 0.874,
-        "accepted_accuracy": 0.4061784897025172
+        "accepted": 876,
+        "accept_rate": 0.876,
+        "accepted_accuracy": 0.4063926940639269
       },
       {
         "tau": 0.23,
-        "accepted": 717,
-        "accept_rate": 0.717,
-        "accepted_accuracy": 0.3263598326359833
+        "accepted": 711,
+        "accept_rate": 0.711,
+        "accepted_accuracy": 0.3263009845288326
       },
       {
         "tau": 0.24,
         "accepted": 648,
         "accept_rate": 0.648,
-        "accepted_accuracy": 0.30246913580246915
+        "accepted_accuracy": 0.30401234567901236
       },
       {
         "tau": 0.25,
-        "accepted": 635,
-        "accept_rate": 0.635,
-        "accepted_accuracy": 0.30551181102362207
+        "accepted": 632,
+        "accept_rate": 0.632,
+        "accepted_accuracy": 0.3069620253164557
       },
       {
         "tau": 0.26,
-        "accepted": 584,
-        "accept_rate": 0.584,
-        "accepted_accuracy": 0.3133561643835616
+        "accepted": 589,
+        "accept_rate": 0.589,
+        "accepted_accuracy": 0.31239388794567063
       },
       {
         "tau": 0.27,
-        "accepted": 562,
-        "accept_rate": 0.562,
-        "accepted_accuracy": 0.3220640569395018
+        "accepted": 561,
+        "accept_rate": 0.561,
+        "accepted_accuracy": 0.32085561497326204
       },
       {
         "tau": 0.28,
-        "accepted": 493,
-        "accept_rate": 0.493,
-        "accepted_accuracy": 0.3448275862068966
+        "accepted": 518,
+        "accept_rate": 0.518,
+        "accepted_accuracy": 0.3301158301158301
       },
       {
         "tau": 0.29,
-        "accepted": 457,
-        "accept_rate": 0.457,
-        "accepted_accuracy": 0.3479212253829322
+        "accepted": 463,
+        "accept_rate": 0.463,
+        "accepted_accuracy": 0.34773218142548595
       },
       {
         "tau": 0.3,
-        "accepted": 402,
-        "accept_rate": 0.402,
-        "accepted_accuracy": 0.36318407960199006
+        "accepted": 399,
+        "accept_rate": 0.399,
+        "accepted_accuracy": 0.3634085213032581
       },
       {
         "tau": 0.31,
-        "accepted": 365,
-        "accept_rate": 0.365,
-        "accepted_accuracy": 0.38082191780821917
+        "accepted": 366,
+        "accept_rate": 0.366,
+        "accepted_accuracy": 0.3825136612021858
       },
       {
         "tau": 0.32,
-        "accepted": 306,
-        "accept_rate": 0.306,
-        "accepted_accuracy": 0.3790849673202614
+        "accepted": 284,
+        "accept_rate": 0.284,
+        "accepted_accuracy": 0.3908450704225352
       },
       {
         "tau": 0.33,
-        "accepted": 251,
-        "accept_rate": 0.251,
-        "accepted_accuracy": 0.4063745019920319
+        "accepted": 253,
+        "accept_rate": 0.253,
+        "accepted_accuracy": 0.4031620553359684
       },
       {
         "tau": 0.34,
-        "accepted": 183,
-        "accept_rate": 0.183,
-        "accepted_accuracy": 0.4207650273224044
+        "accepted": 169,
+        "accept_rate": 0.169,
+        "accepted_accuracy": 0.4260355029585799
       },
       {
         "tau": 0.35,
-        "accepted": 94,
-        "accept_rate": 0.094,
-        "accepted_accuracy": 0.35106382978723405
+        "accepted": 93,
+        "accept_rate": 0.093,
+        "accepted_accuracy": 0.34408602150537637
       },
       {
         "tau": 0.36,
-        "accepted": 84,
-        "accept_rate": 0.084,
-        "accepted_accuracy": 0.3333333333333333
+        "accepted": 85,
+        "accept_rate": 0.085,
+        "accepted_accuracy": 0.32941176470588235
       },
       {
         "tau": 0.37,
-        "accepted": 80,
-        "accept_rate": 0.08,
-        "accepted_accuracy": 0.35
+        "accepted": 81,
+        "accept_rate": 0.081,
+        "accepted_accuracy": 0.345679012345679
       },
       {
         "tau": 0.38,
-        "accepted": 73,
-        "accept_rate": 0.073,
-        "accepted_accuracy": 0.3561643835616438
+        "accepted": 78,
+        "accept_rate": 0.078,
+        "accepted_accuracy": 0.358974358974359
       },
       {
         "tau": 0.39,
-        "accepted": 68,
-        "accept_rate": 0.068,
-        "accepted_accuracy": 0.35294117647058826
+        "accepted": 67,
+        "accept_rate": 0.067,
+        "accepted_accuracy": 0.3582089552238806
       },
       {
         "tau": 0.4,
@@ -582,163 +582,163 @@
         "tau": 0,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.372
+        "accepted_accuracy": 0.376
       },
       {
         "tau": 0.01,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.372
+        "accepted_accuracy": 0.376
       },
       {
         "tau": 0.02,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.372
+        "accepted_accuracy": 0.376
       },
       {
         "tau": 0.03,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.372
+        "accepted_accuracy": 0.376
       },
       {
         "tau": 0.04,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.372
+        "accepted_accuracy": 0.376
       },
       {
         "tau": 0.05,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.372
+        "accepted_accuracy": 0.376
       },
       {
         "tau": 0.06,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.372
+        "accepted_accuracy": 0.376
       },
       {
         "tau": 0.07,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.372
+        "accepted_accuracy": 0.376
       },
       {
         "tau": 0.08,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.372
+        "accepted_accuracy": 0.376
       },
       {
         "tau": 0.09,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.372
+        "accepted_accuracy": 0.376
       },
       {
         "tau": 0.1,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.372
+        "accepted_accuracy": 0.376
       },
       {
         "tau": 0.11,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.372
+        "accepted_accuracy": 0.376
       },
       {
         "tau": 0.12,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.372
+        "accepted_accuracy": 0.376
       },
       {
         "tau": 0.13,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.372
+        "accepted_accuracy": 0.376
       },
       {
         "tau": 0.14,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.372
+        "accepted_accuracy": 0.376
       },
       {
         "tau": 0.15,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.372
+        "accepted_accuracy": 0.376
       },
       {
         "tau": 0.16,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.372
+        "accepted_accuracy": 0.376
       },
       {
         "tau": 0.17,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.372
+        "accepted_accuracy": 0.376
       },
       {
         "tau": 0.18,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.372
+        "accepted_accuracy": 0.376
       },
       {
         "tau": 0.19,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.372
+        "accepted_accuracy": 0.376
       },
       {
         "tau": 0.2,
-        "accepted": 897,
-        "accept_rate": 0.897,
-        "accepted_accuracy": 0.34002229654403565
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.376
       },
       {
         "tau": 0.21,
-        "accepted": 869,
-        "accept_rate": 0.869,
-        "accepted_accuracy": 0.33141542002301494
+        "accepted": 867,
+        "accept_rate": 0.867,
+        "accepted_accuracy": 0.33102652825836215
       },
       {
         "tau": 0.22,
-        "accepted": 865,
-        "accept_rate": 0.865,
-        "accepted_accuracy": 0.3283236994219653
+        "accepted": 867,
+        "accept_rate": 0.867,
+        "accepted_accuracy": 0.33102652825836215
       },
       {
         "tau": 0.23,
-        "accepted": 722,
-        "accept_rate": 0.722,
-        "accepted_accuracy": 0.278393351800554
+        "accepted": 717,
+        "accept_rate": 0.717,
+        "accepted_accuracy": 0.27615062761506276
       },
       {
         "tau": 0.24,
-        "accepted": 662,
-        "accept_rate": 0.662,
-        "accepted_accuracy": 0.26435045317220546
+        "accepted": 665,
+        "accept_rate": 0.665,
+        "accepted_accuracy": 0.2646616541353383
       },
       {
         "tau": 0.25,
-        "accepted": 652,
-        "accept_rate": 0.652,
-        "accepted_accuracy": 0.2684049079754601
+        "accepted": 654,
+        "accept_rate": 0.654,
+        "accepted_accuracy": 0.2691131498470948
       },
       {
         "tau": 0.26,
-        "accepted": 606,
-        "accept_rate": 0.606,
-        "accepted_accuracy": 0.2722772277227723
+        "accepted": 609,
+        "accept_rate": 0.609,
+        "accepted_accuracy": 0.270935960591133
       },
       {
         "tau": 0.27,
@@ -748,69 +748,69 @@
       },
       {
         "tau": 0.28,
-        "accepted": 484,
-        "accept_rate": 0.484,
-        "accepted_accuracy": 0.2768595041322314
+        "accepted": 527,
+        "accept_rate": 0.527,
+        "accepted_accuracy": 0.2713472485768501
       },
       {
         "tau": 0.29,
-        "accepted": 452,
-        "accept_rate": 0.452,
-        "accepted_accuracy": 0.2809734513274336
+        "accepted": 463,
+        "accept_rate": 0.463,
+        "accepted_accuracy": 0.28077753779697623
       },
       {
         "tau": 0.3,
-        "accepted": 406,
-        "accept_rate": 0.406,
-        "accepted_accuracy": 0.2832512315270936
+        "accepted": 410,
+        "accept_rate": 0.41,
+        "accepted_accuracy": 0.28292682926829266
       },
       {
         "tau": 0.31,
-        "accepted": 358,
-        "accept_rate": 0.358,
-        "accepted_accuracy": 0.3016759776536313
+        "accepted": 362,
+        "accept_rate": 0.362,
+        "accepted_accuracy": 0.30386740331491713
       },
       {
         "tau": 0.32,
-        "accepted": 295,
-        "accept_rate": 0.295,
-        "accepted_accuracy": 0.31864406779661014
+        "accepted": 277,
+        "accept_rate": 0.277,
+        "accepted_accuracy": 0.3176895306859206
       },
       {
         "tau": 0.33,
-        "accepted": 245,
-        "accept_rate": 0.245,
-        "accepted_accuracy": 0.3142857142857143
+        "accepted": 251,
+        "accept_rate": 0.251,
+        "accepted_accuracy": 0.3147410358565737
       },
       {
         "tau": 0.34,
-        "accepted": 152,
-        "accept_rate": 0.152,
-        "accepted_accuracy": 0.34210526315789475
+        "accepted": 147,
+        "accept_rate": 0.147,
+        "accepted_accuracy": 0.3333333333333333
       },
       {
         "tau": 0.35,
-        "accepted": 90,
-        "accept_rate": 0.09,
-        "accepted_accuracy": 0.2777777777777778
+        "accepted": 89,
+        "accept_rate": 0.089,
+        "accepted_accuracy": 0.2696629213483146
       },
       {
         "tau": 0.36,
-        "accepted": 80,
-        "accept_rate": 0.08,
-        "accepted_accuracy": 0.2625
+        "accepted": 81,
+        "accept_rate": 0.081,
+        "accepted_accuracy": 0.25925925925925924
       },
       {
         "tau": 0.37,
-        "accepted": 78,
-        "accept_rate": 0.078,
-        "accepted_accuracy": 0.2692307692307692
+        "accepted": 79,
+        "accept_rate": 0.079,
+        "accepted_accuracy": 0.26582278481012656
       },
       {
         "tau": 0.38,
-        "accepted": 74,
-        "accept_rate": 0.074,
-        "accepted_accuracy": 0.28378378378378377
+        "accepted": 76,
+        "accept_rate": 0.076,
+        "accepted_accuracy": 0.27631578947368424
       },
       {
         "tau": 0.39,
@@ -1155,7 +1155,7 @@
   {
     "model": "laya-typed-decisions",
     "target_error": 0.2,
-    "source": "offline",
+    "source": "calibrated",
     "reference": "frontier",
     "reachable": true,
     "tau": 0.39,
@@ -1300,39 +1300,39 @@
       },
       {
         "tau": 0.22,
-        "accepted": 822,
-        "accept_rate": 0.822,
-        "accepted_accuracy": 0.34793187347931875
+        "accepted": 835,
+        "accept_rate": 0.835,
+        "accepted_accuracy": 0.34251497005988024
       },
       {
         "tau": 0.23,
-        "accepted": 573,
-        "accept_rate": 0.573,
-        "accepted_accuracy": 0.4432809773123909
+        "accepted": 576,
+        "accept_rate": 0.576,
+        "accepted_accuracy": 0.4427083333333333
       },
       {
         "tau": 0.24,
-        "accepted": 557,
-        "accept_rate": 0.557,
-        "accepted_accuracy": 0.4542190305206463
+        "accepted": 553,
+        "accept_rate": 0.553,
+        "accepted_accuracy": 0.4538878842676311
       },
       {
         "tau": 0.25,
-        "accepted": 527,
-        "accept_rate": 0.527,
-        "accepted_accuracy": 0.45351043643263755
+        "accepted": 529,
+        "accept_rate": 0.529,
+        "accepted_accuracy": 0.45368620037807184
       },
       {
         "tau": 0.26,
-        "accepted": 479,
-        "accept_rate": 0.479,
-        "accepted_accuracy": 0.4509394572025052
+        "accepted": 475,
+        "accept_rate": 0.475,
+        "accepted_accuracy": 0.45052631578947366
       },
       {
         "tau": 0.27,
-        "accepted": 384,
-        "accept_rate": 0.384,
-        "accepted_accuracy": 0.4713541666666667
+        "accepted": 388,
+        "accept_rate": 0.388,
+        "accepted_accuracy": 0.47164948453608246
       },
       {
         "tau": 0.28,
@@ -1354,9 +1354,9 @@
       },
       {
         "tau": 0.31,
-        "accepted": 138,
-        "accept_rate": 0.138,
-        "accepted_accuracy": 0.36231884057971014
+        "accepted": 139,
+        "accept_rate": 0.139,
+        "accepted_accuracy": 0.3597122302158273
       },
       {
         "tau": 0.32,
@@ -1366,15 +1366,15 @@
       },
       {
         "tau": 0.33,
-        "accepted": 136,
-        "accept_rate": 0.136,
-        "accepted_accuracy": 0.36764705882352944
+        "accepted": 135,
+        "accept_rate": 0.135,
+        "accepted_accuracy": 0.37037037037037035
       },
       {
         "tau": 0.34,
-        "accepted": 131,
-        "accept_rate": 0.131,
-        "accepted_accuracy": 0.3816793893129771
+        "accepted": 133,
+        "accept_rate": 0.133,
+        "accepted_accuracy": 0.37593984962406013
       },
       {
         "tau": 0.35,
@@ -1384,15 +1384,15 @@
       },
       {
         "tau": 0.36,
-        "accepted": 93,
-        "accept_rate": 0.093,
-        "accepted_accuracy": 0.3870967741935484
+        "accepted": 94,
+        "accept_rate": 0.094,
+        "accepted_accuracy": 0.39361702127659576
       },
       {
         "tau": 0.37,
-        "accepted": 27,
-        "accept_rate": 0.027,
-        "accepted_accuracy": 0.4074074074074074
+        "accepted": 26,
+        "accept_rate": 0.026,
+        "accepted_accuracy": 0.4230769230769231
       },
       {
         "tau": 0.38,
@@ -1853,9 +1853,9 @@
       },
       {
         "tau": 0.22,
-        "accepted": 813,
-        "accept_rate": 0.813,
-        "accepted_accuracy": 0.28044280442804426
+        "accepted": 824,
+        "accept_rate": 0.824,
+        "accepted_accuracy": 0.2779126213592233
       },
       {
         "tau": 0.23,
@@ -1865,27 +1865,27 @@
       },
       {
         "tau": 0.24,
-        "accepted": 567,
-        "accept_rate": 0.567,
-        "accepted_accuracy": 0.35978835978835977
+        "accepted": 564,
+        "accept_rate": 0.564,
+        "accepted_accuracy": 0.3617021276595745
       },
       {
         "tau": 0.25,
         "accepted": 532,
         "accept_rate": 0.532,
-        "accepted_accuracy": 0.3684210526315789
+        "accepted_accuracy": 0.36654135338345867
       },
       {
         "tau": 0.26,
-        "accepted": 480,
-        "accept_rate": 0.48,
-        "accepted_accuracy": 0.35833333333333334
+        "accepted": 476,
+        "accept_rate": 0.476,
+        "accepted_accuracy": 0.35714285714285715
       },
       {
         "tau": 0.27,
-        "accepted": 403,
-        "accept_rate": 0.403,
-        "accepted_accuracy": 0.34987593052109184
+        "accepted": 404,
+        "accept_rate": 0.404,
+        "accepted_accuracy": 0.35148514851485146
       },
       {
         "tau": 0.28,
@@ -1895,9 +1895,9 @@
       },
       {
         "tau": 0.29,
-        "accepted": 229,
-        "accept_rate": 0.229,
-        "accepted_accuracy": 0.24017467248908297
+        "accepted": 230,
+        "accept_rate": 0.23,
+        "accepted_accuracy": 0.2391304347826087
       },
       {
         "tau": 0.3,
@@ -1925,9 +1925,9 @@
       },
       {
         "tau": 0.34,
-        "accepted": 154,
-        "accept_rate": 0.154,
-        "accepted_accuracy": 0.2662337662337662
+        "accepted": 153,
+        "accept_rate": 0.153,
+        "accepted_accuracy": 0.2679738562091503
       },
       {
         "tau": 0.35,
@@ -1937,15 +1937,15 @@
       },
       {
         "tau": 0.36,
-        "accepted": 118,
-        "accept_rate": 0.118,
-        "accepted_accuracy": 0.288135593220339
+        "accepted": 119,
+        "accept_rate": 0.119,
+        "accepted_accuracy": 0.2857142857142857
       },
       {
         "tau": 0.37,
-        "accepted": 19,
-        "accept_rate": 0.019,
-        "accepted_accuracy": 0.631578947368421
+        "accepted": 16,
+        "accept_rate": 0.016,
+        "accepted_accuracy": 0.6875
       },
       {
         "tau": 0.38,
@@ -2276,7 +2276,7 @@
   {
     "model": "von-1.2.0",
     "target_error": 0.2,
-    "source": "offline",
+    "source": "calibrated",
     "reference": "frontier",
     "reachable": true,
     "tau": 0.78,
@@ -2451,9 +2451,9 @@
       },
       {
         "tau": 0.27,
-        "accepted": 989,
-        "accept_rate": 0.989,
-        "accepted_accuracy": 0.4762386248736097
+        "accepted": 990,
+        "accept_rate": 0.99,
+        "accepted_accuracy": 0.47575757575757577
       },
       {
         "tau": 0.28,
@@ -2481,9 +2481,9 @@
       },
       {
         "tau": 0.32,
-        "accepted": 927,
-        "accept_rate": 0.927,
-        "accepted_accuracy": 0.48975188781014023
+        "accepted": 926,
+        "accept_rate": 0.926,
+        "accepted_accuracy": 0.4892008639308855
       },
       {
         "tau": 0.33,
@@ -2493,27 +2493,27 @@
       },
       {
         "tau": 0.34,
-        "accepted": 890,
-        "accept_rate": 0.89,
-        "accepted_accuracy": 0.4966292134831461
+        "accepted": 888,
+        "accept_rate": 0.888,
+        "accepted_accuracy": 0.49774774774774777
       },
       {
         "tau": 0.35,
-        "accepted": 808,
-        "accept_rate": 0.808,
-        "accepted_accuracy": 0.5086633663366337
+        "accepted": 813,
+        "accept_rate": 0.813,
+        "accepted_accuracy": 0.5092250922509225
       },
       {
         "tau": 0.36,
-        "accepted": 749,
-        "accept_rate": 0.749,
-        "accepted_accuracy": 0.5300400534045394
+        "accepted": 750,
+        "accept_rate": 0.75,
+        "accepted_accuracy": 0.5293333333333333
       },
       {
         "tau": 0.37,
-        "accepted": 729,
-        "accept_rate": 0.729,
-        "accepted_accuracy": 0.5404663923182441
+        "accepted": 730,
+        "accept_rate": 0.73,
+        "accepted_accuracy": 0.5397260273972603
       },
       {
         "tau": 0.38,
@@ -2523,9 +2523,9 @@
       },
       {
         "tau": 0.39,
-        "accepted": 659,
-        "accept_rate": 0.659,
-        "accepted_accuracy": 0.5523520485584219
+        "accepted": 660,
+        "accept_rate": 0.66,
+        "accepted_accuracy": 0.5515151515151515
       },
       {
         "tau": 0.4,
@@ -2541,15 +2541,15 @@
       },
       {
         "tau": 0.42,
-        "accepted": 630,
-        "accept_rate": 0.63,
-        "accepted_accuracy": 0.5571428571428572
+        "accepted": 627,
+        "accept_rate": 0.627,
+        "accepted_accuracy": 0.5566188197767146
       },
       {
         "tau": 0.43,
-        "accepted": 589,
-        "accept_rate": 0.589,
-        "accepted_accuracy": 0.567062818336163
+        "accepted": 592,
+        "accept_rate": 0.592,
+        "accepted_accuracy": 0.5692567567567568
       },
       {
         "tau": 0.44,
@@ -2559,9 +2559,9 @@
       },
       {
         "tau": 0.45,
-        "accepted": 562,
-        "accept_rate": 0.562,
-        "accepted_accuracy": 0.5729537366548043
+        "accepted": 565,
+        "accept_rate": 0.565,
+        "accepted_accuracy": 0.5734513274336284
       },
       {
         "tau": 0.46,
@@ -2571,27 +2571,27 @@
       },
       {
         "tau": 0.47,
-        "accepted": 472,
-        "accept_rate": 0.472,
-        "accepted_accuracy": 0.586864406779661
+        "accepted": 471,
+        "accept_rate": 0.471,
+        "accepted_accuracy": 0.5881104033970276
       },
       {
         "tau": 0.48,
-        "accepted": 435,
-        "accept_rate": 0.435,
-        "accepted_accuracy": 0.6
+        "accepted": 436,
+        "accept_rate": 0.436,
+        "accepted_accuracy": 0.6009174311926605
       },
       {
         "tau": 0.49,
-        "accepted": 423,
-        "accept_rate": 0.423,
-        "accepted_accuracy": 0.6004728132387707
+        "accepted": 424,
+        "accept_rate": 0.424,
+        "accepted_accuracy": 0.5990566037735849
       },
       {
         "tau": 0.5,
-        "accepted": 417,
-        "accept_rate": 0.417,
-        "accepted_accuracy": 0.6019184652278178
+        "accepted": 418,
+        "accept_rate": 0.418,
+        "accepted_accuracy": 0.6028708133971292
       },
       {
         "tau": 0.51,
@@ -2603,13 +2603,13 @@
         "tau": 0.52,
         "accepted": 394,
         "accept_rate": 0.394,
-        "accepted_accuracy": 0.6040609137055838
+        "accepted_accuracy": 0.6015228426395939
       },
       {
         "tau": 0.53,
-        "accepted": 359,
-        "accept_rate": 0.359,
-        "accepted_accuracy": 0.6155988857938719
+        "accepted": 360,
+        "accept_rate": 0.36,
+        "accepted_accuracy": 0.6166666666666667
       },
       {
         "tau": 0.54,
@@ -2619,27 +2619,27 @@
       },
       {
         "tau": 0.55,
-        "accepted": 300,
-        "accept_rate": 0.3,
-        "accepted_accuracy": 0.6233333333333333
+        "accepted": 302,
+        "accept_rate": 0.302,
+        "accepted_accuracy": 0.6258278145695364
       },
       {
         "tau": 0.56,
-        "accepted": 270,
-        "accept_rate": 0.27,
-        "accepted_accuracy": 0.6333333333333333
+        "accepted": 271,
+        "accept_rate": 0.271,
+        "accepted_accuracy": 0.6346863468634686
       },
       {
         "tau": 0.57,
-        "accepted": 247,
-        "accept_rate": 0.247,
-        "accepted_accuracy": 0.6234817813765182
+        "accepted": 246,
+        "accept_rate": 0.246,
+        "accepted_accuracy": 0.6219512195121951
       },
       {
         "tau": 0.58,
-        "accepted": 205,
-        "accept_rate": 0.205,
-        "accepted_accuracy": 0.6439024390243903
+        "accepted": 206,
+        "accept_rate": 0.206,
+        "accepted_accuracy": 0.6456310679611651
       },
       {
         "tau": 0.59,
@@ -2649,9 +2649,9 @@
       },
       {
         "tau": 0.6,
-        "accepted": 165,
-        "accept_rate": 0.165,
-        "accepted_accuracy": 0.6909090909090909
+        "accepted": 164,
+        "accept_rate": 0.164,
+        "accepted_accuracy": 0.6890243902439024
       },
       {
         "tau": 0.61,
@@ -2667,21 +2667,21 @@
       },
       {
         "tau": 0.63,
-        "accepted": 100,
-        "accept_rate": 0.1,
-        "accepted_accuracy": 0.63
+        "accepted": 101,
+        "accept_rate": 0.101,
+        "accepted_accuracy": 0.6336633663366337
       },
       {
         "tau": 0.64,
-        "accepted": 88,
-        "accept_rate": 0.088,
-        "accepted_accuracy": 0.5909090909090909
+        "accepted": 89,
+        "accept_rate": 0.089,
+        "accepted_accuracy": 0.5842696629213483
       },
       {
         "tau": 0.65,
         "accepted": 71,
         "accept_rate": 0.071,
-        "accepted_accuracy": 0.5633802816901409
+        "accepted_accuracy": 0.5492957746478874
       },
       {
         "tau": 0.66,
@@ -2691,9 +2691,9 @@
       },
       {
         "tau": 0.67,
-        "accepted": 44,
-        "accept_rate": 0.044,
-        "accepted_accuracy": 0.5909090909090909
+        "accepted": 43,
+        "accept_rate": 0.043,
+        "accepted_accuracy": 0.6046511627906976
       },
       {
         "tau": 0.68,
@@ -2888,241 +2888,241 @@
         "tau": 0,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.438
+        "accepted_accuracy": 0.436
       },
       {
         "tau": 0.01,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.438
+        "accepted_accuracy": 0.436
       },
       {
         "tau": 0.02,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.438
+        "accepted_accuracy": 0.436
       },
       {
         "tau": 0.03,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.438
+        "accepted_accuracy": 0.436
       },
       {
         "tau": 0.04,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.438
+        "accepted_accuracy": 0.436
       },
       {
         "tau": 0.05,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.438
+        "accepted_accuracy": 0.436
       },
       {
         "tau": 0.06,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.438
+        "accepted_accuracy": 0.436
       },
       {
         "tau": 0.07,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.438
+        "accepted_accuracy": 0.436
       },
       {
         "tau": 0.08,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.438
+        "accepted_accuracy": 0.436
       },
       {
         "tau": 0.09,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.438
+        "accepted_accuracy": 0.436
       },
       {
         "tau": 0.1,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.438
+        "accepted_accuracy": 0.436
       },
       {
         "tau": 0.11,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.438
+        "accepted_accuracy": 0.436
       },
       {
         "tau": 0.12,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.438
+        "accepted_accuracy": 0.436
       },
       {
         "tau": 0.13,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.438
+        "accepted_accuracy": 0.436
       },
       {
         "tau": 0.14,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.438
+        "accepted_accuracy": 0.436
       },
       {
         "tau": 0.15,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.438
+        "accepted_accuracy": 0.436
       },
       {
         "tau": 0.16,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.438
+        "accepted_accuracy": 0.436
       },
       {
         "tau": 0.17,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.438
+        "accepted_accuracy": 0.436
       },
       {
         "tau": 0.18,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.438
+        "accepted_accuracy": 0.436
       },
       {
         "tau": 0.19,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.438
+        "accepted_accuracy": 0.436
       },
       {
         "tau": 0.2,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.438
+        "accepted_accuracy": 0.436
       },
       {
         "tau": 0.21,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.438
+        "accepted_accuracy": 0.436
       },
       {
         "tau": 0.22,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.438
+        "accepted_accuracy": 0.436
       },
       {
         "tau": 0.23,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.438
+        "accepted_accuracy": 0.436
       },
       {
         "tau": 0.24,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.438
+        "accepted_accuracy": 0.436
       },
       {
         "tau": 0.25,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.438
+        "accepted_accuracy": 0.436
       },
       {
         "tau": 0.26,
         "accepted": 999,
         "accept_rate": 0.999,
-        "accepted_accuracy": 0.43743743743743746
+        "accepted_accuracy": 0.43543543543543545
       },
       {
         "tau": 0.27,
-        "accepted": 997,
-        "accept_rate": 0.997,
-        "accepted_accuracy": 0.4383149448345035
+        "accepted": 998,
+        "accept_rate": 0.998,
+        "accepted_accuracy": 0.43587174348697394
       },
       {
         "tau": 0.28,
         "accepted": 989,
         "accept_rate": 0.989,
-        "accepted_accuracy": 0.4408493427704752
+        "accepted_accuracy": 0.43882709807886755
       },
       {
         "tau": 0.29,
         "accepted": 985,
         "accept_rate": 0.985,
-        "accepted_accuracy": 0.44060913705583754
+        "accepted_accuracy": 0.4385786802030457
       },
       {
         "tau": 0.3,
         "accepted": 959,
         "accept_rate": 0.959,
-        "accepted_accuracy": 0.443169968717414
+        "accepted_accuracy": 0.4410844629822732
       },
       {
         "tau": 0.31,
-        "accepted": 942,
-        "accept_rate": 0.942,
-        "accepted_accuracy": 0.4426751592356688
+        "accepted": 941,
+        "accept_rate": 0.941,
+        "accepted_accuracy": 0.4399574920297556
       },
       {
         "tau": 0.32,
         "accepted": 936,
         "accept_rate": 0.936,
-        "accepted_accuracy": 0.4412393162393162
+        "accepted_accuracy": 0.4391025641025641
       },
       {
         "tau": 0.33,
-        "accepted": 934,
-        "accept_rate": 0.934,
-        "accepted_accuracy": 0.4421841541755889
+        "accepted": 935,
+        "accept_rate": 0.935,
+        "accepted_accuracy": 0.439572192513369
       },
       {
         "tau": 0.34,
-        "accepted": 899,
-        "accept_rate": 0.899,
-        "accepted_accuracy": 0.45383759733036705
+        "accepted": 897,
+        "accept_rate": 0.897,
+        "accepted_accuracy": 0.45261984392419174
       },
       {
         "tau": 0.35,
-        "accepted": 784,
-        "accept_rate": 0.784,
-        "accepted_accuracy": 0.47831632653061223
+        "accepted": 788,
+        "accept_rate": 0.788,
+        "accepted_accuracy": 0.4746192893401015
       },
       {
         "tau": 0.36,
-        "accepted": 714,
-        "accept_rate": 0.714,
-        "accepted_accuracy": 0.4943977591036415
+        "accepted": 715,
+        "accept_rate": 0.715,
+        "accepted_accuracy": 0.4909090909090909
       },
       {
         "tau": 0.37,
         "accepted": 699,
         "accept_rate": 0.699,
-        "accepted_accuracy": 0.5007153075822603
+        "accepted_accuracy": 0.4978540772532189
       },
       {
         "tau": 0.38,
         "accepted": 662,
         "accept_rate": 0.662,
-        "accepted_accuracy": 0.5075528700906344
+        "accepted_accuracy": 0.5030211480362538
       },
       {
         "tau": 0.39,
-        "accepted": 626,
-        "accept_rate": 0.626,
-        "accepted_accuracy": 0.5079872204472844
+        "accepted": 622,
+        "accept_rate": 0.622,
+        "accepted_accuracy": 0.5096463022508039
       },
       {
         "tau": 0.4,
@@ -3146,19 +3146,19 @@
         "tau": 0.43,
         "accepted": 572,
         "accept_rate": 0.572,
-        "accepted_accuracy": 0.5174825174825175
+        "accepted_accuracy": 0.5157342657342657
       },
       {
         "tau": 0.44,
-        "accepted": 546,
-        "accept_rate": 0.546,
-        "accepted_accuracy": 0.521978021978022
+        "accepted": 547,
+        "accept_rate": 0.547,
+        "accepted_accuracy": 0.5228519195612431
       },
       {
         "tau": 0.45,
-        "accepted": 539,
-        "accept_rate": 0.539,
-        "accepted_accuracy": 0.5250463821892394
+        "accepted": 540,
+        "accept_rate": 0.54,
+        "accepted_accuracy": 0.524074074074074
       },
       {
         "tau": 0.46,
@@ -3192,21 +3192,21 @@
       },
       {
         "tau": 0.51,
-        "accepted": 399,
-        "accept_rate": 0.399,
-        "accepted_accuracy": 0.5664160401002506
+        "accepted": 400,
+        "accept_rate": 0.4,
+        "accepted_accuracy": 0.5675
       },
       {
         "tau": 0.52,
-        "accepted": 381,
-        "accept_rate": 0.381,
-        "accepted_accuracy": 0.5774278215223098
+        "accepted": 380,
+        "accept_rate": 0.38,
+        "accepted_accuracy": 0.5763157894736842
       },
       {
         "tau": 0.53,
-        "accepted": 357,
-        "accept_rate": 0.357,
-        "accepted_accuracy": 0.5742296918767507
+        "accepted": 356,
+        "accept_rate": 0.356,
+        "accepted_accuracy": 0.5758426966292135
       },
       {
         "tau": 0.54,
@@ -3216,9 +3216,9 @@
       },
       {
         "tau": 0.55,
-        "accepted": 296,
-        "accept_rate": 0.296,
-        "accepted_accuracy": 0.6013513513513513
+        "accepted": 294,
+        "accept_rate": 0.294,
+        "accepted_accuracy": 0.6054421768707483
       },
       {
         "tau": 0.56,
@@ -3228,21 +3228,21 @@
       },
       {
         "tau": 0.57,
-        "accepted": 234,
-        "accept_rate": 0.234,
-        "accepted_accuracy": 0.6324786324786325
+        "accepted": 233,
+        "accept_rate": 0.233,
+        "accepted_accuracy": 0.630901287553648
       },
       {
         "tau": 0.58,
-        "accepted": 177,
-        "accept_rate": 0.177,
-        "accepted_accuracy": 0.6384180790960452
+        "accepted": 178,
+        "accept_rate": 0.178,
+        "accepted_accuracy": 0.6292134831460674
       },
       {
         "tau": 0.59,
-        "accepted": 147,
-        "accept_rate": 0.147,
-        "accepted_accuracy": 0.6462585034013606
+        "accepted": 146,
+        "accept_rate": 0.146,
+        "accepted_accuracy": 0.6506849315068494
       },
       {
         "tau": 0.6,
@@ -3252,15 +3252,15 @@
       },
       {
         "tau": 0.61,
-        "accepted": 115,
-        "accept_rate": 0.115,
-        "accepted_accuracy": 0.6434782608695652
+        "accepted": 114,
+        "accept_rate": 0.114,
+        "accepted_accuracy": 0.6403508771929824
       },
       {
         "tau": 0.62,
         "accepted": 102,
         "accept_rate": 0.102,
-        "accepted_accuracy": 0.6470588235294118
+        "accepted_accuracy": 0.6372549019607843
       },
       {
         "tau": 0.63,
@@ -3276,9 +3276,9 @@
       },
       {
         "tau": 0.65,
-        "accepted": 40,
-        "accept_rate": 0.04,
-        "accepted_accuracy": 0.6
+        "accepted": 39,
+        "accept_rate": 0.039,
+        "accepted_accuracy": 0.5897435897435898
       },
       {
         "tau": 0.66,
@@ -3288,9 +3288,9 @@
       },
       {
         "tau": 0.67,
-        "accepted": 23,
-        "accept_rate": 0.023,
-        "accepted_accuracy": 0.6521739130434783
+        "accepted": 22,
+        "accept_rate": 0.022,
+        "accepted_accuracy": 0.5909090909090909
       },
       {
         "tau": 0.68,
@@ -3481,7 +3481,7 @@
   {
     "model": "laya-en-ft-tickets",
     "target_error": 0.2,
-    "source": "offline",
+    "source": "calibrated",
     "reference": "frontier",
     "reachable": false,
     "held_out_items": 1000,
@@ -3492,229 +3492,229 @@
         "tau": 0,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.381
+        "accepted_accuracy": 0.397
       },
       {
         "tau": 0.01,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.381
+        "accepted_accuracy": 0.397
       },
       {
         "tau": 0.02,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.381
+        "accepted_accuracy": 0.397
       },
       {
         "tau": 0.03,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.381
+        "accepted_accuracy": 0.397
       },
       {
         "tau": 0.04,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.381
+        "accepted_accuracy": 0.397
       },
       {
         "tau": 0.05,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.381
+        "accepted_accuracy": 0.397
       },
       {
         "tau": 0.06,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.381
+        "accepted_accuracy": 0.397
       },
       {
         "tau": 0.07,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.381
+        "accepted_accuracy": 0.397
       },
       {
         "tau": 0.08,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.381
+        "accepted_accuracy": 0.397
       },
       {
         "tau": 0.09,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.381
+        "accepted_accuracy": 0.397
       },
       {
         "tau": 0.1,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.381
+        "accepted_accuracy": 0.397
       },
       {
         "tau": 0.11,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.381
+        "accepted_accuracy": 0.397
       },
       {
         "tau": 0.12,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.381
+        "accepted_accuracy": 0.397
       },
       {
         "tau": 0.13,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.381
+        "accepted_accuracy": 0.397
       },
       {
         "tau": 0.14,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.381
+        "accepted_accuracy": 0.397
       },
       {
         "tau": 0.15,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.381
+        "accepted_accuracy": 0.397
       },
       {
         "tau": 0.16,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.381
+        "accepted_accuracy": 0.397
       },
       {
         "tau": 0.17,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.381
+        "accepted_accuracy": 0.397
       },
       {
         "tau": 0.18,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.381
+        "accepted_accuracy": 0.397
       },
       {
         "tau": 0.19,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.381
+        "accepted_accuracy": 0.397
       },
       {
         "tau": 0.2,
-        "accepted": 992,
-        "accept_rate": 0.992,
-        "accepted_accuracy": 0.3780241935483871
+        "accepted": 987,
+        "accept_rate": 0.987,
+        "accepted_accuracy": 0.3910840932117528
       },
       {
         "tau": 0.21,
-        "accepted": 987,
-        "accept_rate": 0.987,
-        "accepted_accuracy": 0.37487335359675783
+        "accepted": 986,
+        "accept_rate": 0.986,
+        "accepted_accuracy": 0.39046653144016225
       },
       {
         "tau": 0.22,
-        "accepted": 972,
-        "accept_rate": 0.972,
-        "accepted_accuracy": 0.3683127572016461
+        "accepted": 975,
+        "accept_rate": 0.975,
+        "accepted_accuracy": 0.38564102564102565
       },
       {
         "tau": 0.23,
-        "accepted": 792,
-        "accept_rate": 0.792,
-        "accepted_accuracy": 0.3371212121212121
+        "accepted": 790,
+        "accept_rate": 0.79,
+        "accepted_accuracy": 0.3367088607594937
       },
       {
         "tau": 0.24,
-        "accepted": 785,
-        "accept_rate": 0.785,
-        "accepted_accuracy": 0.3375796178343949
+        "accepted": 789,
+        "accept_rate": 0.789,
+        "accepted_accuracy": 0.3358681875792142
       },
       {
         "tau": 0.25,
-        "accepted": 753,
-        "accept_rate": 0.753,
-        "accepted_accuracy": 0.3386454183266932
+        "accepted": 760,
+        "accept_rate": 0.76,
+        "accepted_accuracy": 0.3394736842105263
       },
       {
         "tau": 0.26,
-        "accepted": 594,
-        "accept_rate": 0.594,
-        "accepted_accuracy": 0.3787878787878788
+        "accepted": 596,
+        "accept_rate": 0.596,
+        "accepted_accuracy": 0.3775167785234899
       },
       {
         "tau": 0.27,
-        "accepted": 529,
-        "accept_rate": 0.529,
-        "accepted_accuracy": 0.40264650283553877
+        "accepted": 574,
+        "accept_rate": 0.574,
+        "accepted_accuracy": 0.3885017421602787
       },
       {
         "tau": 0.28,
-        "accepted": 518,
-        "accept_rate": 0.518,
-        "accepted_accuracy": 0.40733590733590735
+        "accepted": 522,
+        "accept_rate": 0.522,
+        "accepted_accuracy": 0.4042145593869732
       },
       {
         "tau": 0.29,
-        "accepted": 507,
-        "accept_rate": 0.507,
-        "accepted_accuracy": 0.40631163708086787
+        "accepted": 513,
+        "accept_rate": 0.513,
+        "accepted_accuracy": 0.40350877192982454
       },
       {
         "tau": 0.3,
-        "accepted": 485,
-        "accept_rate": 0.485,
-        "accepted_accuracy": 0.40824742268041236
+        "accepted": 488,
+        "accept_rate": 0.488,
+        "accepted_accuracy": 0.4077868852459016
       },
       {
         "tau": 0.31,
-        "accepted": 419,
-        "accept_rate": 0.419,
-        "accepted_accuracy": 0.42482100238663484
+        "accepted": 417,
+        "accept_rate": 0.417,
+        "accepted_accuracy": 0.4244604316546763
       },
       {
         "tau": 0.32,
-        "accepted": 416,
-        "accept_rate": 0.416,
-        "accepted_accuracy": 0.42788461538461536
+        "accepted": 417,
+        "accept_rate": 0.417,
+        "accepted_accuracy": 0.4244604316546763
       },
       {
         "tau": 0.33,
-        "accepted": 412,
-        "accept_rate": 0.412,
-        "accepted_accuracy": 0.42718446601941745
+        "accepted": 411,
+        "accept_rate": 0.411,
+        "accepted_accuracy": 0.4257907542579075
       },
       {
         "tau": 0.34,
-        "accepted": 316,
-        "accept_rate": 0.316,
-        "accepted_accuracy": 0.4240506329113924
+        "accepted": 315,
+        "accept_rate": 0.315,
+        "accepted_accuracy": 0.42857142857142855
       },
       {
         "tau": 0.35,
-        "accepted": 305,
-        "accept_rate": 0.305,
-        "accepted_accuracy": 0.419672131147541
+        "accepted": 303,
+        "accept_rate": 0.303,
+        "accepted_accuracy": 0.42244224422442245
       },
       {
         "tau": 0.36,
-        "accepted": 293,
-        "accept_rate": 0.293,
-        "accepted_accuracy": 0.4197952218430034
+        "accepted": 301,
+        "accept_rate": 0.301,
+        "accepted_accuracy": 0.42524916943521596
       },
       {
         "tau": 0.37,
-        "accepted": 263,
-        "accept_rate": 0.263,
-        "accepted_accuracy": 0.40304182509505704
+        "accepted": 259,
+        "accept_rate": 0.259,
+        "accepted_accuracy": 0.40540540540540543
       },
       {
         "tau": 0.38,
@@ -3724,39 +3724,39 @@
       },
       {
         "tau": 0.39,
-        "accepted": 165,
-        "accept_rate": 0.165,
-        "accepted_accuracy": 0.4303030303030303
+        "accepted": 166,
+        "accept_rate": 0.166,
+        "accepted_accuracy": 0.43373493975903615
       },
       {
         "tau": 0.4,
-        "accepted": 162,
-        "accept_rate": 0.162,
-        "accepted_accuracy": 0.41975308641975306
+        "accepted": 163,
+        "accept_rate": 0.163,
+        "accepted_accuracy": 0.4233128834355828
       },
       {
         "tau": 0.41,
-        "accepted": 66,
-        "accept_rate": 0.066,
-        "accepted_accuracy": 0.5
+        "accepted": 67,
+        "accept_rate": 0.067,
+        "accepted_accuracy": 0.5074626865671642
       },
       {
         "tau": 0.42,
-        "accepted": 65,
-        "accept_rate": 0.065,
-        "accepted_accuracy": 0.5076923076923077
+        "accepted": 66,
+        "accept_rate": 0.066,
+        "accepted_accuracy": 0.5151515151515151
       },
       {
         "tau": 0.43,
-        "accepted": 65,
-        "accept_rate": 0.065,
-        "accepted_accuracy": 0.5076923076923077
+        "accepted": 66,
+        "accept_rate": 0.066,
+        "accepted_accuracy": 0.5151515151515151
       },
       {
         "tau": 0.44,
-        "accepted": 65,
-        "accept_rate": 0.065,
-        "accepted_accuracy": 0.5076923076923077
+        "accepted": 66,
+        "accept_rate": 0.066,
+        "accepted_accuracy": 0.5151515151515151
       },
       {
         "tau": 0.45,
@@ -3778,27 +3778,27 @@
       },
       {
         "tau": 0.48,
-        "accepted": 7,
-        "accept_rate": 0.007,
-        "accepted_accuracy": 0.42857142857142855
+        "accepted": 8,
+        "accept_rate": 0.008,
+        "accepted_accuracy": 0.5
       },
       {
         "tau": 0.49,
-        "accepted": 7,
-        "accept_rate": 0.007,
-        "accepted_accuracy": 0.42857142857142855
+        "accepted": 8,
+        "accept_rate": 0.008,
+        "accepted_accuracy": 0.5
       },
       {
         "tau": 0.5,
-        "accepted": 7,
-        "accept_rate": 0.007,
-        "accepted_accuracy": 0.42857142857142855
+        "accepted": 8,
+        "accept_rate": 0.008,
+        "accepted_accuracy": 0.5
       },
       {
         "tau": 0.51,
-        "accepted": 7,
-        "accept_rate": 0.007,
-        "accepted_accuracy": 0.42857142857142855
+        "accepted": 8,
+        "accept_rate": 0.008,
+        "accepted_accuracy": 0.5
       },
       {
         "tau": 0.52,
@@ -4058,229 +4058,229 @@
         "tau": 0,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.353
+        "accepted_accuracy": 0.357
       },
       {
         "tau": 0.01,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.353
+        "accepted_accuracy": 0.357
       },
       {
         "tau": 0.02,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.353
+        "accepted_accuracy": 0.357
       },
       {
         "tau": 0.03,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.353
+        "accepted_accuracy": 0.357
       },
       {
         "tau": 0.04,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.353
+        "accepted_accuracy": 0.357
       },
       {
         "tau": 0.05,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.353
+        "accepted_accuracy": 0.357
       },
       {
         "tau": 0.06,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.353
+        "accepted_accuracy": 0.357
       },
       {
         "tau": 0.07,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.353
+        "accepted_accuracy": 0.357
       },
       {
         "tau": 0.08,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.353
+        "accepted_accuracy": 0.357
       },
       {
         "tau": 0.09,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.353
+        "accepted_accuracy": 0.357
       },
       {
         "tau": 0.1,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.353
+        "accepted_accuracy": 0.357
       },
       {
         "tau": 0.11,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.353
+        "accepted_accuracy": 0.357
       },
       {
         "tau": 0.12,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.353
+        "accepted_accuracy": 0.357
       },
       {
         "tau": 0.13,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.353
+        "accepted_accuracy": 0.357
       },
       {
         "tau": 0.14,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.353
+        "accepted_accuracy": 0.357
       },
       {
         "tau": 0.15,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.353
+        "accepted_accuracy": 0.357
       },
       {
         "tau": 0.16,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.353
+        "accepted_accuracy": 0.357
       },
       {
         "tau": 0.17,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.353
+        "accepted_accuracy": 0.357
       },
       {
         "tau": 0.18,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.353
+        "accepted_accuracy": 0.357
       },
       {
         "tau": 0.19,
         "accepted": 1000,
         "accept_rate": 1,
-        "accepted_accuracy": 0.353
+        "accepted_accuracy": 0.357
       },
       {
         "tau": 0.2,
-        "accepted": 995,
-        "accept_rate": 0.995,
-        "accepted_accuracy": 0.3527638190954774
+        "accepted": 990,
+        "accept_rate": 0.99,
+        "accepted_accuracy": 0.35454545454545455
       },
       {
         "tau": 0.21,
         "accepted": 989,
         "accept_rate": 0.989,
-        "accepted_accuracy": 0.34984833164812945
+        "accepted_accuracy": 0.3538928210313448
       },
       {
         "tau": 0.22,
-        "accepted": 983,
-        "accept_rate": 0.983,
-        "accepted_accuracy": 0.34587995930824006
+        "accepted": 984,
+        "accept_rate": 0.984,
+        "accepted_accuracy": 0.35060975609756095
       },
       {
         "tau": 0.23,
-        "accepted": 798,
-        "accept_rate": 0.798,
-        "accepted_accuracy": 0.3132832080200501
+        "accepted": 792,
+        "accept_rate": 0.792,
+        "accepted_accuracy": 0.31186868686868685
       },
       {
         "tau": 0.24,
-        "accepted": 793,
-        "accept_rate": 0.793,
-        "accepted_accuracy": 0.31525851197982346
+        "accepted": 790,
+        "accept_rate": 0.79,
+        "accepted_accuracy": 0.31139240506329113
       },
       {
         "tau": 0.25,
-        "accepted": 751,
-        "accept_rate": 0.751,
-        "accepted_accuracy": 0.3182423435419441
+        "accepted": 761,
+        "accept_rate": 0.761,
+        "accepted_accuracy": 0.316688567674113
       },
       {
         "tau": 0.26,
-        "accepted": 578,
-        "accept_rate": 0.578,
-        "accepted_accuracy": 0.3460207612456747
+        "accepted": 577,
+        "accept_rate": 0.577,
+        "accepted_accuracy": 0.3466204506065858
       },
       {
         "tau": 0.27,
-        "accepted": 508,
-        "accept_rate": 0.508,
-        "accepted_accuracy": 0.35826771653543305
+        "accepted": 565,
+        "accept_rate": 0.565,
+        "accepted_accuracy": 0.3504424778761062
       },
       {
         "tau": 0.28,
-        "accepted": 503,
-        "accept_rate": 0.503,
-        "accepted_accuracy": 0.35984095427435386
+        "accepted": 505,
+        "accept_rate": 0.505,
+        "accepted_accuracy": 0.3603960396039604
       },
       {
         "tau": 0.29,
-        "accepted": 492,
-        "accept_rate": 0.492,
-        "accepted_accuracy": 0.3597560975609756
+        "accepted": 496,
+        "accept_rate": 0.496,
+        "accepted_accuracy": 0.36088709677419356
       },
       {
         "tau": 0.3,
-        "accepted": 467,
-        "accept_rate": 0.467,
-        "accepted_accuracy": 0.35974304068522484
+        "accepted": 470,
+        "accept_rate": 0.47,
+        "accepted_accuracy": 0.3595744680851064
       },
       {
         "tau": 0.31,
-        "accepted": 407,
-        "accept_rate": 0.407,
-        "accepted_accuracy": 0.37346437346437344
+        "accepted": 406,
+        "accept_rate": 0.406,
+        "accepted_accuracy": 0.37438423645320196
       },
       {
         "tau": 0.32,
-        "accepted": 405,
-        "accept_rate": 0.405,
-        "accepted_accuracy": 0.3728395061728395
+        "accepted": 406,
+        "accept_rate": 0.406,
+        "accepted_accuracy": 0.37438423645320196
       },
       {
         "tau": 0.33,
-        "accepted": 399,
-        "accept_rate": 0.399,
-        "accepted_accuracy": 0.37593984962406013
+        "accepted": 397,
+        "accept_rate": 0.397,
+        "accepted_accuracy": 0.3778337531486146
       },
       {
         "tau": 0.34,
-        "accepted": 304,
-        "accept_rate": 0.304,
-        "accepted_accuracy": 0.3717105263157895
+        "accepted": 303,
+        "accept_rate": 0.303,
+        "accepted_accuracy": 0.37293729372937295
       },
       {
         "tau": 0.35,
-        "accepted": 289,
-        "accept_rate": 0.289,
-        "accepted_accuracy": 0.3771626297577855
+        "accepted": 288,
+        "accept_rate": 0.288,
+        "accepted_accuracy": 0.3784722222222222
       },
       {
         "tau": 0.36,
-        "accepted": 280,
-        "accept_rate": 0.28,
-        "accepted_accuracy": 0.37857142857142856
+        "accepted": 288,
+        "accept_rate": 0.288,
+        "accepted_accuracy": 0.3784722222222222
       },
       {
         "tau": 0.37,
-        "accepted": 264,
-        "accept_rate": 0.264,
-        "accepted_accuracy": 0.38636363636363635
+        "accepted": 263,
+        "accept_rate": 0.263,
+        "accepted_accuracy": 0.38783269961977185
       },
       {
         "tau": 0.38,
@@ -4290,9 +4290,9 @@
       },
       {
         "tau": 0.39,
-        "accepted": 159,
-        "accept_rate": 0.159,
-        "accepted_accuracy": 0.37735849056603776
+        "accepted": 163,
+        "accept_rate": 0.163,
+        "accepted_accuracy": 0.39263803680981596
       },
       {
         "tau": 0.4,
@@ -4620,5 +4620,1224 @@
       }
     ],
     "note": "No threshold meets the 20.0% target disagreement on the calibration split. The lowest disagreement any threshold reaches is 43.8%, at \u03C4 = 0.45, accepting 1.6% of items. No threshold is invented."
+  },
+  {
+    "model": "jev-1.13",
+    "target_error": 0.2,
+    "source": "offline",
+    "reference": "frontier",
+    "reachable": true,
+    "tau": 0.65,
+    "calibration_accept_rate": 0.407,
+    "calibration_accepted_accuracy": 0.800982800982801,
+    "held_out_accept_rate": 0.398,
+    "held_out_accepted_accuracy": 0.7311557788944724,
+    "held_out_accepted": 398,
+    "held_out_items": 1000,
+    "calibration_curve": [
+      {
+        "tau": 0,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.609
+      },
+      {
+        "tau": 0.01,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.609
+      },
+      {
+        "tau": 0.02,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.609
+      },
+      {
+        "tau": 0.03,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.609
+      },
+      {
+        "tau": 0.04,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.609
+      },
+      {
+        "tau": 0.05,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.609
+      },
+      {
+        "tau": 0.06,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.609
+      },
+      {
+        "tau": 0.07,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.609
+      },
+      {
+        "tau": 0.08,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.609
+      },
+      {
+        "tau": 0.09,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.609
+      },
+      {
+        "tau": 0.1,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.609
+      },
+      {
+        "tau": 0.11,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.609
+      },
+      {
+        "tau": 0.12,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.609
+      },
+      {
+        "tau": 0.13,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.609
+      },
+      {
+        "tau": 0.14,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.609
+      },
+      {
+        "tau": 0.15,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.609
+      },
+      {
+        "tau": 0.16,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.609
+      },
+      {
+        "tau": 0.17,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.609
+      },
+      {
+        "tau": 0.18,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.609
+      },
+      {
+        "tau": 0.19,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.609
+      },
+      {
+        "tau": 0.2,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.609
+      },
+      {
+        "tau": 0.21,
+        "accepted": 999,
+        "accept_rate": 0.999,
+        "accepted_accuracy": 0.6096096096096096
+      },
+      {
+        "tau": 0.22,
+        "accepted": 996,
+        "accept_rate": 0.996,
+        "accepted_accuracy": 0.6114457831325302
+      },
+      {
+        "tau": 0.23,
+        "accepted": 992,
+        "accept_rate": 0.992,
+        "accepted_accuracy": 0.6129032258064516
+      },
+      {
+        "tau": 0.24,
+        "accepted": 988,
+        "accept_rate": 0.988,
+        "accepted_accuracy": 0.6153846153846154
+      },
+      {
+        "tau": 0.25,
+        "accepted": 988,
+        "accept_rate": 0.988,
+        "accepted_accuracy": 0.6153846153846154
+      },
+      {
+        "tau": 0.26,
+        "accepted": 984,
+        "accept_rate": 0.984,
+        "accepted_accuracy": 0.6148373983739838
+      },
+      {
+        "tau": 0.27,
+        "accepted": 979,
+        "accept_rate": 0.979,
+        "accepted_accuracy": 0.6159346271705822
+      },
+      {
+        "tau": 0.28,
+        "accepted": 976,
+        "accept_rate": 0.976,
+        "accepted_accuracy": 0.6168032786885246
+      },
+      {
+        "tau": 0.29,
+        "accepted": 970,
+        "accept_rate": 0.97,
+        "accepted_accuracy": 0.6185567010309279
+      },
+      {
+        "tau": 0.3,
+        "accepted": 966,
+        "accept_rate": 0.966,
+        "accepted_accuracy": 0.6211180124223602
+      },
+      {
+        "tau": 0.31,
+        "accepted": 964,
+        "accept_rate": 0.964,
+        "accepted_accuracy": 0.6224066390041494
+      },
+      {
+        "tau": 0.32,
+        "accepted": 955,
+        "accept_rate": 0.955,
+        "accepted_accuracy": 0.6219895287958115
+      },
+      {
+        "tau": 0.33,
+        "accepted": 938,
+        "accept_rate": 0.938,
+        "accepted_accuracy": 0.6226012793176973
+      },
+      {
+        "tau": 0.34,
+        "accepted": 925,
+        "accept_rate": 0.925,
+        "accepted_accuracy": 0.625945945945946
+      },
+      {
+        "tau": 0.35,
+        "accepted": 915,
+        "accept_rate": 0.915,
+        "accepted_accuracy": 0.6262295081967213
+      },
+      {
+        "tau": 0.36,
+        "accepted": 906,
+        "accept_rate": 0.906,
+        "accepted_accuracy": 0.6258278145695364
+      },
+      {
+        "tau": 0.37,
+        "accepted": 884,
+        "accept_rate": 0.884,
+        "accepted_accuracy": 0.6266968325791855
+      },
+      {
+        "tau": 0.38,
+        "accepted": 855,
+        "accept_rate": 0.855,
+        "accepted_accuracy": 0.6362573099415205
+      },
+      {
+        "tau": 0.39,
+        "accepted": 837,
+        "accept_rate": 0.837,
+        "accepted_accuracy": 0.6391875746714456
+      },
+      {
+        "tau": 0.4,
+        "accepted": 820,
+        "accept_rate": 0.82,
+        "accepted_accuracy": 0.6365853658536585
+      },
+      {
+        "tau": 0.41,
+        "accepted": 806,
+        "accept_rate": 0.806,
+        "accepted_accuracy": 0.6377171215880894
+      },
+      {
+        "tau": 0.42,
+        "accepted": 788,
+        "accept_rate": 0.788,
+        "accepted_accuracy": 0.6408629441624365
+      },
+      {
+        "tau": 0.43,
+        "accepted": 711,
+        "accept_rate": 0.711,
+        "accepted_accuracy": 0.6427566807313643
+      },
+      {
+        "tau": 0.44,
+        "accepted": 687,
+        "accept_rate": 0.687,
+        "accepted_accuracy": 0.6491994177583698
+      },
+      {
+        "tau": 0.45,
+        "accepted": 657,
+        "accept_rate": 0.657,
+        "accepted_accuracy": 0.6468797564687976
+      },
+      {
+        "tau": 0.46,
+        "accepted": 605,
+        "accept_rate": 0.605,
+        "accepted_accuracy": 0.6661157024793388
+      },
+      {
+        "tau": 0.47,
+        "accepted": 592,
+        "accept_rate": 0.592,
+        "accepted_accuracy": 0.668918918918919
+      },
+      {
+        "tau": 0.48,
+        "accepted": 570,
+        "accept_rate": 0.57,
+        "accepted_accuracy": 0.6666666666666666
+      },
+      {
+        "tau": 0.49,
+        "accepted": 568,
+        "accept_rate": 0.568,
+        "accepted_accuracy": 0.6654929577464789
+      },
+      {
+        "tau": 0.5,
+        "accepted": 562,
+        "accept_rate": 0.562,
+        "accepted_accuracy": 0.6672597864768683
+      },
+      {
+        "tau": 0.51,
+        "accepted": 500,
+        "accept_rate": 0.5,
+        "accepted_accuracy": 0.714
+      },
+      {
+        "tau": 0.52,
+        "accepted": 500,
+        "accept_rate": 0.5,
+        "accepted_accuracy": 0.714
+      },
+      {
+        "tau": 0.53,
+        "accepted": 462,
+        "accept_rate": 0.462,
+        "accepted_accuracy": 0.7510822510822511
+      },
+      {
+        "tau": 0.54,
+        "accepted": 455,
+        "accept_rate": 0.455,
+        "accepted_accuracy": 0.7582417582417582
+      },
+      {
+        "tau": 0.55,
+        "accepted": 441,
+        "accept_rate": 0.441,
+        "accepted_accuracy": 0.7732426303854876
+      },
+      {
+        "tau": 0.56,
+        "accepted": 439,
+        "accept_rate": 0.439,
+        "accepted_accuracy": 0.7744874715261959
+      },
+      {
+        "tau": 0.57,
+        "accepted": 435,
+        "accept_rate": 0.435,
+        "accepted_accuracy": 0.7816091954022989
+      },
+      {
+        "tau": 0.58,
+        "accepted": 430,
+        "accept_rate": 0.43,
+        "accepted_accuracy": 0.7837209302325582
+      },
+      {
+        "tau": 0.59,
+        "accepted": 427,
+        "accept_rate": 0.427,
+        "accepted_accuracy": 0.7868852459016393
+      },
+      {
+        "tau": 0.6,
+        "accepted": 417,
+        "accept_rate": 0.417,
+        "accepted_accuracy": 0.7985611510791367
+      },
+      {
+        "tau": 0.61,
+        "accepted": 417,
+        "accept_rate": 0.417,
+        "accepted_accuracy": 0.7985611510791367
+      },
+      {
+        "tau": 0.62,
+        "accepted": 415,
+        "accept_rate": 0.415,
+        "accepted_accuracy": 0.7975903614457831
+      },
+      {
+        "tau": 0.63,
+        "accepted": 415,
+        "accept_rate": 0.415,
+        "accepted_accuracy": 0.7975903614457831
+      },
+      {
+        "tau": 0.64,
+        "accepted": 409,
+        "accept_rate": 0.409,
+        "accepted_accuracy": 0.7995110024449877
+      },
+      {
+        "tau": 0.65,
+        "accepted": 407,
+        "accept_rate": 0.407,
+        "accepted_accuracy": 0.800982800982801
+      },
+      {
+        "tau": 0.66,
+        "accepted": 385,
+        "accept_rate": 0.385,
+        "accepted_accuracy": 0.8155844155844156
+      },
+      {
+        "tau": 0.67,
+        "accepted": 380,
+        "accept_rate": 0.38,
+        "accepted_accuracy": 0.8184210526315789
+      },
+      {
+        "tau": 0.68,
+        "accepted": 375,
+        "accept_rate": 0.375,
+        "accepted_accuracy": 0.8266666666666667
+      },
+      {
+        "tau": 0.69,
+        "accepted": 375,
+        "accept_rate": 0.375,
+        "accepted_accuracy": 0.8266666666666667
+      },
+      {
+        "tau": 0.7,
+        "accepted": 375,
+        "accept_rate": 0.375,
+        "accepted_accuracy": 0.8266666666666667
+      },
+      {
+        "tau": 0.71,
+        "accepted": 373,
+        "accept_rate": 0.373,
+        "accepted_accuracy": 0.8284182305630027
+      },
+      {
+        "tau": 0.72,
+        "accepted": 373,
+        "accept_rate": 0.373,
+        "accepted_accuracy": 0.8284182305630027
+      },
+      {
+        "tau": 0.73,
+        "accepted": 373,
+        "accept_rate": 0.373,
+        "accepted_accuracy": 0.8284182305630027
+      },
+      {
+        "tau": 0.74,
+        "accepted": 322,
+        "accept_rate": 0.322,
+        "accepted_accuracy": 0.8664596273291926
+      },
+      {
+        "tau": 0.75,
+        "accepted": 321,
+        "accept_rate": 0.321,
+        "accepted_accuracy": 0.8660436137071651
+      },
+      {
+        "tau": 0.76,
+        "accepted": 321,
+        "accept_rate": 0.321,
+        "accepted_accuracy": 0.8660436137071651
+      },
+      {
+        "tau": 0.77,
+        "accepted": 321,
+        "accept_rate": 0.321,
+        "accepted_accuracy": 0.8660436137071651
+      },
+      {
+        "tau": 0.78,
+        "accepted": 321,
+        "accept_rate": 0.321,
+        "accepted_accuracy": 0.8660436137071651
+      },
+      {
+        "tau": 0.79,
+        "accepted": 321,
+        "accept_rate": 0.321,
+        "accepted_accuracy": 0.8660436137071651
+      },
+      {
+        "tau": 0.8,
+        "accepted": 313,
+        "accept_rate": 0.313,
+        "accepted_accuracy": 0.8817891373801917
+      },
+      {
+        "tau": 0.81,
+        "accepted": 313,
+        "accept_rate": 0.313,
+        "accepted_accuracy": 0.8817891373801917
+      },
+      {
+        "tau": 0.82,
+        "accepted": 294,
+        "accept_rate": 0.294,
+        "accepted_accuracy": 0.8809523809523809
+      },
+      {
+        "tau": 0.83,
+        "accepted": 294,
+        "accept_rate": 0.294,
+        "accepted_accuracy": 0.8809523809523809
+      },
+      {
+        "tau": 0.84,
+        "accepted": 282,
+        "accept_rate": 0.282,
+        "accepted_accuracy": 0.8971631205673759
+      },
+      {
+        "tau": 0.85,
+        "accepted": 282,
+        "accept_rate": 0.282,
+        "accepted_accuracy": 0.8971631205673759
+      },
+      {
+        "tau": 0.86,
+        "accepted": 282,
+        "accept_rate": 0.282,
+        "accepted_accuracy": 0.8971631205673759
+      },
+      {
+        "tau": 0.87,
+        "accepted": 282,
+        "accept_rate": 0.282,
+        "accepted_accuracy": 0.8971631205673759
+      },
+      {
+        "tau": 0.88,
+        "accepted": 282,
+        "accept_rate": 0.282,
+        "accepted_accuracy": 0.8971631205673759
+      },
+      {
+        "tau": 0.89,
+        "accepted": 282,
+        "accept_rate": 0.282,
+        "accepted_accuracy": 0.8971631205673759
+      },
+      {
+        "tau": 0.9,
+        "accepted": 282,
+        "accept_rate": 0.282,
+        "accepted_accuracy": 0.8971631205673759
+      },
+      {
+        "tau": 0.91,
+        "accepted": 282,
+        "accept_rate": 0.282,
+        "accepted_accuracy": 0.8971631205673759
+      },
+      {
+        "tau": 0.92,
+        "accepted": 282,
+        "accept_rate": 0.282,
+        "accepted_accuracy": 0.8971631205673759
+      },
+      {
+        "tau": 0.93,
+        "accepted": 125,
+        "accept_rate": 0.125,
+        "accepted_accuracy": 1
+      },
+      {
+        "tau": 0.94,
+        "accepted": 125,
+        "accept_rate": 0.125,
+        "accepted_accuracy": 1
+      },
+      {
+        "tau": 0.95,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.96,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.97,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.98,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.99,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 1,
+        "accepted": 0,
+        "accept_rate": 0
+      }
+    ],
+    "held_out_curve": [
+      {
+        "tau": 0,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.555
+      },
+      {
+        "tau": 0.01,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.555
+      },
+      {
+        "tau": 0.02,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.555
+      },
+      {
+        "tau": 0.03,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.555
+      },
+      {
+        "tau": 0.04,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.555
+      },
+      {
+        "tau": 0.05,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.555
+      },
+      {
+        "tau": 0.06,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.555
+      },
+      {
+        "tau": 0.07,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.555
+      },
+      {
+        "tau": 0.08,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.555
+      },
+      {
+        "tau": 0.09,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.555
+      },
+      {
+        "tau": 0.1,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.555
+      },
+      {
+        "tau": 0.11,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.555
+      },
+      {
+        "tau": 0.12,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.555
+      },
+      {
+        "tau": 0.13,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.555
+      },
+      {
+        "tau": 0.14,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.555
+      },
+      {
+        "tau": 0.15,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.555
+      },
+      {
+        "tau": 0.16,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.555
+      },
+      {
+        "tau": 0.17,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.555
+      },
+      {
+        "tau": 0.18,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.555
+      },
+      {
+        "tau": 0.19,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.555
+      },
+      {
+        "tau": 0.2,
+        "accepted": 1000,
+        "accept_rate": 1,
+        "accepted_accuracy": 0.555
+      },
+      {
+        "tau": 0.21,
+        "accepted": 999,
+        "accept_rate": 0.999,
+        "accepted_accuracy": 0.5545545545545546
+      },
+      {
+        "tau": 0.22,
+        "accepted": 996,
+        "accept_rate": 0.996,
+        "accepted_accuracy": 0.5552208835341366
+      },
+      {
+        "tau": 0.23,
+        "accepted": 994,
+        "accept_rate": 0.994,
+        "accepted_accuracy": 0.5563380281690141
+      },
+      {
+        "tau": 0.24,
+        "accepted": 991,
+        "accept_rate": 0.991,
+        "accepted_accuracy": 0.5549949545913219
+      },
+      {
+        "tau": 0.25,
+        "accepted": 989,
+        "accept_rate": 0.989,
+        "accepted_accuracy": 0.5551061678463094
+      },
+      {
+        "tau": 0.26,
+        "accepted": 987,
+        "accept_rate": 0.987,
+        "accepted_accuracy": 0.5542046605876393
+      },
+      {
+        "tau": 0.27,
+        "accepted": 982,
+        "accept_rate": 0.982,
+        "accepted_accuracy": 0.5539714867617108
+      },
+      {
+        "tau": 0.28,
+        "accepted": 979,
+        "accept_rate": 0.979,
+        "accepted_accuracy": 0.5546475995914198
+      },
+      {
+        "tau": 0.29,
+        "accepted": 972,
+        "accept_rate": 0.972,
+        "accepted_accuracy": 0.5576131687242798
+      },
+      {
+        "tau": 0.3,
+        "accepted": 967,
+        "accept_rate": 0.967,
+        "accepted_accuracy": 0.5584281282316442
+      },
+      {
+        "tau": 0.31,
+        "accepted": 963,
+        "accept_rate": 0.963,
+        "accepted_accuracy": 0.5586708203530634
+      },
+      {
+        "tau": 0.32,
+        "accepted": 952,
+        "accept_rate": 0.952,
+        "accepted_accuracy": 0.5588235294117647
+      },
+      {
+        "tau": 0.33,
+        "accepted": 940,
+        "accept_rate": 0.94,
+        "accepted_accuracy": 0.5617021276595745
+      },
+      {
+        "tau": 0.34,
+        "accepted": 920,
+        "accept_rate": 0.92,
+        "accepted_accuracy": 0.5652173913043478
+      },
+      {
+        "tau": 0.35,
+        "accepted": 914,
+        "accept_rate": 0.914,
+        "accepted_accuracy": 0.5667396061269147
+      },
+      {
+        "tau": 0.36,
+        "accepted": 909,
+        "accept_rate": 0.909,
+        "accepted_accuracy": 0.5665566556655666
+      },
+      {
+        "tau": 0.37,
+        "accepted": 889,
+        "accept_rate": 0.889,
+        "accepted_accuracy": 0.5703037120359955
+      },
+      {
+        "tau": 0.38,
+        "accepted": 864,
+        "accept_rate": 0.864,
+        "accepted_accuracy": 0.5694444444444444
+      },
+      {
+        "tau": 0.39,
+        "accepted": 845,
+        "accept_rate": 0.845,
+        "accepted_accuracy": 0.5775147928994083
+      },
+      {
+        "tau": 0.4,
+        "accepted": 824,
+        "accept_rate": 0.824,
+        "accepted_accuracy": 0.5800970873786407
+      },
+      {
+        "tau": 0.41,
+        "accepted": 799,
+        "accept_rate": 0.799,
+        "accepted_accuracy": 0.5807259073842302
+      },
+      {
+        "tau": 0.42,
+        "accepted": 784,
+        "accept_rate": 0.784,
+        "accepted_accuracy": 0.5841836734693877
+      },
+      {
+        "tau": 0.43,
+        "accepted": 712,
+        "accept_rate": 0.712,
+        "accepted_accuracy": 0.5828651685393258
+      },
+      {
+        "tau": 0.44,
+        "accepted": 687,
+        "accept_rate": 0.687,
+        "accepted_accuracy": 0.5895196506550219
+      },
+      {
+        "tau": 0.45,
+        "accepted": 653,
+        "accept_rate": 0.653,
+        "accepted_accuracy": 0.5941807044410413
+      },
+      {
+        "tau": 0.46,
+        "accepted": 601,
+        "accept_rate": 0.601,
+        "accepted_accuracy": 0.6039933444259568
+      },
+      {
+        "tau": 0.47,
+        "accepted": 578,
+        "accept_rate": 0.578,
+        "accepted_accuracy": 0.6176470588235294
+      },
+      {
+        "tau": 0.48,
+        "accepted": 557,
+        "accept_rate": 0.557,
+        "accepted_accuracy": 0.6086175942549371
+      },
+      {
+        "tau": 0.49,
+        "accepted": 555,
+        "accept_rate": 0.555,
+        "accepted_accuracy": 0.609009009009009
+      },
+      {
+        "tau": 0.5,
+        "accepted": 543,
+        "accept_rate": 0.543,
+        "accepted_accuracy": 0.6114180478821363
+      },
+      {
+        "tau": 0.51,
+        "accepted": 483,
+        "accept_rate": 0.483,
+        "accepted_accuracy": 0.6542443064182195
+      },
+      {
+        "tau": 0.52,
+        "accepted": 483,
+        "accept_rate": 0.483,
+        "accepted_accuracy": 0.6542443064182195
+      },
+      {
+        "tau": 0.53,
+        "accepted": 449,
+        "accept_rate": 0.449,
+        "accepted_accuracy": 0.6815144766146993
+      },
+      {
+        "tau": 0.54,
+        "accepted": 447,
+        "accept_rate": 0.447,
+        "accepted_accuracy": 0.6845637583892618
+      },
+      {
+        "tau": 0.55,
+        "accepted": 432,
+        "accept_rate": 0.432,
+        "accepted_accuracy": 0.6990740740740741
+      },
+      {
+        "tau": 0.56,
+        "accepted": 432,
+        "accept_rate": 0.432,
+        "accepted_accuracy": 0.6990740740740741
+      },
+      {
+        "tau": 0.57,
+        "accepted": 428,
+        "accept_rate": 0.428,
+        "accepted_accuracy": 0.7032710280373832
+      },
+      {
+        "tau": 0.58,
+        "accepted": 422,
+        "accept_rate": 0.422,
+        "accepted_accuracy": 0.7037914691943128
+      },
+      {
+        "tau": 0.59,
+        "accepted": 418,
+        "accept_rate": 0.418,
+        "accepted_accuracy": 0.7057416267942583
+      },
+      {
+        "tau": 0.6,
+        "accepted": 414,
+        "accept_rate": 0.414,
+        "accepted_accuracy": 0.7101449275362319
+      },
+      {
+        "tau": 0.61,
+        "accepted": 414,
+        "accept_rate": 0.414,
+        "accepted_accuracy": 0.7101449275362319
+      },
+      {
+        "tau": 0.62,
+        "accepted": 411,
+        "accept_rate": 0.411,
+        "accepted_accuracy": 0.7128953771289538
+      },
+      {
+        "tau": 0.63,
+        "accepted": 410,
+        "accept_rate": 0.41,
+        "accepted_accuracy": 0.7121951219512195
+      },
+      {
+        "tau": 0.64,
+        "accepted": 399,
+        "accept_rate": 0.399,
+        "accepted_accuracy": 0.7293233082706767
+      },
+      {
+        "tau": 0.65,
+        "accepted": 398,
+        "accept_rate": 0.398,
+        "accepted_accuracy": 0.7311557788944724
+      },
+      {
+        "tau": 0.66,
+        "accepted": 368,
+        "accept_rate": 0.368,
+        "accepted_accuracy": 0.7472826086956522
+      },
+      {
+        "tau": 0.67,
+        "accepted": 360,
+        "accept_rate": 0.36,
+        "accepted_accuracy": 0.7555555555555555
+      },
+      {
+        "tau": 0.68,
+        "accepted": 356,
+        "accept_rate": 0.356,
+        "accepted_accuracy": 0.7584269662921348
+      },
+      {
+        "tau": 0.69,
+        "accepted": 356,
+        "accept_rate": 0.356,
+        "accepted_accuracy": 0.7584269662921348
+      },
+      {
+        "tau": 0.7,
+        "accepted": 356,
+        "accept_rate": 0.356,
+        "accepted_accuracy": 0.7584269662921348
+      },
+      {
+        "tau": 0.71,
+        "accepted": 353,
+        "accept_rate": 0.353,
+        "accepted_accuracy": 0.7648725212464589
+      },
+      {
+        "tau": 0.72,
+        "accepted": 353,
+        "accept_rate": 0.353,
+        "accepted_accuracy": 0.7648725212464589
+      },
+      {
+        "tau": 0.73,
+        "accepted": 353,
+        "accept_rate": 0.353,
+        "accepted_accuracy": 0.7648725212464589
+      },
+      {
+        "tau": 0.74,
+        "accepted": 305,
+        "accept_rate": 0.305,
+        "accepted_accuracy": 0.7934426229508197
+      },
+      {
+        "tau": 0.75,
+        "accepted": 304,
+        "accept_rate": 0.304,
+        "accepted_accuracy": 0.7927631578947368
+      },
+      {
+        "tau": 0.76,
+        "accepted": 304,
+        "accept_rate": 0.304,
+        "accepted_accuracy": 0.7927631578947368
+      },
+      {
+        "tau": 0.77,
+        "accepted": 304,
+        "accept_rate": 0.304,
+        "accepted_accuracy": 0.7927631578947368
+      },
+      {
+        "tau": 0.78,
+        "accepted": 304,
+        "accept_rate": 0.304,
+        "accepted_accuracy": 0.7927631578947368
+      },
+      {
+        "tau": 0.79,
+        "accepted": 304,
+        "accept_rate": 0.304,
+        "accepted_accuracy": 0.7927631578947368
+      },
+      {
+        "tau": 0.8,
+        "accepted": 298,
+        "accept_rate": 0.298,
+        "accepted_accuracy": 0.802013422818792
+      },
+      {
+        "tau": 0.81,
+        "accepted": 298,
+        "accept_rate": 0.298,
+        "accepted_accuracy": 0.802013422818792
+      },
+      {
+        "tau": 0.82,
+        "accepted": 278,
+        "accept_rate": 0.278,
+        "accepted_accuracy": 0.7949640287769785
+      },
+      {
+        "tau": 0.83,
+        "accepted": 278,
+        "accept_rate": 0.278,
+        "accepted_accuracy": 0.7949640287769785
+      },
+      {
+        "tau": 0.84,
+        "accepted": 259,
+        "accept_rate": 0.259,
+        "accepted_accuracy": 0.8223938223938224
+      },
+      {
+        "tau": 0.85,
+        "accepted": 259,
+        "accept_rate": 0.259,
+        "accepted_accuracy": 0.8223938223938224
+      },
+      {
+        "tau": 0.86,
+        "accepted": 259,
+        "accept_rate": 0.259,
+        "accepted_accuracy": 0.8223938223938224
+      },
+      {
+        "tau": 0.87,
+        "accepted": 259,
+        "accept_rate": 0.259,
+        "accepted_accuracy": 0.8223938223938224
+      },
+      {
+        "tau": 0.88,
+        "accepted": 259,
+        "accept_rate": 0.259,
+        "accepted_accuracy": 0.8223938223938224
+      },
+      {
+        "tau": 0.89,
+        "accepted": 259,
+        "accept_rate": 0.259,
+        "accepted_accuracy": 0.8223938223938224
+      },
+      {
+        "tau": 0.9,
+        "accepted": 259,
+        "accept_rate": 0.259,
+        "accepted_accuracy": 0.8223938223938224
+      },
+      {
+        "tau": 0.91,
+        "accepted": 259,
+        "accept_rate": 0.259,
+        "accepted_accuracy": 0.8223938223938224
+      },
+      {
+        "tau": 0.92,
+        "accepted": 259,
+        "accept_rate": 0.259,
+        "accepted_accuracy": 0.8223938223938224
+      },
+      {
+        "tau": 0.93,
+        "accepted": 116,
+        "accept_rate": 0.116,
+        "accepted_accuracy": 0.7844827586206896
+      },
+      {
+        "tau": 0.94,
+        "accepted": 116,
+        "accept_rate": 0.116,
+        "accepted_accuracy": 0.7844827586206896
+      },
+      {
+        "tau": 0.95,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.96,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.97,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.98,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 0.99,
+        "accepted": 0,
+        "accept_rate": 0
+      },
+      {
+        "tau": 1,
+        "accepted": 0,
+        "accept_rate": 0
+      }
+    ],
+    "note": "\u03C4 = 0.65 is the smallest threshold whose calibration-split disagreement is at most 20.0%. On held-out it accepts 39.8% of items with 73.1% agreement with the frontier model."
   }
 ]

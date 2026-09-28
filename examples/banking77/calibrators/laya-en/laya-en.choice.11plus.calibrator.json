@@ -6,14 +6,14 @@
   "questionType": "choice",
   "bucket": "11\u002B",
   "method": "temperature",
-  "temperature": 3.0491195396233484,
+  "temperature": 2.9512343878495293,
   "fitted": {
     "n": 1000,
     "dataset": "banking77",
-    "datasetRevision": "7ff6d7b0974afb66a781fccbeae9f58db38a37ebd2a0398792d5f2550ac6c79e",
+    "datasetRevision": "49c912d8b5eb821feba6396a5f0d167c10b8ed766bd997731940c3bf72dd264b",
     "date": "2026-09-27",
-    "eceBefore": 0.5000526000000006,
-    "eceAfter": 0.09540399082309994,
+    "eceBefore": 0.5000514454692602,
+    "eceAfter": 0.07149340669494207,
     "tool": "tau-workbench",
     "toolVersion": "0.1.0"
   }

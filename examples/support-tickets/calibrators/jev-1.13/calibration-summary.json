@@ -1,0 +1,276 @@
+{
+  "model": "jev-1.13",
+  "reference": "frontier",
+  "model_hash": "61a35f1e58b5c49e122940e00f31cec4e89cf89be340c7384cf73e23088486c4",
+  "offline_only": true,
+  "dataset_revision": "46c1ec565c6c8dda61044250c224fc9a691688c44dd95a6ec87922bc7ca64943",
+  "raw_precision": "rounded",
+  "raw_decimal_places": 16,
+  "calibrators": [
+    {
+      "file": "calibrators/jev-1.13/jev-1.13.score.offline-calibrator.json",
+      "scope": "question type",
+      "n": 1000,
+      "chosen": "isotonic",
+      "temperature": {
+        "method": "temperature",
+        "temperature": 3.5527923580760046,
+        "calibration_ece": 0.10410084524157334,
+        "calibration_log_loss": 0.9087576251382268
+      },
+      "isotonic": {
+        "method": "isotonic",
+        "knots": 50,
+        "calibration_ece": 0.12310545586888566,
+        "calibration_log_loss": 0.893924470736501
+      },
+      "calibration_ece_before": 0.22447000000000017,
+      "calibration_log_loss_before": 1.984653089399636
+    },
+    {
+      "file": "calibrators/jev-1.13/jev-1.13.score.3-5.offline-calibrator.json",
+      "scope": "3-5 options",
+      "n": 1000,
+      "chosen": "isotonic",
+      "temperature": {
+        "method": "temperature",
+        "temperature": 3.5527923580760046,
+        "calibration_ece": 0.10410084524157334,
+        "calibration_log_loss": 0.9087576251382268
+      },
+      "isotonic": {
+        "method": "isotonic",
+        "knots": 50,
+        "calibration_ece": 0.12310545586888566,
+        "calibration_log_loss": 0.893924470736501
+      },
+      "calibration_ece_before": 0.22447000000000017,
+      "calibration_log_loss_before": 1.984653089399636
+    }
+  ],
+  "excluded_failures": 0,
+  "classes_without_calibration_examples": [],
+  "offline_held_out": {
+    "n": 1000,
+    "accuracy": 0.555,
+    "ece": 0.12238218754852416,
+    "brier": 0.5631790009108195,
+    "log_loss": 1.033402389785696,
+    "mae": 0.49,
+    "reliability": [
+      {
+        "lower": 0,
+        "upper": 0.06666666666666667,
+        "count": 0
+      },
+      {
+        "lower": 0.06666666666666667,
+        "upper": 0.13333333333333333,
+        "count": 0
+      },
+      {
+        "lower": 0.13333333333333333,
+        "upper": 0.2,
+        "count": 0
+      },
+      {
+        "lower": 0.2,
+        "upper": 0.26666666666666666,
+        "count": 17,
+        "mean_confidence": 0.23850804596962885,
+        "accuracy": 0.5882352941176471
+      },
+      {
+        "lower": 0.26666666666666666,
+        "upper": 0.3333333333333333,
+        "count": 47,
+        "mean_confidence": 0.30853117656307577,
+        "accuracy": 0.3617021276595745
+      },
+      {
+        "lower": 0.3333333333333333,
+        "upper": 0.4,
+        "count": 112,
+        "mean_confidence": 0.37057756984600265,
+        "accuracy": 0.44642857142857145
+      },
+      {
+        "lower": 0.4,
+        "upper": 0.4666666666666667,
+        "count": 225,
+        "mean_confidence": 0.4339971032550875,
+        "accuracy": 0.5155555555555555
+      },
+      {
+        "lower": 0.4666666666666667,
+        "upper": 0.5333333333333333,
+        "count": 150,
+        "mean_confidence": 0.49826274238266316,
+        "accuracy": 0.37333333333333335
+      },
+      {
+        "lower": 0.5333333333333333,
+        "upper": 0.6,
+        "count": 35,
+        "mean_confidence": 0.5628629838339881,
+        "accuracy": 0.34285714285714286
+      },
+      {
+        "lower": 0.6,
+        "upper": 0.6666666666666666,
+        "count": 46,
+        "mean_confidence": 0.6425541027278687,
+        "accuracy": 0.41304347826086957
+      },
+      {
+        "lower": 0.6666666666666666,
+        "upper": 0.7333333333333333,
+        "count": 50,
+        "mean_confidence": 0.7154317661755257,
+        "accuracy": 0.56
+      },
+      {
+        "lower": 0.7333333333333333,
+        "upper": 0.8,
+        "count": 20,
+        "mean_confidence": 0.7522947825757317,
+        "accuracy": 0.4
+      },
+      {
+        "lower": 0.8,
+        "upper": 0.8666666666666667,
+        "count": 39,
+        "mean_confidence": 0.8243028759890305,
+        "accuracy": 0.6666666666666666
+      },
+      {
+        "lower": 0.8666666666666667,
+        "upper": 0.9333333333333333,
+        "count": 143,
+        "mean_confidence": 0.9287887165157633,
+        "accuracy": 0.8531468531468531
+      },
+      {
+        "lower": 0.9333333333333333,
+        "upper": 1,
+        "count": 116,
+        "mean_confidence": 0.9423503325942338,
+        "accuracy": 0.7844827586206896
+      }
+    ]
+  },
+  "raw_held_out": {
+    "n": 1000,
+    "accuracy": 0.525,
+    "ece": 0.2879700000000004,
+    "brier": 0.6928892,
+    "log_loss": 2.5499451554149584,
+    "mae": 0.53,
+    "reliability": [
+      {
+        "lower": 0,
+        "upper": 0.06666666666666667,
+        "count": 0
+      },
+      {
+        "lower": 0.06666666666666667,
+        "upper": 0.13333333333333333,
+        "count": 0
+      },
+      {
+        "lower": 0.13333333333333333,
+        "upper": 0.2,
+        "count": 0
+      },
+      {
+        "lower": 0.2,
+        "upper": 0.26666666666666666,
+        "count": 1,
+        "mean_confidence": 0.24,
+        "accuracy": 1
+      },
+      {
+        "lower": 0.26666666666666666,
+        "upper": 0.3333333333333333,
+        "count": 1,
+        "mean_confidence": 0.32,
+        "accuracy": 1
+      },
+      {
+        "lower": 0.3333333333333333,
+        "upper": 0.4,
+        "count": 15,
+        "mean_confidence": 0.37533333333333335,
+        "accuracy": 0.2
+      },
+      {
+        "lower": 0.4,
+        "upper": 0.4666666666666667,
+        "count": 12,
+        "mean_confidence": 0.4283333333333334,
+        "accuracy": 0.5833333333333334
+      },
+      {
+        "lower": 0.4666666666666667,
+        "upper": 0.5333333333333333,
+        "count": 75,
+        "mean_confidence": 0.5058666666666669,
+        "accuracy": 0.41333333333333333
+      },
+      {
+        "lower": 0.5333333333333333,
+        "upper": 0.6,
+        "count": 98,
+        "mean_confidence": 0.5692857142857146,
+        "accuracy": 0.35714285714285715
+      },
+      {
+        "lower": 0.6,
+        "upper": 0.6666666666666666,
+        "count": 80,
+        "mean_confidence": 0.6376249999999994,
+        "accuracy": 0.375
+      },
+      {
+        "lower": 0.6666666666666666,
+        "upper": 0.7333333333333333,
+        "count": 75,
+        "mean_confidence": 0.702,
+        "accuracy": 0.4666666666666667
+      },
+      {
+        "lower": 0.7333333333333333,
+        "upper": 0.8,
+        "count": 76,
+        "mean_confidence": 0.7710526315789473,
+        "accuracy": 0.34210526315789475
+      },
+      {
+        "lower": 0.8,
+        "upper": 0.8666666666666667,
+        "count": 85,
+        "mean_confidence": 0.8348235294117646,
+        "accuracy": 0.35294117647058826
+      },
+      {
+        "lower": 0.8666666666666667,
+        "upper": 0.9333333333333333,
+        "count": 95,
+        "mean_confidence": 0.9031578947368423,
+        "accuracy": 0.45263157894736844
+      },
+      {
+        "lower": 0.9333333333333333,
+        "upper": 1,
+        "count": 387,
+        "mean_confidence": 0.987829457364342,
+        "accuracy": 0.7312661498708011
+      }
+    ]
+  },
+  "notes": [
+    "Offline only: a hosted endpoint can\u0027t load calibrators and has no model hash, so its calibrators are applied by the Workbench only, and its calibrated view is the offline one. The files end in .offline-calibrator.json, which the Runtime never loads.",
+    "Probabilities rounded to 16 dp by the endpoint; calibrators fitted on rounded values.",
+    "A spec asks one question, so every item has 5 options and the 3-5 bucket calibrator is fitted on the same items as the question-type one. The Runtime prefers the bucket file for 5-option requests; the type-level file covers other option counts."
+  ]
+}

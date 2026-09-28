@@ -50,6 +50,8 @@
   "calibrators_seen": [
     "none"
   ],
+  "precision": "full",
+  "decimal_places": 19,
   "items": 1000,
   "measured": 1000,
   "failures": 0,
@@ -58,9 +60,9 @@
   "metrics": {
     "n": 1000,
     "accuracy": 0.29,
-    "ece": 0.2504219,
-    "brier": 0.9227395603799997,
-    "log_loss": 2.548820711022642,
+    "ece": 0.2504202013611794,
+    "brier": 0.9227376374757109,
+    "log_loss": 2.5487600307267897,
     "mae": 1.094,
     "reliability": [
       {
@@ -92,70 +94,70 @@
         "lower": 0.3333333333333333,
         "upper": 0.4,
         "count": 11,
-        "mean_confidence": 0.3810363636363637,
+        "mean_confidence": 0.38104442303830927,
         "accuracy": 0.09090909090909091
       },
       {
         "lower": 0.4,
         "upper": 0.4666666666666667,
         "count": 254,
-        "mean_confidence": 0.4418763779527558,
+        "mean_confidence": 0.4418740281908531,
         "accuracy": 0.16141732283464566
       },
       {
         "lower": 0.4666666666666667,
         "upper": 0.5333333333333333,
         "count": 348,
-        "mean_confidence": 0.49894339080459765,
+        "mean_confidence": 0.49894196779906064,
         "accuracy": 0.26436781609195403
       },
       {
         "lower": 0.5333333333333333,
         "upper": 0.6,
         "count": 188,
-        "mean_confidence": 0.5615281914893617,
+        "mean_confidence": 0.5615255651955909,
         "accuracy": 0.3617021276595745
       },
       {
         "lower": 0.6,
         "upper": 0.6666666666666666,
         "count": 73,
-        "mean_confidence": 0.6300561643835619,
+        "mean_confidence": 0.63005637877608,
         "accuracy": 0.4383561643835616
       },
       {
         "lower": 0.6666666666666666,
         "upper": 0.7333333333333333,
         "count": 47,
-        "mean_confidence": 0.6999808510638299,
+        "mean_confidence": 0.6999779698696542,
         "accuracy": 0.40425531914893614
       },
       {
         "lower": 0.7333333333333333,
         "upper": 0.8,
         "count": 30,
-        "mean_confidence": 0.7663000000000001,
+        "mean_confidence": 0.766300622622172,
         "accuracy": 0.4666666666666667
       },
       {
         "lower": 0.8,
         "upper": 0.8666666666666667,
         "count": 21,
-        "mean_confidence": 0.8359285714285717,
+        "mean_confidence": 0.8359285394350687,
         "accuracy": 0.6190476190476191
       },
       {
         "lower": 0.8666666666666667,
         "upper": 0.9333333333333333,
         "count": 21,
-        "mean_confidence": 0.8927428571428571,
+        "mean_confidence": 0.8927393896239144,
         "accuracy": 0.42857142857142855
       },
       {
         "lower": 0.9333333333333333,
         "upper": 1,
         "count": 7,
-        "mean_confidence": 0.9442857142857142,
+        "mean_confidence": 0.9442818675722394,
         "accuracy": 0.14285714285714285
       }
     ]
@@ -164,23 +166,23 @@
   "confidence_note": "Confidence for ECE and thresholds is max(p), the probability of the chosen answer, not the contract\u0027s confidence field, which for choice and score questions is not a calibrated probability.",
   "exclusion_note": "No item failed; the metrics cover every item.",
   "latency_ms": {
-    "p50": 52.711,
-    "p95": 66.01705,
-    "mean": 53.75289000000004
+    "p50": 53.424,
+    "p95": 70.73514999999999,
+    "mean": 57.552167999999966
   },
   "model_ms": {
-    "p50": 51.644,
-    "p95": 64.5759,
-    "mean": 52.73354000000003
+    "p50": 52.39,
+    "p95": 68.90559999999999,
+    "mean": 56.431421
   },
-  "duration_seconds": 13.454387,
+  "duration_seconds": 14.4011666,
   "concurrency": 4,
   "gpu": {
-    "mean_watts": 342.8955555555556,
-    "samples": 27,
+    "mean_watts": 334.3727586206897,
+    "samples": 29,
     "interval_ms": 500,
     "gpu": "NVIDIA GeForce RTX 3080 Ti",
     "note": "Mean of nvidia-smi power.draw for the first GPU, sampled while the phase ran. It is whole-GPU power: idle draw and any other work on the GPU are included, so it overstates what the model alone used."
   },
-  "started_utc": "2026-09-27T13:18:05Z"
+  "started_utc": "2026-09-27T23:31:21Z"
 }

@@ -5,6 +5,8 @@
   "model_hash": "2b7a961ac37157d1cfa8105e3283106baf1ba2a5cc30fb3a673253f06aa1e1c5",
   "model_hashes_seen": [],
   "calibrators_seen": [],
+  "precision": "full",
+  "decimal_places": 19,
   "items": 1000,
   "measured": 1000,
   "failures": 0,
@@ -13,10 +15,10 @@
   "metrics": {
     "n": 1000,
     "accuracy": 0.318,
-    "ece": 0.09446391913613568,
-    "brier": 0.7695834516917033,
-    "log_loss": 1.4994445504631269,
-    "mae": 0.971,
+    "ece": 0.07290227564061823,
+    "brier": 0.7695835724978602,
+    "log_loss": 1.499302634705644,
+    "mae": 0.97,
     "reliability": [
       {
         "lower": 0,
@@ -36,29 +38,29 @@
       {
         "lower": 0.2,
         "upper": 0.26666666666666666,
-        "count": 567,
-        "mean_confidence": 0.2294984369765196,
-        "accuracy": 0.19576719576719576
+        "count": 598,
+        "mean_confidence": 0.23125519498839767,
+        "accuracy": 0.21739130434782608
       },
       {
         "lower": 0.26666666666666666,
         "upper": 0.3333333333333333,
-        "count": 297,
-        "mean_confidence": 0.2775320925245834,
-        "accuracy": 0.5286195286195287
+        "count": 267,
+        "mean_confidence": 0.27903010935179706,
+        "accuracy": 0.5168539325842697
       },
       {
         "lower": 0.3333333333333333,
         "upper": 0.4,
-        "count": 135,
-        "mean_confidence": 0.36134829532325463,
-        "accuracy": 0.362962962962963
+        "count": 134,
+        "mean_confidence": 0.36145219247527255,
+        "accuracy": 0.3656716417910448
       },
       {
         "lower": 0.4,
         "upper": 0.4666666666666667,
         "count": 1,
-        "mean_confidence": 0.45264328111030844,
+        "mean_confidence": 0.452697973827265,
         "accuracy": 1
       },
       {
