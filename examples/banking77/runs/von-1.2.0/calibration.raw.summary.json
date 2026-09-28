@@ -44,7 +44,7 @@
     "none"
   ],
   "precision": "full",
-  "decimal_places": 43,
+  "decimal_places": 12,
   "items": 1000,
   "measured": 1000,
   "failures": 0,

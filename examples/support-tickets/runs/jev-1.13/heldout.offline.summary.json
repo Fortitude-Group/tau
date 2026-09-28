@@ -5,7 +5,7 @@
   "model_hashes_seen": [],
   "calibrators_seen": [],
   "precision": "rounded",
-  "decimal_places": 17,
+  "decimal_places": 12,
   "items": 1000,
   "measured": 1000,
   "failures": 0,

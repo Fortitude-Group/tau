@@ -78,7 +78,6 @@ So the order on Banking77 is MiniLM, then the fine-tuned Laya, then Jev, then th
 - **laya-en on the tickets missed the 50% calibration target:** [ECE went from 0.273 to 0.155, 43% lower](../../examples/support-tickets/report.json). The Workbench picks the calibrator with the lower log loss on the calibration split. Here that picked isotonic regression, even though temperature scaling had [a calibration-split ECE of 0.016 against 0.216](../../examples/support-tickets/calibrators/laya-en/calibration-summary.json). I set that rule before seeing any held-out result, so I didn't change it afterwards. The report explains the miss instead.
 - **Von's tickets calibration moved [ECE from 0.045 to 0.042](../../examples/support-tickets/report.json).** It was already close to calibrated.
 - **My own report misled me.** Its summary first quoted the cascade of the first model in the list [(Von, 4.5% local at the time)](../DECISIONS.md) rather than the best one, and I repeated that to myself before reading the table. The summary now quotes the best cascade, and the fix has a test.
-- **The report misreads Jev's precision.** Jev returns probabilities to 2 decimal places, but the report's note [says 18](../DECISIONS.md), because it counts the digits of float noise such as 0.060000000000000005. The figures are right and the note is wrong. It's logged and not yet fixed.
 
 ## How fast is it?
 

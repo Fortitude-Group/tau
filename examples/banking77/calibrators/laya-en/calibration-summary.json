@@ -5,7 +5,7 @@
   "offline_only": false,
   "dataset_revision": "49c912d8b5eb821feba6396a5f0d167c10b8ed766bd997731940c3bf72dd264b",
   "raw_precision": "full",
-  "raw_decimal_places": 36,
+  "raw_decimal_places": 12,
   "calibrators": [
     {
       "file": "calibrators/laya-en/laya-en.choice.calibrator.json",

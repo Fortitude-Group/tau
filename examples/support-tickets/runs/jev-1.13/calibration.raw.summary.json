@@ -12,7 +12,7 @@
   "model_hashes_seen": [],
   "calibrators_seen": [],
   "precision": "rounded",
-  "decimal_places": 16,
+  "decimal_places": 2,
   "hosted": {
     "label": "hosted endpoint, measured over the network",
     "endpoint": "https://api.typesafe.ai/",
@@ -30,7 +30,7 @@
     "output_usd_per_m_tok": 0,
     "stopped_at_budget": false,
     "not_sent": 0,
-    "headers_note": "x-tau-raw and x-tau-precision: full were sent on every request, as for a local model. The endpoint echoed neither and returned no x-tau-* header, so it did not honour them: its answers are its own output, rounded to 16 dp.",
+    "headers_note": "x-tau-raw and x-tau-precision: full were sent on every request, as for a local model. The endpoint echoed neither and returned no x-tau-* header, so it did not honour them: its answers are its own output, rounded to 2 dp.",
     "latency_note": "Wall-clock latency per call, network included: the time from sending the request to reading the whole response.",
     "spend_note": "Estimated spend on this split: $0.0179 (427,295 input and 18,000 output tokens at $0.042 and $0 per million, the spec\u0027s prices; an estimate, not a bill). The run has spent an estimated $0.0179 of its $1.00 budget.",
     "usd_per_decision": 1.794639E-05

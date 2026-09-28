@@ -61,7 +61,6 @@ All measured on one RTX 3080 Ti (12 GB) and i9-11900K, FP32, on 27 and 28 Septem
 - **Newcomers now download the exported models** from the `models-v1` release with `scripts/fetch-onnx.ps1` (hash-pinned). The support-tickets fine-tune isn't on the release, because it was trained on non-commercial data.
 - **Frontier labels are session-produced.** They came from batched sheets, not independent per-item API calls. Every report says so. A per-item API run would cost real money and was out of scope.
 - **The ticket dataset is synthetic and non-commercial** (CC-BY-NC-4.0). Its labels are close to arbitrary. Treat the tickets fine-tune as non-commercial as well.
-- **Jev's precision note is wrong in the reports.** It says 18 dp (17 on the tickets) because it counts float noise. Jev returns 2 dp. The figures are unaffected.
 - **The laya-en tickets calibration missed the 50% target.** It was explained, and the rule wasn't changed after the fact.
 - **FP16, WebGPU, numeric interval decoding and the prompt-injection harness** are all out of scope, as the brainstorm planned.
 - **Decision models weren't measured where they should shine,** on untrained questions or many questions against one state. The articles say so.

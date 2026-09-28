@@ -51,7 +51,7 @@
     "laya-en:score:3-5"
   ],
   "precision": "full",
-  "decimal_places": 18,
+  "decimal_places": 12,
   "items": 1000,
   "measured": 1000,
   "failures": 0,

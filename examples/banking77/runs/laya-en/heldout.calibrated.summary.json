@@ -44,7 +44,7 @@
     "laya-en:choice:11\u002B"
   ],
   "precision": "full",
-  "decimal_places": 19,
+  "decimal_places": 12,
   "items": 1000,
   "measured": 1000,
   "failures": 0,

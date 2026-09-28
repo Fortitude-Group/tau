@@ -38,12 +38,21 @@ public static class Precisions
         answered > 0 && honoured == answered ? Full : honoured == 0 ? Rounded : Mixed;
 
     /// <summary>
-    /// The decimal places a number is written with: the digits after the point in its shortest round-trip form, so
-    /// 0.37 has 2, 0.1234 has 4, 1E-05 has 5 and 0 has 0.
+    /// The decimal places a number is written with: the fewest digits after the point that reproduce it to within
+    /// 1e-12, so 0.37 has 2, 0.1234 has 4, 1E-05 has 5, 0 has 0, and float noise such as 0.060000000000000005 (an
+    /// endpoint's arithmetic on a two-place value) still counts as 2.
     /// </summary>
     /// <param name="value">A probability as returned.</param>
     public static int DecimalPlaces(double value)
     {
+        for (int d = 0; d <= 12; d++)
+        {
+            if (Math.Abs(value - Math.Round(value, d)) < 1e-12)
+            {
+                return d;
+            }
+        }
+
         var text = Math.Abs(value).ToString("R", System.Globalization.CultureInfo.InvariantCulture);
         int exponent = 0;
         int e = text.IndexOfAny(['E', 'e']);

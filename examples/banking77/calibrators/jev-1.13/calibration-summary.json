@@ -5,7 +5,7 @@
   "offline_only": true,
   "dataset_revision": "49c912d8b5eb821feba6396a5f0d167c10b8ed766bd997731940c3bf72dd264b",
   "raw_precision": "rounded",
-  "raw_decimal_places": 18,
+  "raw_decimal_places": 2,
   "calibrators": [
     {
       "file": "calibrators/jev-1.13/jev-1.13.choice.offline-calibrator.json",
@@ -270,7 +270,7 @@
   },
   "notes": [
     "Offline only: a hosted endpoint can\u0027t load calibrators and has no model hash, so its calibrators are applied by the Workbench only, and its calibrated view is the offline one. The files end in .offline-calibrator.json, which the Runtime never loads.",
-    "Probabilities rounded to 18 dp by the endpoint; calibrators fitted on rounded values.",
+    "Probabilities rounded to 2 dp by the endpoint; calibrators fitted on rounded values.",
     "A spec asks one question, so every item has 77 options and the 11\u002B bucket calibrator is fitted on the same items as the question-type one. The Runtime prefers the bucket file for 77-option requests; the type-level file covers other option counts."
   ]
 }

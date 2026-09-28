@@ -181,7 +181,8 @@ public sealed class HostedSpecTests
     [InlineData(1.0, 0)]
     [InlineData(1e-5, 5)]
     [InlineData(1.5e-7, 8)]
-    [InlineData(0.30000000000000004, 17)]
+    [InlineData(0.30000000000000004, 1)]
+    [InlineData(0.060000000000000005, 2)]
     public void DecimalPlacesAreReadFromTheNumberAsWritten(double value, int expected) =>
         Assert.Equal(expected, Precisions.DecimalPlaces(value));
 

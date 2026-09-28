@@ -37,9 +37,10 @@ this file records the ones I made so the trail is auditable.
   MiniLM (91.5%), above laya-en (37.2%) and Von (77.1%). Its raw ECE is 0.093, better than
   out-of-the-box laya-en (0.502) and Von (0.185) though not the fine-tune (0.071), and 0.029 after the Workbench's offline calibration. As the first
   stage of a cascade it keeps 51.3% (threshold 0.86) at 93.6% blended, £1,952 against £3,898 per
-  million. Its probabilities come back at 2 dp. The report's headers note says "18 dp", because the
-  decimal-place count reads float noise such as 0.060000000000000005. Every value in all four Jev
-  runs is a whole number of hundredths (checked).
+  million. Its probabilities come back at 2 dp. Every value in all four Jev runs is a whole number of
+  hundredths (checked). The first report said "18 dp", because the decimal-place count read float noise such
+  as 0.060000000000000005. Fixed on 28 September: the count now takes the fewest places that reproduce a value to
+  within 1e-12, and the stored summaries were recomputed from the committed per-item records.
 - **Jev findings, tickets:** 52.5% agreement with Claude out of the box, ahead of every local model
   (Von's 43.9% is the closest). Out of the box it isn't well calibrated here (ECE 0.288, 0.122 after
   calibration). It's the only non-frontier model that takes a real share: 39.8% kept at 89.3% served

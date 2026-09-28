@@ -317,7 +317,7 @@
           "none"
         ],
         "precision": "full",
-        "decimal_places": 19,
+        "decimal_places": 12,
         "items": 1000,
         "measured": 1000,
         "failures": 0,
@@ -503,7 +503,7 @@
           "none"
         ],
         "precision": "full",
-        "decimal_places": 19,
+        "decimal_places": 12,
         "items": 1000,
         "measured": 1000,
         "failures": 0,
@@ -691,7 +691,7 @@
           "laya-en:score:3-5"
         ],
         "precision": "full",
-        "decimal_places": 19,
+        "decimal_places": 12,
         "items": 1000,
         "measured": 1000,
         "failures": 0,
@@ -830,7 +830,7 @@
         "model_hashes_seen": [],
         "calibrators_seen": [],
         "precision": "full",
-        "decimal_places": 19,
+        "decimal_places": 12,
         "items": 1000,
         "measured": 1000,
         "failures": 0,
@@ -951,7 +951,7 @@
         "offline_only": false,
         "dataset_revision": "46c1ec565c6c8dda61044250c224fc9a691688c44dd95a6ec87922bc7ca64943",
         "raw_precision": "full",
-        "raw_decimal_places": 19,
+        "raw_decimal_places": 12,
         "calibrators": [
           {
             "file": "calibrators/laya-en/laya-en.score.calibrator.json",
@@ -1414,7 +1414,7 @@
           "none"
         ],
         "precision": "full",
-        "decimal_places": 19,
+        "decimal_places": 12,
         "items": 1000,
         "measured": 1000,
         "failures": 0,
@@ -1594,7 +1594,7 @@
           "none"
         ],
         "precision": "full",
-        "decimal_places": 19,
+        "decimal_places": 12,
         "items": 1000,
         "measured": 1000,
         "failures": 0,
@@ -1776,7 +1776,7 @@
           "laya-typed-decisions:score:3-5"
         ],
         "precision": "full",
-        "decimal_places": 19,
+        "decimal_places": 12,
         "items": 1000,
         "measured": 1000,
         "failures": 0,
@@ -1907,7 +1907,7 @@
         "model_hashes_seen": [],
         "calibrators_seen": [],
         "precision": "full",
-        "decimal_places": 19,
+        "decimal_places": 12,
         "items": 1000,
         "measured": 1000,
         "failures": 0,
@@ -2020,7 +2020,7 @@
         "offline_only": false,
         "dataset_revision": "46c1ec565c6c8dda61044250c224fc9a691688c44dd95a6ec87922bc7ca64943",
         "raw_precision": "full",
-        "raw_decimal_places": 19,
+        "raw_decimal_places": 12,
         "calibrators": [
           {
             "file": "calibrators/laya-typed-decisions/laya-typed-decisions.score.calibrator.json",
@@ -2461,7 +2461,7 @@
           "none"
         ],
         "precision": "full",
-        "decimal_places": 22,
+        "decimal_places": 12,
         "items": 1000,
         "measured": 1000,
         "failures": 0,
@@ -2649,7 +2649,7 @@
           "none"
         ],
         "precision": "full",
-        "decimal_places": 25,
+        "decimal_places": 12,
         "items": 1000,
         "measured": 1000,
         "failures": 0,
@@ -2839,7 +2839,7 @@
           "von-1.2.0:score:3-5"
         ],
         "precision": "full",
-        "decimal_places": 18,
+        "decimal_places": 12,
         "items": 1000,
         "measured": 1000,
         "failures": 0,
@@ -2982,7 +2982,7 @@
         "model_hashes_seen": [],
         "calibrators_seen": [],
         "precision": "full",
-        "decimal_places": 22,
+        "decimal_places": 12,
         "items": 1000,
         "measured": 1000,
         "failures": 0,
@@ -3107,7 +3107,7 @@
         "offline_only": false,
         "dataset_revision": "46c1ec565c6c8dda61044250c224fc9a691688c44dd95a6ec87922bc7ca64943",
         "raw_precision": "full",
-        "raw_decimal_places": 25,
+        "raw_decimal_places": 12,
         "calibrators": [
           {
             "file": "calibrators/von-1.2.0/von-1.2.0.score.calibrator.json",
@@ -3580,7 +3580,7 @@
           "none"
         ],
         "precision": "full",
-        "decimal_places": 19,
+        "decimal_places": 12,
         "items": 1000,
         "measured": 1000,
         "failures": 0,
@@ -3768,7 +3768,7 @@
           "none"
         ],
         "precision": "full",
-        "decimal_places": 19,
+        "decimal_places": 12,
         "items": 1000,
         "measured": 1000,
         "failures": 0,
@@ -3956,7 +3956,7 @@
           "laya-en-ft-tickets:score:3-5"
         ],
         "precision": "full",
-        "decimal_places": 17,
+        "decimal_places": 12,
         "items": 1000,
         "measured": 1000,
         "failures": 0,
@@ -4093,7 +4093,7 @@
         "model_hashes_seen": [],
         "calibrators_seen": [],
         "precision": "full",
-        "decimal_places": 19,
+        "decimal_places": 12,
         "items": 1000,
         "measured": 1000,
         "failures": 0,
@@ -4212,7 +4212,7 @@
         "offline_only": false,
         "dataset_revision": "46c1ec565c6c8dda61044250c224fc9a691688c44dd95a6ec87922bc7ca64943",
         "raw_precision": "full",
-        "raw_decimal_places": 19,
+        "raw_decimal_places": 12,
         "calibrators": [
           {
             "file": "calibrators/laya-en-ft-tickets/laya-en-ft-tickets.score.calibrator.json",
@@ -4636,8 +4636,8 @@
         "output_usd_per_m_tok": 0,
         "not_sent": 0,
         "stopped_at_budget": false,
-        "decimal_places": 17,
-        "headers_note": "x-tau-raw and x-tau-precision: full were sent on every request, as for a local model. The endpoint echoed neither and returned no x-tau-* header, so it did not honour them: its answers are its own output, rounded to 17 dp.",
+        "decimal_places": 2,
+        "headers_note": "x-tau-raw and x-tau-precision: full were sent on every request, as for a local model. The endpoint echoed neither and returned no x-tau-* header, so it did not honour them: its answers are its own output, rounded to 2 dp.",
         "latency_note": "Wall-clock latency per call, network included: the time from sending the request to reading the whole response.",
         "calibration_note": "Calibrated view: the Workbench\u0027s offline calibration, because a hosted endpoint can\u0027t load calibrators and has no model hash, so its calibrators are applied by the Workbench only, and its calibrated view is the offline one. The files end in .offline-calibrator.json, which the Runtime never loads."
       },
@@ -4655,7 +4655,7 @@
         "model_hashes_seen": [],
         "calibrators_seen": [],
         "precision": "rounded",
-        "decimal_places": 17,
+        "decimal_places": 2,
         "hosted": {
           "label": "hosted endpoint, measured over the network",
           "endpoint": "https://api.typesafe.ai/",
@@ -4673,7 +4673,7 @@
           "output_usd_per_m_tok": 0,
           "stopped_at_budget": false,
           "not_sent": 0,
-          "headers_note": "x-tau-raw and x-tau-precision: full were sent on every request, as for a local model. The endpoint echoed neither and returned no x-tau-* header, so it did not honour them: its answers are its own output, rounded to 17 dp.",
+          "headers_note": "x-tau-raw and x-tau-precision: full were sent on every request, as for a local model. The endpoint echoed neither and returned no x-tau-* header, so it did not honour them: its answers are its own output, rounded to 2 dp.",
           "latency_note": "Wall-clock latency per call, network included: the time from sending the request to reading the whole response.",
           "spend_note": "Estimated spend on this split: $0.0181 (430,372 input and 18,000 output tokens at $0.042 and $0 per million, the spec\u0027s prices; an estimate, not a bill). The run has spent an estimated $0.0360 of its $1.00 budget.",
           "usd_per_decision": 1.8075624E-05
@@ -4819,7 +4819,7 @@
         "model_hashes_seen": [],
         "calibrators_seen": [],
         "precision": "rounded",
-        "decimal_places": 16,
+        "decimal_places": 2,
         "hosted": {
           "label": "hosted endpoint, measured over the network",
           "endpoint": "https://api.typesafe.ai/",
@@ -4837,7 +4837,7 @@
           "output_usd_per_m_tok": 0,
           "stopped_at_budget": false,
           "not_sent": 0,
-          "headers_note": "x-tau-raw and x-tau-precision: full were sent on every request, as for a local model. The endpoint echoed neither and returned no x-tau-* header, so it did not honour them: its answers are its own output, rounded to 16 dp.",
+          "headers_note": "x-tau-raw and x-tau-precision: full were sent on every request, as for a local model. The endpoint echoed neither and returned no x-tau-* header, so it did not honour them: its answers are its own output, rounded to 2 dp.",
           "latency_note": "Wall-clock latency per call, network included: the time from sending the request to reading the whole response.",
           "spend_note": "Estimated spend on this split: $0.0179 (427,295 input and 18,000 output tokens at $0.042 and $0 per million, the spec\u0027s prices; an estimate, not a bill). The run has spent an estimated $0.0179 of its $1.00 budget.",
           "usd_per_decision": 1.794639E-05
@@ -4974,7 +4974,7 @@
         "model_hashes_seen": [],
         "calibrators_seen": [],
         "precision": "rounded",
-        "decimal_places": 17,
+        "decimal_places": 12,
         "items": 1000,
         "measured": 1000,
         "failures": 0,
@@ -5103,7 +5103,7 @@
         "offline_only": true,
         "dataset_revision": "46c1ec565c6c8dda61044250c224fc9a691688c44dd95a6ec87922bc7ca64943",
         "raw_precision": "rounded",
-        "raw_decimal_places": 16,
+        "raw_decimal_places": 2,
         "calibrators": [
           {
             "file": "calibrators/jev-1.13/jev-1.13.score.offline-calibrator.json",
@@ -5368,7 +5368,7 @@
         },
         "notes": [
           "Offline only: a hosted endpoint can\u0027t load calibrators and has no model hash, so its calibrators are applied by the Workbench only, and its calibrated view is the offline one. The files end in .offline-calibrator.json, which the Runtime never loads.",
-          "Probabilities rounded to 16 dp by the endpoint; calibrators fitted on rounded values.",
+          "Probabilities rounded to 2 dp by the endpoint; calibrators fitted on rounded values.",
           "A spec asks one question, so every item has 5 options and the 3-5 bucket calibrator is fitted on the same items as the question-type one. The Runtime prefers the bucket file for 5-option requests; the type-level file covers other option counts."
         ]
       },
@@ -13501,11 +13501,11 @@
     "Label noise: the frontier model disagrees with gold on 76.2% (762 of 1,000). This example is scored against the frontier model\u0027s answers instead of the dataset\u0027s labels; the figures against those labels are kept in a secondary table."
   ],
   "metadata": {
-    "generated_utc": "2026-09-27T23:38:21Z",
+    "generated_utc": "2026-09-28T02:03:31Z",
     "command": "tau report examples/support-tickets/decision.yaml",
     "tool_version": "0.1.0",
     "git": {
-      "commit": "68f919cb9a27d83f81da8ffefcde37f8fd8b4b1e",
+      "commit": "88e84ece3a564f2cc20289df77622b38acd062e4",
       "dirty": true
     },
     "hardware": {
@@ -13595,8 +13595,8 @@
         "output_usd_per_m_tok": 0,
         "not_sent": 0,
         "stopped_at_budget": false,
-        "decimal_places": 17,
-        "headers_note": "x-tau-raw and x-tau-precision: full were sent on every request, as for a local model. The endpoint echoed neither and returned no x-tau-* header, so it did not honour them: its answers are its own output, rounded to 17 dp.",
+        "decimal_places": 2,
+        "headers_note": "x-tau-raw and x-tau-precision: full were sent on every request, as for a local model. The endpoint echoed neither and returned no x-tau-* header, so it did not honour them: its answers are its own output, rounded to 2 dp.",
         "latency_note": "Wall-clock latency per call, network included: the time from sending the request to reading the whole response.",
         "calibration_note": "Calibrated view: the Workbench\u0027s offline calibration, because a hosted endpoint can\u0027t load calibrators and has no model hash, so its calibrators are applied by the Workbench only, and its calibrated view is the offline one. The files end in .offline-calibrator.json, which the Runtime never loads."
       }
