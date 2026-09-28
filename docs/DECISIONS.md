@@ -6,6 +6,13 @@ this file records the ones I made so the trail is auditable.
 
 ---
 
+## 2026-09-28 · Jev spend checked against the bill
+
+Rob checked the TypeSafe console: the total Jev spend was $0.32. The Workbench's estimate, built from each
+response's reported tokens at $0.042 per million input tokens with output tokens free, came to about $0.32 over
+the two Banking77 runs, the tickets run and the conformance run. So the output-token assumption holds, and the
+Jev cost figures in the reports and drafts stand as published.
+
 ## 2026-09-28 · Conformance run against Jev
 
 The conformance tool gained `--peer-api-key-env NAME`, which reads a hosted peer's key from the environment

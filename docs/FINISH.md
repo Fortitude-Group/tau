@@ -20,7 +20,7 @@ Current as of 28 September 2026.
   - Each report has one combined cost table: Claude alone, then each model answering first with the rest escalated.
 - **Jev measured.** TypeSafe's hosted `jev-1.13.0` went through both examples on the same items, 2,000 calls per dataset.
   - **Spend:** an estimated [$0.14 for a Banking77 run](../examples/banking77/report.json) and [$0.04 for a tickets run](../examples/support-tickets/report.json). Banking77 was run twice, so the total across both runs and the first smoke call is about $0.32.
-  - **Estimate only:** these figures price input tokens at the published $0.042 per million and output tokens at nothing, as listed. Banking77 calls averaged about 828 output tokens each, so if TypeSafe charges for output, the real spend is higher. No bill has been checked against the estimates yet.
+  - **Checked against the bill:** Rob confirmed on the TypeSafe console on 28 September that the total spend was $0.32, which matches the estimate. The estimates price input tokens at the published $0.042 per million and output tokens at nothing, and the bill agrees, so output tokens aren't charged.
 - **Exported models to download.** `scripts/fetch-onnx.ps1` pulls the hash-pinned ONNX packages from the `models-v1` release, so a newcomer needs no Python export environment. The support-tickets fine-tune isn't on the release, because it was trained on non-commercial data.
 - **Fine-tune sidecar** (Python, pinned). Data prep, Laya fine-tune, MiniLM baseline, ONNX export, parity and the frontier answer-sheet tooling.
 - **Two worked examples** with committed reports, calibrators, cached frontier answers and per-item results. The reports are hosted as pages: [Banking77](https://fortitude-omnis.group/rd/files/tau/banking77.html) and [support tickets](https://fortitude-omnis.group/rd/files/tau/support-tickets.html).
@@ -72,7 +72,6 @@ All measured on one RTX 3080 Ti (12 GB) and i9-11900K, FP32, on 27 and 28 Septem
 ## Known gaps
 
 - **Tau and Jev answer invalid requests with different status codes.** Tau follows TypeSafe's published reference (422 for a failed validation), and Jev returns 400 for five of those cases. It also accepts a one-level score and a noul `maybe` key that the reference rules out. A client written against Jev's real behaviour rather than its docs would see different codes from Tau. Matching Jev instead of the reference is a one-line decision per case, and I've left it as the reference says.
-- **Jev's spend is estimated, not billed,** and it assumes output tokens are free (see What shipped). Check the TypeSafe console.
 - **VRAM pressure with three models resident.** In the final runs the fine-tuned Laya, measured last in a Runtime holding three FP32 models, slowed to [a 15,219 ms median](../examples/banking77/runs/laya-en-ft-banking77/heldout.raw.summary.json) in its raw phase, against [243 ms](../examples/banking77/runs/laya-en-ft-banking77/heldout.calibrated.summary.json) in a fresh Runtime.
   - Accuracy is unaffected, and the published latency uses the clean phase.
   - A real deployment on a 12 GB card should serve fewer models or use FP16.
@@ -99,11 +98,10 @@ Done already:
 
 Still to do, in order:
 1. **Read and edit the drafts** in `docs/articles/`. Approve or change the titles, especially the HN title.
-2. **Check the TypeSafe console** against the estimated Jev spend of about $0.32. If output tokens are billed, the drafts' Jev cost figures need restating.
-3. **Decide on JsonSchema.Net.** Keep it (tests only) or swap it for another JSON Schema validator.
-4. **Push the packages** if you want them on NuGet. First run `dotnet pack` for `src/Tau.Contract`, `src/Tau.Client` and `src/Tau.Workbench.Cli`, then `dotnet nuget push artifacts/packages/*.nupkg --source nuget.org --api-key <key>`. Push Tau.Contract before Tau.Client, and set the key with `setx` as usual, never in chat.
-5. **Push the Docker image** if you want it public. Tag `tau-runtime:local` for your registry, then push. It's a CPU image. Mention NVIDIA's terms if you ever ship a CUDA image.
-6. **Post, in this order:**
+2. **Decide on JsonSchema.Net.** Keep it (tests only) or swap it for another JSON Schema validator.
+3. **Push the packages** if you want them on NuGet. First run `dotnet pack` for `src/Tau.Contract`, `src/Tau.Client` and `src/Tau.Workbench.Cli`, then `dotnet nuget push artifacts/packages/*.nupkg --source nuget.org --api-key <key>`. Push Tau.Contract before Tau.Client, and set the key with `setx` as usual, never in chat.
+4. **Push the Docker image** if you want it public. Tag `tau-runtime:local` for your registry, then push. It's a CPU image. Mention NVIDIA's terms if you ever ship a CUDA image.
+5. **Post, in this order:**
    - HN (Show HN), and stay around to answer comments. The canonical piece is already live on the R&D page.
    - DEV.to, with the canonical URL set to https://fortitude-omnis.group/rd/tau/.
    - r/LocalLLaMA, then r/dotnet a day or two later, then r/MachineLearning only if its rules allow a [P] post that day. Check each subreddit's self-promotion rules on the day.
