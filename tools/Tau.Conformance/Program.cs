@@ -11,7 +11,7 @@ catch (ArgumentException ex)
     Console.Error.WriteLine();
     Console.Error.WriteLine(
         "usage: dotnet run --project tools/Tau.Conformance -- --tau <url> [--peer <url> --peer-name <name> "
-        + "--peer-revision <sha>] --out <dir> [--requests <dir>] [--lenient-target] [--self-test]");
+        + "--peer-revision <sha> [--peer-api-key-env <NAME>]] --out <dir> [--requests <dir>] [--lenient-target] [--self-test]");
     return 2;
 }
 
@@ -22,6 +22,19 @@ if (options.SelfTest)
 
 var fixtures = RequestFixture.LoadAll(options.RequestsDir);
 Console.WriteLine($"loaded {fixtures.Count} request fixtures from '{options.RequestsDir}'");
+
+string? peerApiKey = null;
+if (options.PeerApiKeyEnv is { } keyEnv)
+{
+    // Process environment first, then the Windows User scope (where setx puts it). Never printed.
+    peerApiKey = Environment.GetEnvironmentVariable(keyEnv)
+        ?? (OperatingSystem.IsWindows() ? Environment.GetEnvironmentVariable(keyEnv, EnvironmentVariableTarget.User) : null);
+    if (string.IsNullOrWhiteSpace(peerApiKey))
+    {
+        Console.Error.WriteLine($"error: environment variable {keyEnv} is not set, so the peer can't be authenticated");
+        return 2;
+    }
+}
 
 using var http = new HttpClient { Timeout = TimeSpan.FromSeconds(60) };
 
@@ -38,7 +51,7 @@ foreach (var fixture in fixtures)
 
     if (options.PeerUrl is not null)
     {
-        peerProbe = await HttpProbe.Send(http, options.PeerName ?? "peer", options.PeerUrl, fixture.WireBody);
+        peerProbe = await HttpProbe.Send(http, options.PeerName ?? "peer", options.PeerUrl, fixture.WireBody, peerApiKey);
         peerVerdict = Evaluate(fixture, peerProbe, strict: false);
 
         if (fixture.ExpectedStatus == 200

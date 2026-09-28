@@ -8,6 +8,8 @@ Updated after every completed task. On session restart, resume from here without
 
 ## R3 log
 
+- Conformance against Jev (28 September): the tool gained `--peer-api-key-env`. Tau passes 45 of 45 with Jev as the peer (`reports/jev/`). Jev passes 35: 3 misses are Tau-only fixtures, and 7 are departures from TypeSafe's own published reference. This closes the last brainstorm criterion.
+
 - 2026-09-28, final run: both examples re-measured with full-precision calibrators (the rounding fix) and with TypeSafe's hosted Jev (`jev-1.13`) beside the local models. Estimated Jev spend $0.1417 (Banking77) and $0.0360 (tickets). The fine-tuned Laya's raw phase slowed to a 15,219 ms median with three FP32 models resident (VRAM, not proven). Accuracy unaffected. Reports, calibrators and runs committed. Every doc, draft and screenshot updated to the new numbers, checker 0 problems. The website update is on the web repo's `rd-tau-jev` branch, not deployed. Details in DECISIONS (2026-09-28).
 - T010–T011: canonical article `docs/articles/tau-canonical.md`, checker 0 problems.
 - T030–T031: `scripts/check-articles.ps1` (5 Pester tests pass) and five report screenshots.

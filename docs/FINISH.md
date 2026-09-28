@@ -13,7 +13,7 @@ Current as of 28 September 2026.
 
 - **Tau Runtime.** A .NET 10 server that answers the `/v1/systemone` contract locally with Laya (English, multilingual, typed decisions) and Von 1.2.0 through ONNX Runtime, on CUDA, DirectML or CPU. It has calibrator loading, raw outputs behind `x-tau-raw`, full-precision probabilities behind `x-tau-precision: full`, OpenTelemetry, a single-file publish and a Docker image.
 - **Tau.Client** and **Tau.Contract.** Typed C# client packages. They pack locally, and nothing has been pushed.
-- **Tau Workbench** (`tau` global tool): label, measure, calibrate, threshold, cascade, report and run.
+- **Conformance against Jev.** The suite takes `--peer-api-key-env` for a hosted peer, so the key stays in the environment. Report in [reports/jev](../reports/jev/conformance.md).: label, measure, calibrate, threshold, cascade, report and run.
   - It works against any `/v1/systemone` endpoint, local or hosted, and writes one self-contained HTML report per example.
   - Hosted endpoints go under `external:` in the spec. The key is read from an environment variable at run time, and a budget guard stops a run before it overspends.
   - Calibrators are fitted on full-precision probabilities where the endpoint offers them.
@@ -54,13 +54,13 @@ All measured on one RTX 3080 Ti (12 GB) and i9-11900K, FP32, on 27 and 28 Septem
   - [p50 223 ms](../examples/banking77/report.json) over the network, not comparable with local inference.
 - **Latency:** laya-en on CUDA [18.59 ms for one question, 114.11 ms for ten](../reports/r1/latency.md). CPU [529.21 ms for one](../reports/r1/latency.md).
 - **ONNX parity:** [pass on every gate](../reports/r1/parity.md) for all four models, and for [both fine-tunes](../examples/banking77/finetune-parity.json).
-- **Conformance:** Tau answers [all 45 requests without a contract violation](../reports/r1/conformance.md), diffed against Kev-0.8B.
+- **Conformance:** Tau answers [all 45 requests without a contract violation](../reports/r1/conformance.md), diffed against Kev-0.8B, and [all 45 again with Jev as the peer](../reports/jev/conformance.md). Jev passes 35: three misses are Tau-only fixtures, and seven depart from TypeSafe's own published reference (400 where it documents 422, and two invalid requests accepted).
 
 ## Brainstorm finish line
 
 | Criterion | Status | Evidence |
 | --- | --- | --- |
-| Runtime answers the full contract, conformance passes against Kev (and Jev if a key is available) | Met against Kev. Jev measured, not yet conformance-tested | [conformance report](../reports/r1/conformance.md): Tau 45 of 45 against Kev-0.8B. A Jev key is now available and Jev answered 6,000 Workbench calls on the same contract, but the 45-request conformance suite can't yet send an API key to its peer |
+| Runtime answers the full contract, conformance passes against Kev (and Jev if a key is available) | Met against both | Tau passes 45 of 45 [against Kev-0.8B](../reports/r1/conformance.md) and 45 of 45 [with Jev as the peer](../reports/jev/conformance.md) (28 September). Jev itself passes 35. Three of its misses are Tau-only fixtures (a null state and the `auto` and `laya-en` model names). The other seven are Jev departing from its own published reference: 400 instead of 422 for five invalid requests, and accepting a one-level score and a noul `maybe` key |
 | ONNX matches the PyTorch reference within the agreed tolerance on every case | Met | [parity report](../reports/r1/parity.md), plus the fine-tune parity for [Banking77](../examples/banking77/finetune-parity.json) and [tickets](../examples/support-tickets/finetune-parity.json) |
 | Latency measured on Rob's hardware, single and batched, with specs | Met | [latency summary](../reports/r1/latency.md) and the per-provider reports |
 | ECE before and after on both datasets, after materially lower | Met, one explained miss | Banking77 laya-en 88.7% lower. Tickets laya-typed-decisions 76.3% lower, laya-en 43.4% (explained in the report) |
@@ -71,7 +71,7 @@ All measured on one RTX 3080 Ti (12 GB) and i9-11900K, FP32, on 27 and 28 Septem
 
 ## Known gaps
 
-- **No conformance run against Jev.** The suite's peer mode has no API-key option. Adding one is a small change, and 45 requests cost a fraction of a penny.
+- **Tau and Jev answer invalid requests with different status codes.** Tau follows TypeSafe's published reference (422 for a failed validation), and Jev returns 400 for five of those cases. It also accepts a one-level score and a noul `maybe` key that the reference rules out. A client written against Jev's real behaviour rather than its docs would see different codes from Tau. Matching Jev instead of the reference is a one-line decision per case, and I've left it as the reference says.
 - **Jev's spend is estimated, not billed,** and it assumes output tokens are free (see What shipped). Check the TypeSafe console.
 - **VRAM pressure with three models resident.** In the final runs the fine-tuned Laya, measured last in a Runtime holding three FP32 models, slowed to [a 15,219 ms median](../examples/banking77/runs/laya-en-ft-banking77/heldout.raw.summary.json) in its raw phase, against [243 ms](../examples/banking77/runs/laya-en-ft-banking77/heldout.calibrated.summary.json) in a fresh Runtime.
   - Accuracy is unaffected, and the published latency uses the clean phase.
@@ -101,10 +101,9 @@ Still to do, in order:
 1. **Read and edit the drafts** in `docs/articles/`. Approve or change the titles, especially the HN title.
 2. **Check the TypeSafe console** against the estimated Jev spend of about $0.32. If output tokens are billed, the drafts' Jev cost figures need restating.
 3. **Decide on JsonSchema.Net.** Keep it (tests only) or swap it for another JSON Schema validator.
-4. **Optionally, run conformance against Jev.** Ask me to add the peer API-key option and run the 45 requests. That's pennies, and it closes the last brainstorm criterion completely.
-5. **Push the packages** if you want them on NuGet. First run `dotnet pack` for `src/Tau.Contract`, `src/Tau.Client` and `src/Tau.Workbench.Cli`, then `dotnet nuget push artifacts/packages/*.nupkg --source nuget.org --api-key <key>`. Push Tau.Contract before Tau.Client, and set the key with `setx` as usual, never in chat.
-6. **Push the Docker image** if you want it public. Tag `tau-runtime:local` for your registry, then push. It's a CPU image. Mention NVIDIA's terms if you ever ship a CUDA image.
-7. **Post, in this order:**
+4. **Push the packages** if you want them on NuGet. First run `dotnet pack` for `src/Tau.Contract`, `src/Tau.Client` and `src/Tau.Workbench.Cli`, then `dotnet nuget push artifacts/packages/*.nupkg --source nuget.org --api-key <key>`. Push Tau.Contract before Tau.Client, and set the key with `setx` as usual, never in chat.
+5. **Push the Docker image** if you want it public. Tag `tau-runtime:local` for your registry, then push. It's a CPU image. Mention NVIDIA's terms if you ever ship a CUDA image.
+6. **Post, in this order:**
    - HN (Show HN), and stay around to answer comments. The canonical piece is already live on the R&D page.
    - DEV.to, with the canonical URL set to https://fortitude-omnis.group/rd/tau/.
    - r/LocalLLaMA, then r/dotnet a day or two later, then r/MachineLearning only if its rules allow a [P] post that day. Check each subreddit's self-promotion rules on the day.

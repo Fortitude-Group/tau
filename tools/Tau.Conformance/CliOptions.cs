@@ -15,6 +15,12 @@ internal sealed record CliOptions
     /// <summary>The peer's pinned commit/revision for the report header.</summary>
     public string? PeerRevision { get; init; }
 
+    /// <summary>
+    /// Name of an environment variable holding the peer's API key, sent as <c>Authorization: Bearer</c> on peer
+    /// requests only. The key itself never appears on the command line, in the report or in any output.
+    /// </summary>
+    public string? PeerApiKeyEnv { get; init; }
+
     /// <summary>Directory the report files are written to.</summary>
     public required string OutDir { get; init; }
 
@@ -40,6 +46,7 @@ internal sealed record CliOptions
         string? peer = null;
         string? peerName = null;
         string? peerRevision = null;
+        string? peerApiKeyEnv = null;
         string? outDir = null;
         string? requestsDir = null;
         var selfTest = false;
@@ -53,6 +60,7 @@ internal sealed record CliOptions
                 case "--peer": peer = Next(args, ref i); break;
                 case "--peer-name": peerName = Next(args, ref i); break;
                 case "--peer-revision": peerRevision = Next(args, ref i); break;
+                case "--peer-api-key-env": peerApiKeyEnv = Next(args, ref i); break;
                 case "--out": outDir = Next(args, ref i); break;
                 case "--requests": requestsDir = Next(args, ref i); break;
                 case "--self-test": selfTest = true; break;
@@ -78,6 +86,12 @@ internal sealed record CliOptions
             throw new ArgumentException("--tau <url> is required");
         }
 
+        if (peerApiKeyEnv is not null && !System.Text.RegularExpressions.Regex.IsMatch(peerApiKeyEnv, "^[A-Za-z_][A-Za-z0-9_]{0,63}$"))
+        {
+            // A value that isn't a variable name is most likely a pasted key: refuse it without echoing it.
+            throw new ArgumentException("--peer-api-key-env takes the NAME of an environment variable, not a key");
+        }
+
         if (outDir is null)
         {
             throw new ArgumentException("--out <dir> is required");
@@ -89,6 +103,7 @@ internal sealed record CliOptions
             PeerUrl = peer,
             PeerName = peerName,
             PeerRevision = peerRevision,
+            PeerApiKeyEnv = peerApiKeyEnv,
             OutDir = outDir,
             RequestsDir = requestsDir ?? Path.Combine("tests", "conformance", "requests"),
             LenientTarget = lenientTarget,

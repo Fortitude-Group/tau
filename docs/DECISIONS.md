@@ -6,6 +6,29 @@ this file records the ones I made so the trail is auditable.
 
 ---
 
+## 2026-09-28 · Conformance run against Jev
+
+The conformance tool gained `--peer-api-key-env NAME`, which reads a hosted peer's key from the environment
+(process, then the Windows User scope) and sends it only on the peer's requests. The option refuses anything
+that isn't a variable name, so a pasted key is rejected without being echoed. The self-test still passes
+(12 of 12).
+
+Run against the Runtime serving R1's four models on CUDA, with `jev-latest` at api.typesafe.ai as the peer,
+written to `reports/jev/` so the R1 report against Kev stays as it was:
+- **Tau:** 45 of 45, no contract violation.
+- **Jev:** 35 of 45.
+  - Three misses are Tau-only fixtures: `state: null` (a Tau extension, noted in the contract snapshot) and
+    the `auto` and `laya-en` model names.
+  - Seven are Jev departing from TypeSafe's own published reference, as snapshotted in
+    `contracts/systemone/2026-09-27/`. It returns 400 where the reference documents 422 for an unknown
+    question type, 0 or 256 choice options, 11 score levels and an unknown top-level field. It also accepts
+    a one-level score ("at least two levels") and a noul criteria key `maybe` (only true and false).
+- **66 answer disagreements,** which is expected from different models.
+- **Spend:** 45 requests, a fraction of a penny.
+
+**Decision:** Tau keeps the published reference's behaviour. Matching Jev's actual codes instead is a small
+change per case, recorded in FINISH as a known gap for Rob to decide.
+**Reason:** the reference is the contract, and Jev's departures from it are a finding, not a spec.
 ## 2026-09-28 · Final run: full-precision calibrators, Jev measured, and a VRAM slowdown
 
 - **What ran:** `scripts/examples.ps1 -Force` for both examples against a Runtime with the
