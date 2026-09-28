@@ -1,23 +1,38 @@
 # Tau: finish
 
-Written 27 September 2026 at the end of R3. Update, 27 September 2026 (evening): the repo is **public** at `Fortitude-Group/tau` with rewritten history (the full history stays private in `Fortitude-Group/tau-dev`). The ONNX packages are on the `models-v1` release. The R&D page is live at https://fortitude-omnis.group/rd/tau/. Nothing else is published: no NuGet packages, no Docker image and no posts. Update, 28 September 2026: the final run re-measured both examples with full-precision calibrators and added TypeSafe's hosted Jev, and every number below comes from it (DECISIONS, 2026-09-28).
+Current as of 28 September 2026.
+
+**Where things stand:**
+- **Repo:** public at [Fortitude-Group/tau](https://github.com/Fortitude-Group/tau). Its history was rewritten to remove personal planning notes, and the full history stays private in `Fortitude-Group/tau-dev`. Report hashes from before the rewrite map to new ones in [commit-map.txt](commit-map.txt).
+- **Exported ONNX models:** on the repo's `models-v1` release.
+- **R&D page:** live at https://fortitude-omnis.group/rd/tau/, with both HTML reports hosted beside it.
+- **Measured:** the local models, a classic baseline, Claude as the frontier model and TypeSafe's hosted Jev, all on the same items.
+- **Not published:** no NuGet packages, no Docker image and no posts. The drafts are ready and waiting for your approval.
 
 ## What shipped
 
-- **Tau Runtime.** A .NET 10 server that answers the `/v1/systemone` contract locally with Laya (English, multilingual, typed decisions) and Von 1.2.0 through ONNX Runtime, on CUDA, DirectML or CPU. It has calibrator loading, raw outputs behind `x-tau-raw`, OpenTelemetry, a single-file publish and a Docker image.
+- **Tau Runtime.** A .NET 10 server that answers the `/v1/systemone` contract locally with Laya (English, multilingual, typed decisions) and Von 1.2.0 through ONNX Runtime, on CUDA, DirectML or CPU. It has calibrator loading, raw outputs behind `x-tau-raw`, full-precision probabilities behind `x-tau-precision: full`, OpenTelemetry, a single-file publish and a Docker image.
 - **Tau.Client** and **Tau.Contract.** Typed C# client packages. They pack locally, and nothing has been pushed.
-- **Tau Workbench** (`tau` global tool). Label, measure, calibrate, threshold, cascade, report and run. It works against any `/v1/systemone` endpoint, local or hosted, and writes one self-contained HTML report per example. Hosted endpoints go under `external:` in the spec, with the key read from an environment variable at run time and a budget guard on spend.
-- **Jev measured.** TypeSafe's hosted `jev-1.13.0` went through both examples on the same items, 2,000 calls per dataset. Estimated spend [$0.14 on Banking77](../examples/banking77/report.json) and [$0.04 on the tickets](../examples/support-tickets/report.json), at the published $0.042 per million input tokens. No real bill was checked against those estimates.
+- **Tau Workbench** (`tau` global tool): label, measure, calibrate, threshold, cascade, report and run.
+  - It works against any `/v1/systemone` endpoint, local or hosted, and writes one self-contained HTML report per example.
+  - Hosted endpoints go under `external:` in the spec. The key is read from an environment variable at run time, and a budget guard stops a run before it overspends.
+  - Calibrators are fitted on full-precision probabilities where the endpoint offers them.
+  - Each report has one combined cost table: Claude alone, then each model answering first with the rest escalated.
+- **Jev measured.** TypeSafe's hosted `jev-1.13.0` went through both examples on the same items, 2,000 calls per dataset.
+  - **Spend:** an estimated [$0.14 for a Banking77 run](../examples/banking77/report.json) and [$0.04 for a tickets run](../examples/support-tickets/report.json). Banking77 was run twice, so the total across both runs and the first smoke call is about $0.32.
+  - **Estimate only:** these figures price input tokens at the published $0.042 per million and output tokens at nothing, as listed. Banking77 calls averaged about 828 output tokens each, so if TypeSafe charges for output, the real spend is higher. No bill has been checked against the estimates yet.
+- **Exported models to download.** `scripts/fetch-onnx.ps1` pulls the hash-pinned ONNX packages from the `models-v1` release, so a newcomer needs no Python export environment. The support-tickets fine-tune isn't on the release, because it was trained on non-commercial data.
 - **Fine-tune sidecar** (Python, pinned). Data prep, Laya fine-tune, MiniLM baseline, ONNX export, parity and the frontier answer-sheet tooling.
-- **Two worked examples** with committed reports, calibrators, cached frontier answers and per-item results: [Banking77](../examples/banking77/report.html) and [support tickets](../examples/support-tickets/report.html).
+- **Two worked examples** with committed reports, calibrators, cached frontier answers and per-item results. The reports are hosted as pages: [Banking77](https://fortitude-omnis.group/rd/files/tau/banking77.html) and [support tickets](https://fortitude-omnis.group/rd/files/tau/support-tickets.html).
 - **Launch drafts** in `docs/articles/`:
-  - the canonical piece
-  - HN, DEV.to, Reddit (three variants) and LinkedIn
-  - the APEX R&D page
-  - five report screenshots.
+  - the canonical piece, which is also the live R&D page
+  - HN and LinkedIn, as plain text with URLs
+  - DEV.to and Reddit (three variants), with absolute links
+  - the APEX page source
+  - five report screenshots, also on the site.
 - **Public readiness:**
   - README, THIRD-PARTY-NOTICES.md and an extended NOTICE
-  - a secret scan (clean)
+  - a secret scan of the rewritten history (clean)
   - `scripts/check-articles.ps1`, which proves every article number against its report.
 
 ## Headline numbers
@@ -45,20 +60,23 @@ All measured on one RTX 3080 Ti (12 GB) and i9-11900K, FP32, on 27 and 28 Septem
 
 | Criterion | Status | Evidence |
 | --- | --- | --- |
-| Runtime answers the full contract, conformance passes against Kev (and Jev if a key is available) | Met against Kev | [conformance report](../reports/r1/conformance.md): Tau 45 of 45. Jev was measured in the Workbench (both examples) but the conformance suite wasn't run against it |
+| Runtime answers the full contract, conformance passes against Kev (and Jev if a key is available) | Met against Kev. Jev measured, not yet conformance-tested | [conformance report](../reports/r1/conformance.md): Tau 45 of 45 against Kev-0.8B. A Jev key is now available and Jev answered 6,000 Workbench calls on the same contract, but the 45-request conformance suite can't yet send an API key to its peer |
 | ONNX matches the PyTorch reference within the agreed tolerance on every case | Met | [parity report](../reports/r1/parity.md), plus the fine-tune parity for [Banking77](../examples/banking77/finetune-parity.json) and [tickets](../examples/support-tickets/finetune-parity.json) |
 | Latency measured on Rob's hardware, single and batched, with specs | Met | [latency summary](../reports/r1/latency.md) and the per-provider reports |
 | ECE before and after on both datasets, after materially lower | Met, one explained miss | Banking77 laya-en 88.7% lower. Tickets laya-typed-decisions 76.3% lower, laya-en 43.4% (explained in the report) |
-| Cascade reports share kept local, blended accuracy against Claude-only, £ per million | Met | Both reports' cascade and cost tables |
-| Every number traces to a committed report, one command reproduces each | Met | `scripts/check-articles.ps1`: 0 problems over all six drafts. `scripts/examples.ps1 -Example <name>` rebuilds each report |
-| Repo, NuGet package and Docker image ready to go public, README under 10 minutes | Met, with caveats | README walkthrough: 117 s excluding downloads (PROGRESS, R3 log). Packages and image built and tested locally. Caveats under Known gaps |
-| Articles drafted for LinkedIn, DEV.to, Reddit and HN, Rob approves before publishing | Drafted, approval pending | `docs/articles/`. Approval is yours |
+| Cascade reports share kept local, blended accuracy against Claude-only, £ per million | Met | Both reports' cascade table and combined cost table, Jev included |
+| Every number traces to a committed report, one command reproduces each | Met | `scripts/check-articles.ps1`: 0 problems over all six drafts. `scripts/examples.ps1 -Example <name>` rebuilds each report, and re-measuring Jev needs `TYPESAFE_API_KEY` |
+| Repo, NuGet package and Docker image ready to go public, README under 10 minutes | Repo public. Packages and image ready but not pushed | README walkthrough: 117 s excluding downloads (PROGRESS, R3 log). The quickstart now downloads the exported models from the release. Packages and image built and tested locally |
+| Articles drafted for LinkedIn, DEV.to, Reddit and HN, Rob approves before publishing | Drafted and link-checked, approval pending | `docs/articles/`. Every URL resolves. Approval is yours |
 
 ## Known gaps
 
-- **No conformance run against Jev.** Jev is measured head to head in both examples (see What shipped), but the 45-request conformance suite has only been run against Tau and Kev.
-- **VRAM pressure with three models resident.** In the final run the fine-tuned Laya, measured last in a Runtime holding three FP32 models, slowed to [a 15,219 ms median](../examples/banking77/runs/laya-en-ft-banking77/heldout.raw.summary.json) in its raw phase, against [243 ms](../examples/banking77/runs/laya-en-ft-banking77/heldout.calibrated.summary.json) in a fresh Runtime. Accuracy is unaffected and the published latency uses the clean phase, but a real deployment on a 12 GB card should serve fewer models or use FP16. The cause (VRAM spill) isn't proven.
-- **Newcomers now download the exported models** from the `models-v1` release with `scripts/fetch-onnx.ps1` (hash-pinned). The support-tickets fine-tune isn't on the release, because it was trained on non-commercial data.
+- **No conformance run against Jev.** The suite's peer mode has no API-key option. Adding one is a small change, and 45 requests cost a fraction of a penny.
+- **Jev's spend is estimated, not billed,** and it assumes output tokens are free (see What shipped). Check the TypeSafe console.
+- **VRAM pressure with three models resident.** In the final runs the fine-tuned Laya, measured last in a Runtime holding three FP32 models, slowed to [a 15,219 ms median](../examples/banking77/runs/laya-en-ft-banking77/heldout.raw.summary.json) in its raw phase, against [243 ms](../examples/banking77/runs/laya-en-ft-banking77/heldout.calibrated.summary.json) in a fresh Runtime.
+  - Accuracy is unaffected, and the published latency uses the clean phase.
+  - A real deployment on a 12 GB card should serve fewer models or use FP16.
+  - The cause (VRAM spill) isn't proven.
 - **Frontier labels are session-produced.** They came from batched sheets, not independent per-item API calls. Every report says so. A per-item API run would cost real money and was out of scope.
 - **The ticket dataset is synthetic and non-commercial** (CC-BY-NC-4.0). Its labels are close to arbitrary. Treat the tickets fine-tune as non-commercial as well.
 - **The laya-en tickets calibration missed the 50% target.** It was explained, and the rule wasn't changed after the fact.
@@ -68,23 +86,26 @@ All measured on one RTX 3080 Ti (12 GB) and i9-11900K, FP32, on 27 and 28 Septem
 - **The R1 latency reports say "(dirty)".** Uncommitted Workbench edits were in the tree during the run, but none of the measured projects references them (DECISIONS).
 - **Session usage for frontier labelling** was about 1.33M tokens, against a 0.85–1.0M estimate. That was Max usage, with no API spend.
 
-## What you need to do to go public, in order
+## What you need to do to go public
 
-1. **Read and edit the drafts** in `docs/articles/`. Approve or change the titles, especially the canonical title and the HN title.
-2. **Decide on JsonSchema.Net.** Keep it (tests only) or swap it for another JSON Schema validator before going public.
-3. **Done 2026-09-27. Make the repo public:** `gh repo edit Fortitude-Group/tau --visibility public --accept-visibility-change-consequences`, run as `fortitude-omnis`. After that, the relative links in the drafts need turning into `https://github.com/Fortitude-Group/tau/blob/master/...` URLs (a search and replace on `../../`).
-4. **Done 2026-09-27. Optionally publish the exported ONNX models** as a GitHub release, and point the README's quickstart at it.
+Done already:
+- **Repo made public** (27 September), with rewritten history. The drafts' links have been turned into live GitHub and site URLs.
+- **Exported ONNX models published** as the `models-v1` release (27 September), with the README quickstart pointing at them.
+- **R&D page built and deployed** at `/rd/tau/`, each change after you approved its diff:
+  - the first version (27 September)
+  - the hosted reports
+  - the final numbers with Jev (28 September)
+  - the combined cost table (28 September).
+
+Still to do, in order:
+1. **Read and edit the drafts** in `docs/articles/`. Approve or change the titles, especially the HN title.
+2. **Check the TypeSafe console** against the estimated Jev spend of about $0.32. If output tokens are billed, the drafts' Jev cost figures need restating.
+3. **Decide on JsonSchema.Net.** Keep it (tests only) or swap it for another JSON Schema validator.
+4. **Optionally, run conformance against Jev.** Ask me to add the peer API-key option and run the 45 requests. That's pennies, and it closes the last brainstorm criterion completely.
 5. **Push the packages** if you want them on NuGet. First run `dotnet pack` for `src/Tau.Contract`, `src/Tau.Client` and `src/Tau.Workbench.Cli`, then `dotnet nuget push artifacts/packages/*.nupkg --source nuget.org --api-key <key>`. Push Tau.Contract before Tau.Client, and set the key with `setx` as usual, never in chat.
 6. **Push the Docker image** if you want it public. Tag `tau-runtime:local` for your registry, then push. It's a CPU image. Mention NVIDIA's terms if you ever ship a CUDA image.
-7. **Done 2026-09-27. Build the R&D page** from `docs/articles/apex-page.md`, using the web playbook's R&D generator at `/rd/tau/`:
-   - copy `docs/articles/img/*.png` to `/images/rd/tau-*.png`
-   - add the `rd/projects.json` entry from the draft's front matter
-   - deploy with the playbook's process.
-    - Update, 28 September: the page refreshed with the final numbers and Jev is live (8 files published after Rob approved the diff), with the two HTML reports hosted at `/rd/files/tau/`.
-8. **Post, in this order:**
-   - the canonical piece on the R&D page
-   - HN (Show HN), and stay around to answer comments
-   - DEV.to with the canonical URL set
-   - r/LocalLLaMA, then r/dotnet a day or two later, then r/MachineLearning only if its rules allow a [P] post that day
-   - LinkedIn from the Fortitude Omnis page.
-   - Check each subreddit's self-promotion rules on the day.
+7. **Post, in this order:**
+   - HN (Show HN), and stay around to answer comments. The canonical piece is already live on the R&D page.
+   - DEV.to, with the canonical URL set to https://fortitude-omnis.group/rd/tau/.
+   - r/LocalLLaMA, then r/dotnet a day or two later, then r/MachineLearning only if its rules allow a [P] post that day. Check each subreddit's self-promotion rules on the day.
+   - LinkedIn, from the Fortitude Omnis page.

@@ -122,7 +122,7 @@ Tau wraps and proves existing open models; it doesn't compete with them.
 
 Done means both components work end to end on two public datasets, the numbers are measured and reproducible, and four articles sit ready for Rob to publish.
 
-- [x] Runtime answers the full `/v1/systemone` contract; conformance suite passes against Kev (and Jev if a key is available). *Evidence: [reports/r1/conformance.md](../reports/r1/conformance.md), Tau 45 of 45. Jev not run: no key, by decision.*
+- [x] Runtime answers the full `/v1/systemone` contract; conformance suite passes against Kev (and Jev if a key is available). *Evidence: [reports/r1/conformance.md](../reports/r1/conformance.md), Tau 45 of 45. No Jev key at first, by decision. A key was bought on 28 September and Jev was measured head to head in both worked examples (6,000 calls, about $0.32 estimated), but the 45-request conformance suite hasn't been run against it yet. See [FINISH.md](FINISH.md).*
 - [x] ONNX outputs match the PyTorch reference within an agreed tolerance on every test case. *Evidence: [reports/r1/parity.md](../reports/r1/parity.md) and both `examples/*/finetune-parity.json`.*
 - [x] Runtime latency measured on Rob's hardware for single and batched questions, published with hardware specs. *Evidence: [reports/r1/latency.md](../reports/r1/latency.md), re-run on a quiet machine in R2.*
 - [x] Workbench shows ECE before and after calibration on both datasets; the after figure is materially lower. *Evidence: both `examples/*/report.html`. One explained miss (laya-en on tickets, 46%).*
@@ -148,15 +148,15 @@ The biggest technical risk is the ONNX export; the biggest credibility risk is a
 
 These are the decisions `/speckit.clarify` should put to you; everything else can default.
 
-- [ ] Name: keep "Tau", or something else?
-- [ ] Which hardware is the benchmark reference? GPU model matters for every latency figure.
-- [ ] Do you have, or want to buy, a Jev API key for the conformance and head-to-head runs?
-- [ ] Which two datasets? Default proposal: Banking77 (intent, 77 classes) plus one open support-ticket set with urgency scoring.
-- [ ] Claude spend cap for labelling and cascade runs?
-- [ ] Fine-tuning compute: local GPU, Kaggle, or a rented instance?
-- [ ] Workbench in C# as proposed, or Python for reach with the ML crowd? (C# is less crowded; Python gets more stars.)
-- [ ] Repo home: the existing Fortitude-Group organisation, or a separate R&D organisation?
-- [ ] Articles: under your name, the Fortitude Omnis brand, or both?
+- [x] Name: keep "Tau", or something else? *Answered: Tau.*
+- [x] Which hardware is the benchmark reference? GPU model matters for every latency figure. *Answered: Rob's RTX 3080 Ti (12 GB) with an i9-11900K.*
+- [x] Do you have, or want to buy, a Jev API key for the conformance and head-to-head runs? *Answered: not at first. A key with $5 of credit arrived on 28 September and the head-to-head ran (conformance against Jev is still open).*
+- [x] Which two datasets? Default proposal: Banking77 (intent, 77 classes) plus one open support-ticket set with urgency scoring. *Answered: Banking77 and Tobi-Bueck/customer-support-tickets, which turned out to be synthetic. It's kept, labelled as such, and scored against Claude's answers.*
+- [x] Claude spend cap for labelling and cascade runs? *Answered: no API spend at all. Frontier answers came from the Claude Code session, with a usage estimate before each batch.*
+- [x] Fine-tuning compute: local GPU, Kaggle, or a rented instance? *Answered: the local GPU.*
+- [x] Workbench in C# as proposed, or Python for reach with the ML crowd? (C# is less crowded; Python gets more stars.) *Answered: C# on .NET 10, with a Python sidecar only for fine-tuning and export.*
+- [x] Repo home: the existing Fortitude-Group organisation, or a separate R&D organisation? *Answered: Fortitude-Group, now public.*
+- [x] Articles: under your name, the Fortitude Omnis brand, or both? *Answered: both, Rob Hill and Fortitude Omnis.*
 
 ## Article plan
 
