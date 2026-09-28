@@ -80,7 +80,7 @@ All measured on one RTX 3080 Ti (12 GB) and i9-11900K, FP32, on 27 and 28 Septem
    - copy `docs/articles/img/*.png` to `/images/rd/tau-*.png`
    - add the `rd/projects.json` entry from the draft's front matter
    - deploy with the playbook's process.
-   - Update, 28 September: the page refreshed with the final numbers and Jev is on the website repo's `rd-tau-jev` branch, not merged or deployed. Review its diff, then merge and deploy.
+    - Update, 28 September: the page refreshed with the final numbers and Jev is live (8 files published after Rob approved the diff), with the two HTML reports hosted at `/rd/files/tau/`.
 8. **Post, in this order:**
    - the canonical piece on the R&D page
    - HN (Show HN), and stay around to answer comments
