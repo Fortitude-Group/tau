@@ -133,7 +133,9 @@ enum Category { Billing, Technical, Account }
 
 ## How do I know if a local model is good enough to replace frontier calls?
 
-That's the Workbench's job. You describe one decision in a `decision.yaml`: the question, the labelled data, the local models and the frontier model. Then `tau run` measures every model on a calibration split and a held-out split, fits temperature and isotonic calibrators, picks the confidence threshold that meets your target error, simulates the cascade (local answer above the threshold, frontier below it) and prices it. It writes a self-contained `report.html` with the misses left in. It never calls a paid API. Frontier answers arrive as files in `frontier/cache.jsonl`. `scripts/examples.ps1` runs the whole thing for the two worked examples, and their committed reports are [`examples/banking77/report.html`](examples/banking77/report.html) and [`examples/support-tickets/report.html`](examples/support-tickets/report.html). Run `tau --help` for the stages.
+That's the Workbench's job. You describe one decision in a `decision.yaml`: the question, the labelled data, the local models and the frontier model. Then `tau run` measures every model on a calibration split and a held-out split, fits temperature and isotonic calibrators, picks the confidence threshold that meets your target error, simulates the cascade (local answer above the threshold, frontier below it) and prices it. It writes a self-contained `report.html` with the misses left in. Frontier answers arrive as files in `frontier/cache.jsonl`, so the frontier model is never called.
+
+A spec can also list hosted `/v1/systemone` endpoints under `external:`, and the Workbench measures them over the network alongside the local models. The key is read at run time from the environment variable the spec names in `api_key_env` and is never written to disk. A budget in the spec (`budget_usd`) stops the run before the estimated spend passes it. Both worked examples measure TypeSafe's hosted Jev this way. `scripts/examples.ps1` runs the whole thing for the two worked examples, and their committed reports are [`examples/banking77/report.html`](examples/banking77/report.html) and [`examples/support-tickets/report.html`](examples/support-tickets/report.html). Run `tau --help` for the stages.
 
 ## What's in the repository?
 
@@ -157,7 +159,7 @@ Each report comes from one command. The script checks everything first and print
 ./scripts/examples.ps1 -Example support-tickets
 ```
 
-The fine-tunes need an NVIDIA GPU and take tens of minutes each. The frontier answers are committed, so a re-run asks no paid API anything.
+The fine-tunes need an NVIDIA GPU and take tens of minutes each. The frontier answers are committed, so a re-run never calls Claude. Re-measuring Jev needs your own key in `TYPESAFE_API_KEY` and costs a few pence (the last run's estimate was $0.14 for Banking77 and $0.04 for the tickets). Without the key the Workbench sends Jev nothing and says so.
 
 The latency figures are in [`reports/r1/latency.md`](reports/r1/latency.md). Regenerate them with `./scripts/bench.ps1 -Http` on a quiet machine. Each report records the hardware it ran on, and the CPU and GPU load either side of the timed passes.
 

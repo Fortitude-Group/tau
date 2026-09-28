@@ -6,6 +6,60 @@ this file records the ones I made so the trail is auditable.
 
 ---
 
+## 2026-09-28 · Final run: full-precision calibrators, Jev measured, and a VRAM slowdown
+
+- **What ran:** `scripts/examples.ps1 -Force` for both examples against a Runtime with the
+  `x-tau-precision: full` fix, raw phases on 27 September (UTC evening) and calibrated phases in the
+  early hours of 28 September. Both reports, every calibrator and every per-item run were rewritten
+  and committed together.
+- **What the precision fix moved (Banking77, held-out, calibrated ECE):**
+  - laya-en 0.065 → 0.056 (raw 0.502, now 88.7% lower, was 87%).
+  - von-1.2.0 0.039 → 0.021 (raw 0.185).
+  - laya-en-ft-banking77 0.061 → 0.060 (raw 0.071, 14.7% lower, still the least helped).
+  - Every Runtime-calibrated view now matches the Workbench's offline calibration exactly
+    (`runtime_vs_offline_max_diff` 0 in both reports).
+- **What it moved in the cascade (Banking77, 5% target error):**
+  - laya-en-ft-banking77: 73.6% kept local at 93.2% → 73.0% at 93.3%, £1,031 → £1,054 per million
+    against £3,898. The threshold is still 0.95.
+  - von-1.2.0: 4.5% → 32.6% kept local (threshold 0.92 → 0.94), 93.3% blended.
+  - MiniLM is unchanged (94.7% at 94.2%). Raw laya-en still reaches no threshold.
+- **Tickets (against Claude's answers):** calibrated ECE cuts are laya-en 43.4% (was 46%, still the
+  explained miss: temperature scaling's calibration-split ECE was 0.016 against isotonic's 0.216),
+  laya-typed-decisions 76.3%, laya-en-ft-tickets 72.0%, von-1.2.0 6.2% (0.045 → 0.042).
+  laya-en-ft-tickets now reaches no threshold at the 20% target. The other three decision models keep
+  0.1%.
+- **Jev measured (`jev-1.13`, the responses say `jev-1.13.0`):** 2,000 calls per dataset (both
+  splits), none refused by the budget guard. Estimated spend $0.1417 on Banking77 (3,374,232 input
+  tokens) and $0.0360 on the tickets (857,667 input tokens), at the published $0.042 per million
+  input tokens with output priced at zero, as the spec has it. That's $0.18 in all, about 13 pence at the reports' exchange rate. The
+  estimates come from the responses' `usage` and the spec's price, not from an invoice.
+- **Jev findings, Banking77:** 79.2% held-out out of the box, below the fine-tuned Laya (87.3%) and
+  MiniLM (91.5%), above laya-en (37.2%) and Von (77.1%). Its raw ECE is 0.093, better than
+  out-of-the-box laya-en (0.502) and Von (0.185) though not the fine-tune (0.071), and 0.029 after the Workbench's offline calibration. As the first
+  stage of a cascade it keeps 51.3% (threshold 0.86) at 93.6% blended, £1,952 against £3,898 per
+  million. Its probabilities come back at 2 dp. The report's headers note says "18 dp", because the
+  decimal-place count reads float noise such as 0.060000000000000005. Every value in all four Jev
+  runs is a whole number of hundredths (checked).
+- **Jev findings, tickets:** 52.5% agreement with Claude out of the box, ahead of every local model
+  (Von's 43.9% is the closest). Out of the box it isn't well calibrated here (ECE 0.288, 0.122 after
+  calibration). It's the only non-frontier model that takes a real share: 39.8% kept at 89.3% served
+  agreement, £614 against £997 per million. It agrees with the synthetic labels on 18.9%, below
+  Claude's 23.8%.
+- **Jev latency:** p50 223 ms on Banking77 and 225 ms on the tickets, wall clock over the network from
+  this machine. It isn't comparable with local inference and the report says so.
+- **The VRAM slowdown:** with laya-en, von-1.2.0 and laya-en-ft-banking77 resident in one Runtime (FP32,
+  12 GB card), the model measured last slowed to seconds per request. The fine-tune's raw phase had a
+  median of 15,219 ms (held-out) and 14,004 ms (calibration), against 243 ms in the calibrated phase's
+  fresh Runtime. It happened on two runs. VRAM spill is the likely cause, consistent with R1's
+  all-models-resident finding, but it isn't proven. Accuracy is unaffected, since the answers don't
+  depend on timing. The published cascade latency comes from the calibrated phase.
+- **Superseded claims:** "73.6% local at 93.2%, £1,031", "laya-en ECE 0.502 to 0.065", "Von 0.185 to
+  0.039", "Von keeps 4.5%" and "Workbench and Runtime agree within 2.4e-4 through the endpoint" are all
+  replaced by the figures above. The docs and drafts were updated to match.
+
+**Reason:** the committed numbers had to come from calibrators fitted on the same input the Runtime
+applies them to, and Jev had to be measured on the same items before anyone compares Tau with it.
+
 ## 2026-09-27 · Hosted endpoints join a decision spec (Jev beside the local models)
 
 - **What:** a spec can now list hosted `/v1/systemone` endpoints under `external:`. Each one is measured
