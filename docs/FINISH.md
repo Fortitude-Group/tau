@@ -7,7 +7,7 @@ Current as of 28 September 2026.
 - **Exported ONNX models:** on the repo's `models-v1` release.
 - **R&D page:** live at https://fortitude-omnis.group/rd/tau/, with both HTML reports hosted beside it.
 - **Measured:** the local models, a classic baseline, Claude as the frontier model and TypeSafe's hosted Jev, all on the same items.
-- **Not published:** no NuGet packages, no Docker image and no posts. The drafts are ready and waiting for your approval.
+- **Posted:** the DEV.to article (29 September). HN, Reddit and LinkedIn aren't posted yet, and there are no NuGet packages or Docker image.
 
 ## What shipped
 
@@ -103,6 +103,6 @@ Still to do, in order:
 4. **Push the Docker image** if you want it public. Tag `tau-runtime:local` for your registry, then push. It's a CPU image. Mention NVIDIA's terms if you ever ship a CUDA image.
 5. **Post, in this order:**
    - HN (Show HN), and stay around to answer comments. The canonical piece is already live on the R&D page.
-   - DEV.to: an unpublished draft is already in your dashboard (created 28 September from `docs/articles/devto.md`, canonical URL set to https://fortitude-omnis.group/rd/tau/). Review the preview and press Publish.
+   - DEV.to: **published 29 September** at https://dev.to/fortitudeomnis/three-quarters-of-my-claude-classification-calls-can-run-on-a-gaming-gpu-how-to-measure-yours-338m, with its canonical URL set to https://fortitude-omnis.group/rd/tau/. DEV.to keeps its own copies of the images, so a later change to a figure on the site won't reach it without an edit there.
    - r/LocalLLaMA, then r/dotnet a day or two later, then r/MachineLearning only if its rules allow a [P] post that day. Check each subreddit's self-promotion rules on the day.
    - LinkedIn, from the Fortitude Omnis page.
