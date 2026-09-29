@@ -39,7 +39,7 @@ The surprise was the classic encoder. A fine-tuned all-MiniLM-L6-v2 [kept 94.7% 
 
 Other misses: calibration barely moved the fine-tuned Laya ([ECE 0.071 to 0.060](https://github.com/Fortitude-Group/tau/blob/master/examples/banking77/report.json)), and laya-en missed my calibration target on the tickets ([ECE 0.273 to 0.155](https://github.com/Fortitude-Group/tau/blob/master/examples/support-tickets/report.json)) because my calibrator-selection rule picked isotonic over temperature. Worse, my first published figures came from calibrators fitted on 4-dp-rounded probabilities that the Runtime then applied to unrounded ones. The [decisions log](https://github.com/Fortitude-Group/tau/blob/master/docs/DECISIONS.md) has the old numbers and the fix. And with three FP32 models resident on the 12 GB card, the one measured last slowed to a [15,219 ms median per request](https://github.com/Fortitude-Group/tau/blob/master/examples/banking77/runs/laya-en-ft-banking77/heldout.raw.summary.json). VRAM spill, I think, not proven. Accuracy wasn't affected.
 
-Everything's open source (Apache-2.0): the server, the measuring tool, the reports with the misses left in, and one command to rerun it. Repo: https://github.com/Fortitude-Group/tau
+Disclosure: I built Tau. It's open source (Apache-2.0), with no paid tier: the server, the measuring tool, the reports with the misses left in, and one command to rerun it. Repo: https://github.com/Fortitude-Group/tau
 
 ## r/dotnet
 
